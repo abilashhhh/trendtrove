@@ -8,5 +8,7 @@ dotenv_1.default.config();
 const configurationKeys = {
     PORT: process.env.PORT,
     MONGODB: process.env.MONGODB,
+    JWT_ACCESS_CODE: process.env.JWT_ACCESS_CODE,
+    JWT_REFRESH_CODE: process.env.JWT_REFRESH_CODE,
 };
 exports.default = configurationKeys;
