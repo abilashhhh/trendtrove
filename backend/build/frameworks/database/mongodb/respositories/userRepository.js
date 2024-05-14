@@ -8,12 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRepositoryMongoDB = void 0;
+const userModel_1 = __importDefault(require("../models/userModel"));
 const userRepositoryMongoDB = () => {
     const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const newUser = new User(user);
+            const newUser = new userModel_1.default(user);
             return yield newUser.save();
         }
         catch (error) {
@@ -21,8 +25,41 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error adding user!");
         }
     });
+    const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findOne({ email });
+            return user;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error getting user by email!");
+        }
+    });
+    const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findOne({ username });
+            return user;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error getting user by username!");
+        }
+    });
+    const getUserByPhone = (phone) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findOne({ phone });
+            return user;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error getting user by phone!");
+        }
+    });
+    return {
+        addUser,
+        getUserByEmail,
+        getUserByUsername,
+        getUserByPhone
+    };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;
-return {
-    addUser,
-};

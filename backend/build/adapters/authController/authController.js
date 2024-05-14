@@ -9,17 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userDBRepository = void 0;
-const userDBRepository = (repository) => {
-    const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.addUser(user); });
-    const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByEmail(email); });
-    const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByUsername(username); });
-    const getUserByPhone = (phone) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByPhone(phone); });
+// use cases
+const userAuth_1 = require("../../application/use-cases/auth/userAuth");
+const authController = (authServiceImplementation, authServiceInterface, userDBRepositoryImplementation, userDBRepositoryInterface) => {
+    const authService = authServiceInterface(authServiceImplementation());
+    const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
+    const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const user = req.body;
+        yield (0, userAuth_1.userRegister)(user, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "User verified"
+        });
+    });
     return {
-        addUser,
-        getUserByEmail,
-        getUserByUsername,
-        getUserByPhone,
+        registerUser
     };
 };
-exports.userDBRepository = userDBRepository;
+exports.default = authController;

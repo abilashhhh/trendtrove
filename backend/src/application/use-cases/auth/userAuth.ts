@@ -30,4 +30,5 @@ export const userRegister = async (
 
   user.password = await authService.encryptPassword(user.password);
   await dbUserRepository.addUser(user);
+  console.log(user)
 };
