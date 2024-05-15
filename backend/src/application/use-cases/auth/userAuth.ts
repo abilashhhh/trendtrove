@@ -1,8 +1,11 @@
 import ErrorInApplication from "../../../utils/ErrorInApplication";
+const otpGenerator = require("otp-generator");
 import { UserDBInterface } from "../../repositories/userDBRepository";
 import { AuthServiceInterface } from "../../services/authServiceInterface";
-
 import { UserInterface } from "../../../types/userInterface";
+import { OtpDbInterface } from "../../repositories/OTPDBRepository";
+import { mailSenderService } from "../../../frameworks/services/mailSendService";
+import { MailSenderServiceInterface } from "../../services/mailServiceInterface";
 
 export const userRegister = async (
   user: UserInterface,
@@ -14,8 +17,10 @@ export const userRegister = async (
     throw new ErrorInApplication("Email already exists", 401);
   }
 
-  const existingUsername = await dbUserRepository.getUserByUsername( user.username);
-  console.log("get by :",existingUsername)
+  const existingUsername = await dbUserRepository.getUserByUsername(
+    user.username
+  );
+  console.log("get by :", existingUsername);
   if (existingUsername) {
     throw new ErrorInApplication("Username already exists!", 401);
   }
@@ -29,3 +34,34 @@ export const userRegister = async (
   await dbUserRepository.addUser(user);
   console.log(user);
 };
+
+export const handleSendOtp = async (
+  email: string,
+  text: string,
+  dbOtpRepository: ReturnType<OtpDbInterface>,
+  mailSenderService: ReturnType<MailSenderServiceInterface>
+) => {
+  try {
+    const otp = otpGenerator.generate(6, {
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false,
+    })
+    await dbOtpRepository.saveNewOtp({email, otp});
+    if (text === "email-verification") {
+      await mailSenderService.sendVerificationEmail(email, Number(otp))
+    } else if (text === "forgot-password") {
+      await mailSenderService.sendForgotPasswordEmail(email, Number(otp))
+    }
+  } catch (error) {
+    console.log("Error in handleSendOtp: ", error)
+    throw new ErrorInApplication("Error in handleSendOtp" , 401)
+  }
+};
+
+
+
+
+
+export const handleOtpVerification = async () => {};
+export const handleResetPassword = async () => {};

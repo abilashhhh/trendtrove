@@ -10,5 +10,7 @@ const configurationKeys = {
     MONGODB: process.env.MONGODB,
     JWT_ACCESS_CODE: process.env.JWT_ACCESS_CODE,
     JWT_REFRESH_CODE: process.env.JWT_REFRESH_CODE,
+    MAIL_USERNAME: process.env.MAIL_USERNAME,
+    MAIL_PASSWORD: process.env.MAIL_PASSWORD,
 };
 exports.default = configurationKeys;

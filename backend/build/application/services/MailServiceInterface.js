@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.otpDbRepository = void 0;
-const otpDbRepository = (repository) => {
-    const saveNewOtp = (_a) => __awaiter(void 0, [_a], void 0, function* ({ email, otp }) { return yield repository.saveNewOtp({ email, otp }); });
-    const getLatestOtp = (email) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getLatestOtp(email); });
+exports.mailSenderServiceInterface = void 0;
+const mailSenderServiceInterface = (service) => {
+    const sendVerificationEmail = (email, otp) => __awaiter(void 0, void 0, void 0, function* () { return service.sendVerificationEmail(email, otp); });
+    const sendForgotPasswordEmail = (email, otp) => __awaiter(void 0, void 0, void 0, function* () { return service.sendForgotPasswordEmail(email, otp); });
     return {
-        saveNewOtp,
-        getLatestOtp,
+        sendVerificationEmail,
+        sendForgotPasswordEmail,
     };
 };
-exports.otpDbRepository = otpDbRepository;
+exports.mailSenderServiceInterface = mailSenderServiceInterface;
