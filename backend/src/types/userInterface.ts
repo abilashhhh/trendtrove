@@ -14,7 +14,7 @@ export interface GoogleUserInterface {
   password?: string;
 }
 
-export interface UserDateInterface {
+export interface UserDataInterface {
   id?: string;
   name: string;
   username?: string;

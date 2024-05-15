@@ -14,21 +14,18 @@ export const userRegister = async (
     throw new ErrorInApplication("Email already exists", 401);
   }
 
-  const existingUsername = await dbUserRepository.getUserByUsername(
-    user.username
-  );
+  const existingUsername = await dbUserRepository.getUserByUsername( user.username);
+  console.log("get by :",existingUsername)
   if (existingUsername) {
     throw new ErrorInApplication("Username already exists!", 401);
   }
 
-  const existingPhoneNumber = await dbUserRepository.getUserByPhone(
-    user.phone
-  );
+  const existingPhoneNumber = await dbUserRepository.getUserByPhone(user.phone);
   if (existingPhoneNumber) {
     throw new ErrorInApplication("Phone number already exists!", 401);
   }
 
   user.password = await authService.encryptPassword(user.password);
   await dbUserRepository.addUser(user);
-  console.log(user)
+  console.log(user);
 };

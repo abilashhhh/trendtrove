@@ -1,4 +1,3 @@
-import { EventEmitterAsyncResource } from "nodemailer/lib/xoauth2";
 import {
   GoogleUserInterface,
   UserInterface,
@@ -30,6 +29,7 @@ export const userRepositoryMongoDB = () => {
 
   const getUserByUsername = async( username : string) => {
     try {
+      console.log('repo ;',username)
       const user = await User.findOne({username})
       return user
     } catch (error) {

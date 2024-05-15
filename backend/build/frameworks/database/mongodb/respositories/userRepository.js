@@ -37,6 +37,7 @@ const userRepositoryMongoDB = () => {
     });
     const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            console.log('repo ;', username);
             const user = yield userModel_1.default.findOne({ username });
             return user;
         }

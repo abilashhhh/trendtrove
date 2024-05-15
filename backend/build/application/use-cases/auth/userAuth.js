@@ -20,6 +20,7 @@ const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, 
         throw new ErrorInApplication_1.default("Email already exists", 401);
     }
     const existingUsername = yield dbUserRepository.getUserByUsername(user.username);
+    console.log("get by :", existingUsername);
     if (existingUsername) {
         throw new ErrorInApplication_1.default("Username already exists!", 401);
     }
