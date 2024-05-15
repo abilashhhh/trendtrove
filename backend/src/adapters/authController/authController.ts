@@ -25,7 +25,7 @@ const authController = (
 
   
     const registerUser = async(req : Request , res : Response) => {
-        console.log(req.body)
+        // console.log(req.body)
         const user : UserInterface = req.body;
         try {
             await userRegister(user, dbUserRepository, authService);
@@ -49,9 +49,40 @@ const authController = (
         }
     }
 
+
+    const usernameAvailability = async (req: Request, res: Response) => {
+        const { username } = req.params;
+        console.log("usernamne from controller:" , username)
+        try {
+          // Assuming you have a method in your repository to check username availability
+          const isAvailable = await dbUserRepository.getUserByUsername(username); 
+          console.log("isAvailable : ", isAvailable)
+          if (isAvailable === null) {
+            res.json ({
+                available: true,
+                status: "Username is available"
+            });
+        } else {
+            res.json ({
+                available: false,
+                status: "Username not available"
+            });
+        }
+        
+        } catch (error) {
+          console.error("Error checking username availability:", error);
+          res.status(500).json({
+            status: "error",
+            message: "Failed to check username availability"
+          });
+        }
+      }
+    
+
+
     return {
-        registerUser
-    }
+        registerUser,
+        usernameAvailability    }
 
 }
 

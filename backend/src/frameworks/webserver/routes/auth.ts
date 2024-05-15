@@ -18,7 +18,9 @@ const authRouter = () => {
     )
 
     router.post('/signup' , controller.registerUser)
+    router.get('/usernameavailablity/:username' , controller.usernameAvailability)
 
+    
     return router
 }
 

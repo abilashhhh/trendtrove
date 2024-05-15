@@ -13,6 +13,7 @@ const authRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, authController_1.default)(authService_1.authService, authServiceInterface_1.authServiceInterface, userRepository_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository);
     router.post('/signup', controller.registerUser);
+    router.get('/usernameavailablity/:username', controller.usernameAvailability);
     return router;
 };
 exports.default = authRouter;

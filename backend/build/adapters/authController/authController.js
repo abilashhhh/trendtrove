@@ -19,7 +19,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     const authService = authServiceInterface(authServiceImplementation());
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(req.body);
+        // console.log(req.body)
         const user = req.body;
         try {
             yield (0, userAuth_1.userRegister)(user, dbUserRepository, authService);
@@ -44,8 +44,37 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             }
         }
     });
+    const usernameAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = req.params;
+        console.log("usernamne from controller:", username);
+        try {
+            // Assuming you have a method in your repository to check username availability
+            const isAvailable = yield dbUserRepository.getUserByUsername(username);
+            console.log("isAvailable : ", isAvailable);
+            if (isAvailable === null) {
+                res.json({
+                    available: true,
+                    status: "Username is available"
+                });
+            }
+            else {
+                res.json({
+                    available: false,
+                    status: "Username not available"
+                });
+            }
+        }
+        catch (error) {
+            console.error("Error checking username availability:", error);
+            res.status(500).json({
+                status: "error",
+                message: "Failed to check username availability"
+            });
+        }
+    });
     return {
-        registerUser
+        registerUser,
+        usernameAvailability
     };
 };
 exports.default = authController;
