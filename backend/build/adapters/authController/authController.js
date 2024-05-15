@@ -74,7 +74,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         }
     });
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const sendOtpForEmailVerification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
         yield (0, userAuth_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
         res.json({
@@ -83,33 +83,29 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         });
     });
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //   const verifyOtpForEmailVerification = async (req: Request, res: Response) => {
-    //     const { email, otp, text }: { email: string; otp: string; text: string } =
-    //       req.body;
-    //     const isOtpValid = await handleOtpVerification(
-    //       email,
-    //       otp,
-    //       text,
-    //       dbOtpRepository,
-    //       dbUserRepository
-    //     );
-    //     if (isOtpValid) {
-    //       res.json({
-    //         status: "success",
-    //         message: "OTP verified",
-    //       });
-    //     } else {
-    //       res.json({
-    //         status: "fail",
-    //         message: "OTP not verified",
-    //       });
-    //     }
-    // };
+    const verifyOtpForEmailVerification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, otp } = req.body;
+        console.log("req.body in verifyotp: ", req.body);
+        const isOtpValid = yield (0, userAuth_1.handleOtpVerification)(email, otp, dbOtpRepository);
+        console.log("isOtpValid: ", isOtpValid);
+        if (isOtpValid) {
+            return res.json({
+                status: "success",
+                message: "OTP verified",
+            });
+        }
+        else {
+            return res.status(400).json({
+                status: "fail",
+                message: "Invalid OTP",
+            });
+        }
+    });
     return {
         registerUser,
         usernameAvailability,
-        sendOtpForEmailVerification,
-        // verifyOtpForEmailVerification,
+        sendOtp,
+        verifyOtpForEmailVerification,
     };
 };
 exports.default = authController;

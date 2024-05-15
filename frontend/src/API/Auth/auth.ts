@@ -30,6 +30,33 @@ export const usernameAvailability = async (username: string): Promise<UsernameAv
   }
 };
 
+
+
+export const generateOtp = async (email: string, text : string): Promise<void> => {
+  try {
+    await axios.post(END_POINTS.GENERATE_OTP, { email , text });
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+
+export const verifyOtp = async (email: string, otp: string): Promise<any> => {
+  try {
+    const resultOfVerifyOTP = await axios.post(END_POINTS.VERIFY_OTP, { email, otp });
+    return resultOfVerifyOTP
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+ 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const handleAxiosError = (error: any) => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;

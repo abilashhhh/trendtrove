@@ -30,7 +30,6 @@ const sendMail = (email, title, body) => __awaiter(void 0, void 0, void 0, funct
             html: body,
         });
         // console.log("Email info: ", info);
-        console.log("EMAIL SENT TO : ", email);
         return info;
     }
     catch (error) {

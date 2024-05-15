@@ -4,7 +4,7 @@ import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { signUpUser, usernameAvailability } from "../API/Auth/auth";
+import { generateOtp, signUpUser, usernameAvailability } from "../API/Auth/auth";
 import { SignUpUserInterface } from "../Types/signUpUser";
 import {
   validateEmail,
@@ -101,7 +101,7 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate all fields before submitting
+    // Validateing fields  
     for (const field in formData) {
       const value = formData[field as keyof SignUpUserInterface];
       if (typeof value === "string") {
@@ -109,19 +109,21 @@ const SignupPage: React.FC = () => {
       }
     }
 
-    // Check if there are any validation errors or password mismatch
+    // Checking validation errors or password mismatch
     const hasErrors =
       Object.values(validationErrors).some(error => error !== "") ||
       formData.password !== formData.confirmPassword;
 
     if (!hasErrors) {
       try {
-        // Omit confirmPassword before sending data to the server
+        // Removing confirmPassword data
         const { confirmPassword, ...userData } = formData;
-        await signUpUser(userData as SignUpUserInterface);
-        toast.success("Signup successful");
+        // await signUpUser(userData as SignUpUserInterface);
+        localStorage.setItem("signupData", JSON.stringify(formData));
+        generateOtp(userData.email, 'email-verification')
+        toast.success("OTP sent successfully");
         setTimeout(() => {
-          navigate("/signin");
+          navigate("/otp");
         }, 3000);
       } catch (error: any) {
         console.error(
@@ -205,7 +207,7 @@ const SignupPage: React.FC = () => {
               {usernameAvailable === false && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
                   Username not available
-                </p>
+                </p>  
               )}
               { !validationErrors.username &&  usernameAvailable === true && (
                 <p className="text-green-500 text-xs font-semibold mt-1">

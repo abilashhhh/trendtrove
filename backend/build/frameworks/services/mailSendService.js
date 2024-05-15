@@ -24,7 +24,7 @@ const mailSenderService = () => {
                 <h2>OTP: ${otp}</h2>
               
                 `);
-            console.log("Verification email sent successfully: ", mailResponse);
+            console.log("Sent to :", mailResponse === null || mailResponse === void 0 ? void 0 : mailResponse.accepted[0]);
         }
         catch (err) {
             console.log("Error in sending verification email: ", err);

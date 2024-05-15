@@ -51,7 +51,7 @@ export interface LogoutResponse {
     message: string,    
 }
 
-export interface SendOtpResponse {
+export interface generateOtpResponse {
     status: string,
     message: string,    
 }

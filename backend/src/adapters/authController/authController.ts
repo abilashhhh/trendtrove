@@ -11,7 +11,7 @@ import { MailSenderServiceInterface } from "../../application/services/mailServi
 import { UserInterface } from "../../types/userInterface";
 
 
-import {  handleSendOtp, userRegister, } from "../../application/use-cases/auth/userAuth";
+import {  handleOtpVerification, handleSendOtp, userRegister, } from "../../application/use-cases/auth/userAuth";
   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,7 +89,7 @@ const authController = (
 
 
 
-  const sendOtpForEmailVerification = async (req: Request, res: Response) => {
+  const sendOtp = async (req: Request, res: Response) => {
     const { email, text }: { email: string; text: string } = req.body;
     await handleSendOtp(email, text, dbOtpRepository, mailSenderService);
     res.json({
@@ -99,40 +99,39 @@ const authController = (
   };
 
 
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  const verifyOtpForEmailVerification = async (req: Request, res: Response) => {
+    const { email, otp }: { email: string; otp: string } = req.body;
+    console.log("req.body in verifyotp: " , req.body)
+    const isOtpValid = await handleOtpVerification(
+      email,
+      otp,
+      dbOtpRepository,
+    );
+    console.log("isOtpValid: ", isOtpValid)
+    if (isOtpValid) {
+      return  res.json({
+        status: "success",
+        message: "OTP verified",
+      });
+    } else {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid OTP",
+      });
+    }
+  };
   
-//   const verifyOtpForEmailVerification = async (req: Request, res: Response) => {
-//     const { email, otp, text }: { email: string; otp: string; text: string } =
-//       req.body;
-//     const isOtpValid = await handleOtpVerification(
-//       email,
-//       otp,
-//       text,
-//       dbOtpRepository,
-//       dbUserRepository
-//     );
-//     if (isOtpValid) {
-//       res.json({
-//         status: "success",
-//         message: "OTP verified",
-//       });
-//     } else {
-//       res.json({
-//         status: "fail",
-//         message: "OTP not verified",
-//       });
-//     }
-  // };
 
 
 
   return {
     registerUser,
     usernameAvailability,
-    sendOtpForEmailVerification,
-    // verifyOtpForEmailVerification,
+    sendOtp,
+    verifyOtpForEmailVerification,
+
   };
 };
 

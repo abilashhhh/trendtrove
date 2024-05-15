@@ -20,7 +20,7 @@ export const userRegister = async (
   const existingUsername = await dbUserRepository.getUserByUsername(
     user.username
   );
-  console.log("get by :", existingUsername);
+ 
   if (existingUsername) {
     throw new ErrorInApplication("Username already exists!", 401);
   }
@@ -34,6 +34,8 @@ export const userRegister = async (
   await dbUserRepository.addUser(user);
   console.log(user);
 };
+
+
 
 export const handleSendOtp = async (
   email: string,
@@ -62,6 +64,43 @@ export const handleSendOtp = async (
 
 
 
+export const handleOtpVerification = async (
+  email: string,
+  otp: string,
+  dbOtpRepository: ReturnType<OtpDbInterface>
+) => {
+  try {
+    const latestOtp = await dbOtpRepository.getLatestOtp(email);
+    if (!latestOtp || latestOtp.otp !== otp) {
+      return false; 
+    }
+    return true; // OTP verification successful
+  } catch (error) {
+    console.log("Error in handleOtpVerification: ", error);
+    throw new ErrorInApplication("Error in handleOtpVerification", 401);
+  }
+};
 
-export const handleOtpVerification = async () => {};
-export const handleResetPassword = async () => {};
+export const handleResendOtp = async (
+  email: string,
+  text: string,
+  dbOtpRepository: ReturnType<OtpDbInterface>,
+  mailSenderService: ReturnType<MailSenderServiceInterface>
+) => {
+  try {
+    const otp = otpGenerator.generate(6, {
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
+    await dbOtpRepository.saveNewOtp({ email, otp });
+    if (text === "email-verification") {
+      await mailSenderService.sendVerificationEmail(email, Number(otp));
+    } else if (text === "forgot-password") {
+      await mailSenderService.sendForgotPasswordEmail(email, Number(otp));
+    }
+  } catch (error) {
+    console.log("Error in handleResendOtp: ", error);
+    throw new ErrorInApplication("Error in handleResendOtp", 401);
+  }
+};

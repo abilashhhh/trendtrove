@@ -12,7 +12,10 @@ export interface SignupUserResponse {
     status: string
 }
 
+ 
+
 export interface UsernameAvailabilityResponse {
     available: boolean,
     status: string
 }
+

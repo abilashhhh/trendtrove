@@ -14,7 +14,7 @@ export const mailSenderService = () => {
               
                 `
       );
-      console.log("Verification email sent successfully: ", mailResponse);
+      console.log("Sent to :" , mailResponse?.accepted[0])
     } catch (err) {
       console.log("Error in sending verification email: ", err);
       throw err;

@@ -1,6 +1,5 @@
 import { Document, Schema, model } from "mongoose";
 
-
 interface OtpInterface extends Document {
     email: string;
     otp: string;
@@ -19,9 +18,9 @@ const otpSchema = new Schema<OtpInterface>({
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 60 * 1,
+        expires: 1 * 60,
     }
-})
+});
 
-const Otp = model<OtpInterface>("Otp" , otpSchema)
-export default Otp
+const Otp = model<OtpInterface>("Otp", otpSchema);
+export default Otp;

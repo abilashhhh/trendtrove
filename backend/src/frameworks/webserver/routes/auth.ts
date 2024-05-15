@@ -29,9 +29,8 @@ const authRouter = () => {
 
     router.post('/signup' , controller.registerUser)
     router.get('/usernameavailablity/:username' , controller.usernameAvailability)
-    router.post('/sendotp', controller.sendOtpForEmailVerification);
-    // router.post('/verify_otp', controller.verifyOtpForEmailVerification);
-    
+    router.post('/generateotp', controller.sendOtp); // generates otp and sent through mail
+    router.post('/verifyotp', controller.verifyOtpForEmailVerification);
     return router
 }
 
