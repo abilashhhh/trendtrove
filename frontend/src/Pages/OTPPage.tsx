@@ -4,12 +4,12 @@ import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
 import { generateOtp, signUpUser, verifyOtp } from "../API/Auth/auth";
 import { SignUpUserInterface } from "../Types/signUpUser";
-import { toast } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
+ 
 const OTPPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const [otp, setOtp] = useState({ otp: '' });
+  const [otp, setOtp] = useState({ otp: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtp({ otp: e.target.value });
@@ -39,7 +39,9 @@ const OTPPage: React.FC = () => {
 
   const handleResendOTP = async () => {
     if (resendCount < 2) {
-      const email = JSON.parse(localStorage.getItem("signupData") || "{}").email;
+      const email = JSON.parse(
+        localStorage.getItem("signupData") || "{}"
+      ).email;
       await generateOtp(email, "email-verification");
       setCountdown(120);
       setResendTime(60);
@@ -49,18 +51,28 @@ const OTPPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+  
+    if (countdown === 0) {
+      toast.error("OTP has expired. Please request a new OTP.");
+      return;
+    }
+  
     const email = JSON.parse(localStorage.getItem("signupData") || "{}").email;
     const otpValue = otp.otp;
     try {
       const result = await verifyOtp(email, otpValue);
-      console.log("result:" , result)
+      console.log("result:", result);
       if (result.data.status === "success") {
         toast.success("Account created successfully!");
+        toast.success("Redirecting to login page...");
         // Get the user data from localStorage
         const userData = JSON.parse(localStorage.getItem("signupData") || "{}");
         await signUpUser(userData as SignUpUserInterface);
-        navigate("/signin"); // Navigate to the home page or any other desired page after successful signup
+        setTimeout(() => {
+          navigate("/signin");
+        }, 3000);
+      } else if (result.data.status === "failed") {
+        toast.error("Incorrect OTP. Try Again");
       } else {
         toast.error("Failed to create account.");
       }
@@ -69,10 +81,12 @@ const OTPPage: React.FC = () => {
       toast.error("Failed to verify OTP.");
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <TrendTroveLogo />
+      <ToastContainer />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="text-center">
@@ -83,8 +97,7 @@ const OTPPage: React.FC = () => {
               New here?{" "}
               <Link
                 to="/signup"
-                className="font-medium text-blue-400 hover:text-blue-600"
-              >
+                className="font-medium text-blue-400 hover:text-blue-600">
                 Create an account
               </Link>
             </p>
@@ -98,8 +111,7 @@ const OTPPage: React.FC = () => {
             {resendTime === 0 && resendCount < 2 && (
               <button
                 onClick={handleResendOTP}
-                className="mt-2 text-blue-600 hover:underline focus:outline-none"
-              >
+                className="mt-2 text-blue-600 hover:underline focus:outline-none">
                 Resend OTP
               </button>
             )}
@@ -117,8 +129,7 @@ const OTPPage: React.FC = () => {
             <div className="mt-4">
               <label
                 htmlFor="otp"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Enter the OTP
               </label>
               <input
@@ -134,8 +145,7 @@ const OTPPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none"
-              >
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
                 Verify OTP
               </button>
             </div>

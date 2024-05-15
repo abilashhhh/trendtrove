@@ -82,6 +82,32 @@ const authController = (
     }
   };
 
+  const emailAvailability = async (req: Request, res: Response) => {
+    const { email } = req.params;
+    console.log("email from controller:", email);
+    try {
+      const isAvailable = await dbUserRepository.getUserByEmail(email);
+      console.log("isAvailable : ", isAvailable);
+      if (isAvailable === null) {
+        res.json({
+          available: true,
+          status: "",
+        });
+      } else {
+        res.json({
+          available: false,
+          status: "Email id already registered, Try logging in",
+        });
+      }
+    } catch (error) {
+      console.error("Error checking email availability:", error);
+      res.status(500).json({
+        status: "error",
+        message: "Failed to check email availability",
+      });
+    }
+  };
+
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +143,7 @@ const authController = (
       });
     } else {
       return res.status(400).json({
-        status: "fail",
+        status: "failed",
         message: "Invalid OTP",
       });
     }
@@ -131,6 +157,7 @@ const authController = (
     usernameAvailability,
     sendOtp,
     verifyOtpForEmailVerification,
+    emailAvailability
 
   };
 };

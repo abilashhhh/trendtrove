@@ -4,7 +4,11 @@ import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { generateOtp, signUpUser, usernameAvailability } from "../API/Auth/auth";
+import {
+  generateOtp,
+  usernameAvailability,
+  emailAvailability,
+} from "../API/Auth/auth";
 import { SignUpUserInterface } from "../Types/signUpUser";
 import {
   validateEmail,
@@ -82,6 +86,7 @@ const SignupPage: React.FC = () => {
   };
 
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
 
   const checkUsernameAvailability = async (username: string) => {
     try {
@@ -92,35 +97,60 @@ const SignupPage: React.FC = () => {
     }
   };
 
+  const checkEmailAvailability = async (email: string) => {
+    try {
+      const response = await emailAvailability(email);
+      setEmailAvailable(response.available);
+    } catch (error) {
+      console.error("Error checking email availability:", error);
+    }
+  };
+
   useEffect(() => {
     if (formData.username && formData.username.trim() !== "") {
       checkUsernameAvailability(formData.username);
     }
   }, [formData.username]);
 
+  useEffect(() => {
+    if (formData.email && formData.email.trim() !== "") {
+      checkEmailAvailability(formData.email);
+    }
+  }, [formData.email ]);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Validateing fields  
+  
+    // Validateing fields
     for (const field in formData) {
       const value = formData[field as keyof SignUpUserInterface];
       if (typeof value === "string") {
         validateField(field, value);
       }
     }
-
+  
     // Checking validation errors or password mismatch
     const hasErrors =
       Object.values(validationErrors).some(error => error !== "") ||
       formData.password !== formData.confirmPassword;
-
+  
     if (!hasErrors) {
       try {
+        // Check if email is available
+        if (emailAvailable === false) {
+          toast.error("Email address is already registered. Please try logging in.");
+          return;
+        }
+  
+        // Check if username is available
+        if (usernameAvailable === false) {
+          toast.error("Username is not available. Please choose a different one.");
+          return;
+        }
+  
         // Removing confirmPassword data
         const { confirmPassword, ...userData } = formData;
-        // await signUpUser(userData as SignUpUserInterface);
         localStorage.setItem("signupData", JSON.stringify(formData));
-        generateOtp(userData.email, 'email-verification')
+        generateOtp(userData.email, "email-verification");
         toast.success("OTP sent successfully");
         setTimeout(() => {
           navigate("/otp");
@@ -138,6 +168,7 @@ const SignupPage: React.FC = () => {
       toast.error("Please fix the errors in the form");
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -152,9 +183,8 @@ const SignupPage: React.FC = () => {
             <p className="mt-2 text-sm text-gray-600">
               Or{" "}
               <Link
-                to="/sign-in"
-                className="font-medium text-blue-400 hover:text-blue-600"
-              >
+                to="/signin"
+                className="font-medium text-blue-400 hover:text-blue-600">
                 Log in to your account
               </Link>
             </p>
@@ -164,8 +194,7 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Name
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -186,8 +215,7 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Username
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -207,9 +235,9 @@ const SignupPage: React.FC = () => {
               {usernameAvailable === false && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
                   Username not available
-                </p>  
+                </p>
               )}
-              { !validationErrors.username &&  usernameAvailable === true && (
+              {!validationErrors.username && usernameAvailable === true && (
                 <p className="text-green-500 text-xs font-semibold mt-1">
                   Username available
                 </p>
@@ -219,8 +247,7 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Email address
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -237,13 +264,17 @@ const SignupPage: React.FC = () => {
                   {validationErrors.email}
                 </p>
               )}
+              {emailAvailable === false && (
+                <p className="text-red-500 text-xs font-semibold mt-1">
+                  Email id already registered, Try logging in
+                </p>
+              )}
             </div>
 
             <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Phone Number
               </label>
               <input
@@ -264,8 +295,7 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Password
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -287,8 +317,7 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Confirm Password
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -310,8 +339,7 @@ const SignupPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none"
-              >
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
                 Sign up
               </button>
             </div>

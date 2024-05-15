@@ -37,23 +37,13 @@
         throw new Error("Error getting user by username!");
       }
     }
-
-    const getUserByPhone = async( phone : number) => {
-      try {
-        const user = await User.findOne({phone})
-        return user
-      } catch (error) {
-        console.log(error);
-        throw new Error("Error getting user by phone!");
-      }
-    }
+ 
 
 
     return {
       addUser,
       getUserByEmail,
       getUserByUsername,
-      getUserByPhone
 
 
     };

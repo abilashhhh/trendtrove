@@ -18,6 +18,7 @@ const authRouter = () => {
     const controller = (0, authController_1.default)(authService_1.authService, authServiceInterface_1.authServiceInterface, userRepository_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, otpRepositoryMongoDB_1.otpRepositoryMongoDB, OTPDBRepository_1.otpDbRepository, mailSendService_1.mailSenderService, mailServiceInterface_1.mailSenderServiceInterface);
     router.post('/signup', controller.registerUser);
     router.get('/usernameavailablity/:username', controller.usernameAvailability);
+    router.get('/emailavailability/:email', controller.emailAvailability);
     router.post('/generateotp', controller.sendOtp); // generates otp and sent through mail
     router.post('/verifyotp', controller.verifyOtpForEmailVerification);
     return router;

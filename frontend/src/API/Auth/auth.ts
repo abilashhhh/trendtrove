@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AxiosError } from 'axios';
 
 import {
+  EmailAvailabilityResponse,
   SignUpUserInterface,
   SignupUserResponse,
   UsernameAvailabilityResponse,
@@ -30,6 +31,18 @@ export const usernameAvailability = async (username: string): Promise<UsernameAv
   }
 };
 
+export const emailAvailability = async (email: string): Promise<UsernameAvailabilityResponse> => {
+  try {
+    console.log("emailAvailability:", email);
+    const response = await axios.get<EmailAvailabilityResponse>(`${END_POINTS.EMAIL_AVAILABLE}/${email}`);
+    console.log("email availability from auth.ts", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+1
 
 
 export const generateOtp = async (email: string, text : string): Promise<void> => {

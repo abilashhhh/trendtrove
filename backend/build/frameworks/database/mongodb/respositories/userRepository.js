@@ -46,21 +46,10 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error getting user by username!");
         }
     });
-    const getUserByPhone = (phone) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const user = yield userModel_1.default.findOne({ phone });
-            return user;
-        }
-        catch (error) {
-            console.log(error);
-            throw new Error("Error getting user by phone!");
-        }
-    });
     return {
         addUser,
         getUserByEmail,
         getUserByUsername,
-        getUserByPhone
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

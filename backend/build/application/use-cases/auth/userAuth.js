@@ -24,10 +24,6 @@ const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, 
     if (existingUsername) {
         throw new ErrorInApplication_1.default("Username already exists!", 401);
     }
-    const existingPhoneNumber = yield dbUserRepository.getUserByPhone(user.phone);
-    if (existingPhoneNumber) {
-        throw new ErrorInApplication_1.default("Phone number already exists!", 401);
-    }
     user.password = yield authService.encryptPassword(user.password);
     yield dbUserRepository.addUser(user);
     console.log(user);

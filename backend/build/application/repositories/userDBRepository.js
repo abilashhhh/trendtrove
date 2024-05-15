@@ -14,12 +14,10 @@ const userDBRepository = (repository) => {
     const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.addUser(user); });
     const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByEmail(email); });
     const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByUsername(username); });
-    const getUserByPhone = (phone) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByPhone(phone); });
     return {
         addUser,
         getUserByEmail,
         getUserByUsername,
-        getUserByPhone,
     };
 };
 exports.userDBRepository = userDBRepository;
