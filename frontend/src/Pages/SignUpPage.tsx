@@ -80,38 +80,41 @@
         [id]: validationMessage,
       }));
     };
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-
+    
       // Validate all fields before submitting
       for (const field in formData) {
-        validateField(field, formData[field as keyof SignUpUserInterface]);
+        const value = formData[field as keyof SignUpUserInterface];
+        if (typeof value === 'string') {
+          validateField(field, value);
+        }
       }
-
+    
       // Check if there are any validation errors or password mismatch
       const hasErrors =
         Object.values(validationErrors).some(error => error !== "") ||
         formData.password !== formData.confirmPassword;
-
-      if (true) {
+    
+      if (!hasErrors) { 
         try {
           // Omit confirmPassword before sending data to the server
           const { confirmPassword, ...userData } = formData;
-          await signUpUser(userData);
+          await signUpUser(userData as SignUpUserInterface); // Type assertion
           toast.success("Signup successful");
           setTimeout(() => {
             navigate("/signin");
           }, 3000);
-        } catch (error) {
-          console.error("Error signing up user:", error.response.data.message);
-          toast.error(`Signup failed: ${error.response.data.message}`);
+        } catch (error: any) {
+          console.error("Error signing up user:", error.response?.data?.message || error.message);
+          toast.error(`Signup failed: ${error.response?.data?.message || error.message}`);
         }
       } else {
         toast.error("Please fix the errors in the form");
       }
     };
-
+    
+    
     return (
       <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <TrendTroveLogo />
