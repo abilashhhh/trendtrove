@@ -81,16 +81,11 @@ const SignupPage: React.FC = () => {
     }));
   };
 
-  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
-    null
-  );
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
 
   const checkUsernameAvailability = async (username: string) => {
     try {
       const response = await usernameAvailability(username);
-      // Update the state based on the response
-      console.log("username passed:" , username)
-      console.log("response after username passed:" , response)
       setUsernameAvailable(response.available);
     } catch (error) {
       console.error("Error checking username availability:", error);
@@ -98,11 +93,10 @@ const SignupPage: React.FC = () => {
   };
 
   useEffect(() => {
-     if (formData.username && formData.username.trim() !== "") {
-       checkUsernameAvailability(formData.username);
+    if (formData.username && formData.username.trim() !== "") {
+      checkUsernameAvailability(formData.username);
     }
   }, [formData.username]);
-  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -125,7 +119,6 @@ const SignupPage: React.FC = () => {
         // Omit confirmPassword before sending data to the server
         const { confirmPassword, ...userData } = formData;
         await signUpUser(userData as SignUpUserInterface);
-        console.log("forms submitted data : ", formData);
         toast.success("Signup successful");
         setTimeout(() => {
           navigate("/signin");
@@ -158,7 +151,8 @@ const SignupPage: React.FC = () => {
               Or{" "}
               <Link
                 to="/sign-in"
-                className="font-medium text-blue-400 hover:text-blue-600">
+                className="font-medium text-blue-400 hover:text-blue-600"
+              >
                 Log in to your account
               </Link>
             </p>
@@ -168,7 +162,8 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Name
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -189,7 +184,8 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -206,22 +202,23 @@ const SignupPage: React.FC = () => {
                   {validationErrors.username}
                 </p>
               )}
-               {usernameAvailable === null || usernameAvailable === false &&   (
-                <p className="text-red-500 text-xs font-semibold mt-1">Create a username </p>
+              {usernameAvailable === false && (
+                <p className="text-red-500 text-xs font-semibold mt-1">
+                  Username not available
+                </p>
               )}
-              {usernameAvailable === true && (
-                 <p className="text-green-500 text-xs font-semibold mt-1">Username available</p>
+              { !validationErrors.username &&  usernameAvailable === true && (
+                <p className="text-green-500 text-xs font-semibold mt-1">
+                  Username available
+                </p>
               )}
-              {usernameAvailable === false&& usernameAvailable !== null && (
-                <p className="text-red-500 text-xs font-semibold mt-1">Username not available</p>
-              )}
-             
             </div>
 
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -243,7 +240,8 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Phone Number
               </label>
               <input
@@ -264,7 +262,8 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -286,7 +285,8 @@ const SignupPage: React.FC = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Confirm Password
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
@@ -308,7 +308,8 @@ const SignupPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none"
+              >
                 Sign up
               </button>
             </div>
