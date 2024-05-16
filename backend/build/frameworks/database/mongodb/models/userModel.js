@@ -27,7 +27,6 @@ const mongoose_1 = __importStar(require("mongoose"));
 const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
-        minlength: 3,
         required: true,
     },
     username: {
@@ -81,7 +80,7 @@ const userSchema = new mongoose_1.Schema({
     },
     refreshTokenExpiresAt: {
         type: Date,
-        default: null,
+        default: Date.now() || null,
     },
     posts: [],
     savedPosts: [],

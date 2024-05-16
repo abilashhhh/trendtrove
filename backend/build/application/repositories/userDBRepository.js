@@ -13,11 +13,19 @@ exports.userDBRepository = void 0;
 const userDBRepository = (repository) => {
     const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.addUser(user); });
     const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByEmail(email); });
+    const getUserById = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserById(userId); });
     const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getUserByUsername(username); });
+    const logoutUser = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.logoutUser(userId); });
+    const addRefreshTokenAndExpiry = (email, refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.addRefreshTokenAndExpiry(email, refreshToken);
+    });
     return {
         addUser,
         getUserByEmail,
         getUserByUsername,
+        addRefreshTokenAndExpiry,
+        getUserById,
+        logoutUser
     };
 };
 exports.userDBRepository = userDBRepository;

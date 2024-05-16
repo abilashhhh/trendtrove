@@ -1,18 +1,24 @@
 import { Request, Response } from "express";
 import ErrorInApplication from "../../utils/ErrorInApplication";
-import { AuthService } from "../../frameworks/services/authService";
-import { AuthServiceInterface } from "../../application/services/authServiceInterface";
+import { AuthService } from "../../frameworks/services/authenticationService";
+import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
-import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepository";
+import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { OtpDbInterface } from "../../application/repositories/OTPDBRepository";
-import { OtpRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/otpRepositoryMongoDB";
+import { OtpRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/otpRepositoryDatabase";
 import { MailSenderService } from "../../frameworks/services/mailSendService";
 import { MailSenderServiceInterface } from "../../application/services/mailServiceInterface";
 import { UserInterface } from "../../types/userInterface";
 
+import {
+  accessTokenRefresh,
+  handleLogoutUser,
+  handleOtpVerification,
+  handleSendOtp,
+  userLogin,
+  userRegister,
+} from "../../application/use-cases/auth/userAuthApplication";
 
-import {  handleOtpVerification, handleSendOtp, userLogin, userRegister, } from "../../application/use-cases/auth/userAuth";
-  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const authController = (
@@ -26,12 +32,17 @@ const authController = (
   mailSenderServiceInterface: MailSenderServiceInterface
 ) => {
   const authService = authServiceInterface(authServiceImplementation());
-  const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
-  const dbOtpRepository = otpDbRepositoryInterface(otpDBRepositoryImplementation());
-  const mailSenderService = mailSenderServiceInterface(mailSenderServiceImplementation());
+  const dbUserRepository = userDBRepositoryInterface(
+    userDBRepositoryImplementation()
+  );
+  const dbOtpRepository = otpDbRepositoryInterface(
+    otpDBRepositoryImplementation()
+  );
+  const mailSenderService = mailSenderServiceInterface(
+    mailSenderServiceImplementation()
+  );
 
-
-  /////////////////////////////////////////////////////////// 
+  ///////////////////////////////////////////////////////////
 
   const registerUser = async (req: Request, res: Response) => {
     const user: UserInterface = req.body;
@@ -87,7 +98,6 @@ const authController = (
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
   const emailAvailability = async (req: Request, res: Response) => {
     const { email } = req.params;
     console.log("email from controller:", email);
@@ -114,12 +124,7 @@ const authController = (
     }
   };
 
-
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
   const sendOtp = async (req: Request, res: Response) => {
     const { email, text }: { email: string; text: string } = req.body;
@@ -130,20 +135,15 @@ const authController = (
     });
   };
 
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const verifyOtpForEmailVerification = async (req: Request, res: Response) => {
     const { email, otp }: { email: string; otp: string } = req.body;
-    console.log("req.body in verifyotp: " , req.body)
-    const isOtpValid = await handleOtpVerification(
-      email,
-      otp,
-      dbOtpRepository,
-    );
-    console.log("isOtpValid: ", isOtpValid)
+    console.log("req.body in verifyotp: ", req.body);
+    const isOtpValid = await handleOtpVerification(email, otp, dbOtpRepository);
+    console.log("isOtpValid: ", isOtpValid);
     if (isOtpValid) {
-      return  res.json({
+      return res.json({
         status: "success",
         message: "OTP verified",
       });
@@ -156,21 +156,26 @@ const authController = (
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+
   const signInUser = async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
-    
     try {
-      const { userDetails } = await userLogin(
+      const { userDetails, refreshToken , accessToken } = await userLogin(
         email,
         password,
         dbUserRepository,
         authService
       );
+
+    res.cookie('refreshToken' , refreshToken ,{
+      httpOnly: true, secure : true , sameSite : 'none', maxAge: 7*24*60*60*1000 // 7days
+    })
+
       res.json({
         status: "success",
         message: "user verified",
         user: userDetails,
+        accessToken
       });
     } catch (error) {
       res.status(404).json({
@@ -179,7 +184,54 @@ const authController = (
       });
     }
   };
-  
+
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ 
+
+  const refreshAccessToken = async (req : Request , res : Response) => {
+  try {
+    const cookies  = req.cookies ;
+    const accessToken =  await accessTokenRefresh(
+      cookies, dbUserRepository, authService
+    )
+    res.json({ accessToken });
+  } catch (error) {
+    
+  }
+  }
+ 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  const logoutUser = async (req : Request , res : Response) => {
+    try {
+      const {userId} = {userId : string} = req.body;
+      const  cookies = req.cookies
+      if (!cookies?.refreshToken) {
+        res.sendStatus(204);
+      }
+      await handleLogoutUser(userId, dbUserRepository);
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        sameSite: "none",
+      });
+      res.json({ 
+        status: "success",
+        message: "Cookie Cleared" 
+      });
+    } catch (error) {
+      res.json({ 
+        status: "fail",
+        message: "Cookie Not Cleared" 
+      });
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
   return {
     registerUser,
     usernameAvailability,
@@ -187,9 +239,11 @@ const authController = (
     verifyOtpForEmailVerification,
     emailAvailability,
     signInUser,
-    
-
+    refreshAccessToken,
+    logoutUser
   };
 };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default authController;

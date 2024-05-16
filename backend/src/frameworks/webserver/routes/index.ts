@@ -1,5 +1,5 @@
 import { Application } from "express";
-import authRouter from "./auth";
+import authRouter from "./authRoutes";
 
 const routes = (app: Application) => {
   app.use("/api/auth", authRouter());

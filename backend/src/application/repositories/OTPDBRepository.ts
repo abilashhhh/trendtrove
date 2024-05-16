@@ -1,4 +1,4 @@
-import { OtpRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/otpRepositoryMongoDB";
+import { OtpRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/otpRepositoryDatabase";
 
 export const otpDbRepository = (
   repository: ReturnType<OtpRepositoryMongoDB>

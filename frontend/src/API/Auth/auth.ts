@@ -8,7 +8,10 @@ import {
   SignupUserResponse,
   UsernameAvailabilityResponse,
 } from "../../Types/signUpUser";
-import { SignInUserInterface, SignInUserResponse } from "../../Types/signInUser";
+
+
+import { LogoutResponse, SignInUserInterface, SignInUserResponse } from "../../Types/signInUser";
+import axiosUserInstance, { axiosRefreshInstance } from "../Axios/axiosUserInstance";
 
 export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUserResponse> => {
   try {
@@ -76,6 +79,23 @@ export const signin = async( payload : SignInUserInterface) : Promise<SignInUser
     handleAxiosError(error);
     throw error;
   }} 
+
+
+  export const logoutUser = async() : Promise<LogoutResponse> => {
+    const response = await axiosUserInstance.delete<LogoutResponse>(END_POINTS.LOGIN_USER)
+    return response.data
+  }
+ 
+
+  export const refreshAccessToken = async (): Promise<{
+    accessToken: string;
+  }> => {
+    const response = await axiosRefreshInstance.get<{ accessToken: string }>(
+      END_POINTS.REFRESH_TOKEN,
+      { withCredentials: true }
+    );
+    return response.data;
+  };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -6,10 +6,11 @@ function BasePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen  flex flex-col justify-center py-12 sm:px-6 lg:px-8">
        <div className="text-center text-slate-600 font-bold mt-1 lg:mt-2 text-sm lg:text-base">
       Welcome to
       </div>
+      <img src="/TrendTroveLogo2.jpg" className="w-60 place-self-center" alt="" />
       <TrendTroveLogo />
      <div className="flex justify-center gap-3 pt-5">
      <div className="text-center">

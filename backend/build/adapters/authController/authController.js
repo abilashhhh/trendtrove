@@ -13,18 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ErrorInApplication_1 = __importDefault(require("../../utils/ErrorInApplication"));
-const userAuth_1 = require("../../application/use-cases/auth/userAuth");
+const userAuthApplication_1 = require("../../application/use-cases/auth/userAuthApplication");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const authController = (authServiceImplementation, authServiceInterface, userDBRepositoryImplementation, userDBRepositoryInterface, otpDBRepositoryImplementation, otpDbRepositoryInterface, mailSenderServiceImplementation, mailSenderServiceInterface) => {
     const authService = authServiceInterface(authServiceImplementation());
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const dbOtpRepository = otpDbRepositoryInterface(otpDBRepositoryImplementation());
     const mailSenderService = mailSenderServiceInterface(mailSenderServiceImplementation());
-    /////////////////////////////////////////////////////////// 
+    ///////////////////////////////////////////////////////////
     const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
         try {
-            yield (0, userAuth_1.userRegister)(user, dbUserRepository, authService);
+            yield (0, userAuthApplication_1.userRegister)(user, dbUserRepository, authService);
             res.status(200).json({
                 status: "success",
                 message: "User registered successfully",
@@ -105,7 +105,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
-        yield (0, userAuth_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
+        yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
         res.json({
             status: "success",
             message: "OTP sent",
@@ -115,7 +115,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     const verifyOtpForEmailVerification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, otp } = req.body;
         console.log("req.body in verifyotp: ", req.body);
-        const isOtpValid = yield (0, userAuth_1.handleOtpVerification)(email, otp, dbOtpRepository);
+        const isOtpValid = yield (0, userAuthApplication_1.handleOtpVerification)(email, otp, dbOtpRepository);
         console.log("isOtpValid: ", isOtpValid);
         if (isOtpValid) {
             return res.json({
@@ -134,11 +134,15 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     const signInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         try {
-            const { userDetails } = yield (0, userAuth_1.userLogin)(email, password, dbUserRepository, authService);
+            const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.userLogin)(email, password, dbUserRepository, authService);
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true, secure: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 // 7days
+            });
             res.json({
                 status: "success",
                 message: "user verified",
                 user: userDetails,
+                accessToken
             });
         }
         catch (error) {
@@ -148,6 +152,42 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const cookies = req.cookies;
+            const accessToken = yield (0, userAuthApplication_1.accessTokenRefresh)(cookies, dbUserRepository, authService);
+            res.json({ accessToken });
+        }
+        catch (error) {
+        }
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId } = { userId: string } = req.body;
+            const cookies = req.cookies;
+            if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {
+                res.sendStatus(204);
+            }
+            yield (0, userAuthApplication_1.handleLogoutUser)(userId, dbUserRepository);
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                sameSite: "none",
+            });
+            res.json({
+                status: "success",
+                message: "Cookie Cleared"
+            });
+        }
+        catch (error) {
+            res.json({
+                status: "fail",
+                message: "Cookie Not Cleared"
+            });
+        }
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     return {
         registerUser,
         usernameAvailability,
@@ -155,6 +195,9 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         verifyOtpForEmailVerification,
         emailAvailability,
         signInUser,
+        refreshAccessToken,
+        logoutUser
     };
 };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 exports.default = authController;

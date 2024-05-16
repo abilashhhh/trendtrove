@@ -1,11 +1,13 @@
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 const otpGenerator = require("otp-generator");
 import { UserDBInterface } from "../../repositories/userDBRepository";
-import { AuthServiceInterface } from "../../services/authServiceInterface";
+import { AuthServiceInterface } from "../../services/authenticationServiceInterface";
 import { UserInterface } from "../../../types/userInterface";
 import { OtpDbInterface } from "../../repositories/OTPDBRepository";
-import { mailSenderService } from "../../../frameworks/services/mailSendService";
 import { MailSenderServiceInterface } from "../../services/mailServiceInterface";
+// import { mailSenderService } from "../../../frameworks/services/mailSendService";
+
+////////////////////////////////////////////////////////////////////////////////
 
 export const userRegister = async (
   user: UserInterface,
@@ -20,7 +22,7 @@ export const userRegister = async (
   const existingUsername = await dbUserRepository.getUserByUsername(
     user.username
   );
- 
+
   if (existingUsername) {
     throw new ErrorInApplication("Username already exists!", 401);
   }
@@ -30,7 +32,7 @@ export const userRegister = async (
   console.log(user);
 };
 
-
+////////////////////////////////////////////////////////////////////////////////
 
 export const handleSendOtp = async (
   email: string,
@@ -43,21 +45,20 @@ export const handleSendOtp = async (
       lowerCaseAlphabets: false,
       upperCaseAlphabets: false,
       specialChars: false,
-    })
-    await dbOtpRepository.saveNewOtp({email, otp});
+    });
+    await dbOtpRepository.saveNewOtp({ email, otp });
     if (text === "email-verification") {
-      await mailSenderService.sendVerificationEmail(email, Number(otp))
+      await mailSenderService.sendVerificationEmail(email, Number(otp));
     } else if (text === "forgot-password") {
-      await mailSenderService.sendForgotPasswordEmail(email, Number(otp))
+      await mailSenderService.sendForgotPasswordEmail(email, Number(otp));
     }
   } catch (error) {
-    console.log("Error in handleSendOtp: ", error)
-    throw new ErrorInApplication("Error in handleSendOtp" , 401)
+    console.log("Error in handleSendOtp: ", error);
+    throw new ErrorInApplication("Error in handleSendOtp", 401);
   }
 };
 
-
-
+////////////////////////////////////////////////////////////////////////////////
 
 export const handleOtpVerification = async (
   email: string,
@@ -67,7 +68,7 @@ export const handleOtpVerification = async (
   try {
     const latestOtp = await dbOtpRepository.getLatestOtp(email);
     if (!latestOtp || latestOtp.otp !== otp) {
-      return false; 
+      return false;
     }
     return true; // OTP verification successful
   } catch (error) {
@@ -75,6 +76,8 @@ export const handleOtpVerification = async (
     throw new ErrorInApplication("Error in handleOtpVerification", 401);
   }
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 export const handleResendOtp = async (
   email: string,
@@ -100,10 +103,7 @@ export const handleResendOtp = async (
   }
 };
 
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
 
 export const userLogin = async (
   email: string,
@@ -111,11 +111,11 @@ export const userLogin = async (
   dbUserRepository: ReturnType<UserDBInterface>,
   authService: ReturnType<AuthServiceInterface>
 ) => {
-  const user = await dbUserRepository.getUserByEmail(email); 
+  const user = await dbUserRepository.getUserByEmail(email);
   if (!user) {
     throw new ErrorInApplication("Invalid email or password!", 401);
   }
-  if (user.isBlocked){
+  if (user.isBlocked) {
     throw new ErrorInApplication("Your account has been blocked!", 401);
   }
   const isPasswordCorrect = await authService.comparePassword(
@@ -138,11 +138,66 @@ export const userLogin = async (
     city: user?.city,
     followers: user?.followers,
     following: user?.following,
-    isAccountVerified: user?.isVerifiedAccount , 
-    isBlock: user?.isBlocked
+    isAccountVerified: user?.isVerifiedAccount,
+    isBlock: user?.isBlocked,
   };
-  return { userDetails};
+
+  const refreshToken = authService.generateRefreshToken({userId : user._id.toString() , role : "client"})
+  const accessToken = authService.generateAccessToken({userId : user._id.toString() , role : "client"})
+  await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken)   // setting the expirry 7days
+
+  return { userDetails, refreshToken , accessToken };
 };
 
 
- 
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const accessTokenRefresh = async (
+  cookies: { refreshToken: string },
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  if (!cookies?.refreshToken) {
+    throw new ErrorInApplication("Invalid token1",401);
+  }
+  const refreshToken = cookies.refreshToken;
+  const { userId, role } = authService.verifyRefreshToken(refreshToken.toString());
+  if (!userId || role !== "client") {
+    throw new ErrorInApplication("Invalid token!",401);
+  }
+  const user = await dbUserRepository.getUserById(userId);
+  if (!user?.refreshToken && !user?.refreshTokenExpiresAt) {
+    throw new ErrorInApplication("Invalid token!",401);
+  }
+  if (user ) {
+    const expiresAt = user.refreshTokenExpiresAt.getTime();
+    if (Date.now() > expiresAt) {
+      throw new ErrorInApplication("Invalid token!",401);
+    }
+  }
+  const newAccessToken = authService.generateAccessToken({ userId: userId, role: "client" });
+  return newAccessToken;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+const tokenVerification = async(token : string ,
+  authService : ReturnType<AuthServiceInterface>
+) => {
+  const decodedToken = authService.verifyAccessToken(token);
+  if(!decodedToken){
+    throw new ErrorInApplication("Invalid token!",401);
+  }else{
+    return decodedToken
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+export const handleLogoutUser = async(userId : string , dbUserRepository : ReturnType<UserDBInterface> ) => {
+  await dbUserRepository.logoutUser(userId)
+} 

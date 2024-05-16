@@ -1,10 +1,5 @@
 import { Document, Schema, model } from "mongoose";
-
-interface OtpInterface extends Document {
-    email: string;
-    otp: string;
-    createdAt: Date;
-}
+import { OtpInterface } from "../../../../types/otpInterface";
 
 const otpSchema = new Schema<OtpInterface>({
     email: {

@@ -4,7 +4,6 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
-      minlength: 3,
       required: true,
     },
     username: {
@@ -44,6 +43,7 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
     isVerifiedAccount: {
       type: Boolean,
       default: false,
@@ -58,7 +58,7 @@ const userSchema = new Schema(
     },
     refreshTokenExpiresAt: {
       type: Date,
-      default: null,
+      default: Date.now() || null,
     },
     posts: [],
     savedPosts: [],
