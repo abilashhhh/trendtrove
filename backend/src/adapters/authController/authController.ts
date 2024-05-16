@@ -11,7 +11,7 @@ import { MailSenderServiceInterface } from "../../application/services/mailServi
 import { UserInterface } from "../../types/userInterface";
 
 
-import {  handleOtpVerification, handleSendOtp, userRegister, } from "../../application/use-cases/auth/userAuth";
+import {  handleOtpVerification, handleSendOtp, userLogin, userRegister, } from "../../application/use-cases/auth/userAuth";
   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +29,9 @@ const authController = (
   const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
   const dbOtpRepository = otpDbRepositoryInterface(otpDBRepositoryImplementation());
   const mailSenderService = mailSenderServiceInterface(mailSenderServiceImplementation());
+
+
+  /////////////////////////////////////////////////////////// 
 
   const registerUser = async (req: Request, res: Response) => {
     const user: UserInterface = req.body;
@@ -81,6 +84,9 @@ const authController = (
       });
     }
   };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   const emailAvailability = async (req: Request, res: Response) => {
     const { email } = req.params;
@@ -148,16 +154,40 @@ const authController = (
       });
     }
   };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-
-
-
+  const signInUser = async (req: Request, res: Response) => {
+    const { email, password }: { email: string; password: string } = req.body;
+    
+    try {
+      const { userDetails } = await userLogin(
+        email,
+        password,
+        dbUserRepository,
+        authService
+      );
+      res.json({
+        status: "success",
+        message: "user verified",
+        user: userDetails,
+      });
+    } catch (error) {
+      res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+  };
+  
   return {
     registerUser,
     usernameAvailability,
     sendOtp,
     verifyOtpForEmailVerification,
-    emailAvailability
+    emailAvailability,
+    signInUser,
+    
 
   };
 };

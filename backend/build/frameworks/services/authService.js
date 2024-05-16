@@ -14,8 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authService = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = __importDefault(require("../../config"));
 const authService = () => {
     const encryptPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
         const salt = yield bcryptjs_1.default.genSalt(10);
@@ -25,43 +23,9 @@ const authService = () => {
     const comparePassword = (password, hashedPassword) => {
         return bcryptjs_1.default.compare(password, hashedPassword);
     };
-    const generateAccessToken = (payload) => {
-        const accessToken = jsonwebtoken_1.default.sign(payload, config_1.default.JWT_ACCESS_CODE, {
-            expiresIn: "15m",
-        });
-        return accessToken;
-    };
-    const generateRefreshToken = (payload) => {
-        const refreshToken = jsonwebtoken_1.default.sign(payload, config_1.default.JWT_REFRESH_CODE, {
-            expiresIn: "15m",
-        });
-        return refreshToken;
-    };
-    const verifyAccessToken = (token) => {
-        try {
-            const payload = jsonwebtoken_1.default.verify(token, config_1.default.JWT_ACCESS_CODE);
-            return payload;
-        }
-        catch (error) {
-            throw new Error("Invalid access token");
-        }
-    };
-    const verifyRefreshToken = (token) => {
-        try {
-            const payload = jsonwebtoken_1.default.verify(token, config_1.default.JWT_REFRESH_CODE);
-            return payload;
-        }
-        catch (error) {
-            throw new Error("Invalid refresh token");
-        }
-    };
     return {
         encryptPassword,
         comparePassword,
-        generateAccessToken,
-        generateRefreshToken,
-        verifyAccessToken,
-        verifyRefreshToken,
     };
 };
 exports.authService = authService;

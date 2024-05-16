@@ -20,6 +20,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const dbOtpRepository = otpDbRepositoryInterface(otpDBRepositoryImplementation());
     const mailSenderService = mailSenderServiceInterface(mailSenderServiceImplementation());
+    /////////////////////////////////////////////////////////// 
     const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
         try {
@@ -73,6 +74,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const emailAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email } = req.params;
         console.log("email from controller:", email);
@@ -128,12 +130,31 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const signInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, password } = req.body;
+        try {
+            const { userDetails } = yield (0, userAuth_1.userLogin)(email, password, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "user verified",
+                user: userDetails,
+            });
+        }
+        catch (error) {
+            res.status(404).json({
+                status: "error",
+                message: "User not found",
+            });
+        }
+    });
     return {
         registerUser,
         usernameAvailability,
         sendOtp,
         verifyOtpForEmailVerification,
-        emailAvailability
+        emailAvailability,
+        signInUser,
     };
 };
 exports.default = authController;

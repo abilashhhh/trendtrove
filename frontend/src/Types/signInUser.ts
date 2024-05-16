@@ -1,5 +1,5 @@
 
-export interface LoginUserInterface {
+export interface SignInUserInterface {
     email: string,
     password: string
 }
@@ -26,11 +26,9 @@ export interface User {
     createdAt?: string;
 }
 
-export interface LoginUserResponse {
-    accessToken: string | null;
+export interface SignInUserResponse {
     message: string,
     status: string,
-    user: User | null;
 }
 
 export interface GoogleLoginInterface {

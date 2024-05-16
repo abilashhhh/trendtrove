@@ -9,6 +9,7 @@ import {
   usernameAvailability,
   emailAvailability,
 } from "../API/Auth/auth";
+
 import { SignUpUserInterface } from "../Types/signUpUser";
 import {
   validateEmail,

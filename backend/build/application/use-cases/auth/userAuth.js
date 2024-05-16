@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
+exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const otpGenerator = require("otp-generator");
 const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
@@ -85,3 +85,35 @@ const handleResendOtp = (email, text, dbOtpRepository, mailSenderService) => __a
     }
 });
 exports.handleResendOtp = handleResendOtp;
+const userLogin = (email, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const user = yield dbUserRepository.getUserByEmail(email);
+    if (!user) {
+        throw new ErrorInApplication_1.default("Invalid email or password!", 401);
+    }
+    if (user.isBlocked) {
+        throw new ErrorInApplication_1.default("Your account has been blocked!", 401);
+    }
+    const isPasswordCorrect = yield authService.comparePassword(password, ((_a = user === null || user === void 0 ? void 0 : user.password) === null || _a === void 0 ? void 0 : _a.toString()) || "");
+    if (!isPasswordCorrect) {
+        throw new ErrorInApplication_1.default("Invalid email or password!", 401);
+    }
+    const userDetails = {
+        _id: user === null || user === void 0 ? void 0 : user._id.toString(),
+        name: user === null || user === void 0 ? void 0 : user.name,
+        username: user === null || user === void 0 ? void 0 : user.username,
+        email: user === null || user === void 0 ? void 0 : user.email,
+        phone: user === null || user === void 0 ? void 0 : user.phone,
+        coverPhoto: user === null || user === void 0 ? void 0 : user.coverPhoto,
+        dp: user === null || user === void 0 ? void 0 : user.dp,
+        bio: user === null || user === void 0 ? void 0 : user.bio,
+        gender: user === null || user === void 0 ? void 0 : user.gender,
+        city: user === null || user === void 0 ? void 0 : user.city,
+        followers: user === null || user === void 0 ? void 0 : user.followers,
+        following: user === null || user === void 0 ? void 0 : user.following,
+        isAccountVerified: user === null || user === void 0 ? void 0 : user.isVerifiedAccount,
+        isBlock: user === null || user === void 0 ? void 0 : user.isBlocked
+    };
+    return { userDetails };
+});
+exports.userLogin = userLogin;

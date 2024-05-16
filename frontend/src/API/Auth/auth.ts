@@ -8,6 +8,7 @@ import {
   SignupUserResponse,
   UsernameAvailabilityResponse,
 } from "../../Types/signUpUser";
+import { SignInUserInterface, SignInUserResponse } from "../../Types/signInUser";
 
 export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUserResponse> => {
   try {
@@ -66,7 +67,16 @@ export const verifyOtp = async (email: string, otp: string): Promise<any> => {
   }
 };
 
- 
+
+export const signin = async( payload : SignInUserInterface) : Promise<SignInUserResponse> => {
+  try {
+    const response = await axios.post(END_POINTS.LOGIN_USER, payload);
+    return response.data
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }} 
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

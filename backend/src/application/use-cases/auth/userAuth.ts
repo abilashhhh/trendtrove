@@ -99,3 +99,50 @@ export const handleResendOtp = async (
     throw new ErrorInApplication("Error in handleResendOtp", 401);
   }
 };
+
+
+
+
+
+
+export const userLogin = async (
+  email: string,
+  password: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  const user = await dbUserRepository.getUserByEmail(email); 
+  if (!user) {
+    throw new ErrorInApplication("Invalid email or password!", 401);
+  }
+  if (user.isBlocked){
+    throw new ErrorInApplication("Your account has been blocked!", 401);
+  }
+  const isPasswordCorrect = await authService.comparePassword(
+    password,
+    user?.password?.toString() || ""
+  );
+  if (!isPasswordCorrect) {
+    throw new ErrorInApplication("Invalid email or password!", 401);
+  }
+  const userDetails = {
+    _id: user?._id.toString(),
+    name: user?.name,
+    username: user?.username,
+    email: user?.email,
+    phone: user?.phone,
+    coverPhoto: user?.coverPhoto,
+    dp: user?.dp,
+    bio: user?.bio,
+    gender: user?.gender,
+    city: user?.city,
+    followers: user?.followers,
+    following: user?.following,
+    isAccountVerified: user?.isVerifiedAccount , 
+    isBlock: user?.isBlocked
+  };
+  return { userDetails};
+};
+
+
+ 

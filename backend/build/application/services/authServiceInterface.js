@@ -17,25 +17,9 @@ const authServiceInterface = (service) => {
     const comparePassword = (password, hashedPassword) => {
         return service.comparePassword(password, hashedPassword);
     };
-    const generateAccessToken = (payload) => {
-        return service.generateAccessToken(payload);
-    };
-    const generateRefreshToken = (payload) => {
-        return service.generateRefreshToken(payload);
-    };
-    const verifyAccessToken = (token) => {
-        return service.verifyAccessToken(token);
-    };
-    const verifyRefreshToken = (token) => {
-        return service.verifyRefreshToken(token);
-    };
     return {
         encryptPassword,
         comparePassword,
-        generateAccessToken,
-        generateRefreshToken,
-        verifyAccessToken,
-        verifyRefreshToken,
     };
 };
 exports.authServiceInterface = authServiceInterface;
