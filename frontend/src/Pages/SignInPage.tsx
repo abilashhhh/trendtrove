@@ -6,6 +6,8 @@ import { SignInUserInterface } from "../Types/signInUser";
 import { signin } from "../API/Auth/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../Redux/UserAuthSlice/authSlice";
 
 const SignInPage: React.FC = () => {
   const [formData, setFormData] = useState<SignInUserInterface>({
@@ -13,7 +15,8 @@ const SignInPage: React.FC = () => {
     password: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -27,13 +30,14 @@ const SignInPage: React.FC = () => {
     e.preventDefault();
 
     console.log("Sign in form submitted:", formData);
-    
+
     try {
       const response = await signin(formData);
-      
+
       if (response.status === "success") {
+        dispatch(setCredentials({ user: response.user, accessToken: response.accessToken }));
         toast.success("Successfully signed in");
-        navigate('/home')
+        navigate('/home');
       } else {
         toast.error("Failed to sign in");
       }

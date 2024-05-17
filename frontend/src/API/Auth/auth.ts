@@ -82,7 +82,7 @@ export const signin = async( payload : SignInUserInterface) : Promise<SignInUser
 
 
   export const logoutUser = async() : Promise<LogoutResponse> => {
-    const response = await axiosUserInstance.delete<LogoutResponse>(END_POINTS.LOGIN_USER)
+    const response = await axiosUserInstance.delete<LogoutResponse>(END_POINTS.LOGOUT_USER)
     return response.data
   }
  

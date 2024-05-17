@@ -7,7 +7,7 @@ function TrendTroveLogo() {
         <span className="text-slate-600 mt-6 text-2xl sm:text-3xl lg:text-4xl font-extrabold">
           Trend
         </span>
-        <span className="mt-1 text-2xl sm:text-3xl lg:text-4xl font-extrabold">
+        <span className="mt-1 text-black-800  text-2xl sm:text-3xl lg:text-4xl font-extrabold">
           Trove
         </span>
       </div>
