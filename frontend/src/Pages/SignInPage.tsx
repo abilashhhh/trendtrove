@@ -36,6 +36,8 @@ const SignInPage: React.FC = () => {
 
       if (response.status === "success") {
         dispatch(setCredentials({ user: response.user, accessToken: response.accessToken }));
+         console.log("response.user : ", response.user)
+         console.log("response.accessToken : ", response.accessToken)
         toast.success("Successfully signed in");
         navigate('/home');
       } else {

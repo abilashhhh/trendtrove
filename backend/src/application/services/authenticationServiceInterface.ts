@@ -9,22 +9,21 @@ export const authServiceInterface = (service: AuthServiceReturn) => {
     return service.comparePassword(password, hashedPassword);
   };
 
-  const generateAccessToken = (payload : {userId: string , role : string}) => {
-    return service.generateAccessToken(payload)
-  } 
+  const generateAccessToken = (payload: { userId: string; role: string }) => {
+    return service.generateAccessToken(payload);
+  };
 
-  const generateRefreshToken = (payload : {userId : string , role :string}) => {
-    return service.generateRefreshToken(payload)
-  }
+  const generateRefreshToken = (payload: { userId: string; role: string }) => {
+    return service.generateRefreshToken(payload);
+  };
 
-  const verifyAccessToken = (token : string ) => {
-    return service.verifyAccessToken(token)
-  }
+  const verifyAccessToken = (token: string) => {
+    return service.verifyAccessToken(token);
+  };
 
-  const verifyRefreshToken = (token : string) => {
-    return service.verifyRefreshToken(token)
-  }
-
+  const verifyRefreshToken = (token: string) => {
+    return service.verifyRefreshToken(token);
+  };
 
   return {
     encryptPassword,

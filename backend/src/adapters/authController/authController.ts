@@ -17,10 +17,8 @@ import {
   handleSendOtp,
   userLogin,
   userRegister,
-} from "../../application/use-cases/auth/userAuthApplication";
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  
+} from "../../application/use-cases/auth/userAuthApplication"; 
 const authController = (
   authServiceImplementation: AuthService,
   authServiceInterface: AuthServiceInterface,
@@ -41,8 +39,6 @@ const authController = (
   const mailSenderService = mailSenderServiceInterface(
     mailSenderServiceImplementation()
   );
-
-  ///////////////////////////////////////////////////////////
 
   const registerUser = async (req: Request, res: Response) => {
     const user: UserInterface = req.body;
@@ -68,15 +64,11 @@ const authController = (
     }
   };
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const usernameAvailability = async (req: Request, res: Response) => {
     const { username } = req.params;
-    console.log("username from controller:", username);
     try {
       const isAvailable = await dbUserRepository.getUserByUsername(username);
-      console.log("isAvailable : ", isAvailable);
-      if (isAvailable === null) {
+      if (!isAvailable) {
         res.json({
           available: true,
           status: "Username is available",
@@ -96,15 +88,11 @@ const authController = (
     }
   };
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const emailAvailability = async (req: Request, res: Response) => {
     const { email } = req.params;
-    console.log("email from controller:", email);
     try {
       const isAvailable = await dbUserRepository.getUserByEmail(email);
-      console.log("isAvailable : ", isAvailable);
-      if (isAvailable === null) {
+      if (!isAvailable) {
         res.json({
           available: true,
           status: "",
@@ -124,8 +112,6 @@ const authController = (
     }
   };
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const sendOtp = async (req: Request, res: Response) => {
     const { email, text }: { email: string; text: string } = req.body;
     await handleSendOtp(email, text, dbOtpRepository, mailSenderService);
@@ -135,13 +121,9 @@ const authController = (
     });
   };
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const verifyOtpForEmailVerification = async (req: Request, res: Response) => {
     const { email, otp }: { email: string; otp: string } = req.body;
-    console.log("req.body in verifyotp: ", req.body);
     const isOtpValid = await handleOtpVerification(email, otp, dbOtpRepository);
-    console.log("isOtpValid: ", isOtpValid);
     if (isOtpValid) {
       return res.json({
         status: "success",
@@ -155,21 +137,22 @@ const authController = (
     }
   };
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const signInUser = async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
     try {
-      const { userDetails, refreshToken , accessToken } = await userLogin(
+      const { userDetails, refreshToken, accessToken } = await userLogin(
         email,
         password,
         dbUserRepository,
         authService
       );
 
-    res.cookie('refreshToken' , refreshToken ,{
-      httpOnly: true, secure : true , sameSite : 'none', maxAge: 7*24*60*60*1000 // 7days
-    })
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
 
       res.json({
         status: "success",
@@ -185,30 +168,27 @@ const authController = (
     }
   };
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
- 
-
-  const refreshAccessToken = async (req : Request , res : Response) => {
-  try {
-    const cookies  = req.cookies ;
-    const accessToken =  await accessTokenRefresh(
-      cookies, dbUserRepository, authService
-    )
-    res.json({ accessToken });
-  } catch (error) {
-    
-  }
-  }
- 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-  const logoutUser = async (req : Request , res : Response) => {
+  const refreshAccessToken = async (req: Request, res: Response) => {
     try {
-      const {userId} = {userId : string} = req.body;
-      const  cookies = req.cookies
+      const cookies = req.cookies;
+      const accessToken = await accessTokenRefresh(
+        cookies, dbUserRepository, authService
+      );
+      
+      res.json({ accessToken });
+    } catch (error) {
+      res.status(404).json({
+        status: "error",
+        message: "Failed to refresh access token",
+      });
+    }
+  };
+  
+
+  const logoutUser = async (req: Request, res: Response) => {
+    try {
+      const { userId }: { userId: string } = req.body;
+      const cookies = req.cookies;
       if (!cookies?.refreshToken) {
         res.sendStatus(204);
       }
@@ -217,20 +197,17 @@ const authController = (
         httpOnly: true,
         sameSite: "none",
       });
-      res.json({ 
+      res.json({
         status: "success",
-        message: "Cookie Cleared" 
+        message: "Cookie Cleared"
       });
     } catch (error) {
-      res.json({ 
+      res.json({
         status: "fail",
-        message: "Cookie Not Cleared" 
+        message: "Cookie Not Cleared"
       });
     }
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  };
 
   return {
     registerUser,
@@ -243,7 +220,5 @@ const authController = (
     logoutUser
   };
 };
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default authController;

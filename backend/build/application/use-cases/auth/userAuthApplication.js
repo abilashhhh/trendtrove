@@ -117,7 +117,7 @@ const userLogin = (email, password, dbUserRepository, authService) => __awaiter(
         city: user === null || user === void 0 ? void 0 : user.city,
         followers: user === null || user === void 0 ? void 0 : user.followers,
         following: user === null || user === void 0 ? void 0 : user.following,
-        isAccountVerified: user === null || user === void 0 ? void 0 : user.isVerifiedAccount,
+        isVerifiedAccount: user === null || user === void 0 ? void 0 : user.isVerifiedAccount,
         isBlock: user === null || user === void 0 ? void 0 : user.isBlocked,
     };
     const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
@@ -129,22 +129,20 @@ exports.userLogin = userLogin;
 ////////////////////////////////////////////////////////////////////////////////
 const accessTokenRefresh = (cookies, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {
-        throw new ErrorInApplication_1.default("Invalid token1", 401);
+        throw new ErrorInApplication_1.default("Invalid token", 401);
     }
     const refreshToken = cookies.refreshToken;
     const { userId, role } = authService.verifyRefreshToken(refreshToken.toString());
     if (!userId || role !== "client") {
-        throw new ErrorInApplication_1.default("Invalid token!", 401);
+        throw new ErrorInApplication_1.default("Invalid token", 401);
     }
     const user = yield dbUserRepository.getUserById(userId);
-    if (!(user === null || user === void 0 ? void 0 : user.refreshToken) && !(user === null || user === void 0 ? void 0 : user.refreshTokenExpiresAt)) {
+    if (!(user === null || user === void 0 ? void 0 : user.refreshToken) || !(user === null || user === void 0 ? void 0 : user.refreshTokenExpiresAt)) {
         throw new ErrorInApplication_1.default("Invalid token!", 401);
     }
-    if (user) {
-        const expiresAt = user.refreshTokenExpiresAt.getTime();
-        if (Date.now() > expiresAt) {
-            throw new ErrorInApplication_1.default("Invalid token!", 401);
-        }
+    const expiresAt = user.refreshTokenExpiresAt.getTime();
+    if (!expiresAt || Date.now() > expiresAt) {
+        throw new ErrorInApplication_1.default("Invalid token!", 401);
     }
     const newAccessToken = authService.generateAccessToken({ userId: userId, role: "client" });
     return newAccessToken;

@@ -27,6 +27,8 @@ export interface User {
 }
 
 export interface SignInUserResponse {
+    user: User | null;
+    accessToken: string | null;
     message: string,
     status: string,
 }

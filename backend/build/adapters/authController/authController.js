@@ -14,13 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ErrorInApplication_1 = __importDefault(require("../../utils/ErrorInApplication"));
 const userAuthApplication_1 = require("../../application/use-cases/auth/userAuthApplication");
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const authController = (authServiceImplementation, authServiceInterface, userDBRepositoryImplementation, userDBRepositoryInterface, otpDBRepositoryImplementation, otpDbRepositoryInterface, mailSenderServiceImplementation, mailSenderServiceInterface) => {
     const authService = authServiceInterface(authServiceImplementation());
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const dbOtpRepository = otpDbRepositoryInterface(otpDBRepositoryImplementation());
     const mailSenderService = mailSenderServiceInterface(mailSenderServiceImplementation());
-    ///////////////////////////////////////////////////////////
     const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
         try {
@@ -46,14 +44,11 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             }
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const usernameAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = req.params;
-        console.log("username from controller:", username);
         try {
             const isAvailable = yield dbUserRepository.getUserByUsername(username);
-            console.log("isAvailable : ", isAvailable);
-            if (isAvailable === null) {
+            if (!isAvailable) {
                 res.json({
                     available: true,
                     status: "Username is available",
@@ -74,14 +69,11 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const emailAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email } = req.params;
-        console.log("email from controller:", email);
         try {
             const isAvailable = yield dbUserRepository.getUserByEmail(email);
-            console.log("isAvailable : ", isAvailable);
-            if (isAvailable === null) {
+            if (!isAvailable) {
                 res.json({
                     available: true,
                     status: "",
@@ -102,7 +94,6 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
         yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
@@ -111,12 +102,9 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             message: "OTP sent",
         });
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const verifyOtpForEmailVerification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, otp } = req.body;
-        console.log("req.body in verifyotp: ", req.body);
         const isOtpValid = yield (0, userAuthApplication_1.handleOtpVerification)(email, otp, dbOtpRepository);
-        console.log("isOtpValid: ", isOtpValid);
         if (isOtpValid) {
             return res.json({
                 status: "success",
@@ -130,13 +118,15 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const signInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         try {
             const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.userLogin)(email, password, dbUserRepository, authService);
             res.cookie('refreshToken', refreshToken, {
-                httpOnly: true, secure: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 // 7days
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             });
             res.json({
                 status: "success",
@@ -152,7 +142,6 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const cookies = req.cookies;
@@ -160,12 +149,15 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             res.json({ accessToken });
         }
         catch (error) {
+            res.status(404).json({
+                status: "error",
+                message: "Failed to refresh access token",
+            });
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { userId } = { userId: string } = req.body;
+            const { userId } = req.body;
             const cookies = req.cookies;
             if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {
                 res.sendStatus(204);
@@ -187,7 +179,6 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     return {
         registerUser,
         usernameAvailability,
@@ -199,5 +190,4 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         logoutUser
     };
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 exports.default = authController;

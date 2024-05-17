@@ -13,6 +13,7 @@ const otpRepositoryDatabase_1 = require("../../database/mongodb/respositories/ot
 const OTPDBRepository_1 = require("../../../application/repositories/OTPDBRepository");
 const mailSendService_1 = require("../../services/mailSendService");
 const mailServiceInterface_1 = require("../../../application/services/mailServiceInterface");
+const authMiddleware_1 = __importDefault(require("../middlewares/authMiddleware")); // add auth middleware
 const authRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, authController_1.default)(authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface, userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, otpRepositoryDatabase_1.otpRepositoryMongoDB, OTPDBRepository_1.otpDbRepository, mailSendService_1.mailSenderService, mailServiceInterface_1.mailSenderServiceInterface);
@@ -23,6 +24,7 @@ const authRouter = () => {
     router.post("/generateotp", controller.sendOtp); // generates otp and sent through mail
     router.post("/verifyotp", controller.verifyOtpForEmailVerification);
     router.get('/refresh', controller.refreshAccessToken);
+    router.delete('/logout', authMiddleware_1.default, controller.logoutUser);
     return router;
 };
 exports.default = authRouter;

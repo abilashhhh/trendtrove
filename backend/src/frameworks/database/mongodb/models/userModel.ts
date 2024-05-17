@@ -58,7 +58,7 @@ const userSchema = new Schema(
     },
     refreshTokenExpiresAt: {
       type: Date,
-      default: Date.now() || null,
+      default: null,
     },
     posts: [],
     savedPosts: [],

@@ -17,7 +17,7 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      setIsVerifiedAccount(user.isVerifiedAccount);
+      setIsVerifiedAccount(user?.isVerifiedAccount);
       console.log("User from app.tsx:" , user);
       console.log("isVerifiedAccount : ", isVerifiedAccount)
     }
@@ -40,3 +40,6 @@ function App() {
 }
 
 export default App;
+
+
+ 

@@ -32,7 +32,7 @@ const authMiddleware = async (
     } else {
       res.status(401).json({
         success: false,
-        message: "Token not found/ not valid",
+        message: "Token not found / not valid",
       });
     }
   } catch (error: any) {

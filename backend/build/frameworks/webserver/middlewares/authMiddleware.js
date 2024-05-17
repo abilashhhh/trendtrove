@@ -40,7 +40,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         else {
             res.status(401).json({
                 success: false,
-                message: "Token not found/ not valid",
+                message: "Token not found / not valid",
             });
         }
     }

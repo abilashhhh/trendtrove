@@ -138,7 +138,7 @@ export const userLogin = async (
     city: user?.city,
     followers: user?.followers,
     following: user?.following,
-    isAccountVerified: user?.isVerifiedAccount,
+    isVerifiedAccount: user?.isVerifiedAccount,
     isBlock: user?.isBlocked,
   };
 
@@ -152,33 +152,31 @@ export const userLogin = async (
 
 
 ////////////////////////////////////////////////////////////////////////////////
-
 export const accessTokenRefresh = async (
   cookies: { refreshToken: string },
   dbUserRepository: ReturnType<UserDBInterface>,
   authService: ReturnType<AuthServiceInterface>
 ) => {
   if (!cookies?.refreshToken) {
-    throw new ErrorInApplication("Invalid token1",401);
+    throw new ErrorInApplication("Invalid token",401);
   }
   const refreshToken = cookies.refreshToken;
   const { userId, role } = authService.verifyRefreshToken(refreshToken.toString());
   if (!userId || role !== "client") {
-    throw new ErrorInApplication("Invalid token!",401);
+    throw new ErrorInApplication("Invalid token",401);
   }
   const user = await dbUserRepository.getUserById(userId);
-  if (!user?.refreshToken && !user?.refreshTokenExpiresAt) {
+  if (!user?.refreshToken || !user?.refreshTokenExpiresAt) {
     throw new ErrorInApplication("Invalid token!",401);
   }
-  if (user ) {
-    const expiresAt = user.refreshTokenExpiresAt.getTime();
-    if (Date.now() > expiresAt) {
-      throw new ErrorInApplication("Invalid token!",401);
-    }
+  const expiresAt = user.refreshTokenExpiresAt.getTime();
+  if (!expiresAt || Date.now() > expiresAt) {
+    throw new ErrorInApplication("Invalid token!",401);
   }
   const newAccessToken = authService.generateAccessToken({ userId: userId, role: "client" });
   return newAccessToken;
 };
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,6 +191,7 @@ const tokenVerification = async(token : string ,
     return decodedToken
   }
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,8 @@ const authRouter = () => {
   router.post("/generateotp", controller.sendOtp); // generates otp and sent through mail
   router.post("/verifyotp", controller.verifyOtpForEmailVerification);
   router.get('/refresh', controller.refreshAccessToken);
+  router.delete('/logout', authMiddleware, controller.logoutUser)
+
 
   return router;
 };
