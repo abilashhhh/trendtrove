@@ -12,6 +12,7 @@ import {
 
 import { SignUpUserInterface } from "../Types/signUpUser";
 import {
+  validateConfirmPassword,
   validateEmail,
   validateName,
   validatePassword,
@@ -76,6 +77,9 @@ const SignupPage: React.FC = () => {
       case "password":
         validationMessage = validatePassword(value);
         break;
+      case "confirmPassword":
+        validationMessage = validateConfirmPassword(value);
+        break;
       default:
         break;
     }
@@ -118,9 +122,13 @@ const SignupPage: React.FC = () => {
       checkEmailAvailability(formData.email);
     }
   }, [formData.email ]);
+
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
+
+    
     // Validateing fields
     for (const field in formData) {
       const value = formData[field as keyof SignUpUserInterface];
@@ -134,7 +142,7 @@ const SignupPage: React.FC = () => {
       Object.values(validationErrors).some(error => error !== "") ||
       formData.password !== formData.confirmPassword;
   
-    if (!hasErrors) {
+    if (!hasErrors && (formData.name && formData.username && formData.email && formData.password && formData.confirmPassword) !== ""   ) {
       try {
         // Check if email is available
         if (emailAvailable === false) {
@@ -169,7 +177,7 @@ const SignupPage: React.FC = () => {
       toast.error("Please fix the errors in the form");
     }
   };
-  
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -191,7 +199,7 @@ const SignupPage: React.FC = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4"  noValidate>
             <div>
               <label
                 htmlFor="name"

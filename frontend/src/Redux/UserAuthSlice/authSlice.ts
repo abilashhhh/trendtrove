@@ -25,10 +25,10 @@ const authSlice = createSlice({
       state.isAuthenticated = !!accessToken;  
 
       if (user && accessToken) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("signupData", JSON.stringify(user));
         localStorage.setItem("accessToken", accessToken);
       } else {
-        localStorage.removeItem("user");
+        localStorage.removeItem("signupData");
         localStorage.removeItem("accessToken");
       }
     },
@@ -36,7 +36,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.accessToken = null;
-      localStorage.removeItem("user");
+      localStorage.removeItem("signupData");
       localStorage.removeItem("accessToken");
     },
   },

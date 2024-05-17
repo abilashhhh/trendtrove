@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useResolvedPath } from "react-router-dom";
 import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
 import { SignInUserInterface } from "../Types/signInUser";
@@ -15,6 +15,7 @@ const SignInPage: React.FC = () => {
     password: "",
   });
 
+ 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -29,6 +30,11 @@ const SignInPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!formData.email || !formData.password) {
+      toast.error("Empty data. Please fill in all fields.");
+      return;
+    }
+
     console.log("Sign in form submitted:", formData);
 
     try {
@@ -38,8 +44,11 @@ const SignInPage: React.FC = () => {
         dispatch(setCredentials({ user: response.user, accessToken: response.accessToken }));
          console.log("response.user : ", response.user)
          console.log("response.accessToken : ", response.accessToken)
-        toast.success("Successfully signed in");
-        navigate('/home');
+        toast.success("Sign in successful");
+        toast.success("Navigating to homepage...");
+     setTimeout(()=> {
+      navigate('/home');
+     },3000)
       } else {
         toast.error("Failed to sign in");
       }
@@ -69,7 +78,7 @@ const SignInPage: React.FC = () => {
               </Link>
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
               <label
                 htmlFor="email"

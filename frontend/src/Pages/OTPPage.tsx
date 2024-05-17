@@ -51,12 +51,15 @@ const OTPPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+ 
+    
     if (countdown === 0) {
       toast.error("OTP has expired. Please request a new OTP.");
       return;
     }
   
+   
+    
     const email = JSON.parse(localStorage.getItem("signupData") || "{}").email;
     const otpValue = otp.otp;
     try {
@@ -125,7 +128,7 @@ const OTPPage: React.FC = () => {
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div className="mt-4">
               <label
                 htmlFor="otp"
