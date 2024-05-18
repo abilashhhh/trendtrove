@@ -10,10 +10,11 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./PrivateRoute";
 import { StoreType } from "./Redux/Store/reduxStore";
-
+import LoadingSpinner from "./Components/LoadingSpinner";
 function App() {
   const user = useSelector((state: StoreType) => state.userAuth.user);
   const [isVerifiedAccount, setIsVerifiedAccount] = useState<boolean>(true);
+  
 
   useEffect(() => {
     if (user) {

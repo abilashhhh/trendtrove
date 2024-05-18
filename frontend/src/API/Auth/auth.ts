@@ -9,13 +9,13 @@ import {
   UsernameAvailabilityResponse
 } from "../../Types/signUpUser"
 import {
+  GoogleLoginInterface,
   LogoutResponse,
   SignInUserInterface,
   SignInUserResponse
 } from "../../Types/signInUser"
 import axiosUserInstance, { axiosRefreshInstance } from "../Axios/axiosUserInstance"
-import { logout } from "../../Redux/UserAuthSlice/authSlice"
-import store from "../../Redux/Store/reduxStore"
+ 
 
 export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUserResponse> => {
   try {
@@ -26,6 +26,8 @@ export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUs
     throw error
   }
 }
+
+
 
 export const usernameAvailability = async (username: string): Promise<UsernameAvailabilityResponse> => {
   try {
@@ -79,6 +81,16 @@ export const signin = async (payload: SignInUserInterface): Promise<SignInUserRe
     throw error
   }
 }
+
+export const loginUsingGoogle = async (
+  payload: GoogleLoginInterface
+): Promise<SignInUserResponse> => {
+  const response = await axiosRefreshInstance.post<SignInUserResponse>(
+    END_POINTS.GOOGLE_LOGIN_SIGNUP_USER,
+    payload
+  );
+  return response.data;
+};
 
 export const logoutUser = async (): Promise<LogoutResponse> => {
   try {

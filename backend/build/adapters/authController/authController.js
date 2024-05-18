@@ -142,6 +142,31 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
+    const loginOrSignUpUsingGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const user = req.body;
+        try {
+            const { userDetails, refreshToken, accessToken } = yield userLoginUsingGoogle(user, dbUserRepository, authService);
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: true, // use in HTTPS only
+                sameSite: "none",
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            });
+            res.json({
+                status: "success",
+                message: "User verified",
+                user: userDetails,
+                accessToken,
+            });
+        }
+        catch (error) {
+            console.error("Error logging in or signing up with Google:", error);
+            res.status(500).json({
+                status: "error",
+                message: "Failed to log in or sign up using Google",
+            });
+        }
+    });
     const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const cookies = req.cookies;
@@ -187,7 +212,8 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         emailAvailability,
         signInUser,
         refreshAccessToken,
-        logoutUser
+        logoutUser,
+        loginOrSignUpUsingGoogle
     };
 };
 exports.default = authController;

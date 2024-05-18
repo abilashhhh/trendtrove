@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import "./styles.css";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,8 @@ import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 import MainContent from "../Components/HomePage/HomePageMiddleContainer";
 import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
+import LoadingSpinner from "../Components/LoadingSpinner";
+
 
 function HomePage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -38,6 +40,19 @@ function HomePage() {
       toast.error("Log out failed");
     }
   };
+  
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);  
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>

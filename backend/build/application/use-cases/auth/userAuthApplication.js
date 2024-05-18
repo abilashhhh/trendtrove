@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleLogoutUser = exports.accessTokenRefresh = exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
+exports.handleLogoutUser = exports.accessTokenRefresh = exports.userLoginUsingGoogle = exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const otpGenerator = require("otp-generator");
 // import { mailSenderService } from "../../../frameworks/services/mailSendService";
@@ -126,6 +126,72 @@ const userLogin = (email, password, dbUserRepository, authService) => __awaiter(
     return { userDetails, refreshToken, accessToken };
 });
 exports.userLogin = userLogin;
+////////////////////////////////////////////////////////////////////////////////
+const userLoginUsingGoogle = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("user google info= ", user);
+    const isExistingEmail = yield dbUserRepository.getUserByEmail(user.email);
+    if (isExistingEmail) {
+        if (isExistingEmail.isBlocked) {
+            throw new ErrorInApplication_1.default("Your account has been blocked!", 401);
+        }
+        const refreshToken = authService.generateRefreshToken({ userId: isExistingEmail._id.toString(), role: "client" });
+        const accessToken = authService.generateAccessToken({ userId: isExistingEmail._id.toString(), role: "client" });
+        const userDetails = {
+            _id: isExistingEmail._id.toString(),
+            name: isExistingEmail.name,
+            username: isExistingEmail.username,
+            email: isExistingEmail.email,
+            phone: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.phone,
+            coverPhoto: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.coverPhoto,
+            dp: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.dp,
+            bio: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.bio,
+            gender: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.gender,
+            city: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.city,
+            followers: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.followers,
+            following: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.following,
+            isVerifiedAccount: isExistingEmail.isVerifiedAccount,
+            isGoogleSignIn: isExistingEmail.isGoogleSignedIn,
+            isBlocked: isExistingEmail.isBlocked,
+        };
+        yield dbUserRepository.addRefreshTokenAndExpiry(user.email, refreshToken);
+        return { userDetails, refreshToken, accessToken };
+    }
+    const newUser = { name: user.name, email: user.email, isAccountVerified: true, isGoogleSignIn: true };
+    const newUserData = yield dbUserRepository.addUser(newUser);
+    if (newUserData) {
+        const refreshToken = authService.generateRefreshToken({
+            userId: newUserData._id.toString(),
+            role: "client"
+        });
+        const accessToken = authService.generateAccessToken({
+            userId: newUserData._id.toString(),
+            role: "client"
+        });
+        const userDetails = {
+            _id: newUserData._id.toString(),
+            name: newUserData.name,
+            username: newUserData.username,
+            email: newUserData.email,
+            phone: newUserData === null || newUserData === void 0 ? void 0 : newUserData.phone,
+            coverPhoto: newUserData === null || newUserData === void 0 ? void 0 : newUserData.coverPhoto,
+            dp: newUserData === null || newUserData === void 0 ? void 0 : newUserData.dp,
+            bio: newUserData === null || newUserData === void 0 ? void 0 : newUserData.bio,
+            gender: newUserData === null || newUserData === void 0 ? void 0 : newUserData.gender,
+            city: newUserData === null || newUserData === void 0 ? void 0 : newUserData.city,
+            followers: newUserData === null || newUserData === void 0 ? void 0 : newUserData.followers,
+            following: newUserData === null || newUserData === void 0 ? void 0 : newUserData.following,
+            isVerifiedAccount: newUserData.isVerifiedAccount,
+            isGoogleSignIn: true,
+            isBlocked: newUserData.isBlocked,
+        };
+        yield dbUserRepository.addRefreshTokenAndExpiry(newUserData.email, refreshToken);
+        return { userDetails, refreshToken, accessToken };
+    }
+    else {
+        throw new ErrorInApplication_1.default("Something went wrong!", 500);
+    }
+});
+exports.userLoginUsingGoogle = userLoginUsingGoogle;
 ////////////////////////////////////////////////////////////////////////////////
 const accessTokenRefresh = (cookies, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {

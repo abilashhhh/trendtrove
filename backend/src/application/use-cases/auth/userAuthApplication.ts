@@ -151,6 +151,97 @@ export const userLogin = async (
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+export const userLoginUsingGoogle = async (
+  user: { name: string; email: string },
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  console.log("user google info= ", user)
+  const isExistingEmail = await dbUserRepository.getUserByEmail(user.email);
+  if (isExistingEmail) {
+    if(isExistingEmail.isBlocked){
+      throw new ErrorInApplication("Your account has been blocked!", 401);
+    }
+    const refreshToken = authService.generateRefreshToken(
+      { userId: isExistingEmail._id.toString(), role: "client" }
+    );
+    const accessToken = authService.generateAccessToken(
+      { userId: isExistingEmail._id.toString(), role: "client" }
+    );
+    const userDetails = {
+      _id: isExistingEmail._id.toString(),
+      name: isExistingEmail.name,
+      username: isExistingEmail.username,
+      email: isExistingEmail.email,
+      phone: isExistingEmail?.phone,
+      coverPhoto: isExistingEmail?.coverPhoto,
+      dp: isExistingEmail?.dp,
+      bio: isExistingEmail?.bio,
+      gender: isExistingEmail?.gender,
+      city: isExistingEmail?.city,
+      followers: isExistingEmail?.followers,
+      following: isExistingEmail?.following,
+      isVerifiedAccount: isExistingEmail.isVerifiedAccount,
+      isGoogleSignIn: isExistingEmail.isGoogleSignedIn,
+      isBlocked: isExistingEmail.isBlocked,
+    };
+    await dbUserRepository.addRefreshTokenAndExpiry(user.email, refreshToken);
+    return { userDetails, refreshToken, accessToken };
+  }
+  const newUser = { name: user.name, email: user.email, isAccountVerified: true, isGoogleSignIn: true };
+  const newUserData = await dbUserRepository.addUser(newUser);
+  if (newUserData) {
+    const refreshToken = authService.generateRefreshToken(
+      {
+        userId: newUserData._id.toString(),
+        role: "client"
+      }
+    );
+    const accessToken = authService.generateAccessToken(
+      {
+        userId: newUserData._id.toString(),
+        role: "client"
+      }
+    );
+    const userDetails = {
+      _id: newUserData._id.toString(),
+      name: newUserData.name,
+      username: newUserData.username,
+      email: newUserData.email,
+      phone: newUserData?.phone,
+      coverPhoto: newUserData?.coverPhoto,
+      dp: newUserData?.dp,
+      bio: newUserData?.bio,
+      gender: newUserData?.gender,
+      city: newUserData?.city,
+      followers: newUserData?.followers,
+      following: newUserData?.following,
+      isVerifiedAccount: newUserData.isVerifiedAccount,
+      isGoogleSignIn: true,
+      isBlocked : newUserData.isBlocked,
+    };
+    await dbUserRepository.addRefreshTokenAndExpiry(
+      newUserData.email,
+      refreshToken
+    );
+    return { userDetails, refreshToken, accessToken };
+  } else {
+    throw new ErrorInApplication(
+      "Something went wrong!",
+      500
+    );
+  }
+};
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 export const accessTokenRefresh = async (
   cookies: { refreshToken: string },
