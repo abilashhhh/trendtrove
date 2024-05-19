@@ -1,6 +1,17 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { StoreType } from "../../Redux/Store/reduxStore";
 
-const Header = ({  toggleLeftSidebar }) => {
+interface HeaderProps {
+  toggleLeftSidebar: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
+  const currentUser: any = useSelector((state: StoreType) => state.userAuth.user);
+
+  console.log("use selector", currentUser);
+
   return (
     <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2">
       <div className="bg-gray-200 dark:bg-gray-900 text-black dark:text-white p-4 flex justify-between items-center rounded-lg">
@@ -15,7 +26,20 @@ const Header = ({  toggleLeftSidebar }) => {
             Trove
           </span>
         </h1>
-       
+
+        <div className="flex items-center space-x-2">
+          {currentUser ? (
+            <Link to="/profile">
+              <img
+                className="rounded-full h-12 w-12 object-cover"
+                src={currentUser.dp}
+                alt="User Profile"
+              />
+            </Link>
+          ) : (
+            <span className="text-white">Guest</span>
+          )}
+        </div>
       </div>
     </div>
   );

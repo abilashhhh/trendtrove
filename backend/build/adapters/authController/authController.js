@@ -19,6 +19,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -156,9 +167,6 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     const loginOrSignUpUsingGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
         try {
-            console.log(" /////////////////////////////////////////////////////");
-            console.log("Data received in the loginOrSignUpUsingGoogle from the baceknd : ", user);
-            console.log(" /////////////////////////////////////////////////////");
             const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.handleGoogleLoginOrSignup)(user, dbUserRepository, authService);
             console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken, accessToken);
             res.cookie("refreshToken", refreshToken, {
@@ -167,10 +175,13 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
                 sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             });
+            // Remove the password from userDetails
+            const _a = userDetails._doc, { password } = _a, userDetailsWithoutPassword = __rest(_a, ["password"]);
+            console.log("Returning user details: ", userDetailsWithoutPassword);
             res.json({
                 status: "success",
                 message: "User verified",
-                user: userDetails,
+                user: userDetailsWithoutPassword,
                 accessToken,
             });
         }

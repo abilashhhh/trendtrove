@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
-import Google from "../Components/GoogleButton/Google";
 import { generateOtp, signUpUser, verifyOtp } from "../API/Auth/auth";
 import { SignUpUserInterface } from "../Types/signUpUser";
 import { ToastContainer, toast } from "react-toastify";
@@ -65,11 +64,13 @@ const OTPPage: React.FC = () => {
     try {
       const result = await verifyOtp(email, otpValue);
       console.log("result:", result);
-      if (result.data.status === "success") {
+      if (result.status === "success") {
         toast.success("Account created successfully!");
         toast.success("Redirecting to login page...");
         // Get the user data from localStorage
         const userData = JSON.parse(localStorage.getItem("signupData") || "{}");
+
+        console.log("userdata from localstrorage: ", userData)
         await signUpUser(userData as SignUpUserInterface);
         setTimeout(() => {
           navigate("/signin");
@@ -99,9 +100,9 @@ const OTPPage: React.FC = () => {
             <p className="mt-2 text-sm text-gray-600">
               New here?{" "}
               <Link
-                to="/signup"
+                to="/signin"
                 className="font-medium text-blue-400 hover:text-blue-600">
-                Create an account
+               Already have an account ? Login
               </Link>
             </p>
           </div>
@@ -153,7 +154,6 @@ const OTPPage: React.FC = () => {
               </button>
             </div>
 
-            <Google />
           </form>
           {countdown > 0 && (
             <p className="text-gray-500 mt-4">

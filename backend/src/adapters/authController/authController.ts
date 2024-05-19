@@ -396,27 +396,28 @@ const authController = (
       });
     }
   };
-
   const loginOrSignUpUsingGoogle = async (req: Request, res: Response) => {
     const user = req.body;
     try {
-      console.log(" /////////////////////////////////////////////////////")
-      console.log("Data received in the loginOrSignUpUsingGoogle from the baceknd : ", user)
-      console.log(" /////////////////////////////////////////////////////")
       const { userDetails, refreshToken, accessToken } = await handleGoogleLoginOrSignup(user, dbUserRepository, authService);
-
-      console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken , accessToken)
+  
+      console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken , accessToken);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true, // use in HTTPS only
         sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-
+  
+      // Remove the password from userDetails
+      const { password, ...userDetailsWithoutPassword } = userDetails._doc;
+  
+      console.log("Returning user details: ", userDetailsWithoutPassword);
+  
       res.json({
         status: "success",
         message: "User verified",
-        user: userDetails,
+        user: userDetailsWithoutPassword,
         accessToken,
       });
     } catch (error) {
@@ -427,6 +428,7 @@ const authController = (
       });
     }
   };
+  
 
   const refreshAccessToken = async (req: Request, res: Response) => {
     try {

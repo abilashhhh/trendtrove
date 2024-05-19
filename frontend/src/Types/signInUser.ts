@@ -5,6 +5,7 @@ export interface SignInUserInterface {
 }
 
 export interface User {
+    _doc: any;
     _id?: string;
     name: string;
     username?: string;

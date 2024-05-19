@@ -172,6 +172,7 @@ const handleAxiosError = (error: any) => {
 export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUserResponse> => {
   try {
     const response = await axios.post<SignupUserResponse>(END_POINTS.SIGNUP_USER, payload);
+    
     return response.data;
   } catch (error) {
     handleAxiosError(error);

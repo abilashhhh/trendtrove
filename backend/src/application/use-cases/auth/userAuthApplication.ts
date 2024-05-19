@@ -452,7 +452,8 @@ export const userLogin = async (
     followers: user?.followers,
     following: user?.following,
     isVerifiedAccount: user?.isVerifiedAccount,
-    isBlock: user?.isBlocked,
+    isGoogleSignedIn: user?.isGoogleSignedIn,
+    isBlocked: user?.isBlocked,
   };
 
   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
@@ -560,7 +561,7 @@ export const userRegisterUsingGoogle = async (
   try {
     console.log("Separate code running, userRegisterUsingGoogle user details:", user);
 
-    const username = user.name.replace(/\s/g, '') + Math.floor(Math.random() * 100);
+    const username = user.name.toLocaleLowerCase().replace(/\s/g, '') + Math.floor(Math.random() * 100);
     const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
     const newPassword = await authService.encryptPassword(generatedPassword);
     console.log("Generated password:", newPassword);

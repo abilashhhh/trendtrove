@@ -383,7 +383,8 @@ const userLogin = (email, password, dbUserRepository, authService) => __awaiter(
         followers: user === null || user === void 0 ? void 0 : user.followers,
         following: user === null || user === void 0 ? void 0 : user.following,
         isVerifiedAccount: user === null || user === void 0 ? void 0 : user.isVerifiedAccount,
-        isBlock: user === null || user === void 0 ? void 0 : user.isBlocked,
+        isGoogleSignedIn: user === null || user === void 0 ? void 0 : user.isGoogleSignedIn,
+        isBlocked: user === null || user === void 0 ? void 0 : user.isBlocked,
     };
     const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
     const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
@@ -461,7 +462,7 @@ exports.handleGoogleLoginOrSignup = handleGoogleLoginOrSignup;
 const userRegisterUsingGoogle = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Separate code running, userRegisterUsingGoogle user details:", user);
-        const username = user.name.replace(/\s/g, '') + Math.floor(Math.random() * 100);
+        const username = user.name.toLocaleLowerCase().replace(/\s/g, '') + Math.floor(Math.random() * 100);
         const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
         const newPassword = yield authService.encryptPassword(generatedPassword);
         console.log("Generated password:", newPassword);
