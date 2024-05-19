@@ -10,6 +10,11 @@ const RightSidebar = () => {
         <p>Some content for the right sidebar</p>
         <p>Some content for the right sidebar</p>
         <p>Some content for the right sidebar</p>
+       
+        <p>Some content for the right sidebar</p>
+        <p>Some content for the right sidebar</p>
+        <p>Some content for the right sidebar</p>
+        <p>Some content for the right sidebar</p>
         <p>Some content for the right sidebar</p>
         <p>Some content for the right sidebar</p>
         <p>Some content for the right sidebar</p>
@@ -47,6 +52,7 @@ const RightSidebar = () => {
         <p>Some content for the right sidebar</p>
         <p>Some content for the right sidebar</p>
       </div>
+        <p>Some content for the right sidebar</p>
     </aside>
   );
 };

@@ -1,15 +1,50 @@
+// // ProfileMainCenterComponent.js
+// import React from "react";
+// import Followers from "./ProfileCenter/Followers";
+// import Following from "./ProfileCenter/Following";
+// import Profile from "./ProfileCenter/Profile";
+
+// const ProfileMainCenterComponent: React.FC = () => {
+//   return (
+//     <main className="flex flex-auto md:flex-row bg-gray-800 dark:bg-gray-700 text-black dark:text-white min-h-screen overflow-y-auto  no-scrollbar">
+//       <div className="flex-1 w-full overflow-y-auto  no-scrollbar">
+//         <Profile />
+//       </div>
+//       <div className=" flex ">
+//         <div className="   no-scrollbar overflow-y-auto">
+//           <Followers />
+//         </div>
+//         <div className="overflow-y-auto  no-scrollbar ">
+//           <Following />
+//         </div>
+//       </div>
+//     </main>
+//   );
+// };
+
+// export default ProfileMainCenterComponent;
+
+
 import React from "react";
+import Followers from "./ProfileCenter/Followers";
+import Following from "./ProfileCenter/Following";
+import Profile from "./ProfileCenter/Profile";
 
-const ProfileMainCenterComponent = () => {
+const ProfileMainCenterComponent: React.FC = () => {
   return (
-    <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
-      <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
-        <h1 className=" font-bold underline text-center pt-5" >PROFILE PAGE</h1>
+    <main className="flex flex-auto md:flex-row bg-gray-800 dark:bg-gray-700 text-black dark:text-white min-h-screen overflow-y-auto no-scrollbar">
+      <div className="flex-1 w-full overflow-y-auto no-scrollbar">
+        <Profile />
+      </div>
 
-
-<img src="/TrendTroveLogo2.jpg" alt="" />
-
-
+      <div className="hidden md:flex overflow-y-auto">
+        <div className="no-scrollbar overflow-y-auto">
+          <Followers />
+        </div>
+        
+        <div className="overflow-y-auto no-scrollbar">
+          <Following />
+        </div>
       </div>
     </main>
   );

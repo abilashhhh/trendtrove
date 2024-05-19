@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 import ProfileMainCenterComponent from "../Components/ProfilePage/ProfileMainCenterComponent";
-import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
+import HomePageRightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../Components/LoadingSpinner";
@@ -39,13 +39,13 @@ function ProfilePage() {
       toast.error("Log out failed");
     }
   };
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500);  
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -69,7 +69,7 @@ function ProfilePage() {
             handleLogout={handleLogout}
           />
           <ProfileMainCenterComponent />
-          <RightSidebar />
+          <HomePageRightSidebar />
         </div>
       </div>
     </>
