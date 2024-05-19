@@ -1,4 +1,12 @@
 "use strict";
+// import ErrorInApplication from "../../../utils/ErrorInApplication";
+// const otpGenerator = require("otp-generator");
+// import { UserDBInterface } from "../../repositories/userDBRepository";
+// import { AuthServiceInterface } from "../../services/authenticationServiceInterface";
+// import { GoogleUserInterface, UserInterface } from "../../../types/userInterface";
+// import { OtpDbInterface } from "../../repositories/OTPDBRepository";
+// import { MailSenderServiceInterface } from "../../services/mailServiceInterface";
+// // import { mailSenderService } from "../../../frameworks/services/mailSendService";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,11 +20,268 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleLogoutUser = exports.accessTokenRefresh = exports.userLoginUsingGoogle = exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
+exports.userLoginUsingGoogle = exports.userRegisterUsingGoogle = exports.handleGoogleLoginOrSignup = exports.handleLogoutUser = exports.tokenVerification = exports.accessTokenRefresh = exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
+// ////////////////////////////////////////////////////////////////////////////////
+// export const userRegister = async (
+//   user: UserInterface,
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   const existingEmail = await dbUserRepository.getUserByEmail(user.email);
+//   if (existingEmail) {
+//     throw new ErrorInApplication("Email already exists", 401);
+//   }
+//   const existingUsername = await dbUserRepository.getUserByUsername(
+//     user.username
+//   );
+//   if (existingUsername) {
+//     throw new ErrorInApplication("Username already exists!", 401);
+//   }
+//   user.password = await authService.encryptPassword(user.password);
+//   await dbUserRepository.addUser(user);
+//   console.log(user);
+// };
+// ////////////////////////////////////////////////////////////////////////////////
+// export const handleSendOtp = async (
+//   email: string,
+//   text: string,
+//   dbOtpRepository: ReturnType<OtpDbInterface>,
+//   mailSenderService: ReturnType<MailSenderServiceInterface>
+// ) => {
+//   try {
+//     const otp = otpGenerator.generate(6, {
+//       lowerCaseAlphabets: false,
+//       upperCaseAlphabets: false,
+//       specialChars: false,
+//     });
+//     await dbOtpRepository.saveNewOtp({ email, otp });
+//     if (text === "email-verification") {
+//       await mailSenderService.sendVerificationEmail(email, Number(otp));
+//     } else if (text === "forgot-password") {
+//       await mailSenderService.sendForgotPasswordEmail(email, Number(otp));
+//     }
+//   } catch (error) {
+//     console.log("Error in handleSendOtp: ", error);
+//     throw new ErrorInApplication("Error in handleSendOtp", 401);
+//   }
+// };
+// ////////////////////////////////////////////////////////////////////////////////
+// export const handleOtpVerification = async (
+//   email: string,
+//   otp: string,
+//   dbOtpRepository: ReturnType<OtpDbInterface>
+// ) => {
+//   try {
+//     const latestOtp = await dbOtpRepository.getLatestOtp(email);
+//     if (!latestOtp || latestOtp.otp !== otp) {
+//       return false;
+//     }
+//     return true; // OTP verification successful
+//   } catch (error) {
+//     console.log("Error in handleOtpVerification: ", error);
+//     throw new ErrorInApplication("Error in handleOtpVerification", 401);
+//   }
+// };
+// ////////////////////////////////////////////////////////////////////////////////
+// export const handleResendOtp = async (
+//   email: string,
+//   text: string,
+//   dbOtpRepository: ReturnType<OtpDbInterface>,
+//   mailSenderService: ReturnType<MailSenderServiceInterface>
+// ) => {
+//   try {
+//     const otp = otpGenerator.generate(6, {
+//       lowerCaseAlphabets: false,
+//       upperCaseAlphabets: false,
+//       specialChars: false,
+//     });
+//     await dbOtpRepository.saveNewOtp({ email, otp });
+//     if (text === "email-verification") {
+//       await mailSenderService.sendVerificationEmail(email, Number(otp));
+//     } else if (text === "forgot-password") {
+//       await mailSenderService.sendForgotPasswordEmail(email, Number(otp));
+//     }
+//   } catch (error) {
+//     console.log("Error in handleResendOtp: ", error);
+//     throw new ErrorInApplication("Error in handleResendOtp", 401);
+//   }
+// };
+// ////////////////////////////////////////////////////////////////////////////////
+// export const userLogin = async (
+//   email: string,
+//   password: string,
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   const user = await dbUserRepository.getUserByEmail(email);
+//   if (!user) {
+//     throw new ErrorInApplication("Invalid email or password!", 401);
+//   }
+//   if (user.isBlocked) {
+//     throw new ErrorInApplication("Your account has been blocked!", 401);
+//   }
+//   const isPasswordCorrect = await authService.comparePassword(
+//     password,
+//     user?.password?.toString() || ""
+//   );
+//   if (!isPasswordCorrect) {
+//     throw new ErrorInApplication("Invalid email or password!", 401);
+//   }
+//   const userDetails = {
+//     _id: user?._id.toString(),
+//     name: user?.name,
+//     username: user?.username,
+//     email: user?.email,
+//     phone: user?.phone,
+//     coverPhoto: user?.coverPhoto,
+//     dp: user?.dp,
+//     bio: user?.bio,
+//     gender: user?.gender,
+//     city: user?.city,
+//     followers: user?.followers,
+//     following: user?.following,
+//     isVerifiedAccount: user?.isVerifiedAccount,
+//     isBlock: user?.isBlocked,
+//   };
+//   const refreshToken = authService.generateRefreshToken({userId : user._id.toString() , role : "client"})
+//   const accessToken = authService.generateAccessToken({userId : user._id.toString() , role : "client"})
+//   await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken)   // setting the expirry 7days
+//   return { userDetails, refreshToken , accessToken };
+// };
+// ////////////////////////////////////////////////////////////////////////////////
+// export const accessTokenRefresh = async (
+//   cookies: { refreshToken: string },
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   if (!cookies?.refreshToken) {
+//     throw new ErrorInApplication("Invalid token",401);
+//   }
+//   const refreshToken = cookies.refreshToken;
+//   const { userId, role } = authService.verifyRefreshToken(refreshToken.toString());
+//   if (!userId || role !== "client") {
+//     throw new ErrorInApplication("Invalid token",401);
+//   }
+//   const user = await dbUserRepository.getUserById(userId);
+//   if (!user?.refreshToken || !user?.refreshTokenExpiresAt) {
+//     throw new ErrorInApplication("Invalid token!",401);
+//   }
+//   const expiresAt = user.refreshTokenExpiresAt.getTime();
+//   if (!expiresAt || Date.now() > expiresAt) {
+//     throw new ErrorInApplication("Invalid token!",401);
+//   }
+//   const newAccessToken = authService.generateAccessToken({ userId: userId, role: "client" });
+//   return newAccessToken;
+// };
+// ///////////////////////////////////////////////////////////////////////////////
+// const tokenVerification = async(token : string ,
+//   authService : ReturnType<AuthServiceInterface>
+// ) => {
+//   const decodedToken = authService.verifyAccessToken(token);
+//   if(!decodedToken){
+//     throw new ErrorInApplication("Invalid token!",401);
+//   }else{
+//     return decodedToken
+//   }
+// }
+// ///////////////////////////////////////////////////////////////////////////////
+// export const handleLogoutUser = async(userId : string , dbUserRepository : ReturnType<UserDBInterface> ) => {
+//   await dbUserRepository.logoutUser(userId)
+// } 
+// ///////////////////////////////////////////////
+// export const handleGoogleLoginOrSignup = async (
+//   user: { name: string; email: string ,dp : string },
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   let userDetails;
+//   let refreshToken;
+//   let accessToken;
+//   const existingUser = await dbUserRepository.getUserByEmail(user.email);
+//   if (existingUser) {
+//     const result = await userLoginUsingGoogle(user, dbUserRepository, authService);
+//     userDetails = result.userDetails;
+//     refreshToken = result.refreshToken;
+//     accessToken = result.accessToken;
+//     console.log("if existing user in app usecases: ,  userDetails :", userDetails)
+//     console.log("if existing user in app usecases: ,  refreshToken :", refreshToken)
+//     console.log("if existing user in app usecases: ,  accessToken :", accessToken)
+//   } else {
+//     const result = await userRegisterUsingGoogle(user, dbUserRepository, authService);
+//     userDetails = result.userDetails;
+//     refreshToken = result.refreshToken;
+//     accessToken = result.accessToken;
+//     console.log("if new user in app usecases: ,  userDetails :", userDetails)
+//     console.log("if new user in app usecases: ,  refreshToken :", refreshToken)
+//     console.log("if new user in app usecases: ,  accessToken :", accessToken)
+//   }
+//   return {
+//     userDetails,
+//     refreshToken,
+//     accessToken,
+//   };
+// };
+// export const userRegisterUsingGoogle = async (
+//   user: { name: string; email: string, dp:string },
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   try {
+//     console.log("................................")
+//     console.log("Seperate code running ,userRegisterUsingGoogle  userdetails:", user)
+//     console.log("................................")
+//     // Generate a username without spaces and random numbers at the end
+//     const username = user.name.replace(/\s/g, '') + Math.floor(Math.random() * 100);
+//     // Generate a new random password
+//     const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+//     const newPassword = await authService.encryptPassword(generatedPassword);
+// console.log("newPassword : ", newPassword)
+//     const userData: GoogleUserInterface = {
+//       name: user.name,
+//       email: user.email,
+//       username: username,
+//       password: newPassword,
+//       dp : user.dp,
+//       isGoogleSignedIn  : true,
+//     };
+//     const savedUser = await dbUserRepository.addUser(userData);
+//     console.log("Resgistered user : " , savedUser)
+//     const refreshToken =   authService.generateRefreshToken({ userId: savedUser._id.toString(), role: "client" });
+//     const accessToken =   authService.generateAccessToken({ userId: savedUser._id.toString(), role: "client" });
+//     const { password: pass, ...rest } = savedUser._doc;
+//     return {
+//       userDetails: savedUser,
+//       refreshToken,
+//       accessToken,
+//     };
+//   } catch (error) {
+//     throw new ErrorInApplication("Failed to register user with Google", 500);
+//   }
+// };
+// export const userLoginUsingGoogle = async (
+//   user: { name: string; email: string; dp: string },
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   try {
+//     console.log("................................");
+//     console.log("Separate code running, userLoginUsingGoogle user details:", user);
+//     console.log("................................");
+//     const existingUser : any = await dbUserRepository.getUserByEmail(user.email);
+//     const refreshToken =   authService.generateRefreshToken({ userId: existingUser._id.toString(), role: "client" });
+//     const accessToken =   authService.generateAccessToken({ userId: existingUser._id.toString(), role: "client" });
+//     return {
+//       userDetails: existingUser,
+//       refreshToken,
+//       accessToken,
+//     };
+//   } catch (error) {
+//     throw new ErrorInApplication("Failed to log in user with Google", 500);
+//   }
+// };
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const otpGenerator = require("otp-generator");
-// import { mailSenderService } from "../../../frameworks/services/mailSendService";
-////////////////////////////////////////////////////////////////////////////////
+// User Registration
 const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     const existingEmail = yield dbUserRepository.getUserByEmail(user.email);
     if (existingEmail) {
@@ -31,7 +296,7 @@ const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, 
     console.log(user);
 });
 exports.userRegister = userRegister;
-////////////////////////////////////////////////////////////////////////////////
+// Handle OTP Sending
 const handleSendOtp = (email, text, dbOtpRepository, mailSenderService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const otp = otpGenerator.generate(6, {
@@ -48,12 +313,12 @@ const handleSendOtp = (email, text, dbOtpRepository, mailSenderService) => __awa
         }
     }
     catch (error) {
-        console.log("Error in handleSendOtp: ", error);
+        console.error("Error in handleSendOtp: ", error);
         throw new ErrorInApplication_1.default("Error in handleSendOtp", 401);
     }
 });
 exports.handleSendOtp = handleSendOtp;
-////////////////////////////////////////////////////////////////////////////////
+// Handle OTP Verification
 const handleOtpVerification = (email, otp, dbOtpRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const latestOtp = yield dbOtpRepository.getLatestOtp(email);
@@ -63,12 +328,12 @@ const handleOtpVerification = (email, otp, dbOtpRepository) => __awaiter(void 0,
         return true; // OTP verification successful
     }
     catch (error) {
-        console.log("Error in handleOtpVerification: ", error);
+        console.error("Error in handleOtpVerification: ", error);
         throw new ErrorInApplication_1.default("Error in handleOtpVerification", 401);
     }
 });
 exports.handleOtpVerification = handleOtpVerification;
-////////////////////////////////////////////////////////////////////////////////
+// Handle Resending OTP
 const handleResendOtp = (email, text, dbOtpRepository, mailSenderService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const otp = otpGenerator.generate(6, {
@@ -85,12 +350,12 @@ const handleResendOtp = (email, text, dbOtpRepository, mailSenderService) => __a
         }
     }
     catch (error) {
-        console.log("Error in handleResendOtp: ", error);
+        console.error("Error in handleResendOtp: ", error);
         throw new ErrorInApplication_1.default("Error in handleResendOtp", 401);
     }
 });
 exports.handleResendOtp = handleResendOtp;
-////////////////////////////////////////////////////////////////////////////////
+// User Login
 const userLogin = (email, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const user = yield dbUserRepository.getUserByEmail(email);
@@ -122,77 +387,11 @@ const userLogin = (email, password, dbUserRepository, authService) => __awaiter(
     };
     const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
     const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
-    yield dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); // setting the expirry 7days
+    yield dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); // setting the expiry to 7 days
     return { userDetails, refreshToken, accessToken };
 });
 exports.userLogin = userLogin;
-////////////////////////////////////////////////////////////////////////////////
-const userLoginUsingGoogle = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("user google info= ", user);
-    const isExistingEmail = yield dbUserRepository.getUserByEmail(user.email);
-    if (isExistingEmail) {
-        if (isExistingEmail.isBlocked) {
-            throw new ErrorInApplication_1.default("Your account has been blocked!", 401);
-        }
-        const refreshToken = authService.generateRefreshToken({ userId: isExistingEmail._id.toString(), role: "client" });
-        const accessToken = authService.generateAccessToken({ userId: isExistingEmail._id.toString(), role: "client" });
-        const userDetails = {
-            _id: isExistingEmail._id.toString(),
-            name: isExistingEmail.name,
-            username: isExistingEmail.username,
-            email: isExistingEmail.email,
-            phone: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.phone,
-            coverPhoto: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.coverPhoto,
-            dp: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.dp,
-            bio: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.bio,
-            gender: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.gender,
-            city: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.city,
-            followers: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.followers,
-            following: isExistingEmail === null || isExistingEmail === void 0 ? void 0 : isExistingEmail.following,
-            isVerifiedAccount: isExistingEmail.isVerifiedAccount,
-            isGoogleSignIn: isExistingEmail.isGoogleSignedIn,
-            isBlocked: isExistingEmail.isBlocked,
-        };
-        yield dbUserRepository.addRefreshTokenAndExpiry(user.email, refreshToken);
-        return { userDetails, refreshToken, accessToken };
-    }
-    const newUser = { name: user.name, email: user.email, isAccountVerified: true, isGoogleSignIn: true };
-    const newUserData = yield dbUserRepository.addUser(newUser);
-    if (newUserData) {
-        const refreshToken = authService.generateRefreshToken({
-            userId: newUserData._id.toString(),
-            role: "client"
-        });
-        const accessToken = authService.generateAccessToken({
-            userId: newUserData._id.toString(),
-            role: "client"
-        });
-        const userDetails = {
-            _id: newUserData._id.toString(),
-            name: newUserData.name,
-            username: newUserData.username,
-            email: newUserData.email,
-            phone: newUserData === null || newUserData === void 0 ? void 0 : newUserData.phone,
-            coverPhoto: newUserData === null || newUserData === void 0 ? void 0 : newUserData.coverPhoto,
-            dp: newUserData === null || newUserData === void 0 ? void 0 : newUserData.dp,
-            bio: newUserData === null || newUserData === void 0 ? void 0 : newUserData.bio,
-            gender: newUserData === null || newUserData === void 0 ? void 0 : newUserData.gender,
-            city: newUserData === null || newUserData === void 0 ? void 0 : newUserData.city,
-            followers: newUserData === null || newUserData === void 0 ? void 0 : newUserData.followers,
-            following: newUserData === null || newUserData === void 0 ? void 0 : newUserData.following,
-            isVerifiedAccount: newUserData.isVerifiedAccount,
-            isGoogleSignIn: true,
-            isBlocked: newUserData.isBlocked,
-        };
-        yield dbUserRepository.addRefreshTokenAndExpiry(newUserData.email, refreshToken);
-        return { userDetails, refreshToken, accessToken };
-    }
-    else {
-        throw new ErrorInApplication_1.default("Something went wrong!", 500);
-    }
-});
-exports.userLoginUsingGoogle = userLoginUsingGoogle;
-////////////////////////////////////////////////////////////////////////////////
+// Access Token Refresh
 const accessTokenRefresh = (cookies, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {
         throw new ErrorInApplication_1.default("Invalid token", 401);
@@ -210,22 +409,103 @@ const accessTokenRefresh = (cookies, dbUserRepository, authService) => __awaiter
     if (!expiresAt || Date.now() > expiresAt) {
         throw new ErrorInApplication_1.default("Invalid token!", 401);
     }
-    const newAccessToken = authService.generateAccessToken({ userId: userId, role: "client" });
+    const newAccessToken = authService.generateAccessToken({ userId, role: "client" });
     return newAccessToken;
 });
 exports.accessTokenRefresh = accessTokenRefresh;
-///////////////////////////////////////////////////////////////////////////////
+// Token Verification
 const tokenVerification = (token, authService) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = authService.verifyAccessToken(token);
     if (!decodedToken) {
         throw new ErrorInApplication_1.default("Invalid token!", 401);
     }
-    else {
-        return decodedToken;
-    }
+    return decodedToken;
 });
-///////////////////////////////////////////////////////////////////////////////
+exports.tokenVerification = tokenVerification;
+// Handle User Logout
 const handleLogoutUser = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     yield dbUserRepository.logoutUser(userId);
 });
 exports.handleLogoutUser = handleLogoutUser;
+const handleGoogleLoginOrSignup = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    let userDetails;
+    let refreshToken;
+    let accessToken;
+    const existingUser = yield dbUserRepository.getUserByEmail(user.email);
+    if (existingUser) {
+        const result = yield (0, exports.userLoginUsingGoogle)(user, dbUserRepository, authService);
+        userDetails = Object.assign(Object.assign({}, result.userDetails), { password: undefined });
+        refreshToken = result.refreshToken;
+        accessToken = result.accessToken;
+        console.log("Existing user in app usecases: userDetails:", userDetails);
+        console.log("Existing user in app usecases: refreshToken:", refreshToken);
+        console.log("Existing user in app usecases: accessToken:", accessToken);
+    }
+    else {
+        const result = yield (0, exports.userRegisterUsingGoogle)(user, dbUserRepository, authService);
+        userDetails = Object.assign(Object.assign({}, result.userDetails), { password: undefined });
+        refreshToken = result.refreshToken;
+        accessToken = result.accessToken;
+        console.log("New user in app usecases: userDetails:", userDetails);
+        console.log("New user in app usecases: refreshToken:", refreshToken);
+        console.log("New user in app usecases: accessToken:", accessToken);
+    }
+    return {
+        userDetails,
+        refreshToken,
+        accessToken,
+    };
+});
+exports.handleGoogleLoginOrSignup = handleGoogleLoginOrSignup;
+// User Registration Using Google
+const userRegisterUsingGoogle = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Separate code running, userRegisterUsingGoogle user details:", user);
+        const username = user.name.replace(/\s/g, '') + Math.floor(Math.random() * 100);
+        const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+        const newPassword = yield authService.encryptPassword(generatedPassword);
+        console.log("Generated password:", newPassword);
+        const userData = {
+            name: user.name,
+            email: user.email,
+            username,
+            password: newPassword,
+            dp: user.dp,
+            isGoogleSignedIn: true,
+        };
+        const savedUser = yield dbUserRepository.addUser(userData);
+        console.log("Registered user:", savedUser);
+        const refreshToken = authService.generateRefreshToken({ userId: savedUser._id.toString(), role: "client" });
+        const accessToken = authService.generateAccessToken({ userId: savedUser._id.toString(), role: "client" });
+        return {
+            userDetails: savedUser,
+            refreshToken,
+            accessToken,
+        };
+    }
+    catch (error) {
+        throw new ErrorInApplication_1.default("Failed to register user with Google", 500);
+    }
+});
+exports.userRegisterUsingGoogle = userRegisterUsingGoogle;
+// User Login Using Google
+const userLoginUsingGoogle = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Separate code running, userLoginUsingGoogle user details:", user);
+        const existingUser = yield dbUserRepository.getUserByEmail(user.email);
+        if (!existingUser) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        const refreshToken = authService.generateRefreshToken({ userId: existingUser._id.toString(), role: "client" });
+        const accessToken = authService.generateAccessToken({ userId: existingUser._id.toString(), role: "client" });
+        return {
+            userDetails: existingUser,
+            refreshToken,
+            accessToken,
+        };
+    }
+    catch (error) {
+        throw new ErrorInApplication_1.default("Failed to log in user with Google", 500);
+    }
+});
+exports.userLoginUsingGoogle = userLoginUsingGoogle;

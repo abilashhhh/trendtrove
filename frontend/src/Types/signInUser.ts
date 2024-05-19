@@ -35,7 +35,8 @@ export interface SignInUserResponse {
 
 export interface GoogleLoginInterface {
     name: string,
-    email: string
+    email: string,
+    dp : string,
 }
 
 export interface GoogleLoginResponse {

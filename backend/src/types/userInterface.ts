@@ -1,8 +1,8 @@
-  export interface UserInterface {
+export interface UserInterface {
   name: string;
   username: string;
   email: string;
-  phone: number;
+  phone?: number;
   password: string;
 }
 
@@ -12,15 +12,17 @@ export interface GoogleUserInterface {
   email: string;
   phone?: number;
   password?: string;
+  dp?:string
+  isGoogleSignedIn?:boolean
 }
 
 export interface UserDataInterface {
   id?: string;
   name: string;
-  username?: string;
+  username: string;
   email: string;
   phone?: number;
-  password?: string;
+  password: string;
   dp?: string;
   coverPhoto?: string;
   bio?: string;

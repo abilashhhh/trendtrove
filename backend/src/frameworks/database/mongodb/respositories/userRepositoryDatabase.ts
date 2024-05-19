@@ -13,6 +13,8 @@ export const userRepositoryMongoDB = () => {
 
   const addUser = async (user: UserInterface | GoogleUserInterface) => {
     try {
+      console.log("Add user tried to run, data : ", user) 
+
       const newUser = new User(user);
       return await newUser.save();
     } catch (error) {
@@ -20,6 +22,8 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error adding user!");
     }
   };
+
+   
 
   //////////////////////////////////////////////////////////
 
@@ -107,3 +111,5 @@ export const userRepositoryMongoDB = () => {
 //////////////////////////////////////////////////////////
 
 export type UserRepositoryMongoDB = typeof userRepositoryMongoDB;
+
+ 

@@ -19,6 +19,7 @@ const userRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
     const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            console.log("Add user tried to run, data : ", user);
             const newUser = new userModel_1.default(user);
             return yield newUser.save();
         }

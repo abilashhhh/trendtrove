@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useResolvedPath } from "react-router-dom";
+import { Link, useNavigate,   } from "react-router-dom";
 import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
 import { SignInUserInterface } from "../Types/signInUser";

@@ -1,40 +1,75 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { auth, provider } from "../../API/Firebase/FirebaseConfig";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-
+import { signInWithPopup, UserCredential } from "firebase/auth";
+import { loginUsingGoogle } from "../../API/Auth/auth";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../Redux/UserAuthSlice/authSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Google: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleClick = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      console.log("User info:", user);
-      console.log("Token:", token);
+      const result: UserCredential = await signInWithPopup(auth, provider);
+      const { displayName, email, photoURL } = result.user;
 
+      if (displayName && email && photoURL) {
+        console.log(
+          "Data from google component: ",
+          displayName,
+          email,
+          photoURL
+        );
+        let response = await loginUsingGoogle({
+          name: displayName,
+          email,
+          dp: photoURL,
+        });
+        console.log("ResponseData : googlecomponen: ", response);
 
-      // const res = send data
-
+        if (response.status === "success") {
+          dispatch(
+            setCredentials({
+              user: response.user,
+              accessToken: response.accessToken,
+            })
+          );
+          console.log("response.user : ", response.user);
+          console.log("response.accessToken : ", response.accessToken);
+          toast.success("Sign in successful");
+          toast.success("Navigating to homepage...");
+          setTimeout(() => {
+            navigate("/home");
+          }, 3000);
+        } else {
+          toast.error("Failed to sign in");
+        }
+      } else {
+        console.error("Missing user information from Google sign-in.");
+      }
     } catch (error) {
-      // Handle Errors here.
       console.error("Error during Google sign-in:", error);
     }
   };
 
   return (
-    <button
-      onClick={handleClick}
-      type="button"
-      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-green-600 hover:bg-green-800 focus:outline-none"
-    >
-      <div className="flex items-center">
-        <FaGoogle className="mr-2" />
-        <span>Continue with Google</span>
-      </div>
-    </button>
+    <>
+      <ToastContainer />
+
+      <button
+        onClick={handleClick}
+        type="button"
+        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-green-600 hover:bg-green-800 focus:outline-none">
+        <div className="flex items-center">
+          <FaGoogle className="mr-2" />
+          <span>Continue with Google</span>
+        </div>
+      </button>
+    </>
   );
 };
 
