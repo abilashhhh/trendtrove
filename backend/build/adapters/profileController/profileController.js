@@ -16,7 +16,6 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
     //////////////////////////////////////////////////
     const getUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("req.params; : ", req.params);
             const { id } = req.params;
             const user = yield (0, profileAuthApplication_1.handleUserInfo)(id, dbUserRepository);
             console.log(user);
@@ -35,8 +34,30 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         }
     });
     //////////////////////////////////////////////////
+    const editProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const profileInfo = req.body;
+            console.log("req.body; : ", profileInfo);
+            const userData = yield (0, profileAuthApplication_1.handleEditProfile)(profileInfo, dbUserRepository);
+            console.log(userData);
+            res.json({
+                status: "success",
+                message: "user edited successfully",
+                userData,
+            });
+        }
+        catch (err) {
+            console.error("Error editing user:", err);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to edit user",
+            });
+        }
+    });
+    //////////////////////////////////////////////////
     return {
         getUserInfo,
+        editProfile
     };
 };
 exports.default = profileController;

@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUserInfo = void 0;
+exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("handleUserInfo runned profile usecase");
+        console.log("handleUserInfo ran in profile usecase");
         const userData = yield dbUserRepository.getUserById(userId);
         if (!userData) {
             throw new Error("User not found!");
@@ -45,3 +45,21 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
     }
 });
 exports.handleUserInfo = handleUserInfo;
+const handleEditProfile = (profileInfo, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("profileInfo...............=-==========", profileInfo);
+        if (profileInfo.email) {
+            const userData = yield dbUserRepository.getUserByEmail(profileInfo.email);
+            if (userData) {
+                console.log("User exists...");
+                const user = yield dbUserRepository.updateProfile(profileInfo);
+                console.log("user: ", user);
+            }
+        }
+    }
+    catch (err) {
+        console.log("Error:", err);
+        throw new ErrorInApplication_1.default("User not found!", 401);
+    }
+});
+exports.handleEditProfile = handleEditProfile;

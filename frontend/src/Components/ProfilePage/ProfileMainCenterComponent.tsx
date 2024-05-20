@@ -15,7 +15,7 @@ const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({
         <Profile userDetails={userDetails} />
       </div>
 
-      <div className="hidden md:flex overflow-y-auto">
+      <div className=" md:flex overflow-y-auto">
         <div className="no-scrollbar overflow-y-auto">
           <Followers userDetails={userDetails} />
         </div>

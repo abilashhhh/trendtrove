@@ -7,7 +7,6 @@ export interface GetUserInfoResponse {
 
 
 export interface UserInfo {
-  address: string;
   name: string;
   username?: string;
   email: string;
@@ -35,4 +34,11 @@ export interface UserInfo {
   blockedUsers?: any[];
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+
+export interface EditProfileResponse {
+  status: string,
+  message: string,
+  user: UserInfo
 }

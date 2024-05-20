@@ -12,9 +12,11 @@ import {
 } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 
 import {
+  handleEditProfile,
   handleUserInfo,
   // handleOtherUserInfo
 } from "../../application/use-cases/profile/profileAuthApplication";
+import { ProfileInterface } from "../../types/profileInterface";
 
 const profileController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
@@ -31,7 +33,6 @@ const profileController = (
 
   const getUserInfo = async (req: Request, res: Response) => {
     try {
-      console.log("req.params; : ", req.params)
       const { id } = req.params;
       const user = await handleUserInfo(id, dbUserRepository);
       console.log(user)
@@ -50,10 +51,40 @@ const profileController = (
   };
 
   //////////////////////////////////////////////////
+  
+  const editProfile = async (req: Request, res: Response) => {
+    try {
+    const profileInfo: ProfileInterface = req.body;
+      console.log("req.body; : ", profileInfo)
+      const userData = await handleEditProfile(profileInfo, dbUserRepository);
+      console.log(userData)
+      res.json({
+        status: "success",
+        message: "user edited successfully",
+        userData,
+      });
+    } catch (err) {
+      console.error("Error editing user:", err);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to edit user",
+      });
+    }
+  };
+
+   
+
+
+
+  //////////////////////////////////////////////////
+
 
   return {
     getUserInfo,
+    editProfile
   };
 };
 
 export default profileController;
+
+ 

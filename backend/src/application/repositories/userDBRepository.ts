@@ -1,4 +1,5 @@
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
+import { ProfileInterface } from "../../types/profileInterface";
 import { UserInterface, GoogleUserInterface } from "../../types/userInterface";
 
 export const userDBRepository = (
@@ -26,13 +27,26 @@ export const userDBRepository = (
     await repository.addRefreshTokenAndExpiry(email, refreshToken);
   };
 
+  
+  const changeIsAccountVerified = async(email: string) => await repository.changeIsAccountVerified(email)
+
+  const changeIsAccountUnverified = async(userId: string) => await repository.changeIsAccountUnverified(userId)
+
+  const updateProfile = async (profileInfo: ProfileInterface) =>
+    await repository.updateProfile(profileInfo);
+
+  
+
   return {
     addUser,
     getUserByEmail,
     getUserByUsername,
     addRefreshTokenAndExpiry,
     getUserById,
-    logoutUser
+    logoutUser,
+    updateProfile,
+    changeIsAccountVerified,
+    changeIsAccountUnverified
   };
 };
 

@@ -13,6 +13,7 @@ const profileRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, profileController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.get("/getuserinfo/:id", controller.getUserInfo);
+    router.patch("/editprofile", controller.editProfile);
     // router.get('/getotheruserinfo/:id', authMiddleware, controller.getOtherUserInfo);
     return router;
 };

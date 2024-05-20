@@ -1,3 +1,4 @@
+import { ProfileInterface } from "../../../../types/profileInterface";
 import {
   GoogleUserInterface,
   UserInterface,
@@ -98,6 +99,56 @@ export const userRepositoryMongoDB = () => {
   };
 
   //////////////////////////////////////////////////////////
+  const updateProfile = async (profileInfo: ProfileInterface) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        profileInfo._id,
+        profileInfo,
+        { new: true }
+      );
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error updating profile!");
+    }
+  };
+  //////////////////////////////////////////////////////
+  
+  
+  const changeIsAccountVerified = async (email: string) => {
+    try {
+      await User.updateOne(
+        { email },
+        {
+          $set: {
+            isAccountVerified: true,
+          },
+        }
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error changing isAccountVerified field");
+    }
+  
+  };
+
+  const changeIsAccountUnverified = async (userId: string) => {
+    try {
+      await User.updateOne(
+        { _id: userId },
+        {
+          $set: {
+            isAccountVerified: false,
+          },
+        }
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error changing isAccountVerified field");
+    }
+  };
 
   return {
     addUser,
@@ -105,7 +156,10 @@ export const userRepositoryMongoDB = () => {
     getUserById,
     getUserByUsername,
     addRefreshTokenAndExpiry,
-    logoutUser
+    logoutUser,
+    updateProfile,
+    changeIsAccountVerified,
+    changeIsAccountUnverified
   };
 };
 //////////////////////////////////////////////////////////

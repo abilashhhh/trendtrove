@@ -87,13 +87,55 @@ const userRepositoryMongoDB = () => {
         }
     });
     //////////////////////////////////////////////////////////
+    const updateProfile = (profileInfo) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndUpdate(profileInfo._id, profileInfo, { new: true });
+            return user;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error updating profile!");
+        }
+    });
+    //////////////////////////////////////////////////////
+    const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            yield userModel_1.default.updateOne({ email }, {
+                $set: {
+                    isAccountVerified: true,
+                },
+            });
+            return true;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error changing isAccountVerified field");
+        }
+    });
+    const changeIsAccountUnverified = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            yield userModel_1.default.updateOne({ _id: userId }, {
+                $set: {
+                    isAccountVerified: false,
+                },
+            });
+            return true;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error changing isAccountVerified field");
+        }
+    });
     return {
         addUser,
         getUserByEmail,
         getUserById,
         getUserByUsername,
         addRefreshTokenAndExpiry,
-        logoutUser
+        logoutUser,
+        updateProfile,
+        changeIsAccountVerified,
+        changeIsAccountUnverified
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   faCheckCircle,
   faTimesCircle,
@@ -13,29 +15,129 @@ import {
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { UserInfo } from "../../../Types/userProfile";
+import {
+  validateName,
+  validateUsername,
+  validatePhoneNumber,
+} from "../../../utils/validations";
+import { usernameAvailability } from "../../../API/Auth/auth";
+import { editProfile } from "../../../API/Profile/profile";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileProps {
   userDetails: UserInfo;
 }
 
 const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<UserInfo>(userDetails);
+  const [validationErrors, setValidationErrors] = useState({
+    name: "",
+    username: "",
+    phone: "",
+    bio: "",
+  });
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
+    null
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    validateField(name, value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, gender: e.target.value });
+  };
+
+  const checkUsernameAvailability = async (username: string) => {
+    if (username === userDetails.username) {
+      setUsernameAvailable(true);
+      return;
+    }
+    try {
+      const response = await usernameAvailability(username);
+      setUsernameAvailable(response.available);
+    } catch (error) {
+      console.error("Error checking username availability:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (formData.username && formData.username.trim() !== "") {
+      checkUsernameAvailability(formData.username);
+    }
+  }, [formData.username]);
+
+  const validateField = (name: string, value: string) => {
+    let validationMessage = "";
+
+    switch (name) {
+      case "name":
+        validationMessage = validateName(value);
+        break;
+      case "username":
+        validationMessage = validateUsername(value);
+        checkUsernameAvailability(value); // Check availability on change
+        break;
+      case "phone":
+        validationMessage = validatePhoneNumber(value);
+        break;
+      case "bio":
+        validationMessage =
+          value.length > 200 ? "Bio must be 200 characters or less" : "";
+        break;
+      default:
+        break;
+    }
+
+    setValidationErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: validationMessage,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here, such as sending the data to an API.
-    console.log("Form submitted:", formData);
+
+    // Validate all fields before submitting
+    for (const field in formData) { 
+      const value = formData[field as keyof UserInfo];
+      if (typeof value === "string") {
+        validateField(field, value);
+      }
+    }
+
+    const hasErrors = Object.values(validationErrors).some(
+      error => error !== ""
+    );
+
+    if (!hasErrors) {
+      console.log("Form submitted:", formData);
+      if(  usernameAvailable === false){
+      toast.error("Error updating profile. Try again");
+return
+      }
+      const result = await editProfile(formData);
+      console.log("result : ",result)
+      
+      toast.success("Profile updated successfully");
+      setTimeout(() => {
+        navigate("/profile");
+      }, 3000);
+    } else {
+      toast.error("Error updating profile. Try again");
+      console.error("Please fix the errors in the form");
+    }
   };
 
   return (
     <>
+      <ToastContainer />
+
       <main className="flex-1 p-2 bg-gray-800 min-h-screen w-full dark:bg-gray-700 text-white">
         <div className="overflow-y-auto no-scrollbar">
           <div className="max-w-full mx-auto relative">
@@ -73,6 +175,23 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                       onChange={handleChange}
                       className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded px-5 py-2"
                     />
+                    {validationErrors.username && (
+                      <p className="text-red-500 text-xs font-semibold mt-1">
+                        {validationErrors.username}
+                      </p>
+                    )}
+                    {!validationErrors.username &&
+                      usernameAvailable === false && (
+                        <p className="text-red-500 text-xs font-semibold mt-1">
+                          Username not available
+                        </p>
+                      )}
+                    {!validationErrors.username &&
+                      usernameAvailable === true && (
+                        <p className="text-green-500 text-xs font-semibold mt-1">
+                          Username available
+                        </p>
+                      )}
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 dark:text-gray-300 flex items-center">
@@ -84,8 +203,13 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded  px-5 py-2"
+                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded px-5 py-2"
                     />
+                    {validationErrors.name && (
+                      <p className="text-red-500 text-xs font-semibold mt-1">
+                        {validationErrors.name}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -108,8 +232,13 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                       name="phone"
                       value={formData.phone || ""}
                       onChange={handleChange}
-                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded  px-5 py-2"
+                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded px-5 py-2"
                     />
+                    {validationErrors.phone && (
+                      <p className="text-red-500 text-xs font-semibold mt-1">
+                        {validationErrors.phone}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -124,7 +253,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                       name="address"
                       value={formData.address || ""}
                       onChange={handleChange}
-                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded  px-5 py-2"
+                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded px-5 py-2"
                     />
                   </div>
                   <div>
@@ -132,15 +261,44 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                       <FontAwesomeIcon icon={faTransgender} className="mr-2" />
                       Gender
                     </label>
-                    <input
-                      type="text"
-                      name="gender"
-                      value={formData.gender || ""}
-                      onChange={handleChange}
-                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded  px-5 py-2"
-                    />
+                    <div className="flex gap-4">
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="male"
+                          checked={formData.gender === "male"}
+                          onChange={handleGenderChange}
+                          className="mr-2"
+                        />
+                        Male
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="female"
+                          checked={formData.gender === "female"}
+                          onChange={handleGenderChange}
+                          className="mr-2"
+                        />
+                        Female
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="other"
+                          checked={formData.gender === "other"}
+                          onChange={handleGenderChange}
+                          className="mr-2"
+                        />
+                        Other
+                      </label>
+                    </div>
                   </div>
                 </div>
+
                 <div className="flex flex-col gap-4">
                   <div>
                     <label className="text-sm text-gray-600 dark:text-gray-300 flex items-center">
@@ -151,8 +309,13 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                       name="bio"
                       value={formData.bio || ""}
                       onChange={handleChange}
-                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded  px-5 py-2"
+                      className="text-lg font-semibold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 rounded px-5 py-2"
                     />
+                    {validationErrors.bio && (
+                      <p className="text-red-500 text-xs font-semibold mt-1">
+                        {validationErrors.bio}
+                      </p>
+                    )}
                   </div>
                 </div>
 

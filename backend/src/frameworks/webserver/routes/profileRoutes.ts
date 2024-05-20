@@ -17,6 +17,7 @@ const profileRouter = () => {
   );
 
   router.get("/getuserinfo/:id" ,controller.getUserInfo);
+  router.patch("/editprofile" ,controller.editProfile);
   // router.get('/getotheruserinfo/:id', authMiddleware, controller.getOtherUserInfo);
   
 

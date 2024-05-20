@@ -9,6 +9,7 @@ const END_POINTS = {
     VERIFY_OTP :'/api/auth/verifyotp',
     REFRESH_TOKEN: '/api/auth/refreshtoken',
     GET_USER_INFO : '/api/profile/getuserinfo' ,
+    EDIT_PROFILE : '/api/profile/editprofile'
  }
 
 

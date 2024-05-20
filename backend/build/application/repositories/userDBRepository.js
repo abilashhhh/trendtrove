@@ -19,13 +19,19 @@ const userDBRepository = (repository) => {
     const addRefreshTokenAndExpiry = (email, refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addRefreshTokenAndExpiry(email, refreshToken);
     });
+    const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.changeIsAccountVerified(email); });
+    const changeIsAccountUnverified = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.changeIsAccountUnverified(userId); });
+    const updateProfile = (profileInfo) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.updateProfile(profileInfo); });
     return {
         addUser,
         getUserByEmail,
         getUserByUsername,
         addRefreshTokenAndExpiry,
         getUserById,
-        logoutUser
+        logoutUser,
+        updateProfile,
+        changeIsAccountVerified,
+        changeIsAccountUnverified
     };
 };
 exports.userDBRepository = userDBRepository;
