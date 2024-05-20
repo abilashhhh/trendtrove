@@ -41,6 +41,8 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
     null
   );
 
+ 
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -160,7 +162,13 @@ return
                   className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-100"
                 />
               </div>
-
+             
+              <button
+                type="button"  
+                className="p-2 mb-5 ml-5 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+              Upload New  DP
+              </button>
+ 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-4">
                   <div>

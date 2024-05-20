@@ -150,6 +150,8 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+   
+
   return {
     addUser,
     getUserByEmail,
@@ -159,7 +161,7 @@ export const userRepositoryMongoDB = () => {
     logoutUser,
     updateProfile,
     changeIsAccountVerified,
-    changeIsAccountUnverified
+    changeIsAccountUnverified,
   };
 };
 //////////////////////////////////////////////////////////

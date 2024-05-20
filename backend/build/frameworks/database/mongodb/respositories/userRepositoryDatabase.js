@@ -135,7 +135,7 @@ const userRepositoryMongoDB = () => {
         logoutUser,
         updateProfile,
         changeIsAccountVerified,
-        changeIsAccountUnverified
+        changeIsAccountUnverified,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;
