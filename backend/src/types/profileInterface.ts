@@ -6,6 +6,6 @@ export interface ProfileInterface {
     phoneNumber?: number,
     bio?: string,
     gender?: string,
-    city?: string,
+    address?: string,
     savedPosts?: string[],
 }

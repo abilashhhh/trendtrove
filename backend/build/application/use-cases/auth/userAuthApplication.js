@@ -113,7 +113,7 @@ const userLogin = (email, password, dbUserRepository, authService) => __awaiter(
         dp: user === null || user === void 0 ? void 0 : user.dp,
         bio: user === null || user === void 0 ? void 0 : user.bio,
         gender: user === null || user === void 0 ? void 0 : user.gender,
-        city: user === null || user === void 0 ? void 0 : user.city,
+        address: user === null || user === void 0 ? void 0 : user.address,
         followers: user === null || user === void 0 ? void 0 : user.followers,
         following: user === null || user === void 0 ? void 0 : user.following,
         isVerifiedAccount: user === null || user === void 0 ? void 0 : user.isVerifiedAccount,

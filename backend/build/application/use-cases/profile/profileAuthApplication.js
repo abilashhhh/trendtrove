@@ -31,7 +31,7 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             coverPhoto: userData.coverPhoto,
             bio: userData.bio,
             gender: userData.gender,
-            city: userData.city,
+            address: userData.address,
             followers: userData.followers,
             following: userData.following,
             isVerifiedAccount: userData.isVerifiedAccount,

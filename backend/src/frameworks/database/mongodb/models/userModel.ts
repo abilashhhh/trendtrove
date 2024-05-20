@@ -13,6 +13,9 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    address: {
+      type: String,
+    },
     phone: {
       type: Number,
     },
@@ -34,9 +37,6 @@ const userSchema = new Schema(
     gender: {
       type: String,
     },
-    city: {
-      type: String,
-    },
     isBlocked: {
       type: Boolean,
       default: false,
@@ -45,7 +45,6 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-
     isVerifiedAccount: {
       type: Boolean,
       default: false,

@@ -21,7 +21,7 @@ export const handleUserInfo = async (
             coverPhoto: userData.coverPhoto,
             bio: userData.bio,
             gender: userData.gender,
-            city: userData.city,
+            address: userData.address,
             followers: userData.followers,
             following: userData.following,
             isVerifiedAccount: userData.isVerifiedAccount,

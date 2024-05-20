@@ -7,6 +7,7 @@ export interface GetUserInfoResponse {
 
 
 export interface UserInfo {
+  address: string;
   name: string;
   username?: string;
   email: string;
@@ -16,7 +17,7 @@ export interface UserInfo {
   coverPhoto?: string;
   bio?: string;
   gender?: string;
-  city?: string;
+  address?: string;
   isBlocked?: boolean;
   isPrivate?: boolean;
   isVerifiedAccount?: boolean;

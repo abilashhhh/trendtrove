@@ -16,7 +16,7 @@ export interface User {
     coverPhoto?: string;
     bio?: string;
     gender?: string;
-    city?: string;
+    address?: string;
     followers?: string[];
     following?: string[];
     savedPosts?: string[];

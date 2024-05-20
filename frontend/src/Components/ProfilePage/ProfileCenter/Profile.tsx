@@ -1,11 +1,30 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheckCircle,
+  faTimesCircle,
+  faUser,
+  faEnvelope,
+  faPhone,
+  faInfoCircle,
+  faMapMarkerAlt,
+  faTransgender,
+  faCrown,
+  faLock
+} from "@fortawesome/free-solid-svg-icons";
 import { UserInfo } from "../../../Types/userProfile";
+import { useNavigate } from "react-router-dom";
+
 
 interface ProfileProps {
   userDetails: UserInfo;
 }
 
 const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
+  const navigate = useNavigate()
+  const handleEdit = () => {
+    navigate('/editProfile')
+  }
   return (
     <>
       <main className="flex-1 p-2 bg-gray-800 min-h-screen w-full dark:bg-gray-700 text-white">
@@ -14,7 +33,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
             {/* Profile Info */}
             <div className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative">
               {/* Edit Profile Button */}
-              <button className="absolute top-4 right-4 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+              <button className="absolute top-4 right-4 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 " onClick={handleEdit}>
                 Edit Profile
               </button>
 
@@ -26,10 +45,12 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                   className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-100"
                 />
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-4">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faUser} className="mr-2" />
                       Username
                     </p>
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -38,6 +59,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faUser} className="mr-2" />
                       Name
                     </p>
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -45,17 +67,22 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                     </h2>
                   </div>
                 </div>
+
                 <div className="flex flex-col gap-4">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
                       Email
                     </p>
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                       {userDetails.email}
                     </h2>
                   </div>
+
+                  
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faPhone} className="mr-2" />
                       Phone Number
                     </p>
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -63,7 +90,82 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                     </h2>
                   </div>
                 </div>
+
+
+                <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
+                      Address
+                    </p>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {userDetails.address || "N/A"}
+                    </h2>
+                  </div>
+
+
+
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faTransgender} className="mr-2" />
+                      Gender
+                    </p>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {userDetails.gender || "N/A"}
+                    </h2>
+                  </div>
+
+                 
+                  
+
+                </div>
+
+               
+
+                <div className="flex items-center">
+                    <FontAwesomeIcon icon={faCrown} className="mr-2" />
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mr-2">
+                    Premium Account 
+                    </p>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {userDetails.isPremium ? (
+                        <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />
+                      ) : (
+                        <FontAwesomeIcon icon={faTimesCircle} className="text-red-500" />
+                      )}
+                    </h2>
+                  </div>
+
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faLock} className="mr-2" />
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mr-2">
+                      Private Account
+                    </p>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {userDetails.isPrivate ? (
+                        <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />
+                      ) : (
+                        <FontAwesomeIcon icon={faTimesCircle} className="text-red-500" />
+                      )}
+                    </h2>
+                  </div>
+
+                  
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                      Bio
+                    </p>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {userDetails.bio || "N/A"}
+                    </h2>
+                  </div>
+                  
+                </div>
+
               </div>
+              
             </div>
 
             <div className="flex flex-col md:flex-row justify-between p-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg gap-4">
@@ -72,23 +174,25 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                   Posts
                 </h2>
                 <p className="text-lg font-bold text-gray-800 dark:text-white">
-                  {userDetails.posts}
+                {userDetails.posts ? userDetails.posts.length : '0'}
                 </p>
               </div>
+
               <div className="text-center cursor-pointer md:w-1/3">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                   Followers
                 </h2>
                 <p className="text-lg font-bold text-gray-800 dark:text-white">
-                  {userDetails.followers}
+                  {userDetails.followers ? userDetails.followers.length : '0'}
                 </p>
               </div>
+
               <div className="text-center cursor-pointer md:w-1/3">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                   Following
                 </h2>
                 <p className="text-lg font-bold text-gray-800 dark:text-white">
-                  {userDetails.following}
+                {userDetails.following ? userDetails.following.length : '0'}
                 </p>
               </div>
             </div>

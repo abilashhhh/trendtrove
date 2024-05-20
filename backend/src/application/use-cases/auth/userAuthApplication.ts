@@ -128,7 +128,7 @@ export const userLogin = async (
     dp: user?.dp,
     bio: user?.bio,
     gender: user?.gender,
-    city: user?.city,
+    address: user?.address,
     followers: user?.followers,
     following: user?.following,
     isVerifiedAccount: user?.isVerifiedAccount,

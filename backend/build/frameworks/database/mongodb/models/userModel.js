@@ -36,6 +36,9 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    address: {
+        type: String,
+    },
     phone: {
         type: Number,
     },
@@ -54,9 +57,6 @@ const userSchema = new mongoose_1.Schema({
         type: String,
     },
     gender: {
-        type: String,
-    },
-    city: {
         type: String,
     },
     isBlocked: {

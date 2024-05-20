@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
-import ProfileMainCenterComponent from "../Components/ProfilePage/ProfileMainCenterComponent";
+import EditProfileMainCenterComponent from "../Components/ProfilePage/EditProfileMainCenterComponent";
 import HomePageRightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import React, { useState, useEffect } from "react";
@@ -16,7 +16,7 @@ import { UserInfo } from "../Types/userProfile";
 import { getUserInfo } from "../API/Profile/profile";
 import { StoreType } from '../Redux/Store/reduxStore';
 
-function ProfilePage() {
+function EditProfilePage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [isDarkMode, setDarkMode] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -116,7 +116,7 @@ function ProfilePage() {
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
           />
-          <ProfileMainCenterComponent userDetails={userDetails} />
+          <EditProfileMainCenterComponent userDetails={userDetails} />
           <HomePageRightSidebar />
         </div>
       </div>
@@ -124,4 +124,4 @@ function ProfilePage() {
   );
 }
 
-export default ProfilePage;
+export default EditProfilePage;
