@@ -22,7 +22,7 @@ const authRouter = () => {
     router.post("/googlesigninup", controller.loginOrSignUpUsingGoogle);
     router.get("/usernameavailablity/:username", controller.usernameAvailability);
     router.get("/emailavailability/:email", controller.emailAvailability);
-    router.post("/generateotp", controller.sendOtp); // generates otp and sent through mail
+    router.post("/generateotp", controller.sendOtp);
     router.post("/verifyotp", controller.verifyOtpForEmailVerification);
     router.get('/refresh', controller.refreshAccessToken);
     router.delete('/logout', authMiddleware_1.default, controller.logoutUser);

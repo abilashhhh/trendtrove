@@ -11,7 +11,6 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
   const currentUser: any = useSelector((state: StoreType) => state.userAuth.user);
 
-  console.log("use selector", currentUser);
 
   return (
     <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2">
@@ -31,11 +30,11 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
        </div>
 
         <div className="flex items-center space-x-2">
-          {currentUser ? (
+          {currentUser && currentUser.dp ? (
             <Link to="/profile">
               <img
                 className="rounded-full h-8 w-8 object-cover"
-                src={currentUser.dp || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"}
+                src={currentUser.dp}
                 alt="User Profile"
               />
             </Link>

@@ -7,8 +7,8 @@ const END_POINTS = {
     EMAIL_AVAILABLE: '/api/auth/emailavailability',
     GENERATE_OTP :'/api/auth/generateotp',
     VERIFY_OTP :'/api/auth/verifyotp',
-    GET_USER_INFO : '/api/auth/getUserInfo' ,
-    REFRESH_TOKEN: '/api/auth/refreshtoken'
+    REFRESH_TOKEN: '/api/auth/refreshtoken',
+    GET_USER_INFO : '/api/profile/getuserinfo' ,
  }
 
 

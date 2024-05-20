@@ -30,7 +30,6 @@ function HomePage() {
     try {
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
-      console.log("handle logout runned");
       toast.error("Logging Out");
       setTimeout(() => {
         dispatch(logout());

@@ -45,7 +45,7 @@ const userSchema = new mongoose_1.Schema({
     },
     dp: {
         type: String,
-        default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+        default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
     coverPhoto: {
         type: String,
@@ -75,6 +75,10 @@ const userSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    isPremium: {
+        type: Boolean,
+        default: false,
+    },
     refreshToken: {
         type: String,
         default: null,
@@ -84,7 +88,18 @@ const userSchema = new mongoose_1.Schema({
         default: null,
     },
     posts: [],
-    savedPosts: [],
+    requests: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+    requested: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: "User",
+        },
+    ],
     followers: [
         {
             type: mongoose_1.default.Types.ObjectId,
@@ -92,6 +107,23 @@ const userSchema = new mongoose_1.Schema({
         },
     ],
     following: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+    savedPosts: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+        },
+    ],
+    notifications: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: "Message",
+        },
+    ],
+    blockedUsers: [
         {
             type: mongoose_1.default.Types.ObjectId,
             ref: "User",
