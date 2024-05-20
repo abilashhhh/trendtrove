@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -63,3 +63,33 @@ const handleEditProfile = (profileInfo, dbUserRepository) => __awaiter(void 0, v
     }
 });
 exports.handleEditProfile = handleEditProfile;
+const handlePasswordChange = (userData, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("userData: ", userData);
+        // Check if required fields exist in userData
+        if (!userData._id || !userData.currentPassword || !userData.newPassword) {
+            throw new Error("Invalid user data or missing current or new password");
+        }
+        // Fetch user from database
+        const userExists = yield dbUserRepository.getUserById(userData._id);
+        if (!userExists) {
+            throw new Error("User not found");
+        }
+        // Compare current password with stored password
+        const isPasswordValid = yield authService.comparePassword(userExists.password, userData.currentPassword);
+        if (!isPasswordValid) {
+            throw new Error("Invalid current password");
+        }
+        console.log("");
+        // Encrypt new password
+        const newPassword = yield authService.encryptPassword(userData.newPassword);
+        // Update user's password in the database
+        const user = yield dbUserRepository.updatePassword(userData._id, newPassword);
+        console.log("user: ", user);
+    }
+    catch (err) {
+        console.log("Error:", err);
+        throw new ErrorInApplication_1.default(err.message || "Failed to change password", 401);
+    }
+});
+exports.handlePasswordChange = handlePasswordChange;

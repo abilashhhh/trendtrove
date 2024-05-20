@@ -18,9 +18,11 @@ const profileRouter = () => {
 
   router.get("/getuserinfo/:id" ,controller.getUserInfo);
   router.patch("/editprofile" ,controller.editProfile);
+  router.patch("/changepassword" ,controller.changePassword);
+  // router.delete("/deleteaccount" ,controller.deleteAccount);
+  // router.patch("/suspendaccount" ,controller.suspendAccount);
   // router.get('/getotheruserinfo/:id', authMiddleware, controller.getOtherUserInfo);
-  
-
+ 
   return router;
 };
 

@@ -13,6 +13,7 @@ import {
 
 import {
   handleEditProfile,
+  handlePasswordChange,
   handleUserInfo,
   // handleOtherUserInfo
 } from "../../application/use-cases/profile/profileAuthApplication";
@@ -72,6 +73,27 @@ const profileController = (
     }
   };
 
+ 
+  const changePassword = async (req: Request, res: Response) => { 
+    try {
+    const {_id , currentPassword, newPassword }  = req.body;
+      console.log("req.body; : ",  req.body)
+      const userData = await handlePasswordChange(_id , currentPassword, newPassword);
+      console.log(userData)
+      res.json({
+        status: "success",
+        message: "Password changed successfully",
+        userData,
+      });
+    } catch (err) {
+      console.error("Error changinig password:", err);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to change password",
+      });
+    }
+  };
+
 
   
    
@@ -83,7 +105,8 @@ const profileController = (
 
   return {
     getUserInfo,
-    editProfile
+    editProfile,
+    changePassword
   };
 };
 

@@ -10,8 +10,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./PrivateRoute";
 import { StoreType } from "./Redux/Store/reduxStore";
-import LoadingSpinner from "./Components/LoadingSpinner";
 import EditProfilePage from "./Pages/EditProfilePage";
+import SettingsPage from "./Pages/SettingsPage";
 function App() {
   const user = useSelector((state: StoreType) => state.userAuth.user);
   const [isVerifiedAccount, setIsVerifiedAccount] = useState<boolean>(true);
@@ -42,6 +42,10 @@ function App() {
         <Route
           path="/editprofile"
           element={<PrivateRoute element={<EditProfilePage />} path={""} />}
+        />
+        <Route
+          path="/settings"
+          element={<PrivateRoute element={< SettingsPage />} path={""} />}
         />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />{" "}

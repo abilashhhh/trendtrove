@@ -14,6 +14,9 @@ const profileRouter = () => {
     const controller = (0, profileController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.get("/getuserinfo/:id", controller.getUserInfo);
     router.patch("/editprofile", controller.editProfile);
+    router.patch("/changepassword", controller.changePassword);
+    // router.delete("/deleteaccount" ,controller.deleteAccount);
+    // router.patch("/suspendaccount" ,controller.suspendAccount);
     // router.get('/getotheruserinfo/:id', authMiddleware, controller.getOtherUserInfo);
     return router;
 };

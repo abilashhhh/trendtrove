@@ -42,3 +42,30 @@ export interface EditProfileResponse {
   message: string,
   user: UserInfo
 }
+
+export interface ChangePasswordResponse {
+  status: string, 
+  message: string,
+}
+
+export interface ChangePasswordInterface {
+  _id: string, 
+  currentPassword: string,
+  newPassword: string, 
+}
+
+export interface DeleteAccountResponse {
+  status: string, 
+  message: string,
+}
+
+export interface SuspendAccountResponse {
+  status: string, 
+  message: string,
+}
+
+export interface GetOtherUserInfoResponse {
+  status: string,
+  message: string,
+  otherUser: UserInfo,
+}

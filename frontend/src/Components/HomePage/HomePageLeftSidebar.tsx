@@ -10,12 +10,19 @@ const LeftSidebar = ({
   handleLogout,
 }) => {
   const navigate = useNavigate()
+
   const home = () => {
     navigate("/home")
   }
+
   const profile = () => {
     navigate("/profile")
   }
+
+  const settings = () => {
+    navigate("/settings")
+  }
+  
   return (
     <aside
       className={`bg-gray-800 dark:bg-gray-700 pt-2 pb-2 pl-2 w-64 ${
@@ -55,7 +62,7 @@ const LeftSidebar = ({
             <FaUser  className="inline-block mr-2" />
             Profile
           </button>
-          <button className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
+          <button  onClick={settings} className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
             <FaCog className="inline-block mr-2" />
             Settings
           </button>

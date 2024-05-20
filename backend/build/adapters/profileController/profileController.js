@@ -54,10 +54,31 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
     });
+    const changePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { _id, currentPassword, newPassword } = req.body;
+            console.log("req.body; : ", req.body);
+            const userData = yield (0, profileAuthApplication_1.handlePasswordChange)(_id, currentPassword, newPassword);
+            console.log(userData);
+            res.json({
+                status: "success",
+                message: "Password changed successfully",
+                userData,
+            });
+        }
+        catch (err) {
+            console.error("Error changinig password:", err);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to change password",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
         getUserInfo,
-        editProfile
+        editProfile,
+        changePassword
     };
 };
 exports.default = profileController;

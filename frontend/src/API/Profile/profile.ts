@@ -1,29 +1,44 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { EditProfileResponse, GetUserInfoResponse, UserInfo } from '../../Types/userProfile';
+import {
+  ChangePasswordInterface,
+  ChangePasswordResponse,
+  DeleteAccountResponse,
+  EditProfileResponse,
+  GetUserInfoResponse,
+  SuspendAccountResponse,
+  UserInfo,
+} from "../../Types/userProfile";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      console.error('Server responded with status:', axiosError.response.status);
-      console.error('Response data:', axiosError.response.data);
+      console.error(
+        "Server responded with status:",
+        axiosError.response.status
+      );
+      console.error("Response data:", axiosError.response.data);
     } else if (axiosError.request) {
-      console.error('No response received from the server');
+      console.error("No response received from the server");
     } else {
-      console.error('Error setting up the request:', axiosError.message);
+      console.error("Error setting up the request:", axiosError.message);
     }
   } else {
-    console.error('An error occurred:', error.message);
+    console.error("An error occurred:", error.message);
   }
 };
 
-export const getUserInfo = async (userId: string): Promise<GetUserInfoResponse> => {
+export const getUserInfo = async (
+  userId: string
+): Promise<GetUserInfoResponse> => {
   try {
     console.log("Userid: ", userId);
-    const response = await axiosUserInstance.get<GetUserInfoResponse>(`${END_POINTS.GET_USER_INFO}/${userId}`);
+    const response = await axiosUserInstance.get<GetUserInfoResponse>(
+      `${END_POINTS.GET_USER_INFO}/${userId}`
+    );
     console.log("response :", response);
     return response.data;
   } catch (error) {
@@ -32,14 +47,65 @@ export const getUserInfo = async (userId: string): Promise<GetUserInfoResponse> 
   }
 };
 
-export const editProfile = async (userInfo: UserInfo): Promise<EditProfileResponse> => {
+export const editProfile = async (
+  userInfo: UserInfo
+): Promise<EditProfileResponse> => {
   try {
     console.log("edit profile api, userInfo:", userInfo);
     const response = await axiosUserInstance.patch<EditProfileResponse>(
       END_POINTS.EDIT_PROFILE,
       userInfo
     );
-    console.log(response.data)
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const changePassword = async (
+  payload: ChangePasswordInterface
+): Promise<ChangePasswordResponse> => {
+  try {
+    console.log("changePassword, userInfo:", payload);
+    const response = await axiosUserInstance.patch<ChangePasswordResponse>(
+      END_POINTS.CHANGE_PASSWORD,
+      payload
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const deleteAccount = async (): Promise<DeleteAccountResponse> => {
+  try {
+    console.log("changePassword, userInfo:", userInfo);
+    const response = await axiosUserInstance.delete<DeleteAccountResponse>(
+      END_POINTS.DELETE_ACCOUNT,
+      userInfo
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const suspendAccount = async (
+  userInfo: UserInfo
+): Promise<SuspendAccountResponse> => {
+  try {
+    console.log("changePassword, userInfo:", userInfo);
+    const response = await axiosUserInstance.patch<SuspendAccountResponse>(
+      END_POINTS.SUSPEND_ACCOUNT,
+      userInfo
+    );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
