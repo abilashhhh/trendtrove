@@ -34,3 +34,12 @@ export const getAllUsers = async (): Promise<GetUsersResponse> => {
   );
   return response.data;
 };
+
+
+export const logoutAdmin = async (accessToken: string) => {
+  await axiosAdminInstance.post(END_POINTS.ADMIN_LOGOUT, null, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};

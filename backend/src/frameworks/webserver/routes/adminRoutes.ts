@@ -17,6 +17,8 @@ const adminRouter = () => {
   );
 
   router.post("/signin" , controller.signin);
+  router.post("/logout", controller.logout);
+
  
  
   return router;

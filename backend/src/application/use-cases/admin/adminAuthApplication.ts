@@ -52,11 +52,10 @@ export const handleAdminSignin = async (
 };
  
 
-// Handle User Logout
-export const handleLogoutUser = async (
+ 
+export const handleLogoutAdmin = async (
   userId: string,
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   await dbUserRepository.logoutUser(userId);
 };
- 

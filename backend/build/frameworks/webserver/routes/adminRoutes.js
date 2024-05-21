@@ -13,6 +13,7 @@ const adminRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, adminController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.post("/signin", controller.signin);
+    router.post("/logout", controller.logout);
     return router;
 };
 exports.default = adminRouter;

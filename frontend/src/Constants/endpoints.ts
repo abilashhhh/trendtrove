@@ -17,6 +17,7 @@ const END_POINTS = {
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
   GET_ALL_USERS : '/api/user/getallusers/:userId',
   ADMIN_LOGIN: 'api/admin/signin',
+  ADMIN_LOGOUT: 'api/admin/logout',
   REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
   GET_USERS: 'api/admin/getUsers',
 };

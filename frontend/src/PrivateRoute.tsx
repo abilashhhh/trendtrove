@@ -1,4 +1,3 @@
- 
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -9,8 +8,16 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
-  const currentUSer = useSelector((state: StoreType) => state.userAuth.isAuthenticated)
-  return currentUSer ? element: <Navigate to="/signin" />
+  const currentUser = useSelector((state: StoreType) => state.userAuth.isAuthenticated);
+  const currentAdmin = useSelector((state: StoreType) => state.admin.isAuthenticated);
+
+  if (currentUser) {
+    return element;  
+  } else if (currentAdmin) {
+    return element;  
+  } else {
+    return <Navigate to="/" />;  
+  }
 }
 
 export default PrivateRoute

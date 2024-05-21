@@ -24,6 +24,7 @@ export interface User {
     isGoogleSignedIn?: boolean;
     isBlocked?: boolean;
     isPrivate?: boolean;
+    isAdmin?: boolean;
     createdAt?: string;
 }
 

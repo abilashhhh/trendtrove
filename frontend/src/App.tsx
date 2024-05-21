@@ -54,6 +54,7 @@ function App() {
           path="/friends"
           element={<PrivateRoute element={< FriendsPage />} path={""} />}
         /> 
+        
         <Route
           path="/adminhome"
           element={<PrivateRoute element={< AdminHomePage />} path={""} />}
@@ -69,3 +70,5 @@ function App() {
 }
 
 export default App;
+
+ 

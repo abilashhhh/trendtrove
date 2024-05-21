@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleLogoutUser = exports.handleAdminSignin = void 0;
+exports.handleLogoutAdmin = exports.handleAdminSignin = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 // User Login
 const handleAdminSignin = (email, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,8 +55,7 @@ const handleAdminSignin = (email, password, dbUserRepository, authService) => __
     return { userDetails, refreshToken, accessToken };
 });
 exports.handleAdminSignin = handleAdminSignin;
-// Handle User Logout
-const handleLogoutUser = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+const handleLogoutAdmin = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     yield dbUserRepository.logoutUser(userId);
 });
-exports.handleLogoutUser = handleLogoutUser;
+exports.handleLogoutAdmin = handleLogoutAdmin;

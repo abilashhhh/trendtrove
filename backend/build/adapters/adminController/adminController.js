@@ -33,9 +33,24 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             });
         }
     });
+    const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId } = req.body;
+            yield handleLogoutAdmin(userId, dbUserRepository);
+            res.json({ status: "success", message: "Admin logged out successfully" });
+        }
+        catch (err) {
+            console.error("Error logging out admin:", err);
+            res.status(500).json({
+                status: "error",
+                message: "Failed to log out admin",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
-        signin
+        signin,
+        logout
     };
 };
 exports.default = adminController;

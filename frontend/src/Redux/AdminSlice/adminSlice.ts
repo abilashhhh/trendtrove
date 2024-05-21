@@ -19,7 +19,7 @@ const adminSlice = createSlice({
       state.accessToken = accessToken;
       state.isAuthenticated = true;
     },
-    adminLogout: state => {
+    adminLogout: (state) => {
       state.isAuthenticated = false;
       state.accessToken = null;
     },
