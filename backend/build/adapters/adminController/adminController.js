@@ -36,7 +36,7 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
     const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { userId } = req.body;
-            yield handleLogoutAdmin(userId, dbUserRepository);
+            yield (0, adminAuthApplication_1.handleLogoutAdmin)(userId, dbUserRepository);
             res.json({ status: "success", message: "Admin logged out successfully" });
         }
         catch (err) {
@@ -47,10 +47,29 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             });
         }
     });
+    const getAllUsersForAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const users = yield (0, adminAuthApplication_1.handleGetAllUsersForAdmin)(dbUserRepository);
+            console.log(users);
+            res.json({
+                status: "success",
+                message: "All users info fetched",
+                users,
+            });
+        }
+        catch (err) {
+            console.error("Error fetching all users info:", err);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to fetch all users info",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
         signin,
-        logout
+        logout,
+        getAllUsersForAdmin
     };
 };
 exports.default = adminController;

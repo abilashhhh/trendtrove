@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "../styles.css";
 import { useDispatch } from "react-redux";
 import { adminLogout } from "../../Redux/AdminSlice/adminSlice";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,6 +11,7 @@ import AdminHeader from "../../Components/AdminPage/AdminHeader";
 function AdminHomePage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [isDarkMode, setDarkMode] = useState(true);
+  const [activeSection, setActiveSection] = useState("Home");
   const dispatch = useDispatch();
 
   const toggleDarkMode = () => {
@@ -50,19 +50,18 @@ function AdminHomePage() {
   return (
     <>
       <ToastContainer />
-
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
         <AdminHeader toggleLeftSidebar={toggleLeftSidebar} />
-
         <div className="flex flex-1 overflow-hidden">
           <AdminLeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}
             toggleDarkMode={toggleDarkMode}
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
           />
-
-          <AdminPageMiddleContainer />
+          <AdminPageMiddleContainer activeSection={activeSection} />
         </div>
       </div>
     </>

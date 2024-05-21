@@ -11,7 +11,7 @@ import {
   userRepositoryMongoDB,
 } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 
-import { handleAdminSignin } from "../../application/use-cases/admin/adminAuthApplication";
+import { handleAdminSignin, handleGetAllUsersForAdmin, handleLogoutAdmin } from "../../application/use-cases/admin/adminAuthApplication";
 
 const adminController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
@@ -60,11 +60,30 @@ const adminController = (
     }
   };
 
+  const getAllUsersForAdmin = async (req: Request, res: Response) => {
+    try {
+      const users = await handleGetAllUsersForAdmin(dbUserRepository);
+      console.log(users);
+      res.json({
+        status: "success",
+        message: "All users info fetched",
+        users,
+      });
+    } catch (err) {
+      console.error("Error fetching all users info:", err);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to fetch all users info",
+      });
+    }
+  };
+
   //////////////////////////////////////////////////
 
   return {
     signin,
-    logout
+    logout,
+    getAllUsersForAdmin
   };
 };
 

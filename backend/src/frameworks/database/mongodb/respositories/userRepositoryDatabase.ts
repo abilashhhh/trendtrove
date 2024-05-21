@@ -9,12 +9,11 @@ import User from "../models/userModel";
 //////////////////////////////////////////////////////////
 
 export const userRepositoryMongoDB = () => {
-
   //////////////////////////////////////////////////////////
 
   const addUser = async (user: UserInterface | GoogleUserInterface) => {
     try {
-      console.log("Add user tried to run, data : ", user) 
+      console.log("Add user tried to run, data : ", user);
 
       const newUser = new User(user);
       return await newUser.save();
@@ -23,8 +22,6 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error adding user!");
     }
   };
-
-   
 
   //////////////////////////////////////////////////////////
 
@@ -42,7 +39,7 @@ export const userRepositoryMongoDB = () => {
 
   const getUserById = async (userId: string) => {
     try {
-      const user = await User.findById( userId );
+      const user = await User.findById(userId);
       return user;
     } catch (error) {
       console.log(error);
@@ -65,18 +62,20 @@ export const userRepositoryMongoDB = () => {
 
   //////////////////////////////////////////////////////////
 
-  const logoutUser = async( userId : string  ) => {
+  const logoutUser = async (userId: string) => {
     try {
-      await User.updateOne({
-        _id : userId},{ $unset : {refreshToken : 1 , refreshTokenExpiresAt : 1}
-      })
+      await User.updateOne(
+        {
+          _id: userId,
+        },
+        { $unset: { refreshToken: 1, refreshTokenExpiresAt: 1 } }
+      );
     } catch (error) {
-      throw new Error("Error logging out user")
+      throw new Error("Error logging out user");
     }
-  }
+  };
 
   //////////////////////////////////////////////////////////
-
 
   const addRefreshTokenAndExpiry = async (
     email: string,
@@ -101,18 +100,15 @@ export const userRepositoryMongoDB = () => {
   //////////////////////////////////////////////////////////
   const updateProfile = async (profileInfo: ProfileInterface) => {
     try {
-      const user = await User.findByIdAndUpdate(
-        profileInfo._id,
-        profileInfo,
-        { new: true }
-      );
+      const user = await User.findByIdAndUpdate(profileInfo._id, profileInfo, {
+        new: true,
+      });
       return user;
     } catch (error) {
       console.log(error);
       throw new Error("Error updating profile!");
     }
   };
-
 
   const updatePassword = async (_id: string, encryptedNewPassword: string) => {
     try {
@@ -121,32 +117,29 @@ export const userRepositoryMongoDB = () => {
         { password: encryptedNewPassword },
         { new: true }
       );
-  
+
       if (!user) {
         throw new Error("User not found");
       }
-  
+
       return user;
     } catch (error) {
       console.error("Error updating password:", error);
       throw new Error("Error updating password!");
     }
   };
- 
 
   const deleteAccount = async (_id: string) => {
     try {
-      const user = await User.findByIdAndDelete(
-        _id,
-      );
-   
+      const user = await User.findByIdAndDelete(_id);
+
       return user;
     } catch (error) {
       console.error("Error updating password:", error);
       throw new Error("Error updating password!");
     }
   };
-  
+
   const suspendAccount = async (_id: string) => {
     try {
       const user = await User.findByIdAndUpdate(
@@ -154,14 +147,14 @@ export const userRepositoryMongoDB = () => {
         { isSuspended: true },
         { new: true }
       );
-  
+
       return user;
     } catch (error) {
       console.error("Error suspending account:", error);
       throw new Error("Error suspending account!");
     }
   };
-  
+
   const privateAccount = async (_id: string) => {
     try {
       const user = await User.findByIdAndUpdate(
@@ -169,7 +162,7 @@ export const userRepositoryMongoDB = () => {
         { isPrivate: true },
         { new: true }
       );
-  
+
       return user;
     } catch (error) {
       console.error("Error suspending account:", error);
@@ -179,25 +172,39 @@ export const userRepositoryMongoDB = () => {
 
   const getAllUsers = async (id: string) => {
     try {
-        const users = await User.find(
-            { 
-                _id: { $ne: id }, 
-                isAdmin: { $ne: true },
-                isBlocked: { $ne: true },
-                isSuspended: { $ne: true }
-            },
-            'username dp name bio isPrivate'
-        ).exec();
-        console.log(users);
-        return users;
+      const users = await User.find(
+        {
+          _id: { $ne: id },
+          isAdmin: { $ne: true },
+          isBlocked: { $ne: true },
+          isSuspended: { $ne: true },
+        },
+        "username dp name bio isPrivate"
+      ).exec();
+      console.log(users);
+      return users;
     } catch (error) {
-        console.error("Error getting all users", error);
-        throw new Error("Error getting all users");
+      console.error("Error getting all users", error);
+      throw new Error("Error getting all users");
     }
-};
+  };
 
- 
-  
+  const getAllUsersForAdmin = async () => {
+    try {
+      const users = await User.find(
+        {
+          isAdmin: { $ne: true },
+        },
+        "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn"
+      ).exec();
+      console.log(users);
+      return users;
+    } catch (error) {
+      console.error("Error getting all users", error);
+      throw new Error("Error getting all users");
+    }
+  };
+
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne(
@@ -213,7 +220,6 @@ export const userRepositoryMongoDB = () => {
       console.log(error);
       throw new Error("Error changing isAccountVerified field");
     }
-  
   };
 
   const changeIsAccountUnverified = async (userId: string) => {
@@ -233,8 +239,6 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
-   
-
   return {
     addUser,
     getUserByEmail,
@@ -249,11 +253,10 @@ export const userRepositoryMongoDB = () => {
     deleteAccount,
     suspendAccount,
     privateAccount,
-    getAllUsers
+    getAllUsers,
+    getAllUsersForAdmin,
   };
 };
 //////////////////////////////////////////////////////////
 
 export type UserRepositoryMongoDB = typeof userRepositoryMongoDB;
-
- 

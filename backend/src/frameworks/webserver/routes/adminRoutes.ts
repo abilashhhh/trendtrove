@@ -18,6 +18,8 @@ const adminRouter = () => {
 
   router.post("/signin" , controller.signin);
   router.post("/logout", controller.logout);
+  router.get("/getusersforadmin", controller.getAllUsersForAdmin);
+
 
  
  

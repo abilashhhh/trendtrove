@@ -25,6 +25,10 @@ const AdminHeader: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
           <span className="ml-1 text-black dark:text-white text-2xl sm:text-3xl lg:text-4xl font-extrabold">
             Trove
           </span>
+          -
+          <span className="text-gray-500 dark:text-slate-300 text-2xl sm:text-3xl lg:text-4xl font-extrabold">
+            Admin
+          </span>
         </h1>
        </div>
 

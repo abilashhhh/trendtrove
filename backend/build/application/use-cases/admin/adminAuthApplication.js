@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleLogoutAdmin = exports.handleAdminSignin = void 0;
+exports.handleGetAllUsersForAdmin = exports.handleLogoutAdmin = exports.handleAdminSignin = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 // User Login
 const handleAdminSignin = (email, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
@@ -59,3 +59,15 @@ const handleLogoutAdmin = (userId, dbUserRepository) => __awaiter(void 0, void 0
     yield dbUserRepository.logoutUser(userId);
 });
 exports.handleLogoutAdmin = handleLogoutAdmin;
+const handleGetAllUsersForAdmin = (dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleyeallusers called");
+        const user = yield dbUserRepository.getAllUsersForAdmin();
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to get all users data", 401);
+    }
+});
+exports.handleGetAllUsersForAdmin = handleGetAllUsersForAdmin;

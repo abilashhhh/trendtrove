@@ -7,6 +7,8 @@ import {
   AdminLoginResponse,
   GetUsersResponse,
 } from "../../Types/admin";
+import { GetRestOfUsersResponse } from "../../Types/userProfile";
+import axios, { AxiosError } from "axios";
 
 export const adminLogin = async (
   payload: AdminLoginInterface
@@ -27,13 +29,7 @@ export const refreshAdminAccessToken = async (): Promise<{
   );
   return response.data;
 };
-
-export const getAllUsers = async (): Promise<GetUsersResponse> => {
-  const response = await axiosAdminInstance.get<GetUsersResponse>(
-    `${END_POINTS.GET_USERS}`
-  );
-  return response.data;
-};
+ 
 
 
 export const logoutAdmin = async (accessToken: string) => {
@@ -42,4 +38,35 @@ export const logoutAdmin = async (accessToken: string) => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
+};
+
+ 
+export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {
+  try {
+    console.log("called getallusersadmin")
+    const response = await axiosAdminInstance.get<GetUsersResponse>(END_POINTS.GET_USERS);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+const handleAxiosError = (error: any) => {
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError;
+    if (axiosError.response) {
+      console.error(
+        "Server responded with status:",
+        axiosError.response.status
+      );
+      console.error("Response data:", axiosError.response.data);
+    } else if (axiosError.request) {
+      console.error("No response received from the server");
+    } else {
+      console.error("Error setting up the request:", axiosError.message);
+    }
+  } else {
+    console.error("An error occurred:", error.message);
+  }
 };

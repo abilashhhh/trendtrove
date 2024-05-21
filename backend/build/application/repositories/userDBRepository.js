@@ -27,6 +27,7 @@ const userDBRepository = (repository) => {
     const suspendAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.suspendAccount(userId); });
     const privateAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.privateAccount(userId); });
     const getAllUsers = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsers(userId); });
+    const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
     return {
         addUser,
         getUserByEmail,
@@ -41,7 +42,8 @@ const userDBRepository = (repository) => {
         privateAccount,
         changeIsAccountVerified,
         changeIsAccountUnverified,
-        getAllUsers
+        getAllUsers,
+        getAllUsersForAdmin
     };
 };
 exports.userDBRepository = userDBRepository;

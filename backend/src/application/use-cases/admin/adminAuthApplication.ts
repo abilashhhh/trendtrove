@@ -59,3 +59,18 @@ export const handleLogoutAdmin = async (
 ) => {
   await dbUserRepository.logoutUser(userId);
 };
+
+
+export const handleGetAllUsersForAdmin = async (
+  dbUserRepository: ReturnType<UserDBInterface>,
+) => {
+  try {
+console.log("handleyeallusers called")
+    const user = await dbUserRepository.getAllUsersForAdmin();
+
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};

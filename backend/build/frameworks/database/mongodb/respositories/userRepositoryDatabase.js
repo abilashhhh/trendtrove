@@ -66,9 +66,8 @@ const userRepositoryMongoDB = () => {
     const logoutUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield userModel_1.default.updateOne({
-                _id: userId
-            }, { $unset: { refreshToken: 1, refreshTokenExpiresAt: 1 }
-            });
+                _id: userId,
+            }, { $unset: { refreshToken: 1, refreshTokenExpiresAt: 1 } });
         }
         catch (error) {
             throw new Error("Error logging out user");
@@ -89,7 +88,9 @@ const userRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
     const updateProfile = (profileInfo) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const user = yield userModel_1.default.findByIdAndUpdate(profileInfo._id, profileInfo, { new: true });
+            const user = yield userModel_1.default.findByIdAndUpdate(profileInfo._id, profileInfo, {
+                new: true,
+            });
             return user;
         }
         catch (error) {
@@ -146,8 +147,21 @@ const userRepositoryMongoDB = () => {
                 _id: { $ne: id },
                 isAdmin: { $ne: true },
                 isBlocked: { $ne: true },
-                isSuspended: { $ne: true }
-            }, 'username dp name bio isPrivate').exec();
+                isSuspended: { $ne: true },
+            }, "username dp name bio isPrivate").exec();
+            console.log(users);
+            return users;
+        }
+        catch (error) {
+            console.error("Error getting all users", error);
+            throw new Error("Error getting all users");
+        }
+    });
+    const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const users = yield userModel_1.default.find({
+                isAdmin: { $ne: true },
+            }, "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn").exec();
             console.log(users);
             return users;
         }
@@ -198,7 +212,8 @@ const userRepositoryMongoDB = () => {
         deleteAccount,
         suspendAccount,
         privateAccount,
-        getAllUsers
+        getAllUsers,
+        getAllUsersForAdmin,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

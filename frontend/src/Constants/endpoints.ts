@@ -19,7 +19,7 @@ const END_POINTS = {
   ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',
   REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
-  GET_USERS: 'api/admin/getUsers',
+  GET_USERS: 'api/admin/getusersforadmin',
 };
 
 export default END_POINTS;

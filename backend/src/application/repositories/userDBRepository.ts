@@ -51,6 +51,9 @@ export const userDBRepository = (
   const getAllUsers = async (userId: string) =>
     await repository.getAllUsers(userId);
 
+  const getAllUsersForAdmin = async () =>
+    await repository.getAllUsersForAdmin();
+
   return {
     addUser,
     getUserByEmail,
@@ -65,7 +68,8 @@ export const userDBRepository = (
     privateAccount,
     changeIsAccountVerified,
     changeIsAccountUnverified,
-    getAllUsers
+    getAllUsers,
+    getAllUsersForAdmin
   };
 };
 
