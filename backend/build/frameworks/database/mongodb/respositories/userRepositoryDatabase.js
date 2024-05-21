@@ -99,7 +99,6 @@ const userRepositoryMongoDB = () => {
     });
     const updatePassword = (_id, encryptedNewPassword) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("_id, enc pass from userRedposiotyddb: ", _id, encryptedNewPassword);
             const user = yield userModel_1.default.findByIdAndUpdate(_id, { password: encryptedNewPassword }, { new: true });
             if (!user) {
                 throw new Error("User not found");

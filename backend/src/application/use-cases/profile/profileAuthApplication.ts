@@ -72,8 +72,6 @@ import { AuthServiceInterface } from "../../services/authenticationServiceInterf
         throw new Error("User not found");
     
       }
-      console.log("User exists data: ", userExists);
-      console.log("User exists userExists.password: ", userExists.password);
       
       // Validate the current password
       const isPasswordValid = await authService.comparePassword( currentPassword,userExists.password);
@@ -81,25 +79,17 @@ import { AuthServiceInterface } from "../../services/authenticationServiceInterf
         throw new Error("iNVALID CURRENT PASSWORD");
 
       }
-      console.log("User exists data isPasswordValid: ", isPasswordValid);
-
-
-
-
   
       const userdata= await dbUserRepository.getUserById(_id);
       if (!userdata) {
         throw new Error("User not found");
       }
-      console.log("User userdata: ", userdata);
   
       // Encrypt the new password
       const encryptedNewPassword = await authService.encryptPassword(newPassword);
-      console.log("enc padss :", encryptedNewPassword)
   
       // Update user's password in the database
       const user = await dbUserRepository.updatePassword(_id, encryptedNewPassword);
-      console.log("Updated user: ", user);
   
       return user;
     } catch (err) {

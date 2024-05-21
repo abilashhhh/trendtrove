@@ -27,18 +27,17 @@ export const userDBRepository = (
     await repository.addRefreshTokenAndExpiry(email, refreshToken);
   };
 
-  
-  const changeIsAccountVerified = async(email: string) => await repository.changeIsAccountVerified(email)
+  const changeIsAccountVerified = async (email: string) =>
+    await repository.changeIsAccountVerified(email);
 
-  const changeIsAccountUnverified = async(userId: string) => await repository.changeIsAccountUnverified(userId)
+  const changeIsAccountUnverified = async (userId: string) =>
+    await repository.changeIsAccountUnverified(userId);
 
   const updateProfile = async (profileInfo: ProfileInterface) =>
     await repository.updateProfile(profileInfo);
 
-  const updatePassword = async (_id: string , encryptedNewPassword : string) =>
+  const updatePassword = async (_id: string, encryptedNewPassword: string) =>
     await repository.updatePassword(_id, encryptedNewPassword);
-
-  
 
   return {
     addUser,
@@ -50,7 +49,7 @@ export const userDBRepository = (
     updateProfile,
     updatePassword,
     changeIsAccountVerified,
-    changeIsAccountUnverified
+    changeIsAccountUnverified,
   };
 };
 

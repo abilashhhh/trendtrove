@@ -116,7 +116,6 @@ export const userRepositoryMongoDB = () => {
 
   const updatePassword = async (_id: string, encryptedNewPassword: string) => {
     try {
-      console.log("_id, enc pass from userRedposiotyddb: ", _id, encryptedNewPassword)
       const user = await User.findByIdAndUpdate(
         _id,
         { password: encryptedNewPassword },

@@ -77,7 +77,6 @@ const profileController = (
   const changePassword = async (req: Request, res: Response) => { 
     try {
       const { _id, currentPassword, newPassword } = req.body;
-      console.log("req.body: ", req.body);
     
   
       // Handle the password change

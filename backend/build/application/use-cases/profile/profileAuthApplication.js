@@ -69,25 +69,19 @@ const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepositor
         if (!userExists) {
             throw new Error("User not found");
         }
-        console.log("User exists data: ", userExists);
-        console.log("User exists userExists.password: ", userExists.password);
         // Validate the current password
         const isPasswordValid = yield authService.comparePassword(currentPassword, userExists.password);
         if (!isPasswordValid) {
             throw new Error("iNVALID CURRENT PASSWORD");
         }
-        console.log("User exists data isPasswordValid: ", isPasswordValid);
         const userdata = yield dbUserRepository.getUserById(_id);
         if (!userdata) {
             throw new Error("User not found");
         }
-        console.log("User userdata: ", userdata);
         // Encrypt the new password
         const encryptedNewPassword = yield authService.encryptPassword(newPassword);
-        console.log("enc padss :", encryptedNewPassword);
         // Update user's password in the database
         const user = yield dbUserRepository.updatePassword(_id, encryptedNewPassword);
-        console.log("Updated user: ", user);
         return user;
     }
     catch (err) {

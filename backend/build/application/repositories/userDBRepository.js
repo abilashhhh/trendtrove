@@ -33,7 +33,7 @@ const userDBRepository = (repository) => {
         updateProfile,
         updatePassword,
         changeIsAccountVerified,
-        changeIsAccountUnverified
+        changeIsAccountUnverified,
     };
 };
 exports.userDBRepository = userDBRepository;
