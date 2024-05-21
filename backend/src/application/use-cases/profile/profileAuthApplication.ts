@@ -76,7 +76,7 @@ import { AuthServiceInterface } from "../../services/authenticationServiceInterf
       // Validate the current password
       const isPasswordValid = await authService.comparePassword( currentPassword,userExists.password);
       if (!isPasswordValid) {
-        throw new Error("iNVALID CURRENT PASSWORD");
+        throw new ErrorInApplication("iNVALID CURRENT PASSWORD", 401);
 
       }
   

@@ -6,12 +6,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import { validatePassword, validateConfirmPassword } from "../../utils/validations"
+import { useNavigate } from "react-router-dom";
 
 // Main Settings Page Component
 const SettingsMiddlePage = () => {
   const [activeSection, setActiveSection] = useState("ChangePassword");
   const currentUser: any = useSelector((state: StoreType) => state.userAuth.user);
-
+const navigate = useNavigate()
   return (
     <>
       <ToastContainer />
@@ -60,7 +61,7 @@ const ChangePassword = ({ currentUser }) => {
   const [newPassword, setNewPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
+const navigate = useNavigate()
   const handleChangePassword = async (e) => {
     e.preventDefault();
 
@@ -93,10 +94,18 @@ const ChangePassword = ({ currentUser }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await changePassword(userInfo);
-          toast.success("Password updated successfully");
+          const changeResult = await changePassword(userInfo);
+          if (changeResult.status === 'success') {
+            toast.success("Password updated successfully");
+            setTimeout(()=>{
+              navigate("/home")
+            },3000)
+          } else {
+            toast.error(`Failed to update password: ${changeResult.message}`);
+            return
+          }
         } catch (error) {
-          toast.error("Failed to update password");
+          toast.error("Failed to update password, Check all fields and try again");
         }
       }
     });

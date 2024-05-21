@@ -72,7 +72,7 @@ const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepositor
         // Validate the current password
         const isPasswordValid = yield authService.comparePassword(currentPassword, userExists.password);
         if (!isPasswordValid) {
-            throw new Error("iNVALID CURRENT PASSWORD");
+            throw new ErrorInApplication_1.default("iNVALID CURRENT PASSWORD", 401);
         }
         const userdata = yield dbUserRepository.getUserById(_id);
         if (!userdata) {
