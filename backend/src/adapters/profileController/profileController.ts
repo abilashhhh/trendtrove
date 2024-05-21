@@ -15,6 +15,8 @@ import {
   handleEditProfile,
   handlePasswordChange,
   handleUserInfo,
+  handleDeleteAccount,
+  handleSuspendAccount
   // handleOtherUserInfo
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
@@ -36,7 +38,7 @@ const profileController = (
     try {
       const { id } = req.params;
       const user = await handleUserInfo(id, dbUserRepository);
-      console.log(user)
+      console.log(user);
       res.json({
         status: "success",
         message: "user info fetched",
@@ -52,13 +54,13 @@ const profileController = (
   };
 
   //////////////////////////////////////////////////
-  
+
   const editProfile = async (req: Request, res: Response) => {
     try {
-    const profileInfo: ProfileInterface = req.body;
-      console.log("req.body; : ", profileInfo)
+      const profileInfo: ProfileInterface = req.body;
+      console.log("req.body; : ", profileInfo);
       const userData = await handleEditProfile(profileInfo, dbUserRepository);
-      console.log(userData)
+      console.log(userData);
       res.json({
         status: "success",
         message: "user edited successfully",
@@ -73,16 +75,20 @@ const profileController = (
     }
   };
 
-
-  const changePassword = async (req: Request, res: Response) => { 
+  const changePassword = async (req: Request, res: Response) => {
     try {
       const { _id, currentPassword, newPassword } = req.body;
-    
-  
+
       // Handle the password change
-      const userData = await handlePasswordChange(_id, currentPassword , newPassword , dbUserRepository, authService);  
+      const userData = await handlePasswordChange(
+        _id,
+        currentPassword,
+        newPassword,
+        dbUserRepository,
+        authService
+      );
       console.log(userData);
-  
+
       res.json({
         status: "success",
         message: "Password changed successfully",
@@ -97,21 +103,56 @@ const profileController = (
     }
   };
 
-  
-   
+  const deleteAccount = async (req: Request, res: Response) => {
+    try {
+      const { id, password } = req.params;
+      console.log("req params in deleteAccount acc: ",req.params)
 
+      const result = await handleDeleteAccount(id , password,dbUserRepository,authService);
 
+      res.json({
+        status: "success",
+        message: "Account deleted successfully",
+        result
+      });
+    } catch (err: any) {
+      console.error("Error deleting account:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to delete account",
+      });
+    }
+  };
+
+  const suspendAccount = async (req: Request, res: Response) => {
+    try {
+      const { id, password } = req.params;
+      console.log("req params in suspend acc: ",req.params)
+      const result = await handleSuspendAccount(id , password,dbUserRepository,authService);
+
+      res.json({
+        status: "success",
+        message: "Account suspended successfully",
+        result
+      });
+    } catch (err: any) {
+      console.error("Error suspending account:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to suspend your account",
+      });
+    }
+  };
 
   //////////////////////////////////////////////////
-
 
   return {
     getUserInfo,
     editProfile,
-    changePassword
+    changePassword,
+    deleteAccount,
+    suspendAccount,
   };
 };
 
 export default profileController;
-
- 

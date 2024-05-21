@@ -39,6 +39,12 @@ export const userDBRepository = (
   const updatePassword = async (_id: string, encryptedNewPassword: string) =>
     await repository.updatePassword(_id, encryptedNewPassword);
 
+  const deleteAccount = async (userId: string) =>
+    await repository.deleteAccount(userId);
+
+  const suspendAccount = async (userId: string) =>
+    await repository.suspendAccount(userId);
+
   return {
     addUser,
     getUserByEmail,
@@ -48,6 +54,8 @@ export const userDBRepository = (
     logoutUser,
     updateProfile,
     updatePassword,
+    deleteAccount,
+    suspendAccount,
     changeIsAccountVerified,
     changeIsAccountUnverified,
   };

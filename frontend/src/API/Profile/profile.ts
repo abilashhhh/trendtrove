@@ -81,12 +81,17 @@ export const changePassword = async (
   }
 };
 
-export const deleteAccount = async (): Promise<DeleteAccountResponse> => {
+export const deleteAccount = async (
+  userId: string,
+  password: string
+): Promise<DeleteAccountResponse> => {
   try {
-    console.log("changePassword, userInfo:", userInfo);
+    console.log(userId, password, "from deklete acc");
     const response = await axiosUserInstance.delete<DeleteAccountResponse>(
-      END_POINTS.DELETE_ACCOUNT,
-      userInfo
+      `${END_POINTS.DELETE_ACCOUNT.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
     );
     console.log(response.data);
     return response.data;
@@ -97,13 +102,17 @@ export const deleteAccount = async (): Promise<DeleteAccountResponse> => {
 };
 
 export const suspendAccount = async (
-  userInfo: UserInfo
+  userId: string,
+  password: string
 ): Promise<SuspendAccountResponse> => {
   try {
-    console.log("changePassword, userInfo:", userInfo);
+    console.log(userId, password, "from susp acc");
+
     const response = await axiosUserInstance.patch<SuspendAccountResponse>(
-      END_POINTS.SUSPEND_ACCOUNT,
-      userInfo
+      `${END_POINTS.SUSPEND_ACCOUNT.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
     );
     console.log(response.data);
     return response.data;

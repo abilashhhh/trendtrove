@@ -23,6 +23,8 @@ const userDBRepository = (repository) => {
     const changeIsAccountUnverified = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.changeIsAccountUnverified(userId); });
     const updateProfile = (profileInfo) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.updateProfile(profileInfo); });
     const updatePassword = (_id, encryptedNewPassword) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.updatePassword(_id, encryptedNewPassword); });
+    const deleteAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteAccount(userId); });
+    const suspendAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.suspendAccount(userId); });
     return {
         addUser,
         getUserByEmail,
@@ -32,6 +34,8 @@ const userDBRepository = (repository) => {
         logoutUser,
         updateProfile,
         updatePassword,
+        deleteAccount,
+        suspendAccount,
         changeIsAccountVerified,
         changeIsAccountUnverified,
     };

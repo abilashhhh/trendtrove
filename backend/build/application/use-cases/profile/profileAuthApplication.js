@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -72,11 +72,7 @@ const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepositor
         // Validate the current password
         const isPasswordValid = yield authService.comparePassword(currentPassword, userExists.password);
         if (!isPasswordValid) {
-            throw new ErrorInApplication_1.default("iNVALID CURRENT PASSWORD", 401);
-        }
-        const userdata = yield dbUserRepository.getUserById(_id);
-        if (!userdata) {
-            throw new Error("User not found");
+            throw new ErrorInApplication_1.default("nvalid current password", 401);
         }
         // Encrypt the new password
         const encryptedNewPassword = yield authService.encryptPassword(newPassword);
@@ -90,3 +86,46 @@ const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepositor
     }
 });
 exports.handlePasswordChange = handlePasswordChange;
+const handleDeleteAccount = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new Error("User not found");
+        }
+        // Validate the current password
+        const isPasswordValid = yield authService.comparePassword(password, userExists.password);
+        if (!isPasswordValid) {
+            throw new ErrorInApplication_1.default("nvalid current password", 401);
+        }
+        // Update user's password in the database
+        const user = yield dbUserRepository.deleteAccount(userId);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to change password", 401);
+    }
+});
+exports.handleDeleteAccount = handleDeleteAccount;
+const handleSuspendAccount = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Userdetails in handleSUspend: ", userId, password);
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new Error("User not found");
+        }
+        // Validate the current password
+        const isPasswordValid = yield authService.comparePassword(password, userExists.password);
+        if (!isPasswordValid) {
+            throw new ErrorInApplication_1.default("nvalid current password", 401);
+        }
+        // Update user's password in the database
+        const user = yield dbUserRepository.suspendAccount(userId);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to change password", 401);
+    }
+});
+exports.handleSuspendAccount = handleSuspendAccount;

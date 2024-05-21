@@ -110,6 +110,26 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error updating password!");
         }
     });
+    const deleteAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndDelete(_id);
+            return user;
+        }
+        catch (error) {
+            console.error("Error updating password:", error);
+            throw new Error("Error updating password!");
+        }
+    });
+    const suspendAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndUpdate(_id, { isSuspended: true }, { new: true });
+            return user;
+        }
+        catch (error) {
+            console.error("Error suspending account:", error);
+            throw new Error("Error suspending account!");
+        }
+    });
     const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield userModel_1.default.updateOne({ email }, {
@@ -149,6 +169,8 @@ const userRepositoryMongoDB = () => {
         updatePassword,
         changeIsAccountVerified,
         changeIsAccountUnverified,
+        deleteAccount,
+        suspendAccount
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

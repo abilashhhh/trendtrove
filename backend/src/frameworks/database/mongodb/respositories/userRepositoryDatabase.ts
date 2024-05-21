@@ -133,6 +133,36 @@ export const userRepositoryMongoDB = () => {
     }
   };
  
+
+  const deleteAccount = async (_id: string) => {
+    try {
+      const user = await User.findByIdAndDelete(
+        _id,
+      );
+   
+      return user;
+    } catch (error) {
+      console.error("Error updating password:", error);
+      throw new Error("Error updating password!");
+    }
+  };
+  
+  const suspendAccount = async (_id: string) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { isSuspended: true },
+        { new: true }
+      );
+  
+      return user;
+    } catch (error) {
+      console.error("Error suspending account:", error);
+      throw new Error("Error suspending account!");
+    }
+  };
+  
+ 
   
   const changeIsAccountVerified = async (email: string) => {
     try {
@@ -182,6 +212,8 @@ export const userRepositoryMongoDB = () => {
     updatePassword,
     changeIsAccountVerified,
     changeIsAccountUnverified,
+    deleteAccount,
+    suspendAccount
   };
 };
 //////////////////////////////////////////////////////////

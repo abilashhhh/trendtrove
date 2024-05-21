@@ -74,11 +74,51 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
     });
+    const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id, password } = req.params;
+            console.log("req params in deleteAccount acc: ", req.params);
+            const result = yield (0, profileAuthApplication_1.handleDeleteAccount)(id, password, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "Account deleted successfully",
+                result
+            });
+        }
+        catch (err) {
+            console.error("Error deleting account:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to delete account",
+            });
+        }
+    });
+    const suspendAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id, password } = req.params;
+            console.log("req params in suspend acc: ", req.params);
+            const result = yield (0, profileAuthApplication_1.handleSuspendAccount)(id, password, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "Account suspended successfully",
+                result
+            });
+        }
+        catch (err) {
+            console.error("Error suspending account:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to suspend your account",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
         getUserInfo,
         editProfile,
-        changePassword
+        changePassword,
+        deleteAccount,
+        suspendAccount,
     };
 };
 exports.default = profileController;

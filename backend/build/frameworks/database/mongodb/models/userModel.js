@@ -79,6 +79,10 @@ const userSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    isSuspended: {
+        type: Boolean,
+        default: false,
+    },
     refreshToken: {
         type: String,
         default: null,

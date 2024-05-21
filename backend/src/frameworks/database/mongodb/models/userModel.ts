@@ -57,6 +57,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    isSuspended: {
+      type: Boolean,
+      default: false,
+    },
     refreshToken: {
       type: String,
       default: null,
