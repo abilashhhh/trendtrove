@@ -27,7 +27,7 @@ const FriendsMiddlePage = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [currentUser]); // Add currentUser as a dependency
 
   return (
     <>

@@ -4,16 +4,10 @@ import {
   faCheckCircle,
   faTimesCircle,
   faUser,
-  faEnvelope,
-  faPhone,
   faInfoCircle,
-  faMapMarkerAlt,
-  faTransgender,
-  faCrown,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
-import { UserInfo } from "../../../Types/userProfile";
-import { useNavigate } from "react-router-dom";
+import { UserInfo } from "../../Types/userProfile";
 
 interface ProfileProps {
   userDetails: UserInfo;
@@ -30,10 +24,6 @@ const formatDate = (date: string | undefined) => {
 };
 
 const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails }) => {
-  const navigate = useNavigate();
-  const handleEdit = () => {
-    navigate("/editProfile");
-  };
 
   return (
     <main className="flex-1 p-2 bg-gray-800 min-h-screen w-full no-scrollbar dark:bg-gray-700 text-white">
@@ -41,7 +31,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails }) => {
         <div className="max-w-full mx-auto relative">
           {/* Profile Info */}
           <div className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative">
-             {/* Profile Picture */}
+            {/* Profile Picture */}
             <div className="flex items-center justify-center mb-4">
               <img
                 src={userDetails.dp}
@@ -51,90 +41,22 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              <div className="flex flex-col gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    <FontAwesomeIcon icon={faUser} className="mr-2" />
-                    Username
-                  </p>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {userDetails.username}
-                  </h2>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    <FontAwesomeIcon icon={faUser} className="mr-2" />
-                    Name
-                  </p>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {userDetails.name}
-                  </h2>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4 col-span-1 sm:col-span-2 lg:col-span-1">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
-                    Email
-                  </p>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white break-all">
-                    {userDetails.email}
-                  </h2>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    <FontAwesomeIcon icon={faPhone} className="mr-2" />
-                    Phone Number
-                  </p>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {userDetails.phone || "N/A"}
-                  </h2>
-                </div>
-              </div>
-
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
-                  Address
+                  <FontAwesomeIcon icon={faUser} className="mr-2" />
+                  Username
                 </p>
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                  {userDetails.address || "N/A"}
+                  {userDetails.username}
                 </h2>
               </div>
-
-              <div className="flex flex-col gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    <FontAwesomeIcon icon={faTransgender} className="mr-2" />
-                    Gender
-                  </p>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {userDetails.gender || "N/A"}
-                  </h2>
-                </div>
-              </div>
-
-              <div className="flex items-center">
-                <FontAwesomeIcon icon={faCrown} className="mr-2" />
-                <p className="text-sm text-gray-600 dark:text-gray-300 mr-2">
-                  Premium Account
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <FontAwesomeIcon icon={faUser} className="mr-2" />
+                  Name
                 </p>
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                  {userDetails.isPremium ? (
-                    <FontAwesomeIcon
-                      icon={faCheckCircle}
-                      className="text-green-500"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faTimesCircle}
-                      className="text-red-500"
-                    />
-                  )}
+                  {userDetails.name}
                 </h2>
               </div>
 
