@@ -181,7 +181,7 @@ export const userRepositoryMongoDB = () => {
     try {
         const users = await User.find(
             { _id: { $ne: id } },  
-            'username dp name'  
+            'username dp name bio isPrivate'  
         );
         console.log(users);
         return users;

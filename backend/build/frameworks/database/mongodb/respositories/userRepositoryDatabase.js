@@ -142,7 +142,7 @@ const userRepositoryMongoDB = () => {
     });
     const getAllUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const users = yield userModel_1.default.find({ _id: { $ne: id } }, 'username dp name');
+            const users = yield userModel_1.default.find({ _id: { $ne: id } }, 'username dp name bio isPrivate');
             console.log(users);
             return users;
         }

@@ -27,6 +27,17 @@ export interface GoogleUserInterface {
   password?: string;
   dp?:string
   isGoogleSignedIn?:boolean
+  coverPhoto?: string;
+  bio?: string;
+  gender?: string;
+  address?: string;
+  followers?: string[];
+  following?: string[];
+  savedPosts?: string[];
+  isVerifiedAccount?: boolean;
+  isBlocked?: boolean;
+  isPrivate?: boolean;
+  createdAt?: string;
 }
 
 export interface UserDataInterface {
