@@ -112,8 +112,28 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error updating profile!");
     }
   };
-  //////////////////////////////////////////////////////
+
+
+  const updatePassword = async (_id: string, encryptedNewPassword: string) => {
+    try {
+      console.log("_id, enc pass from userRedposiotyddb: ", _id, encryptedNewPassword)
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { password: encryptedNewPassword },
+        { new: true }
+      );
   
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      return user;
+    } catch (error) {
+      console.error("Error updating password:", error);
+      throw new Error("Error updating password!");
+    }
+  };
+ 
   
   const changeIsAccountVerified = async (email: string) => {
     try {
@@ -160,6 +180,7 @@ export const userRepositoryMongoDB = () => {
     addRefreshTokenAndExpiry,
     logoutUser,
     updateProfile,
+    updatePassword,
     changeIsAccountVerified,
     changeIsAccountUnverified,
   };

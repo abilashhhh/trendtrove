@@ -57,8 +57,9 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
     const changePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { _id, currentPassword, newPassword } = req.body;
-            console.log("req.body; : ", req.body);
-            const userData = yield (0, profileAuthApplication_1.handlePasswordChange)(_id, currentPassword, newPassword);
+            console.log("req.body: ", req.body);
+            // Handle the password change
+            const userData = yield (0, profileAuthApplication_1.handlePasswordChange)(_id, currentPassword, newPassword, dbUserRepository, authService);
             console.log(userData);
             res.json({
                 status: "success",
@@ -67,8 +68,8 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
         catch (err) {
-            console.error("Error changinig password:", err);
-            res.status(401).json({
+            console.error("Error changing password:", err);
+            res.status(500).json({
                 status: "error",
                 message: "Failed to change password",
             });

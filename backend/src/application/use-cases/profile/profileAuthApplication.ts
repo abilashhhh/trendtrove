@@ -57,44 +57,54 @@ import { AuthServiceInterface } from "../../services/authenticationServiceInterf
     }
   };
 
-
   export const handlePasswordChange = async (
-    userData: { _id: string, currentPassword: string, newPassword: string },
-    dbUserRepository: ReturnType<UserDBInterface>,
+    _id: string, 
+    currentPassword: string, 
+    newPassword: string, 
+    dbUserRepository: ReturnType<UserDBInterface>, 
     authService: ReturnType<AuthServiceInterface>
   ) => {
     try {
-      console.log("userData: ", userData);
-  
-      // Check if required fields exist in userData
-      if (!userData._id || !userData.currentPassword || !userData.newPassword) {
-        throw new Error("Invalid user data or missing current or new password");
-      }
-  
-      // Fetch user from database
-      const userExists = await dbUserRepository.getUserById(userData._id);
+
+        
+      const userExists = await dbUserRepository.getUserById(_id);
       if (!userExists) {
         throw new Error("User not found");
+    
       }
-  
-      // Compare current password with stored password
-      const isPasswordValid = await authService.comparePassword(userExists.password, userData.currentPassword);
+      console.log("User exists data: ", userExists);
+      console.log("User exists userExists.password: ", userExists.password);
+      
+      // Validate the current password
+      const isPasswordValid = await authService.comparePassword( currentPassword,userExists.password);
       if (!isPasswordValid) {
-        throw new Error("Invalid current password");
+        throw new Error("iNVALID CURRENT PASSWORD");
 
       }
+      console.log("User exists data isPasswordValid: ", isPasswordValid);
 
-      console.log("")
+
+
+
   
-      // Encrypt new password
-      const newPassword = await authService.encryptPassword(userData.newPassword);
+      const userdata= await dbUserRepository.getUserById(_id);
+      if (!userdata) {
+        throw new Error("User not found");
+      }
+      console.log("User userdata: ", userdata);
+  
+      // Encrypt the new password
+      const encryptedNewPassword = await authService.encryptPassword(newPassword);
+      console.log("enc padss :", encryptedNewPassword)
   
       // Update user's password in the database
-      const user = await dbUserRepository.updatePassword(userData._id, newPassword);
-      console.log("user: ", user);
+      const user = await dbUserRepository.updatePassword(_id, encryptedNewPassword);
+      console.log("Updated user: ", user);
+  
+      return user;
     } catch (err) {
-      console.log("Error:", err);
-      throw new ErrorInApplication(err.message || "Failed to change password", 401);
+      console.error("Error: ", err);
+      throw new ErrorInApplication("Failed to change password", 401);
     }
   };
   

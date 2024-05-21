@@ -63,33 +63,36 @@ const handleEditProfile = (profileInfo, dbUserRepository) => __awaiter(void 0, v
     }
 });
 exports.handleEditProfile = handleEditProfile;
-const handlePasswordChange = (userData, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("userData: ", userData);
-        // Check if required fields exist in userData
-        if (!userData._id || !userData.currentPassword || !userData.newPassword) {
-            throw new Error("Invalid user data or missing current or new password");
-        }
-        // Fetch user from database
-        const userExists = yield dbUserRepository.getUserById(userData._id);
+        const userExists = yield dbUserRepository.getUserById(_id);
         if (!userExists) {
             throw new Error("User not found");
         }
-        // Compare current password with stored password
-        const isPasswordValid = yield authService.comparePassword(userExists.password, userData.currentPassword);
+        console.log("User exists data: ", userExists);
+        console.log("User exists userExists.password: ", userExists.password);
+        // Validate the current password
+        const isPasswordValid = yield authService.comparePassword(currentPassword, userExists.password);
         if (!isPasswordValid) {
-            throw new Error("Invalid current password");
+            throw new Error("iNVALID CURRENT PASSWORD");
         }
-        console.log("");
-        // Encrypt new password
-        const newPassword = yield authService.encryptPassword(userData.newPassword);
+        console.log("User exists data isPasswordValid: ", isPasswordValid);
+        const userdata = yield dbUserRepository.getUserById(_id);
+        if (!userdata) {
+            throw new Error("User not found");
+        }
+        console.log("User userdata: ", userdata);
+        // Encrypt the new password
+        const encryptedNewPassword = yield authService.encryptPassword(newPassword);
+        console.log("enc padss :", encryptedNewPassword);
         // Update user's password in the database
-        const user = yield dbUserRepository.updatePassword(userData._id, newPassword);
-        console.log("user: ", user);
+        const user = yield dbUserRepository.updatePassword(_id, encryptedNewPassword);
+        console.log("Updated user: ", user);
+        return user;
     }
     catch (err) {
-        console.log("Error:", err);
-        throw new ErrorInApplication_1.default(err.message || "Failed to change password", 401);
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to change password", 401);
     }
 });
 exports.handlePasswordChange = handlePasswordChange;

@@ -97,7 +97,20 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error updating profile!");
         }
     });
-    //////////////////////////////////////////////////////
+    const updatePassword = (_id, encryptedNewPassword) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            console.log("_id, enc pass from userRedposiotyddb: ", _id, encryptedNewPassword);
+            const user = yield userModel_1.default.findByIdAndUpdate(_id, { password: encryptedNewPassword }, { new: true });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            return user;
+        }
+        catch (error) {
+            console.error("Error updating password:", error);
+            throw new Error("Error updating password!");
+        }
+    });
     const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield userModel_1.default.updateOne({ email }, {
@@ -134,6 +147,7 @@ const userRepositoryMongoDB = () => {
         addRefreshTokenAndExpiry,
         logoutUser,
         updateProfile,
+        updatePassword,
         changeIsAccountVerified,
         changeIsAccountUnverified,
     };

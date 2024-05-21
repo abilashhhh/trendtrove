@@ -35,6 +35,9 @@ export const userDBRepository = (
   const updateProfile = async (profileInfo: ProfileInterface) =>
     await repository.updateProfile(profileInfo);
 
+  const updatePassword = async (_id: string , encryptedNewPassword : string) =>
+    await repository.updatePassword(_id, encryptedNewPassword);
+
   
 
   return {
@@ -45,6 +48,7 @@ export const userDBRepository = (
     getUserById,
     logoutUser,
     updateProfile,
+    updatePassword,
     changeIsAccountVerified,
     changeIsAccountUnverified
   };
