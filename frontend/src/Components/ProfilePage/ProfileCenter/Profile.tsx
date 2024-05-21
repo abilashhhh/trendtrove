@@ -19,6 +19,16 @@ interface ProfileProps {
   userDetails: UserInfo;
 }
 
+const formatDate = (date: string | undefined) => {
+  if (!date) return "N/A";
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Date(date).toLocaleDateString(undefined, options);
+};
+
 const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
   const navigate = useNavigate();
   const handleEdit = () => {
@@ -165,6 +175,18 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                     {userDetails.bio || "N/A"}
                   </h2>
                 </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {userDetails.createdAt && (
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                    <p> Joined TrendTrove on </p>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {formatDate(userDetails.createdAt)}
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
           </div>
