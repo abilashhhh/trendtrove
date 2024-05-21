@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import { useNavigate } from "react-router-dom";
 import { getAllUsers } from "../../API/User/user";
+import Profile from "./ProfileSectionFriendsPage"; 
 
 // Main Settings Page Component
 const FriendsMiddlePage = () => {
@@ -14,12 +14,11 @@ const FriendsMiddlePage = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const allUsers = await getAllUsers(currentUser._id);
-        console.log("result from get all users:",allUsers)
+        console.log("result from get all users:", allUsers);
         setUsers(allUsers.user);
       } catch (error) {
         toast.error("Failed to load users");
@@ -33,8 +32,8 @@ const FriendsMiddlePage = () => {
   return (
     <>
       <ToastContainer />
-      <main className="flex-1 min-h-screen pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
-        <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto">
+      <main className="flex-1 min-h-screen pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white ">
+        <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
           <h1 className="text-2xl font-semibold underline text-center mb-4">
             Find new friends
           </h1>
@@ -73,9 +72,10 @@ const FriendsMiddlePage = () => {
                 )}
               </div>
             </div>
-            <div className="w-full md:w-3/4 bg-gray-300 dark:bg-slate-600 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto">
+            <div className="w-full md:w-3/4 bg-gray-300 dark:bg-slate-600 rounded-lg flex text-black dark:text-white text-xl  ">
               {activeSection ? (
-                <div className="p-4">Displaying content for {activeSection}</div>
+                // Render the Profile component with the userDetails
+                <Profile userDetails={users.find(user => user.username === activeSection)} />
               ) : (
                 <div className="p-4 text-center">Select a user to see details</div>
               )}
