@@ -140,6 +140,17 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error suspending account!");
         }
     });
+    const getAllUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const users = yield userModel_1.default.find({ _id: { $ne: id } }, 'username dp name');
+            console.log(users);
+            return users;
+        }
+        catch (error) {
+            console.error("Error getting all users", error);
+            throw new Error("Error getting all users");
+        }
+    });
     const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield userModel_1.default.updateOne({ email }, {
@@ -181,7 +192,8 @@ const userRepositoryMongoDB = () => {
         changeIsAccountUnverified,
         deleteAccount,
         suspendAccount,
-        privateAccount
+        privateAccount,
+        getAllUsers
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

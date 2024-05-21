@@ -69,3 +69,12 @@ export interface GetOtherUserInfoResponse {
   message: string,
   otherUser: UserInfo,
 }
+
+
+export interface GetRestOfUsersResponse {
+  status: string,
+  message: string,
+  users: UserInfo[]
+}
+
+ 

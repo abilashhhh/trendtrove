@@ -197,3 +197,19 @@ export const handlePrivateAccount = async (
     throw new ErrorInApplication("Failed to change to private account", 401);
   }
 };
+
+
+export const handleGetAllUsers = async (
+  id:string ,
+  dbUserRepository: ReturnType<UserDBInterface>,
+) => {
+  try {
+
+    const user = await dbUserRepository.getAllUsers(id);
+
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};

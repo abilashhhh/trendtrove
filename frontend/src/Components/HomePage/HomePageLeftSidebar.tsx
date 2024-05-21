@@ -22,6 +22,10 @@ const LeftSidebar = ({
   const settings = () => {
     navigate("/settings")
   }
+
+  const findFriends = () => {
+    navigate("/friends")
+  }
   
   return (
     <aside
@@ -50,14 +54,14 @@ const LeftSidebar = ({
             Calls
           </button>
 
-          <button className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
+          <button onClick={findFriends} className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
             <FaUserFriends className="inline-block mr-2" />
-            Friends
+           Find Friends
           </button>
-          <button className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
+          {/* <button className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
             <FaSearch className="inline-block mr-2" />
             Search
-          </button>
+          </button> */}
           <button onClick={profile} className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600  hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
             <FaUser  className="inline-block mr-2" />
             Profile

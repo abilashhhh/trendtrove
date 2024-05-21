@@ -12,6 +12,7 @@ import PrivateRoute from "./PrivateRoute";
 import { StoreType } from "./Redux/Store/reduxStore";
 import EditProfilePage from "./Pages/EditProfilePage";
 import SettingsPage from "./Pages/SettingsPage";
+import FriendsPage from "./Pages/FriendsPage";
 function App() {
   const user = useSelector((state: StoreType) => state.userAuth.user);
   const [isVerifiedAccount, setIsVerifiedAccount] = useState<boolean>(true);
@@ -46,6 +47,10 @@ function App() {
         <Route
           path="/settings"
           element={<PrivateRoute element={< SettingsPage />} path={""} />}
+        /> 
+        <Route
+          path="/friends"
+          element={<PrivateRoute element={< FriendsPage />} path={""} />}
         />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />{" "}

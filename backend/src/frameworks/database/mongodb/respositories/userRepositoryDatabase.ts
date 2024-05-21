@@ -176,7 +176,21 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error suspending account!");
     }
   };
-  
+
+  const getAllUsers = async (id: string) => {
+    try {
+        const users = await User.find(
+            { _id: { $ne: id } },  
+            'username dp name'  
+        );
+        console.log(users);
+        return users;
+    } catch (error) {
+        console.error("Error getting all users", error);
+        throw new Error("Error getting all users");
+    }
+};
+
  
   
   const changeIsAccountVerified = async (email: string) => {
@@ -229,7 +243,8 @@ export const userRepositoryMongoDB = () => {
     changeIsAccountUnverified,
     deleteAccount,
     suspendAccount,
-    privateAccount
+    privateAccount,
+    getAllUsers
   };
 };
 //////////////////////////////////////////////////////////
