@@ -142,7 +142,12 @@ const userRepositoryMongoDB = () => {
     });
     const getAllUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const users = yield userModel_1.default.find({ _id: { $ne: id } }, 'username dp name bio isPrivate');
+            const users = yield userModel_1.default.find({
+                _id: { $ne: id },
+                isAdmin: { $ne: true },
+                isBlocked: { $ne: true },
+                isSuspended: { $ne: true }
+            }, 'username dp name bio isPrivate').exec();
             console.log(users);
             return users;
         }

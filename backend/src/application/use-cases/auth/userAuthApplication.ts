@@ -109,6 +109,9 @@ export const userLogin = async (
   if (!user) {
     throw new ErrorInApplication("Invalid email or password!", 401);
   }
+  if (user.isAdmin) {
+    throw new ErrorInApplication("Admins cant login!", 401);
+  }
   if (user.isBlocked) {
     throw new ErrorInApplication("Your account has been blocked!", 401);
   }
@@ -283,6 +286,14 @@ export const userLoginUsingGoogle = async (
     const existingUser: any = await dbUserRepository.getUserByEmail(user.email);
     if (!existingUser) {
       throw new ErrorInApplication("User not found", 404);
+    }
+
+    if (existingUser.isAdmin) {
+      throw new ErrorInApplication("Admins cant login here", 404);
+    }
+    
+    if (existingUser.isBlocked) {
+      throw new ErrorInApplication("Cant login, Admin blocked you!", 404);
     }
 
     const refreshToken = authService.generateRefreshToken({ userId: existingUser._id.toString(), role: "client" });

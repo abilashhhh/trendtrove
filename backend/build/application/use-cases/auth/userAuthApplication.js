@@ -96,6 +96,9 @@ const userLogin = (email, password, dbUserRepository, authService) => __awaiter(
     if (!user) {
         throw new ErrorInApplication_1.default("Invalid email or password!", 401);
     }
+    if (user.isAdmin) {
+        throw new ErrorInApplication_1.default("Admins cant login!", 401);
+    }
     if (user.isBlocked) {
         throw new ErrorInApplication_1.default("Your account has been blocked!", 401);
     }
@@ -230,6 +233,12 @@ const userLoginUsingGoogle = (user, dbUserRepository, authService) => __awaiter(
         const existingUser = yield dbUserRepository.getUserByEmail(user.email);
         if (!existingUser) {
             throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        if (existingUser.isAdmin) {
+            throw new ErrorInApplication_1.default("Admins cant login here", 404);
+        }
+        if (existingUser.isBlocked) {
+            throw new ErrorInApplication_1.default("Cant login, Admin blocked you!", 404);
         }
         const refreshToken = authService.generateRefreshToken({ userId: existingUser._id.toString(), role: "client" });
         const accessToken = authService.generateAccessToken({ userId: existingUser._id.toString(), role: "client" });

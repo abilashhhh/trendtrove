@@ -44,15 +44,17 @@ const Google: React.FC = () => {
           toast.success("Navigating to homepage...");
           setTimeout(() => {
             navigate("/home");
-          }, 3000);
+          }, 2000);
         } else {
           toast.error("Failed to sign in");
         }
       } else {
         console.error("Missing user information from Google sign-in.");
+        toast.error("Failed to sign in");
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error("Error during Google sign-in:", error);
+      toast.error(`Failed  ${error.response.data.message}`);
     }
   };
 

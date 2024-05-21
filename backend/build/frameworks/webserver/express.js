@@ -7,7 +7,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const corsOptions = {
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: 'http://localhost:5173', //  frontend URL
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],

@@ -15,7 +15,14 @@ const END_POINTS = {
   DELETE_ACCOUNT: "/api/profile/deleteaccount/:userId/:password",
   SUSPEND_ACCOUNT: "/api/profile/suspendaccount/:userId/:password",
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
-  GET_ALL_USERS : '/api/user/getallusers/:userId'
+  GET_ALL_USERS : '/api/user/getallusers/:userId',
+  ADMIN_LOGIN: 'api/admin/signin',
+  REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
+  GET_USERS: 'api/admin/getUsers',
 };
 
 export default END_POINTS;
+
+
+
+

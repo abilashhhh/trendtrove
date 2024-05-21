@@ -13,6 +13,7 @@ import { StoreType } from "./Redux/Store/reduxStore";
 import EditProfilePage from "./Pages/EditProfilePage";
 import SettingsPage from "./Pages/SettingsPage";
 import FriendsPage from "./Pages/FriendsPage";
+import AdminLoginPage from "./Pages/Admin/AdminLoginPage";
 function App() {
   const user = useSelector((state: StoreType) => state.userAuth.user);
   const [isVerifiedAccount, setIsVerifiedAccount] = useState<boolean>(true);
@@ -52,6 +53,8 @@ function App() {
           path="/friends"
           element={<PrivateRoute element={< FriendsPage />} path={""} />}
         />
+   
+        <Route path="/adminlogin" element={<AdminLoginPage />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />{" "}
         {/* for undefined paths err pg will load */}

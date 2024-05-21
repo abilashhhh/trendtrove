@@ -1,27 +1,25 @@
 import React, { useState } from "react";
-import { Link, useNavigate,   } from "react-router-dom";
-import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
-import Google from "../Components/GoogleButton/Google";
-import { SignInUserInterface } from "../Types/signInUser";
-import { signin } from "../API/Auth/auth";
+import { Link, useNavigate } from "react-router-dom";
+import TrendTroveLogo from "../../Components/Logo/TrendTroveLogo";
+import { SignInUserInterface } from "../../Types/signInUser";
+import { adminLogin } from "../../API/Admin/admin";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../Redux/UserAuthSlice/authSlice";
+import { setAdminCredentials } from "../../Redux/AdminSlice/adminSlice";
 
-const SignInPage: React.FC = () => {
+const AdminLoginPage: React.FC = () => {
   const [formData, setFormData] = useState<SignInUserInterface>({
     email: "",
     password: "",
   });
 
- 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData((prevFormData) => ({
+    setFormData(prevFormData => ({
       ...prevFormData,
       [id]: value,
     }));
@@ -38,53 +36,44 @@ const SignInPage: React.FC = () => {
     console.log("Sign in form submitted:", formData);
 
     try {
-      const response = await signin(formData);
+      const response = await adminLogin(formData);
 
       if (response.status === "success") {
-        dispatch(setCredentials({ user: response.user, accessToken: response.accessToken }));
-         console.log("response.user : ", response.user)
-         console.log("response.accessToken : ", response.accessToken)
+        dispatch(
+          setAdminCredentials({
+            accessToken: response.accessToken,
+          })
+        );
+        console.log("response.user : ", response.user);
+        console.log("response.accessToken : ", response.accessToken);
         toast.success("Sign in successful");
-        toast.success("Navigating to homepage...");
-     setTimeout(()=> {
-      navigate('/home');
-     },2000)
+        setTimeout(() => {
+          navigate("/adminhome");
+        }, 2000);
       } else {
-        toast.error(`Failed to sign in, ${response.message}`);
+        toast.error("Failed to sign in");
       }
-    } catch (error:any) {
+    } catch (error) {
       console.error("Error during sign-in:", error);
-      toast.error(`Failed to sign in, ${error.response.data.message}`);
-
+      toast.error("Failed to sign in");
     }
   };
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-300 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <TrendTroveLogo />
       <ToastContainer />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="text-center">
-            <h5 className="mt-6 sm:text-l text-xl font-extrabold text-gray-900">
-              Sign in to your account
+            <h5 className="mt-6 sm:text-l text-xl font-extrabold text-gray-900 mb-5">
+              ADMIN LOGIN PAGE
             </h5>
-            <p className="mt-2 text-sm text-gray-600">
-              New here?{" "}
-              <Link
-                to="/signup"
-                className="font-medium text-blue-400 hover:text-blue-600"
-              >
-                Create an account
-              </Link>
-            </p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <input
@@ -99,8 +88,7 @@ const SignInPage: React.FC = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
@@ -116,13 +104,10 @@ const SignInPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none"
-              >
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
                 Sign in
               </button>
             </div>
-
-            <Google />
           </form>
         </div>
       </div>
@@ -130,4 +115,4 @@ const SignInPage: React.FC = () => {
   );
 };
 
-export default SignInPage;
+export default AdminLoginPage;

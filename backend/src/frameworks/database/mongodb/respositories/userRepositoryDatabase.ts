@@ -180,9 +180,14 @@ export const userRepositoryMongoDB = () => {
   const getAllUsers = async (id: string) => {
     try {
         const users = await User.find(
-            { _id: { $ne: id } },  
-            'username dp name bio isPrivate'  
-        );
+            { 
+                _id: { $ne: id }, 
+                isAdmin: { $ne: true },
+                isBlocked: { $ne: true },
+                isSuspended: { $ne: true }
+            },
+            'username dp name bio isPrivate'
+        ).exec();
         console.log(users);
         return users;
     } catch (error) {
