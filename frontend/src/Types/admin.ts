@@ -22,3 +22,8 @@ export interface BlockUserResponse {
     status: string,
     message: string,
 }
+
+export interface UnBlockUserResponse {
+    status: string,
+    message: string,
+}

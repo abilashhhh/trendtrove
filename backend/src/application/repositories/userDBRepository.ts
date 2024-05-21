@@ -44,6 +44,12 @@ export const userDBRepository = (
 
   const suspendAccount = async (userId: string) =>
     await repository.suspendAccount(userId);
+  
+  const blockAccount = async (userId: string) =>
+    await repository.blockAccount(userId);
+  
+  const unblockAccount = async (userId: string) =>
+    await repository.unblockAccount(userId);
 
   const privateAccount = async (userId: string) =>
     await repository.privateAccount(userId);
@@ -69,7 +75,9 @@ export const userDBRepository = (
     changeIsAccountVerified,
     changeIsAccountUnverified,
     getAllUsers,
-    getAllUsersForAdmin
+    getAllUsersForAdmin,
+    blockAccount,
+    unblockAccount,
   };
 };
 

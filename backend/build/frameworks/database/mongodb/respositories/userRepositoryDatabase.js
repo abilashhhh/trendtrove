@@ -131,6 +131,26 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error suspending account!");
         }
     });
+    const blockAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndUpdate(_id, { isBlocked: true }, { new: true });
+            return user;
+        }
+        catch (error) {
+            console.error("Error blocking account:", error);
+            throw new Error("Error blocking account!");
+        }
+    });
+    const unblockAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndUpdate(_id, { isBlocked: false }, { new: true });
+            return user;
+        }
+        catch (error) {
+            console.error("Error unblocking account:", error);
+            throw new Error("Error unblocking account!");
+        }
+    });
     const privateAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const user = yield userModel_1.default.findByIdAndUpdate(_id, { isPrivate: true }, { new: true });
@@ -214,6 +234,8 @@ const userRepositoryMongoDB = () => {
         privateAccount,
         getAllUsers,
         getAllUsersForAdmin,
+        blockAccount,
+        unblockAccount,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

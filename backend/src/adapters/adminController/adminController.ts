@@ -11,7 +11,7 @@ import {
   userRepositoryMongoDB,
 } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 
-import { handleAdminSignin, handleGetAllUsersForAdmin, handleLogoutAdmin } from "../../application/use-cases/admin/adminAuthApplication";
+import { handleAdminSignin, handleBlockAccount, handleGetAllUsersForAdmin, handleLogoutAdmin, handleUnBlockAccount } from "../../application/use-cases/admin/adminAuthApplication";
 
 const adminController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
@@ -78,12 +78,53 @@ const adminController = (
     }
   };
 
+  const blockAccount = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      console.log("req params in suspend acc: ",req.params)
+      const result = await handleBlockAccount(id , dbUserRepository);
+
+      res.json({
+        status: "success",
+        message: "Account blocked successfully",
+        result
+      });
+    } catch (err: any) {
+      console.error("Error blocking account:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to block the account",
+      });
+    }
+  };
+  const unblockAccount = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      console.log("req params in suspend acc: ",req.params)
+      const result = await handleUnBlockAccount(id , dbUserRepository);
+
+      res.json({
+        status: "success",
+        message: "Account blocked successfully",
+        result
+      });
+    } catch (err: any) {
+      console.error("Error blocking account:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to block the account",
+      });
+    }
+  };
+
   //////////////////////////////////////////////////
 
   return {
     signin,
     logout,
-    getAllUsersForAdmin
+    getAllUsersForAdmin,
+    blockAccount,
+    unblockAccount
   };
 };
 

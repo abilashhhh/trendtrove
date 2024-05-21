@@ -5,6 +5,7 @@ import END_POINTS from "../../Constants/endpoints";
 import {
   AdminLoginInterface,
   AdminLoginResponse,
+  BlockUserResponse,
   GetUsersResponse,
 } from "../../Types/admin";
 import { GetRestOfUsersResponse } from "../../Types/userProfile";
@@ -51,7 +52,8 @@ export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {
     throw error;
   }
 };
-
+ 
+ 
 const handleAxiosError = (error: any) => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
@@ -68,5 +70,44 @@ const handleAxiosError = (error: any) => {
     }
   } else {
     console.error("An error occurred:", error.message);
+  }
+};
+
+
+
+export const blockUser = async (
+  userId: string,
+  password: string
+): Promise<BlockUserResponse> => {
+  try {
+    console.log(userId, password, "from blockuser acc");
+
+    const response = await axiosAdminInstance.patch<BlockUserResponse>(
+      `${END_POINTS.BLOCK_USER.replace(":userId", userId)}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const unblockUser = async (
+  userId: string,
+  password: string
+): Promise<BlockUserResponse> => {
+  try {
+    console.log(userId, password, "from unblockuser acc");
+
+    const response = await axiosAdminInstance.patch<BlockUserResponse>(
+      `${END_POINTS.UNBLOCK_USER.replace(":userId", userId)}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
   }
 };

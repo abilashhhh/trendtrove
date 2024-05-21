@@ -65,11 +65,51 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             });
         }
     });
+    const blockAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            console.log("req params in suspend acc: ", req.params);
+            const result = yield (0, adminAuthApplication_1.handleBlockAccount)(id, dbUserRepository);
+            res.json({
+                status: "success",
+                message: "Account blocked successfully",
+                result
+            });
+        }
+        catch (err) {
+            console.error("Error blocking account:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to block the account",
+            });
+        }
+    });
+    const unblockAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            console.log("req params in suspend acc: ", req.params);
+            const result = yield (0, adminAuthApplication_1.handleUnBlockAccount)(id, dbUserRepository);
+            res.json({
+                status: "success",
+                message: "Account blocked successfully",
+                result
+            });
+        }
+        catch (err) {
+            console.error("Error blocking account:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to block the account",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
         signin,
         logout,
-        getAllUsersForAdmin
+        getAllUsersForAdmin,
+        blockAccount,
+        unblockAccount
     };
 };
 exports.default = adminController;

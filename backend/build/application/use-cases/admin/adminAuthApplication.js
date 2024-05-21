@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetAllUsersForAdmin = exports.handleLogoutAdmin = exports.handleAdminSignin = void 0;
+exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handleGetAllUsersForAdmin = exports.handleLogoutAdmin = exports.handleAdminSignin = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 // User Login
 const handleAdminSignin = (email, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,3 +71,37 @@ const handleGetAllUsersForAdmin = (dbUserRepository) => __awaiter(void 0, void 0
     }
 });
 exports.handleGetAllUsersForAdmin = handleGetAllUsersForAdmin;
+const handleBlockAccount = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Userdetails in handle block: ", userId);
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new Error("User not found");
+        }
+        // Update user's password in the database
+        const user = yield dbUserRepository.blockAccount(userId);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to block user", 401);
+    }
+});
+exports.handleBlockAccount = handleBlockAccount;
+const handleUnBlockAccount = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Userdetails in handle unblock: ", userId);
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new Error("User not found");
+        }
+        // Update user's password in the database
+        const user = yield dbUserRepository.unblockAccount(userId);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to unblock user", 401);
+    }
+});
+exports.handleUnBlockAccount = handleUnBlockAccount;

@@ -25,6 +25,8 @@ const userDBRepository = (repository) => {
     const updatePassword = (_id, encryptedNewPassword) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.updatePassword(_id, encryptedNewPassword); });
     const deleteAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteAccount(userId); });
     const suspendAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.suspendAccount(userId); });
+    const blockAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.blockAccount(userId); });
+    const unblockAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unblockAccount(userId); });
     const privateAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.privateAccount(userId); });
     const getAllUsers = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsers(userId); });
     const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
@@ -43,7 +45,9 @@ const userDBRepository = (repository) => {
         changeIsAccountVerified,
         changeIsAccountUnverified,
         getAllUsers,
-        getAllUsersForAdmin
+        getAllUsersForAdmin,
+        blockAccount,
+        unblockAccount,
     };
 };
 exports.userDBRepository = userDBRepository;

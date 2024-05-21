@@ -67,10 +67,56 @@ export const handleGetAllUsersForAdmin = async (
   try {
 console.log("handleyeallusers called")
     const user = await dbUserRepository.getAllUsersForAdmin();
-
     return user;
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};
+
+
+
+
+
+export const handleBlockAccount = async (
+  userId: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+) => {
+  try {
+    console.log("Userdetails in handle block: ", userId)
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new Error("User not found");
+    }
+ 
+    // Update user's password in the database
+    const user = await dbUserRepository.blockAccount(userId);
+
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to block user", 401);
+  }
+};
+
+
+export const handleUnBlockAccount = async (
+  userId: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+) => {
+  try {
+    console.log("Userdetails in handle unblock: ", userId)
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new Error("User not found");
+    }
+ 
+    // Update user's password in the database
+    const user = await dbUserRepository.unblockAccount(userId);
+
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to unblock user", 401);
   }
 };

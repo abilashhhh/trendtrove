@@ -20,6 +20,8 @@ const END_POINTS = {
   ADMIN_LOGOUT: 'api/admin/logout',
   REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
   GET_USERS: 'api/admin/getusersforadmin',
+  BLOCK_USER: 'api/admin/blockuser/:userId',
+  UNBLOCK_USER: 'api/admin/unblockuser/:userId',
 };
 
 export default END_POINTS;

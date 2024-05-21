@@ -155,6 +155,36 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const blockAccount = async (_id: string) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { isBlocked: true },
+        { new: true }
+      );
+
+      return user;
+    } catch (error) {
+      console.error("Error blocking account:", error);
+      throw new Error("Error blocking account!");
+    }
+  };
+
+  const unblockAccount = async (_id: string) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { isBlocked: false },
+        { new: true }
+      );
+
+      return user;
+    } catch (error) {
+      console.error("Error unblocking account:", error);
+      throw new Error("Error unblocking account!");
+    }
+  };
+
   const privateAccount = async (_id: string) => {
     try {
       const user = await User.findByIdAndUpdate(
@@ -255,6 +285,8 @@ export const userRepositoryMongoDB = () => {
     privateAccount,
     getAllUsers,
     getAllUsersForAdmin,
+    blockAccount,
+    unblockAccount,
   };
 };
 //////////////////////////////////////////////////////////
