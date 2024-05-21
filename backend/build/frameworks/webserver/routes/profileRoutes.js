@@ -18,7 +18,6 @@ const profileRouter = () => {
     router.delete("/deleteaccount/:id/:password", controller.deleteAccount);
     router.patch("/suspendaccount/:id/:password", controller.suspendAccount);
     router.patch("/privateaccount/:id/:password", controller.privateAccount);
-    // router.get('/getotheruserinfo/:id', authMiddleware, controller.getOtherUserInfo);
     return router;
 };
 exports.default = profileRouter;

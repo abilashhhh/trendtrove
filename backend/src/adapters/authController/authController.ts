@@ -169,6 +169,7 @@ const authController = (
       });
     }
   };
+  
   const loginOrSignUpUsingGoogle = async (req: Request, res: Response) => {
     const user = req.body;
     try {

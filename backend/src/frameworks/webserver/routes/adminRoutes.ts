@@ -4,26 +4,22 @@ import { authServiceInterface } from "../../../application/services/authenticati
 import { authService } from "../../services/authenticationService";
 import { userRepositoryMongoDB } from "../../database/mongodb/respositories/userRepositoryDatabase";
 import { userDBRepository } from "../../../application/repositories/userDBRepository";
-import profileController from "../../../adapters/profileController/profileController";
+import adminController from "../../../adapters/adminController/adminController";
 
-const profileRouter = () => {
+const adminRouter = () => {
   const router = express();
 
-  const controller = profileController(
+  const controller = adminController(
     userRepositoryMongoDB,
     userDBRepository,
     authService,
     authServiceInterface
   );
 
-  router.get("/getuserinfo/:id" , controller.getUserInfo);
-  router.patch("/editprofile" , controller.editProfile);
-  router.patch("/changepassword" , controller.changePassword);
-  router.delete("/deleteaccount/:id/:password" ,controller.deleteAccount);
-  router.patch("/suspendaccount/:id/:password" ,controller.suspendAccount);
-  router.patch("/privateaccount/:id/:password" ,controller.privateAccount);
+  router.post("/signin" , controller.signin);
+ 
  
   return router;
 };
 
-export default profileRouter;
+export default adminRouter;

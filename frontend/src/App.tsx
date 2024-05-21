@@ -14,6 +14,7 @@ import EditProfilePage from "./Pages/EditProfilePage";
 import SettingsPage from "./Pages/SettingsPage";
 import FriendsPage from "./Pages/FriendsPage";
 import AdminLoginPage from "./Pages/Admin/AdminLoginPage";
+import AdminHomePage from "./Pages/Admin/AdminHomePage";
 function App() {
   const user = useSelector((state: StoreType) => state.userAuth.user);
   const [isVerifiedAccount, setIsVerifiedAccount] = useState<boolean>(true);
@@ -52,9 +53,13 @@ function App() {
         <Route
           path="/friends"
           element={<PrivateRoute element={< FriendsPage />} path={""} />}
+        /> 
+        <Route
+          path="/adminhome"
+          element={<PrivateRoute element={< AdminHomePage />} path={""} />}
         />
    
-        <Route path="/adminlogin" element={<AdminLoginPage />} />
+        <Route path="/adminsignin" element={<AdminLoginPage />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />{" "}
         {/* for undefined paths err pg will load */}
