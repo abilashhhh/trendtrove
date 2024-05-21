@@ -11,12 +11,13 @@ import MainContent from "../Components/HomePage/HomePageMiddleContainer";
 import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import LoadingSpinner from "../Components/LoadingSpinner";
-
+ 
 
 function HomePage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [isDarkMode, setDarkMode] = useState(true);
-  const dispatch = useDispatch();
+   const dispatch = useDispatch();
+ 
 
   const toggleDarkMode = () => {
     setDarkMode(!isDarkMode);
