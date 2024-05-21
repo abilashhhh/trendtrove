@@ -1,13 +1,41 @@
+// import { createSlice } from "@reduxjs/toolkit";
+
+// interface AdminState {
+//   accessToken: string | null;
+//   isAuthenticated: boolean;
+// }
+
+// const initialState: AdminState = {
+//   accessToken: null,
+//   isAuthenticated: false,
+// };
+
+// const adminSlice = createSlice({
+//   name: "admin",
+//   initialState,
+//   reducers: {
+//     setAdminCredentials: (state, action) => {
+//       const { accessToken }: { accessToken: string } = action.payload;
+//       state.accessToken = accessToken;
+//       state.isAuthenticated = true;
+//     },
+//     adminLogout: (state) => {
+//       state.isAuthenticated = false;
+//       state.accessToken = null;
+//     },
+//   },
+// });
+
+// export const { setAdminCredentials, adminLogout } = adminSlice.actions;
+// export default adminSlice.reducer;
+
+
+// adminSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 
-interface AdminState {
-  accessToken: string | null;
-  isAuthenticated: boolean;
-}
-
-const initialState: AdminState = {
-  accessToken: null,
-  isAuthenticated: false,
+const initialState = {
+  accessToken: localStorage.getItem("adminAccessToken") || null,
+  isAuthenticated: localStorage.getItem("adminAccessToken") ? true : false,
 };
 
 const adminSlice = createSlice({
@@ -15,13 +43,15 @@ const adminSlice = createSlice({
   initialState,
   reducers: {
     setAdminCredentials: (state, action) => {
-      const { accessToken }: { accessToken: string } = action.payload;
+      const { accessToken } = action.payload;
       state.accessToken = accessToken;
       state.isAuthenticated = true;
+      localStorage.setItem("adminAccessToken", accessToken);
     },
     adminLogout: (state) => {
       state.isAuthenticated = false;
       state.accessToken = null;
+      localStorage.removeItem("adminAccessToken");
     },
   },
 });

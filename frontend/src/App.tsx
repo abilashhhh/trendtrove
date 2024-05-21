@@ -14,7 +14,7 @@ import EditProfilePage from "./Pages/EditProfilePage";
 import SettingsPage from "./Pages/SettingsPage";
 import FriendsPage from "./Pages/FriendsPage";
 import AdminLoginPage from "./Pages/Admin/AdminLoginPage";
-import AdminHomePage from "./Pages/Admin/AdminHomePage";
+import AdminHomePage from "./Pages/Admin/AdminHomePage"
 function App() {
   const user = useSelector((state: StoreType) => state.userAuth.user);
   const [isVerifiedAccount, setIsVerifiedAccount] = useState<boolean>(true);

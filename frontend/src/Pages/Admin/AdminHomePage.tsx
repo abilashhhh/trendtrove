@@ -1,20 +1,72 @@
+import React, { useState, useEffect } from "react";
+import "../styles.css";
 import { useDispatch } from "react-redux";
 import { adminLogout } from "../../Redux/AdminSlice/adminSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "../../Components/LoadingSpinner";
+import AdminLeftSidebar from "../../Components/AdminPage/AdminLeftSidebar";
+import AdminPageMiddleContainer from "../../Components/AdminPage/AdminPageMiddleContainer";
+import AdminHeader from "../../Components/AdminPage/AdminHeader";
 
 function AdminHomePage() {
+  const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
+  const [isDarkMode, setDarkMode] = useState(true);
   const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    dispatch(adminLogout());
-    
+  const toggleDarkMode = () => {
+    setDarkMode(!isDarkMode);
   };
 
+  const toggleLeftSidebar = () => {
+    setLeftSidebarOpen(!isLeftSidebarOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      toast.error("Logging Out");
+      setTimeout(() => {
+        dispatch(adminLogout());
+      }, 3000);
+    } catch (error) {
+      console.error("Logout failed", error);
+      toast.error("Log out failed");
+    }
+  };
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
-    <div>
-      <h1>Admin Home Page</h1>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <>
+      <ToastContainer />
+
+      <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
+        <AdminHeader toggleLeftSidebar={toggleLeftSidebar} />
+
+        <div className="flex flex-1 overflow-hidden">
+          <AdminLeftSidebar
+            isLeftSidebarOpen={isLeftSidebarOpen}
+            toggleDarkMode={toggleDarkMode}
+            isDarkMode={isDarkMode}
+            handleLogout={handleLogout}
+          />
+
+          <AdminPageMiddleContainer />
+        </div>
+      </div>
+    </>
   );
 }
 
-export default AdminHomePage
+export default AdminHomePage;
