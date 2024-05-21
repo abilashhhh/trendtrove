@@ -130,6 +130,16 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error suspending account!");
         }
     });
+    const privateAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndUpdate(_id, { isPrivate: true }, { new: true });
+            return user;
+        }
+        catch (error) {
+            console.error("Error suspending account:", error);
+            throw new Error("Error suspending account!");
+        }
+    });
     const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield userModel_1.default.updateOne({ email }, {
@@ -170,7 +180,8 @@ const userRepositoryMongoDB = () => {
         changeIsAccountVerified,
         changeIsAccountUnverified,
         deleteAccount,
-        suspendAccount
+        suspendAccount,
+        privateAccount
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

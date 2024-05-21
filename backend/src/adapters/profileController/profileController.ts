@@ -16,7 +16,8 @@ import {
   handlePasswordChange,
   handleUserInfo,
   handleDeleteAccount,
-  handleSuspendAccount
+  handleSuspendAccount,
+  handlePrivateAccount
   // handleOtherUserInfo
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
@@ -144,6 +145,26 @@ const profileController = (
     }
   };
 
+  const privateAccount = async (req: Request, res: Response) => {
+    try {
+      const { id, password } = req.params;
+      console.log("req params in private acc: ",req.params)
+      const result = await handlePrivateAccount(id , password,dbUserRepository,authService);
+
+      res.json({
+        status: "success",
+        message: "Account set to private account successfully",
+        result
+      });
+    } catch (err: any) {
+      console.error("Error setting to private account:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to set to private account",
+      });
+    }
+  };
+
   //////////////////////////////////////////////////
 
   return {
@@ -152,6 +173,7 @@ const profileController = (
     changePassword,
     deleteAccount,
     suspendAccount,
+    privateAccount,
   };
 };
 

@@ -4,6 +4,19 @@ export interface UserInterface {
   email: string;
   phone?: number;
   password: string;
+  dp?: string;
+  coverPhoto?: string;
+  bio?: string;
+  gender?: string;
+  address?: string;
+  followers?: string[];
+  following?: string[];
+  savedPosts?: string[];
+  isVerifiedAccount?: boolean;
+  isGoogleSignedIn?: boolean;
+  isBlocked?: boolean;
+  isPrivate?: boolean;
+  createdAt?: string;
 }
 
 export interface GoogleUserInterface {

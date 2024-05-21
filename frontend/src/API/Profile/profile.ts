@@ -121,3 +121,24 @@ export const suspendAccount = async (
     throw error;
   }
 };
+
+export const privateAccount = async (
+  userId: string,
+  password: string
+): Promise<SuspendAccountResponse> => {
+  try {
+    console.log(userId, password, "from private acc");
+
+    const response = await axiosUserInstance.patch<SuspendAccountResponse>(
+      `${END_POINTS.PRIVATE_ACCOUNT.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};

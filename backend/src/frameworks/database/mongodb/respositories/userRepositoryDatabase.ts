@@ -162,6 +162,21 @@ export const userRepositoryMongoDB = () => {
     }
   };
   
+  const privateAccount = async (_id: string) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { isPrivate: true },
+        { new: true }
+      );
+  
+      return user;
+    } catch (error) {
+      console.error("Error suspending account:", error);
+      throw new Error("Error suspending account!");
+    }
+  };
+  
  
   
   const changeIsAccountVerified = async (email: string) => {
@@ -213,7 +228,8 @@ export const userRepositoryMongoDB = () => {
     changeIsAccountVerified,
     changeIsAccountUnverified,
     deleteAccount,
-    suspendAccount
+    suspendAccount,
+    privateAccount
   };
 };
 //////////////////////////////////////////////////////////

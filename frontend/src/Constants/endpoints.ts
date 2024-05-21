@@ -14,6 +14,7 @@ const END_POINTS = {
   CHANGE_PASSWORD: "/api/profile/changepassword",
   DELETE_ACCOUNT: "/api/profile/deleteaccount/:userId/:password",
   SUSPEND_ACCOUNT: "/api/profile/suspendaccount/:userId/:password",
+  PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
 };
 
 export default END_POINTS;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -36,6 +36,12 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             following: userData.following,
             isVerifiedAccount: userData.isVerifiedAccount,
             notifications: userData.notifications,
+            savedPosts: userData.savedPosts,
+            isGoogleSignedIn: userData.isGoogleSignedIn,
+            isBlocked: userData.isBlocked,
+            isPrivate: userData.isPrivate,
+            createdAt: userData.createdAt,
+            updatedAt: userData.updatedAt
         };
         return user;
     }
@@ -129,3 +135,26 @@ const handleSuspendAccount = (userId, password, dbUserRepository, authService) =
     }
 });
 exports.handleSuspendAccount = handleSuspendAccount;
+const handlePrivateAccount = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Userdetails in handlePrivateAccount: ", userId, password);
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new Error("User not found");
+        }
+        console.log("userExists in handlePrivateAccount: ", userExists);
+        // Validate the current password
+        const isPasswordValid = yield authService.comparePassword(password, userExists.password);
+        if (!isPasswordValid) {
+            throw new ErrorInApplication_1.default("Invalid current password", 401);
+        }
+        // Update user's password in the database
+        const user = yield dbUserRepository.privateAccount(userId);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to change to private account", 401);
+    }
+});
+exports.handlePrivateAccount = handlePrivateAccount;

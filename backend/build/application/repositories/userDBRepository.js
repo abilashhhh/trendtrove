@@ -25,6 +25,7 @@ const userDBRepository = (repository) => {
     const updatePassword = (_id, encryptedNewPassword) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.updatePassword(_id, encryptedNewPassword); });
     const deleteAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteAccount(userId); });
     const suspendAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.suspendAccount(userId); });
+    const privateAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.privateAccount(userId); });
     return {
         addUser,
         getUserByEmail,
@@ -36,6 +37,7 @@ const userDBRepository = (repository) => {
         updatePassword,
         deleteAccount,
         suspendAccount,
+        privateAccount,
         changeIsAccountVerified,
         changeIsAccountUnverified,
     };

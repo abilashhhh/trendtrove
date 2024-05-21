@@ -1,5 +1,5 @@
   import React, { useState } from "react";
-  import { changePassword, deleteAccount, suspendAccount } from "../../API/Profile/profile";
+  import { changePassword, deleteAccount, privateAccount, suspendAccount } from "../../API/Profile/profile";
   import { ToastContainer, toast } from "react-toastify";
   import Swal from "sweetalert2";
   import 'react-toastify/dist/ReactToastify.css';
@@ -40,6 +40,12 @@
                   >
                     Suspend Account
                   </button>
+                  <button
+                    onClick={() => setActiveSection("PrivateAccount")}
+                    className="bg-gray-400 dark:bg-slate-500 w-full rounded p-3 hover:bg-gray-500 dark:hover:bg-slate-400"
+                  >
+                   Change to private account
+                  </button>
                 </div>
               </div>
               <div className="w-full md:w-1/2 bg-gray-300 dark:bg-slate-600 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto">
@@ -47,6 +53,7 @@
                   {activeSection === "ChangePassword" && <ChangePassword currentUser={currentUser} />}
                   {activeSection === "DeleteAccount" && <DeleteAccount currentUser={currentUser} />}
                   {activeSection === "SuspendAccount" && <SuspendAccount currentUser={currentUser} />}
+                  {activeSection === "PrivateAccount" && <PrivateAccount currentUser={currentUser} />}
                 </div>
               </div>
             </div>
@@ -249,6 +256,60 @@
         <p>Are you sure you want to suspend your account? You can reactivate it later.</p>
         <button className="bg-yellow-500 dark:bg-yellow-700 rounded p-2 mt-4 hover:bg-yellow-400 dark:hover:bg-yellow-600" onClick={handleSuspendAccount}>
           Suspend My Account
+        </button>
+      </div>
+    );
+  };
+
+  const PrivateAccount = ({ currentUser }) => {
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+  
+    const handlePrivateAccount = async () => {
+      Swal.fire({
+        title: 'Enter your password',
+        input: 'password',
+        inputAttributes: {
+          autocapitalize: 'off',
+          autocorrect: 'off',
+          autocomplete: 'off',
+          spellcheck: 'false'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Change to private account',
+        showLoaderOnConfirm: true,
+        preConfirm: async (password) => {
+          try {
+            // Call the API function to set the account to private
+            const privateAccountResult = await privateAccount(currentUser._id, password);
+  
+            if (privateAccountResult.status === 'success') {
+              toast.success("Account set to private successfully");
+              // Additional actions after setting the account to private
+            } else {
+              Swal.showValidationMessage(`Failed to set account to private: ${privateAccountResult.message}`);
+            }
+          } catch (error) {
+            Swal.showValidationMessage(`Failed to set account to private. Try again`);
+          }
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then((result) => {
+        if (result.isConfirmed) {
+         
+          setTimeout(() => {
+            navigate("/home");
+          }, 3000);
+        }
+      });
+    };
+  
+    return (
+      <div>
+        <h2 className="text-xl mb-4">Set Account to Private</h2>
+        <p>Are you sure you want to set your account to private?</p>
+        <button className="bg-purple-500 dark:bg-purple-700 rounded p-2 mt-4 hover:bg-purple-400 dark:hover:bg-purple-600" onClick={handlePrivateAccount}>
+          Set Account to Private
         </button>
       </div>
     );

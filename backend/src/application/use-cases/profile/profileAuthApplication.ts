@@ -29,6 +29,12 @@ export const handleUserInfo = async (
       following: userData.following,
       isVerifiedAccount: userData.isVerifiedAccount,
       notifications: userData.notifications,
+      savedPosts:  userData.savedPosts,
+      isGoogleSignedIn: userData.isGoogleSignedIn,
+      isBlocked: userData.isBlocked,
+      isPrivate: userData.isPrivate,
+      createdAt: userData.createdAt,   
+      updatedAt: userData.updatedAt     
     };
     return user;
   } catch (err) {
@@ -155,5 +161,39 @@ export const handleSuspendAccount = async (
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to change password", 401);
+  }
+};
+
+export const handlePrivateAccount = async (
+  userId: string,
+  password: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  try {
+    console.log("Userdetails in handlePrivateAccount: ", userId, password)
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new Error("User not found");
+    }
+    console.log("userExists in handlePrivateAccount: ", userExists)
+
+    // Validate the current password
+    const isPasswordValid = await authService.comparePassword(
+      password,
+      userExists.password
+    );
+    if (!isPasswordValid) {
+      throw new ErrorInApplication("Invalid current password", 401);
+    }
+    
+
+    // Update user's password in the database
+    const user = await dbUserRepository.privateAccount(userId);
+
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to change to private account", 401);
   }
 };

@@ -112,6 +112,25 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
     });
+    const privateAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id, password } = req.params;
+            console.log("req params in private acc: ", req.params);
+            const result = yield (0, profileAuthApplication_1.handlePrivateAccount)(id, password, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "Account set to private account successfully",
+                result
+            });
+        }
+        catch (err) {
+            console.error("Error setting to private account:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to set to private account",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
         getUserInfo,
@@ -119,6 +138,7 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         changePassword,
         deleteAccount,
         suspendAccount,
+        privateAccount,
     };
 };
 exports.default = profileController;

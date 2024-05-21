@@ -45,6 +45,9 @@ export const userDBRepository = (
   const suspendAccount = async (userId: string) =>
     await repository.suspendAccount(userId);
 
+  const privateAccount = async (userId: string) =>
+    await repository.privateAccount(userId);
+
   return {
     addUser,
     getUserByEmail,
@@ -56,6 +59,7 @@ export const userDBRepository = (
     updatePassword,
     deleteAccount,
     suspendAccount,
+    privateAccount,
     changeIsAccountVerified,
     changeIsAccountUnverified,
   };
