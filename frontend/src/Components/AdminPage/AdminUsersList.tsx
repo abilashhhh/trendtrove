@@ -70,7 +70,7 @@ function AdminHomePageContent() {
                 <table className="w-full mt-4 border-collapse">
                     <thead>
                         <tr className="bg-gray-200 dark:bg-gray-700">
-                            <th className="p-2 text-left">Profile</th>
+                            <th className="p-2 text-left">UserProfile</th>
                             <th className="p-2 text-left">Name</th>
                             <th className="p-2 text-left">Email</th>
                             <th className="p-2 text-left">Username</th>
