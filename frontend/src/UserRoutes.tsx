@@ -11,14 +11,18 @@ import EditProfilePage from "./Pages/EditProfilePage";
 import SettingsPage from "./Pages/SettingsPage";
 import FriendsPage from "./Pages/FriendsPage";
 import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
 
 const UserRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<BasePage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/otp" element={<OTPPage />} />
-      <Route path="/signin" element={<SignInPage />} />
+      
+      <Route element={<PublicRoute />}>
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/otp" element={<OTPPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+      </Route>
 
       <Route element={<PrivateRoute />}>
         <Route path="/home" element={<HomePage />} />
