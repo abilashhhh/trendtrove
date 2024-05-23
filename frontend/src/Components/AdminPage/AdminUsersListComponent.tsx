@@ -14,7 +14,7 @@ function AdminUsersListComponent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const allUsers = await getAllUsersForAdmin();
+        const allUsers : any = await getAllUsersForAdmin();
         setUsers(allUsers.users);
       } catch (error) {
         toast.error("Failed to load users");
@@ -25,7 +25,7 @@ function AdminUsersListComponent() {
     fetchUsers();
   }, []);
 
-  const handleBlockUser = async (userId) => {
+  const handleBlockUser = async (userId ) => {
     try {
       await blockUser(userId);
       toast.success("User blocked successfully");
@@ -98,7 +98,7 @@ function AdminUsersListComponent() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users.map((user: any) => (
                 <tr
                   key={user._id}
                   className="border-b hover:bg-gray-200 dark:hover:bg-gray-700"

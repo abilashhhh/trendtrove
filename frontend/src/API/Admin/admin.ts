@@ -77,10 +77,10 @@ const handleAxiosError = (error: any) => {
 
 export const blockUser = async (
   userId: string,
-  password: string
+  
 ): Promise<BlockUserResponse> => {
   try {
-    console.log(userId, password, "from blockuser acc");
+    console.log(userId, "from blockuser acc");
 
     const response = await axiosAdminInstance.patch<BlockUserResponse>(
       `${END_POINTS.BLOCK_USER.replace(":userId", userId)}`
@@ -96,10 +96,9 @@ export const blockUser = async (
 
 export const unblockUser = async (
   userId: string,
-  password: string
 ): Promise<BlockUserResponse> => {
   try {
-    console.log(userId, password, "from unblockuser acc");
+    console.log(userId,  "from unblockuser acc");
 
     const response = await axiosAdminInstance.patch<BlockUserResponse>(
       `${END_POINTS.UNBLOCK_USER.replace(":userId", userId)}`
