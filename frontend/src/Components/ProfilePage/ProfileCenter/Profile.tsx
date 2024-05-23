@@ -219,6 +219,21 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
               </p>
             </div>
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
+          <div className="h-36 "></div>
+          <div className="h-4 ">
+          </div>
         </div>
       </div>
     </main>
