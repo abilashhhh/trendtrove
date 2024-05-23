@@ -7,15 +7,22 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import ReactPaginate from "react-paginate";
 
 function AdminUsersListComponent() {
   const [users, setUsers] = useState([]);
+  const [currentItems, setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 5; // Set the number of items per page
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const allUsers : any = await getAllUsersForAdmin();
+        const allUsers = await getAllUsersForAdmin();
         setUsers(allUsers.users);
+        setPageCount(Math.ceil(allUsers.users.length / itemsPerPage));
+        setCurrentItems(allUsers.users.slice(0, itemsPerPage));
       } catch (error) {
         toast.error("Failed to load users");
         console.error("Failed to fetch users", error);
@@ -25,12 +32,22 @@ function AdminUsersListComponent() {
     fetchUsers();
   }, []);
 
-  const handleBlockUser = async (userId ) => {
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(users.slice(itemOffset, endOffset));
+  }, [itemOffset, users]);
+
+  const handlePageClick = event => {
+    const newOffset = (event.selected * itemsPerPage) % users.length;
+    setItemOffset(newOffset);
+  };
+
+  const handleBlockUser = async userId => {
     try {
       await blockUser(userId);
       toast.success("User blocked successfully");
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
+      setUsers(prevUsers =>
+        prevUsers.map(user =>
           user._id === userId ? { ...user, isBlocked: true } : user
         )
       );
@@ -40,12 +57,12 @@ function AdminUsersListComponent() {
     }
   };
 
-  const handleUnblockUser = async (userId) => {
+  const handleUnblockUser = async userId => {
     try {
       await unblockUser(userId);
       toast.success("User unblocked successfully");
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
+      setUsers(prevUsers =>
+        prevUsers.map(user =>
           user._id === userId ? { ...user, isBlocked: false } : user
         )
       );
@@ -66,7 +83,7 @@ function AdminUsersListComponent() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: isBlocked ? "Yes, unblock" : "Yes, block",
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         if (isBlocked) {
           handleUnblockUser(userId);
@@ -85,24 +102,43 @@ function AdminUsersListComponent() {
           <table className="w-full mt-4 border-collapse">
             <thead>
               <tr className="bg-gray-200 dark:bg-gray-700">
-                <th className="p-2 border border-gray-300 dark:border-gray-600">UserProfile</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Name</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Email</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Username</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Bio</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Private</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Suspended</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Google Login</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Blocked</th>
-                <th className="p-2 border border-gray-300 dark:border-gray-600">Actions</th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  UserProfile
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Name
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Email
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Username
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Bio
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Private
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Suspended
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Google Login
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Blocked
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user: any) => (
+              {currentItems.map(user => (
                 <tr
                   key={user._id}
-                  className="border-b hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
+                  className="border-b hover:bg-gray-200 dark:hover:bg-gray-700">
                   <td className="p-2 flex justify-center items-center border border-gray-300 dark:border-gray-600">
                     <img
                       src={user.dp}
@@ -110,14 +146,30 @@ function AdminUsersListComponent() {
                       className="w-10 h-10 rounded-full"
                     />
                   </td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.name}</td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.email}</td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.username}</td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.bio || "N/A"}</td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.isPrivate ? "Yes" : "No"}</td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.isSuspended ? "Yes" : "No"}</td>
-                  <td className="p-2 border border-gray-300 dark:border-gray-600">{user.isGoogleSignedIn ? "Yes" : "No"}</td>
-                  <td className="p-2  border border-gray-300 dark:border-gray-600">{user.isBlocked ? "Yes" : "No"}</td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.name}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.email}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.username}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.bio || "N/A"}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.isPrivate ? "Yes" : "No"}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.isSuspended ? "Yes" : "No"}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.isGoogleSignedIn ? "Yes" : "No"}
+                  </td>
+                  <td className="p-2  border border-gray-300 dark:border-gray-600">
+                    {user.isBlocked ? "Yes" : "No"}
+                  </td>
                   <td className="p-2 border border-gray-300 dark:border-gray-600 justify-center items-center ">
                     <button
                       onClick={() =>
@@ -127,8 +179,7 @@ function AdminUsersListComponent() {
                         user.isBlocked
                           ? "bg-green-500 hover:bg-green-700"
                           : "bg-red-500 hover:bg-red-700"
-                      } text-white`}
-                    >
+                      } text-white`}>
                       {user.isBlocked ? "Unblock" : "Block"}
                     </button>
                   </td>
@@ -137,6 +188,16 @@ function AdminUsersListComponent() {
             </tbody>
           </table>
         </div>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="< previous"
+          containerClassName="pagination"
+          activeClassName="active"
+        />
       </div>
     </main>
   );
