@@ -1,23 +1,21 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { StoreType } from './Redux/Store/reduxStore'
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { StoreType } from "./Redux/Store/reduxStore";
 
-interface PrivateRouteProps {
-  element: React.ReactElement
-}
+const PrivateRoute: React.FC = () => {
+  const isAuthenticated = useSelector(
+    (state: StoreType) => state.userAuth.isAuthenticated
+  );
+  const isAdminAuthenticated = useSelector(
+    (state: StoreType) => state.admin.isAuthenticated
+  );
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
-  const currentUser = useSelector((state: StoreType) => state.userAuth.isAuthenticated);
-  const currentAdmin = useSelector((state: StoreType) => state.admin.isAuthenticated);
-
-  if (currentUser) {
-    return element;  
-  } else if (currentAdmin) {
-    return element;  
-  } else {
-    return <Navigate to="/" />;  
+  if (isAuthenticated || isAdminAuthenticated) {
+    return <Outlet />; // Render child routes
   }
-}
 
-export default PrivateRoute
+  return <Navigate to="/" />;
+};
+
+export default PrivateRoute;

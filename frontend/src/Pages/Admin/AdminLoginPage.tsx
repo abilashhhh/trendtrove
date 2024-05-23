@@ -49,7 +49,7 @@
           console.log("response.accessToken : ", response.accessToken);
           toast.success("Sign in successful");
           setTimeout(() => {
-            navigate("/adminhome");
+            navigate("/admin/home");
           }, 2000);
         } else {
           toast.error("Failed to sign in");
