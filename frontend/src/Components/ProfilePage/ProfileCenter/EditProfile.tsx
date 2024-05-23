@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
+import debounce from "../../../utils/debouncer";
 
 import {
   faCheckCircle,
@@ -41,8 +42,6 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
     null
   );
 
- 
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -55,18 +54,21 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
     setFormData({ ...formData, gender: e.target.value });
   };
 
-  const checkUsernameAvailability = async (username: string) => {
-    if (username === userDetails.username) {
-      setUsernameAvailable(true);
-      return;
-    }
-    try {
-      const response = await usernameAvailability(username);
-      setUsernameAvailable(response.available);
-    } catch (error) {
-      console.error("Error checking username availability:", error);
-    }
-  };
+  const checkUsernameAvailability = useCallback(
+    debounce(async (username: string) => {
+      if (username === userDetails.username) {
+        setUsernameAvailable(true);
+        return;
+      }
+      try {
+        const response = await usernameAvailability(username);
+        setUsernameAvailable(response.available);
+      } catch (error) {
+        console.error("Error checking username availability:", error);
+      }
+    }, 500),
+    []
+  );
 
   useEffect(() => {
     if (formData.username && formData.username.trim() !== "") {
@@ -106,7 +108,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
     e.preventDefault();
 
     // Validate all fields before submitting
-    for (const field in formData) { 
+    for (const field in formData) {
       const value = formData[field as keyof UserInfo];
       if (typeof value === "string") {
         validateField(field, value);
@@ -119,13 +121,13 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
 
     if (!hasErrors) {
       console.log("Form submitted:", formData);
-      if(  usernameAvailable === false){
-      toast.error("Error updating profile. Try again");
-return
+      if (usernameAvailable === false) {
+        toast.error("Error updating profile. Try again");
+        return;
       }
       const result = await editProfile(formData);
-      console.log("result : ",result)
-      
+      console.log("result : ", result);
+
       toast.success("Profile updated successfully");
       setTimeout(() => {
         navigate("/profile");
@@ -162,13 +164,13 @@ return
                   className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-100"
                 />
               </div>
-             
+
               <button
-                type="button"  
+                type="button"
                 className="p-2 mb-5 ml-5 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-              Upload New  DP
+                Upload New DP
               </button>
- 
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-4">
                   <div>

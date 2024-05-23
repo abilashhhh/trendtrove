@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
@@ -19,6 +19,7 @@ import {
   validatePhoneNumber,
   validateUsername,
 } from "../utils/validations";
+import debounce from "../utils/debouncer";
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ const SignupPage: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -90,58 +94,58 @@ const SignupPage: React.FC = () => {
     }));
   };
 
-  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
-  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
+  const checkUsernameAvailability = useCallback(
+    debounce(async (username: string) => {
+      try {
+        const response = await usernameAvailability(username);
+        setUsernameAvailable(response.available);
+      } catch (error) {
+        console.error("Error checking username availability:", error);
+      }
+    }, 500),
+    []
+  );
 
-  const checkUsernameAvailability = async (username: string) => {
-    try {
-      const response = await usernameAvailability(username);
-      setUsernameAvailable(response.available);
-    } catch (error) {
-      console.error("Error checking username availability:", error);
-    }
-  };
-
-  const checkEmailAvailability = async (email: string) => {
-    try {
-      const response = await emailAvailability(email);
-      setEmailAvailable(response.available);
-    } catch (error) {
-      console.error("Error checking email availability:", error);
-    }
-  };
+  const checkEmailAvailability = useCallback(
+    debounce(async (email: string) => {
+      try {
+        const response = await emailAvailability(email);
+        setEmailAvailable(response.available);
+      } catch (error) {
+        console.error("Error checking email availability:", error);
+      }
+    }, 500),
+    []
+  );
 
   useEffect(() => {
     if (formData.username && formData.username.trim() !== "") {
       checkUsernameAvailability(formData.username);
     }
-  }, [formData.username]);
+  }, [formData.username, checkUsernameAvailability]);
 
   useEffect(() => {
     if (formData.email && formData.email.trim() !== "") {
       checkEmailAvailability(formData.email);
     }
-  }, [formData.email ]);
-
+  }, [formData.email, checkEmailAvailability]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
 
-    
-    // Validateing fields
+    // Validate fields
     for (const field in formData) {
       const value = formData[field as keyof SignUpUserInterface];
       if (typeof value === "string") {
         validateField(field, value);
       }
     }
-  
+
     // Checking validation errors or password mismatch
     const hasErrors =
       Object.values(validationErrors).some(error => error !== "") ||
       formData.password !== formData.confirmPassword;
-  
+
     if (!hasErrors && (formData.name && formData.username && formData.email && formData.password && formData.confirmPassword) !== ""   ) {
       try {
         // Check if email is available
@@ -149,13 +153,13 @@ const SignupPage: React.FC = () => {
           toast.error("Email address is already registered. Please try logging in.");
           return;
         }
-  
+
         // Check if username is available
         if (usernameAvailable === false) {
           toast.error("Username is not available. Please choose a different one.");
           return;
         }
-  
+
         // Removing confirmPassword data
         const { confirmPassword, ...userData } = formData;
         localStorage.setItem("signupData", JSON.stringify(formData));
@@ -177,7 +181,6 @@ const SignupPage: React.FC = () => {
       toast.error("Please fix the errors in the form");
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
