@@ -6,10 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "../../Components/LoadingSpinner";
 import AdminLeftSidebar from "../../Components/AdminPage/AdminLeftSidebar";
 import AdminHeader from "../../Components/AdminPage/AdminHeader";
-import AdminHomePageContent from "../../Components/AdminPage/AdminWelcomePage";
 import { useNavigate } from "react-router-dom";
+import AdminUsersListComponent from "../../Components/AdminPage/AdminUsersListComponent";
 
-function AdminHomePage() {
+function AdminUsersList() {
   const navigate = useNavigate();
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(true);
   const [isDarkMode, setDarkMode] = useState(true);
@@ -70,11 +70,11 @@ function AdminHomePage() {
             handleUsersList={handleUsersList}
             handleHome={handleHome}
           />
-          <AdminHomePageContent />
+          <AdminUsersListComponent />
         </div>
       </div>
     </>
   );
 }
 
-export default AdminHomePage;
+export default AdminUsersList;
