@@ -114,6 +114,27 @@ const authController = (
     }
   };
 
+  const forgotPassword =async(req :Request, res :Response ) => {
+    const {email , text} = req.body
+    try {
+      const isAvailable = await dbUserRepository.getUserByEmail(email);
+      if(isAvailable){
+        await handleSendOtp(email, text, dbOtpRepository, mailSenderService);
+        res.json({
+          status : "success",
+          message : "OTP sent to the given mail id",
+        });
+      }else{
+        res.json({
+          status : "error",
+          message : "Email id not registered, Try signing up",
+        });
+      }
+    } catch (error) {
+      
+    }
+  }
+
   const sendOtp = async (req: Request, res: Response) => {
     const { email, text }: { email: string; text: string } = req.body;
     await handleSendOtp(email, text, dbOtpRepository, mailSenderService);
@@ -253,7 +274,8 @@ const authController = (
     signInUser,
     refreshAccessToken,
     logoutUser,
-    loginOrSignUpUsingGoogle
+    loginOrSignUpUsingGoogle,
+    forgotPassword
   };
 };
 

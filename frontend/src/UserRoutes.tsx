@@ -12,6 +12,7 @@ import SettingsPage from "./Pages/SettingsPage";
 import FriendsPage from "./Pages/FriendsPage";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import ForgotPassword from "./Pages/ForgotPassword";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/otp" element={<OTPPage />} />
         <Route path="/signin" element={<SignInPage />} />
+        <Route path="/forgotpassword" element={<ForgotPassword/>} />
       </Route>
 
       <Route element={<PrivateRoute />}>

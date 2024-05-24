@@ -26,6 +26,7 @@ const authRouter = () => {
     router.post("/verifyotp", controller.verifyOtpForEmailVerification);
     router.get('/refresh', controller.refreshAccessToken);
     router.delete('/logout', authMiddleware_1.default, controller.logoutUser);
+    router.post('/forgotpassword', controller.forgotPassword);
     return router;
 };
 exports.default = authRouter;

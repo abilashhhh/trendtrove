@@ -24,7 +24,8 @@ const END_POINTS = {
   UNBLOCK_USER: 'api/admin/unblockuser/:userId',
   FOLLOW_REQUEST: 'api/user/followuser',
   UNFOLLOW_REQUEST: 'api/user/unfollowuser',
-  CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest'
+  CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest',
+  FORGOT_PASSWORD: 'api/auth/forgotpassword'
 };
 
 export default END_POINTS;

@@ -5,6 +5,7 @@ import {
   SignUpUserInterface,
   SignupUserResponse,
   UsernameAvailabilityResponse,
+  forgotPassword,
 } from "../../Types/signUpUser";
 import {
   GoogleLoginInterface,
@@ -36,7 +37,18 @@ const handleAxiosError = (error: any) => {
 export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUserResponse> => {
   try {
     const response = await axios.post<SignupUserResponse>(END_POINTS.SIGNUP_USER, payload);
-    
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const verifyMailForForgotPass = async (email : string, text : string): Promise<forgotPassword> => {
+  try {
+    console.log("email, string :", email, text)
+    const response = await axios.post<SignupUserResponse>(END_POINTS.FORGOT_PASSWORD, {email , text});
+    console.log("response.data; ", response.data)
     return response.data;
   } catch (error) {
     handleAxiosError(error);

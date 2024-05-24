@@ -39,3 +39,9 @@ export interface EmailAvailabilityResponse {
   available: boolean;
   status: string;
 }
+
+
+export interface forgotPassword{
+  message?: string;
+  status?: string;
+}

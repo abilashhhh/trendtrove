@@ -105,6 +105,27 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
+    const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, text } = req.body;
+        try {
+            const isAvailable = yield dbUserRepository.getUserByEmail(email);
+            if (isAvailable) {
+                yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
+                res.json({
+                    status: "success",
+                    message: "OTP sent to the given mail id",
+                });
+            }
+            else {
+                res.json({
+                    status: "error",
+                    message: "Email id not registered, Try signing up",
+                });
+            }
+        }
+        catch (error) {
+        }
+    });
     const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
         yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
@@ -228,7 +249,8 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         signInUser,
         refreshAccessToken,
         logoutUser,
-        loginOrSignUpUsingGoogle
+        loginOrSignUpUsingGoogle,
+        forgotPassword
     };
 };
 exports.default = authController;

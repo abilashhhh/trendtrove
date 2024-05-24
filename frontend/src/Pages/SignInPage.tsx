@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate,   } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import Google from "../Components/GoogleButton/Google";
 import { SignInUserInterface } from "../Types/signInUser";
@@ -15,16 +15,19 @@ const SignInPage: React.FC = () => {
     password: "",
   });
 
- 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData((prevFormData) => ({
+    setFormData(prevFormData => ({
       ...prevFormData,
       [id]: value,
     }));
+  };
+
+  const forgotPassword = () => {
+    navigate("/forgotpassword");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,21 +44,25 @@ const SignInPage: React.FC = () => {
       const response = await signin(formData);
 
       if (response.status === "success") {
-        dispatch(setCredentials({ user: response.user, accessToken: response.accessToken }));
-         console.log("response.user : ", response.user)
-         console.log("response.accessToken : ", response.accessToken)
+        dispatch(
+          setCredentials({
+            user: response.user,
+            accessToken: response.accessToken,
+          })
+        );
+        console.log("response.user : ", response.user);
+        console.log("response.accessToken : ", response.accessToken);
         toast.success("Sign in successful");
         toast.success("Navigating to homepage...");
-     setTimeout(()=> {
-      navigate('/home');
-     },2000)
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
       } else {
         toast.error(`Failed to sign in, ${response.message}`);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error during sign-in:", error);
       toast.error(`Failed to sign in, ${error.response.data.message}`);
-
     }
   };
 
@@ -73,8 +80,7 @@ const SignInPage: React.FC = () => {
               New here?{" "}
               <Link
                 to="/signup"
-                className="font-medium text-blue-400 hover:text-blue-600"
-              >
+                className="font-medium text-blue-400 hover:text-blue-600">
                 Create an account
               </Link>
             </p>
@@ -83,8 +89,7 @@ const SignInPage: React.FC = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <input
@@ -99,8 +104,7 @@ const SignInPage: React.FC = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
@@ -116,9 +120,17 @@ const SignInPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none"
-              >
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
                 Sign in
+              </button>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={forgotPassword}
+                className=" text-center w-full flex justify-center hover:text-blue-600">
+                Forgot Password
               </button>
             </div>
 
