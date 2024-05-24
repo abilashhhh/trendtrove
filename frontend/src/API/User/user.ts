@@ -52,7 +52,7 @@ export const sendFollowRequest = async (
     console.log("Current users id: ", userId);
     console.log("Target users id: ", targetUserId);
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
-      `${END_POINTS.SEND_FRIEND_REQUEST}`,
+      `${END_POINTS.FOLLOW_REQUEST}`,
       { userId, targetUserId }
     );
     return response.data;

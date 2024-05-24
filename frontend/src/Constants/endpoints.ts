@@ -22,7 +22,9 @@ const END_POINTS = {
   GET_USERS: 'api/admin/getusersforadmin',
   BLOCK_USER: 'api/admin/blockuser/:userId',
   UNBLOCK_USER: 'api/admin/unblockuser/:userId',
-  SEND_FRIEND_REQUEST: 'api/user/followuser'
+  FOLLOW_REQUEST: 'api/user/followuser',
+  UNFOLLOW_REQUEST: 'api/user/unfollowuser',
+  CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest'
 };
 
 export default END_POINTS;
