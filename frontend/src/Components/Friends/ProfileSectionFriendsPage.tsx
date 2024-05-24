@@ -29,6 +29,8 @@ interface ProfileProps {
   userDetails: UserInfo;
   currentUser: UserInfo;
   onFollowUser: (targetUserId: string, targetUserUserName: string) => void;
+  onUnfollowUser: (targetUserId: string) => void; // New handler for unfollow
+  onRemoveRequest: (targetUserId: string) => void; // New handler for removing request
 }
 
 const formatDate = (date: string | undefined) => {
@@ -41,26 +43,41 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails, currentUser, onFollowUser }) => {
+const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails, currentUser, onFollowUser, onUnfollowUser, onRemoveRequest }) => {
   const followStatus = () => {
-    if (userDetails.followers.some(follower => follower.userId === currentUser._id)) {
-      return `Following since ${formatDate(userDetails.followers.find(follower => follower.userId === currentUser._id)?.followedAt)}`;
-    } else if (userDetails.requestsForMe?.some(request => request.userId === currentUser._id)) {
-      return `Requested at ${formatDate(userDetails.requestsForMe.find(request => request.userId === currentUser._id)?.followedAt)}`;
-    } else {
-      return "Follow";
-    }
-  };
-  const followButtonDisplay = () => {
     const follower = userDetails.followers.find(f => f.userId === currentUser._id);
-    const request = userDetails.requestsForMe?.find((r: { userId: string; }) => r.userId === currentUser._id);
+    const request = userDetails.requestsForMe?.find(r => r.userId === currentUser._id);
 
     if (follower) {
-      return `Following`;
+      return (
+        <div>
+          {`Following since ${formatDate(follower.followedAt)}`}
+          <button
+            onClick={() => onUnfollowUser(userDetails._id)}
+            className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm">
+            Unfollow
+          </button>
+        </div>
+      );
     } else if (request) {
-      return `Requested`;
+      return (
+        <div>
+          {`Requested at ${formatDate(request.followedAt)}`}
+          <button
+            onClick={() => onRemoveRequest(userDetails._id)}
+            className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm">
+            Remove request
+          </button>
+        </div>
+      );
     } else {
-      return "Follow";
+      return (
+        <button
+          onClick={() => onFollowUser(userDetails._id, userDetails.username)}
+          className="bg-blue-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm">
+          Follow
+        </button>
+      );
     }
   };
 
@@ -174,14 +191,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails, curren
 
           {/* Follow Button */}
           <div className="text-center mt-6">
-            {userDetails._id !== currentUser._id && (
-              <button
-                onClick={() => onFollowUser(userDetails._id, userDetails.username)}
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm">
-              {followButtonDisplay()}
-              </button>
-            )}
-            <p className="text-sm pt-2">  {followStatus()}</p>
+            {userDetails._id !== currentUser._id && followStatus()}
           </div>
         </div>
       </div>
