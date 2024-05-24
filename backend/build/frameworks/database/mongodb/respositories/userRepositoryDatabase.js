@@ -230,10 +230,19 @@ const userRepositoryMongoDB = () => {
             if (alreadyRequested || alreadyHasRequest) {
                 return { message: "Friend request already sent" };
             }
-            const requestedByMeObject = { userId: targetUserId, followedAt: new Date() };
-            const requestsForMeObject = { userId, followedAt: new Date() };
-            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { requestedByMe: requestedByMeObject } }, { new: true });
-            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { requestsForMe: requestsForMeObject } }, { new: true });
+            const requestedByMeObject = {
+                userId: targetUserId,
+                username: user.username,
+                followedAt: new Date(),
+            };
+            const requestsForMeObject = {
+                userId,
+                username: targetUser.username,
+                followedAt: new Date(),
+            };
+            // correct code, dont change
+            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { requestedByMe: requestsForMeObject } }, { new: true });
+            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { requestsForMe: requestedByMeObject } }, { new: true });
             return { message: "Friend request sent" };
         }
         catch (error) {
@@ -248,15 +257,23 @@ const userRepositoryMongoDB = () => {
             if (!user || !targetUser) {
                 throw new Error("User not found");
             }
-            const alreadyFollowing = user.following.some(follow => follow.userId === targetUserId);
-            const alreadyFollowedBy = targetUser.followers.some(follower => follower.userId === userId);
+            const alreadyFollowing = user.following.some(follow => follow.userId.toString() === targetUserId);
+            const alreadyFollowedBy = targetUser.followers.some(follower => follower.userId.toString() === userId);
             if (alreadyFollowing || alreadyFollowedBy) {
                 return { message: "Already following this user" };
             }
-            const followObject = { targetUserId, followedAt: new Date() };
-            const followerObject = { userId, followedAt: new Date() };
-            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { following: followObject } }, { new: true });
-            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { followers: followerObject } }, { new: true });
+            const followObject = {
+                userId: targetUserId,
+                username: targetUser.username,
+                followedAt: new Date(),
+            };
+            const followerObject = {
+                userId: userId,
+                username: user.username,
+                followedAt: new Date(),
+            };
+            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { following: followObject } });
+            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { followers: followerObject } });
             return { message: "You are now following this user" };
         }
         catch (error) {
@@ -305,13 +322,13 @@ const userRepositoryMongoDB = () => {
                     requestsForMe: [],
                     requestedByMe: [],
                     followers: [],
-                    following: []
-                }
+                    following: [],
+                },
             });
             console.log(`Cleared data for  users.`);
         }
         catch (error) {
-            console.error('Error clearing data:', error);
+            console.error("Error clearing data:", error);
         }
     });
     // clearAll();
@@ -336,7 +353,7 @@ const userRepositoryMongoDB = () => {
         sendFriendRequest,
         makeUserAFollower,
         unfollowUser,
-        cancelSendFriendRequest
+        cancelSendFriendRequest,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

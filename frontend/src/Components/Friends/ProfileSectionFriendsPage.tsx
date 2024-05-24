@@ -10,6 +10,9 @@ import {
 import Swal from "sweetalert2";
 import { cancelFollowRequest } from "../../utils/cancelRequestHelper";
 import { unfollowUser } from "../../utils/unfollowUserHelper";
+import Modal from "../../utils/Modal";
+import { User } from "./FriendsMiddlePage";
+import StatsCard from "./StatsCard";
 
 interface UserInfo {
   requestedByMe: any;
@@ -18,12 +21,12 @@ interface UserInfo {
   name: string;
   dp: string;
   isPrivate: boolean;
-  followers: { userId: string; followedAt: string }[];
+  followers: { userId: string; username: string; followedAt: string }[];
   bio: string;
   createdAt?: string;
   posts?: any[];
-  following?: { userId: string; followedAt: string }[];
-  requestsForMe?: { userId: string; followedAt: string }[];
+  following?: { userId: string; username: string; followedAt: string }[];
+  requestsForMe?: { userId: string; username: string; followedAt: string }[];
 }
 
 interface ProfileProps {
@@ -47,18 +50,19 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   currentUser,
   onFollowUser,
 }) => {
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [isFollower, setIsFollower] = useState<boolean>(false);
   const [hasRequested, setHasRequested] = useState<boolean>(false);
 
   useEffect(() => {
     const follower = userDetails.followers.find(
-      (f) => f.userId === currentUser._id
-    );
-    const request = userDetails.requestsForMe?.find(
-      (r) => r.userId === currentUser._id
+      f => f.userId === currentUser._id
     );
 
-    setIsFollowing(!!follower);
+    const request = userDetails.requestsForMe?.find(
+      r => r.userId === currentUser._id
+    );
+
+    setIsFollower(!!follower);
     setHasRequested(!!request);
   }, [userDetails, currentUser]);
 
@@ -74,7 +78,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Cancel Request!",
-    }).then(async (result) => {
+    }).then(async result => {
       if (result.isConfirmed) {
         const res = await cancelFollowRequest(
           currentUser._id,
@@ -83,9 +87,9 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         );
         if (res) {
           setHasRequested(false);
-          setTimeout(()=>{
-            window.location.reload()
-           },500)
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       }
     });
@@ -103,7 +107,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, unfollow!",
-    }).then(async (result) => {
+    }).then(async result => {
       if (result.isConfirmed) {
         const res = await unfollowUser(
           currentUser._id,
@@ -111,37 +115,43 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           targetUserUserName
         );
         if (res) {
-          setIsFollowing(false);
-         setTimeout(()=>{
-          window.location.reload()
-         },500)
-          
+          setIsFollower(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       }
     });
   };
 
   const followStatus = () => {
-    if (isFollowing) {
-      return <div>{`Following since ${formatDate(
-        userDetails.followers.find((f) => f.userId === currentUser._id)?.followedAt
-      )}`}</div>;
+    if (isFollower) {
+      return (
+        <div>{`Following since ${formatDate(
+          userDetails.followers.find(f => f.userId === currentUser._id)
+            ?.followedAt
+        )}`}</div>
+      );
     } else if (hasRequested) {
-      return <div>{`Requested at ${formatDate(
-        userDetails.requestsForMe?.find((r) => r.userId === currentUser._id)
-          ?.followedAt
-      )}`}</div>;
+      return (
+        <div>{`Requested at ${formatDate(
+          userDetails.requestsForMe?.find(r => r.userId === currentUser._id)
+            ?.followedAt
+        )}`}</div>
+      );
     } else {
       return (
         <button
           onClick={() => onFollowUser(userDetails._id, userDetails.username)}
-          className="bg-blue-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm"
-        >
+          className="bg-blue-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm">
           Follow
         </button>
       );
     }
   };
+
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
 
   return (
     <main className="flex-1 p-4 bg-gray-800 min-h-screen w-full no-scrollbar dark:bg-gray-700 text-white">
@@ -222,33 +232,36 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-between px-8 py-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg gap-6">
-            <div className="text-center md:w-1/3">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Posts
-              </h2>
-              <p className="text-2xl font-bold text-gray-800 dark:text-white">
-                {userDetails.posts ? userDetails.posts.length : "0"}
-              </p>
-            </div>
-
-            <div className="text-center md:w-1/3">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Followers
-              </h2>
-              <p className="text-2xl font-bold text-gray-800 dark:text-white">
-                {userDetails.followers ? userDetails.followers.length : "0"}
-              </p>
-            </div>
-
-            <div className="text-center md:w-1/3">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Following
-              </h2>
-              <p className="text-2xl font-bold text-gray-800 dark:text-white">
-                {userDetails.following ? userDetails.following.length : "0"}
-              </p>
-            </div>
+          <div>
+            <StatsCard
+              posts={userDetails.posts ? userDetails.posts.length : 0}
+              followers={
+                userDetails.followers ? userDetails.followers.length : 0
+              }
+              following={
+                userDetails.following ? userDetails.following.length : 0
+              }
+              onFollowersClick={() => setIsFollowersModalOpen(true)}
+              onFollowingClick={() => setIsFollowingModalOpen(true)}
+            />
+            <Modal
+              isOpen={isFollowersModalOpen}
+              onClose={() => setIsFollowersModalOpen(false)}
+              title="Followers"
+              users={userDetails.followers.map(f => ({
+                _id: f.userId,
+                username: f.username,
+              }))}
+            />
+            <Modal
+              isOpen={isFollowingModalOpen}
+              onClose={() => setIsFollowingModalOpen(false)}
+              title="Following"
+              users={userDetails.following.map(f => ({
+                _id: f.userId,
+                username: f.username,
+              }))}
+            />
           </div>
 
           <div className="text-center mt-6 flex gap-4 justify-center align-center">
@@ -259,21 +272,19 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                   onClick={() =>
                     handleOnCancelRequest(userDetails._id, userDetails.username)
                   }
-                  className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm"
-                >
+                  className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm">
                   Cancel Request
                 </button>
               )}
             </div>
 
             <div>
-              {isFollowing && (
+              {isFollower && (
                 <button
                   onClick={() =>
                     handleOnUnfollowUser(userDetails._id, userDetails.username)
                   }
-                  className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm"
-                >
+                  className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm">
                   Unfollow User
                 </button>
               )}

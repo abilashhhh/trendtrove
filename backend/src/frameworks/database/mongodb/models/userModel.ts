@@ -5,16 +5,20 @@ const followSchema = new Schema(
     userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
-      unique : true,
+      unique: true,
       required: true,
     },
+    username: {
+      type: String,
+    },
+
     followedAt: {
       type: Date,
       default: Date.now,
     },
   },
   {
-    _id: false, 
+    _id: false,
   }
 );
 
@@ -104,7 +108,7 @@ const userSchema = new Schema(
     savedPosts: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "Post", 
+        ref: "Post",
       },
     ],
     notifications: [

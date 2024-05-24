@@ -273,69 +273,91 @@ export const userRepositoryMongoDB = () => {
     try {
       const user = await User.findById(userId);
       const targetUser = await User.findById(targetUserId);
-  
+
       if (!user || !targetUser) {
         throw new Error("User not found");
       }
-  
-      const alreadyRequested = user.requestedByMe.some(request => request.userId === targetUserId);
-      const alreadyHasRequest = targetUser.requestsForMe.some(request => request.userId === userId);
-  
+
+      const alreadyRequested = user.requestedByMe.some(
+        request => request.userId === targetUserId
+      );
+      const alreadyHasRequest = targetUser.requestsForMe.some(
+        request => request.userId === userId
+      );
+
       if (alreadyRequested || alreadyHasRequest) {
         return { message: "Friend request already sent" };
       }
-  
-      const requestedByMeObject = { userId: targetUserId, followedAt: new Date() };
-      const requestsForMeObject = { userId, followedAt: new Date() };
-  
+
+      const requestedByMeObject = {
+        userId: targetUserId,
+        username: user.username,
+        followedAt: new Date(),
+      };
+      const requestsForMeObject = {
+        userId,
+        username: targetUser.username,
+        followedAt: new Date(),
+      };
+// correct code, dont change
       await User.updateOne(
         { _id: userId },
-        { $addToSet: { requestedByMe: requestedByMeObject } },
+        { $addToSet: { requestedByMe: requestsForMeObject } },
         { new: true }
       );
       await User.updateOne(
         { _id: targetUserId },
-        { $addToSet: { requestsForMe: requestsForMeObject } },
+        { $addToSet: { requestsForMe: requestedByMeObject } },
         { new: true }
       );
-  
+
       return { message: "Friend request sent" };
     } catch (error) {
       console.error("Error in sendFriendRequest", error);
       throw new Error("Error in sendFriendRequest");
     }
   };
-  
+
   const makeUserAFollower = async (userId: string, targetUserId: string) => {
     try {
       const user = await User.findById(userId);
       const targetUser = await User.findById(targetUserId);
-  
+
       if (!user || !targetUser) {
         throw new Error("User not found");
       }
-  
-      const alreadyFollowing = user.following.some(follow => follow.userId === targetUserId);
-      const alreadyFollowedBy = targetUser.followers.some(follower => follower.userId === userId);
-  
+
+      const alreadyFollowing = user.following.some(
+        follow => follow.userId.toString() === targetUserId
+      );
+      const alreadyFollowedBy = targetUser.followers.some(
+        follower => follower.userId.toString() === userId
+      );
+
       if (alreadyFollowing || alreadyFollowedBy) {
         return { message: "Already following this user" };
       }
-  
-      const followObject = { targetUserId, followedAt: new Date() };
-      const followerObject = { userId, followedAt: new Date() };
-  
+
+      const followObject = {
+        userId: targetUserId,
+        username: targetUser.username,
+        followedAt: new Date(),
+      };
+      const followerObject = {
+        userId: userId,
+        username: user.username,
+        followedAt: new Date(),
+      };
+
       await User.updateOne(
         { _id: userId },
-        { $addToSet: { following: followObject } },
-        { new: true }
+        { $addToSet: { following: followObject } }
       );
       await User.updateOne(
         { _id: targetUserId },
-        { $addToSet: { followers: followerObject } },
-        { new: true }
+        { $addToSet: { followers: followerObject } }
       );
-  
+
       return { message: "You are now following this user" };
     } catch (error) {
       console.error("Error in makeUserAFollower", error);
@@ -347,78 +369,78 @@ export const userRepositoryMongoDB = () => {
     try {
       const user = await User.findById(userId);
       const targetUser = await User.findById(targetUserId);
-  
+
       if (!user || !targetUser) {
         throw new Error("User not found");
       }
-  
+
       await User.updateOne(
         { _id: userId },
-        { $pull: { following: { targetUserId } } }  
+        { $pull: { following: { targetUserId } } }
       );
       await User.updateOne(
         { _id: targetUserId },
-        { $pull: { followers: { userId } } }  
+        { $pull: { followers: { userId } } }
       );
-  
+
       console.log("Unfollow successful");
       return { message: "You have unfollowed this user" };
-      
     } catch (error) {
       console.error("Error in unfollowUser", error);
       throw new Error("Error in unfollowing the user");
     }
   };
-  
-  const cancelSendFriendRequest = async (userId: string, targetUserId: string) => {
+
+  const cancelSendFriendRequest = async (
+    userId: string,
+    targetUserId: string
+  ) => {
     try {
       const user = await User.findById(userId);
       const targetUser = await User.findById(targetUserId);
-  
+
       if (!user || !targetUser) {
         throw new Error("User not found");
       }
-  
+
       await User.updateOne(
         { _id: userId },
-        { $pull: { requestedByMe: {  targetUserId } } }  
+        { $pull: { requestedByMe: { targetUserId } } }
       );
       await User.updateOne(
         { _id: targetUserId },
-        { $pull: { requestsForMe: { userId } } }  
+        { $pull: { requestsForMe: { userId } } }
       );
-  
+
       console.log("Unfollow successful");
       return { message: "You have cancelled the friend request sent" };
-      
     } catch (error) {
       console.error("Error in cancelSendFriendRequest", error);
       throw new Error("Error in cancelling the send friend request");
     }
   };
-  
-  
 
-  
-const clearAll = async () => {
-  try {
-    const result = await User.updateMany({}, {
-      $set: {
-        requestsForMe: [],
-        requestedByMe: [],
-        followers: [],
-        following: []
-      }
-    });
+  const clearAll = async () => {
+    try {
+      const result = await User.updateMany(
+        {},
+        {
+          $set: {
+            requestsForMe: [],
+            requestedByMe: [],
+            followers: [],
+            following: [],
+          },
+        }
+      );
 
-    console.log(`Cleared data for  users.`);
-  } catch (error) {
-    console.error('Error clearing data:', error);
-  }
-};
+      console.log(`Cleared data for  users.`);
+    } catch (error) {
+      console.error("Error clearing data:", error);
+    }
+  };
 
-// clearAll();
-
+  // clearAll();
 
   return {
     addUser,
@@ -441,9 +463,7 @@ const clearAll = async () => {
     sendFriendRequest,
     makeUserAFollower,
     unfollowUser,
-    cancelSendFriendRequest
-
-
+    cancelSendFriendRequest,
   };
 };
 //////////////////////////////////////////////////////////

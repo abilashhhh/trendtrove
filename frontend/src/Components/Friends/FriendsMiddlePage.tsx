@@ -17,7 +17,7 @@ interface User {
   bio: string;
   createdAt?: string;
   posts?: any[];
-  following?: { userId: string }[];
+  following?: { userId: string, followedAt?: string }[];
   requestsForMe?: { userId: string }[];
 }
 

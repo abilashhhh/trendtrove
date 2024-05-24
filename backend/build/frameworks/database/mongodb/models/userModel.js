@@ -31,6 +31,9 @@ const followSchema = new mongoose_1.Schema({
         unique: true,
         required: true,
     },
+    username: {
+        type: String,
+    },
     followedAt: {
         type: Date,
         default: Date.now,
