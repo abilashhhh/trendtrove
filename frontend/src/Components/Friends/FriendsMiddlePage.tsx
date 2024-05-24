@@ -8,6 +8,7 @@ import { getAllUsers } from "../../API/User/user";
 import ProfileSectionFriendsPage from "./ProfileSectionFriendsPage";
 import { followUser } from "../../utils/followUserHelper";
 
+
 interface User {
   _id: string;
   username: string;
