@@ -342,6 +342,61 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error in makeUserAFollower");
     }
   };
+
+  const unfollowUser = async (userId: string, targetUserId: string) => {
+    try {
+      const user = await User.findById(userId);
+      const targetUser = await User.findById(targetUserId);
+  
+      if (!user || !targetUser) {
+        throw new Error("User not found");
+      }
+  
+      await User.updateOne(
+        { _id: userId },
+        { $pull: { following: { userId: targetUserId } } }  
+      );
+      await User.updateOne(
+        { _id: targetUserId },
+        { $pull: { followers: { userId } } }  
+      );
+  
+      console.log("Unfollow successful");
+      return { message: "You have unfollowed this user" };
+      
+    } catch (error) {
+      console.error("Error in unfollowUser", error);
+      throw new Error("Error in unfollowing the user");
+    }
+  };
+  
+  const cancelSendFriendRequest = async (userId: string, targetUserId: string) => {
+    try {
+      const user = await User.findById(userId);
+      const targetUser = await User.findById(targetUserId);
+  
+      if (!user || !targetUser) {
+        throw new Error("User not found");
+      }
+  
+      await User.updateOne(
+        { _id: userId },
+        { $pull: { requestedByMe: { userId: targetUserId } } }  
+      );
+      await User.updateOne(
+        { _id: targetUserId },
+        { $pull: { requestsForMe: { userId } } }  
+      );
+  
+      console.log("Unfollow successful");
+      return { message: "You have cancelled the friend request sent" };
+      
+    } catch (error) {
+      console.error("Error in cancelSendFriendRequest", error);
+      throw new Error("Error in cancelling the send friend request");
+    }
+  };
+  
   
 
   
@@ -384,7 +439,10 @@ const clearAll = async () => {
     blockAccount,
     unblockAccount,
     sendFriendRequest,
-    makeUserAFollower
+    makeUserAFollower,
+    unfollowUser,
+    cancelSendFriendRequest
+
 
   };
 };

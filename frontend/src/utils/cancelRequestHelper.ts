@@ -1,9 +1,8 @@
 import { toast } from "react-toastify";
 import { sendCancelFollowRequest } from "../API/User/user";
-import { User } from "../Components/Friends/FriendsMiddlePage";
 
 export const cancelFollowRequest = async (
-  currentUser: User,
+  currentUser: string,
   targetUserId: string,
   targetUserUserName: string,
 ) => {
@@ -13,25 +12,18 @@ export const cancelFollowRequest = async (
  
 
     const cancelResult = await sendCancelFollowRequest(
-      currentUser._id,
+      currentUser,
       targetUserId
     );
     console.log("cancelResult: ", cancelResult);
+    if (cancelResult.status === "success") {
+      toast.success(`Successfully cancelled friend request for ${targetUserUserName}`);
+      return true
 
-    const updatedUsers = users.map(user => {
-      if (user._id === targetUserId) {
-        toast.success("Follow request cancelled");
-        return {
-          ...user,
-          requestsForMe:
-            user.requestsForMe?.filter(
-              request => request.userId !== currentUser._id
-            ) || [],
-        };
-      }
-      return user;
-    });
-
+    } else {
+      toast.error(`Failed to cancell friend request for ${targetUserUserName}: ${cancelResult.message}`);
+      return false
+    }
   } catch (error) {
     toast.error("Failed to cancel follow request");
   }

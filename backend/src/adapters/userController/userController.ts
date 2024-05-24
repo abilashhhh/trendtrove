@@ -13,8 +13,10 @@ import {
 
 import {
 
+  handleCancelFollowUserRequest,
   handleFollowUserRequest,
     handleGetAllUsers,
+    handleUnFollowUserRequest,
   
 } from "../../application/use-cases/profile/profileAuthApplication";
 
@@ -49,24 +51,7 @@ const userController = (
       });
     }
   };
-
-  // const followUserRequest = async (req: Request, res: Response) => {
-  //   try {
-  //       const {userId , targetUserId} = req.body
-  //     const user = await handleFollowUserRequest(userId , targetUserId, dbUserRepository);
-  //     console.log(user);
-  //     res.json({
-  //       status: "success",
-  //       message: "Request sent successfully",
-  //       user,
-  //     });
-  //   } catch (err) {
-  //     res.status(401).json({
-  //       status: "error",
-  //       message: "Unable to sent follow request, Please try again",
-  //     });
-  //   }
-  // };
+ 
 
   const followUserRequest = async (req: Request, res: Response) => {
     try {
@@ -85,10 +70,49 @@ const userController = (
     }
   };
 
+  const unfollowUserRequest = async (req: Request, res: Response) => {
+    try {
+      const { userId, targetUserId } = req.body;
+      console.log("unfolow user: ", req.body)
+      const result = await handleUnFollowUserRequest(userId, targetUserId, dbUserRepository);
+      res.json({
+        status: "success",
+        message: result.message,
+        user: result.user,
+      });
+    } catch (err) {
+      res.status(401).json({
+        status: "error",
+        message: "Unable to send follow request, please try again",
+      });
+    }
+  };
+
+  const cancelfollowUserRequest = async (req: Request, res: Response) => {
+    try {
+      const { userId, targetUserId } = req.body;
+      console.log("cancelfollowUserRequest user: ", req.body)
+
+      const result = await handleCancelFollowUserRequest(userId, targetUserId, dbUserRepository);
+      res.json({
+        status: "success",
+        message: result.message,
+        user: result.user,
+      });
+    } catch (err) {
+      res.status(401).json({
+        status: "error",
+        message: "Unable to send follow request, please try again",
+      });
+    }
+  };
+
   
   return {
     getAllUsers,
-    followUserRequest
+    followUserRequest,
+    cancelfollowUserRequest,
+    unfollowUserRequest
   };
 };
 

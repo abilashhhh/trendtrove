@@ -66,6 +66,12 @@ export const userDBRepository = (
   const makeUserAFollower = async (userId : string , targetUserId: string ) =>
     await repository.makeUserAFollower(userId , targetUserId );
 
+  const unfollowUser = async (userId : string , targetUserId: string ) =>
+    await repository.unfollowUser(userId , targetUserId );
+
+  const cancelSendFriendRequest = async (userId : string , targetUserId: string ) =>
+    await repository.cancelSendFriendRequest(userId , targetUserId );
+
   return {
     addUser,
     getUserByEmail,
@@ -85,7 +91,10 @@ export const userDBRepository = (
     blockAccount,
     unblockAccount,
     sendFriendRequest,
-    makeUserAFollower
+    makeUserAFollower,
+    unfollowUser,
+    cancelSendFriendRequest
+
 
   };
 };

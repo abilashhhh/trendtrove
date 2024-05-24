@@ -215,33 +215,6 @@ export const handleGetAllUsers = async (
   }
 };
 
-// export const handleFollowUserRequest = async (
-//   userId : string , targetUserId: string ,
-//   dbUserRepository: ReturnType<UserDBInterface>,
-// ) => {
-//   try {
-
-//     const mainUser = await dbUserRepository.getUserById(userId);
-//     const targetUser = await dbUserRepository.getUserById(targetUserId);
-//     console.log("Main user :", mainUser)
-//     console.log("Target user :", targetUser)
-//     if (!mainUser || !targetUser) {
-//       throw new ErrorInApplication("User dont exist", 401);
-//     }
-
-//     if(targetUser?.isPrivate){
-//       await dbUserRepository.sendFriendRequest(userId, targetUserId)
-//     }else{
-//       await dbUserRepository.makeUserAFollower(userId, targetUserId)
-//     }
-
-//     return;
-//   } catch (err) {
-//     console.error("Error: ", err);
-//     throw new ErrorInApplication("Failed to send handleFollowUserRequest", 401);
-//   }
-// };
-
 
 export const handleFollowUserRequest = async (
   userId: string,
@@ -274,3 +247,56 @@ export const handleFollowUserRequest = async (
     throw new ErrorInApplication("Failed to handle follow request", 401);
   }
 };
+
+
+export const handleUnFollowUserRequest = async (
+  userId: string,
+  targetUserId: string,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    const mainUser = await dbUserRepository.getUserById(userId);
+    const targetUser = await dbUserRepository.getUserById(targetUserId);
+
+    if (!mainUser || !targetUser) {
+      throw new ErrorInApplication("User doesn't exist", 401);
+    }
+ 
+      let newResult =  await dbUserRepository.unfollowUser(userId, targetUserId);
+      return {
+        message: newResult.message,
+        user: targetUser
+      };
+    
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to handle unfollow request", 401);
+  }
+};
+
+
+export const handleCancelFollowUserRequest = async (
+  userId: string,
+  targetUserId: string,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    const mainUser = await dbUserRepository.getUserById(userId);
+    const targetUser = await dbUserRepository.getUserById(targetUserId);
+
+    if (!mainUser || !targetUser) {
+      throw new ErrorInApplication("User doesn't exist", 401);
+    }
+
+     let newResult = await dbUserRepository.cancelSendFriendRequest(userId, targetUserId);
+      return {
+        message: newResult.message,
+        user: targetUser
+      };
+    
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to unsend friend request", 401);
+  }
+};
+

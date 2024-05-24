@@ -264,6 +264,40 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in makeUserAFollower");
         }
     });
+    const unfollowUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            const targetUser = yield userModel_1.default.findById(targetUserId);
+            if (!user || !targetUser) {
+                throw new Error("User not found");
+            }
+            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { following: { userId: targetUserId } } });
+            yield userModel_1.default.updateOne({ _id: targetUserId }, { $pull: { followers: { userId } } });
+            console.log("Unfollow successful");
+            return { message: "You have unfollowed this user" };
+        }
+        catch (error) {
+            console.error("Error in unfollowUser", error);
+            throw new Error("Error in unfollowing the user");
+        }
+    });
+    const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            const targetUser = yield userModel_1.default.findById(targetUserId);
+            if (!user || !targetUser) {
+                throw new Error("User not found");
+            }
+            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { requestedByMe: { userId: targetUserId } } });
+            yield userModel_1.default.updateOne({ _id: targetUserId }, { $pull: { requestsForMe: { userId } } });
+            console.log("Unfollow successful");
+            return { message: "You have cancelled the friend request sent" };
+        }
+        catch (error) {
+            console.error("Error in cancelSendFriendRequest", error);
+            throw new Error("Error in cancelling the send friend request");
+        }
+    });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -300,7 +334,9 @@ const userRepositoryMongoDB = () => {
         blockAccount,
         unblockAccount,
         sendFriendRequest,
-        makeUserAFollower
+        makeUserAFollower,
+        unfollowUser,
+        cancelSendFriendRequest
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

@@ -32,6 +32,8 @@ const userDBRepository = (repository) => {
     const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
     const sendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.sendFriendRequest(userId, targetUserId); });
     const makeUserAFollower = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.makeUserAFollower(userId, targetUserId); });
+    const unfollowUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unfollowUser(userId, targetUserId); });
+    const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.cancelSendFriendRequest(userId, targetUserId); });
     return {
         addUser,
         getUserByEmail,
@@ -51,7 +53,9 @@ const userDBRepository = (repository) => {
         blockAccount,
         unblockAccount,
         sendFriendRequest,
-        makeUserAFollower
+        makeUserAFollower,
+        unfollowUser,
+        cancelSendFriendRequest
     };
 };
 exports.userDBRepository = userDBRepository;

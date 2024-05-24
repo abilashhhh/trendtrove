@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -47,28 +47,43 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   currentUser,
   onFollowUser,
 }) => {
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [hasRequested, setHasRequested] = useState<boolean>(false);
+
+  useEffect(() => {
+    const follower = userDetails.followers.find(
+      (f) => f.userId === currentUser._id
+    );
+    const request = userDetails.requestsForMe?.find(
+      (r) => r.userId === currentUser._id
+    );
+
+    setIsFollowing(!!follower);
+    setHasRequested(!!request);
+  }, [userDetails, currentUser]);
+
   const handleOnCancelRequest = (
     targetUserId: string,
     targetUserUserName: string
   ) => {
     Swal.fire({
       title: "Are you sure?",
-      text: `You are about to cancel the follow request to  ${targetUserUserName}.`,
+      text: `You are about to cancel the follow request to ${targetUserUserName}.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Cancel Request!",
-    }).then(async result => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(
-          "handleOnCancelRequest:  ",
+        const res = await cancelFollowRequest(
+          currentUser._id,
           targetUserId,
-          targetUserUserName,
-          currentUser._id
+          targetUserUserName
         );
-        await cancelFollowRequest(currentUser._id, targetUserId , targetUserUserName)
-
+        if (res) {
+          setHasRequested(false);
+        }
       }
     });
   };
@@ -85,36 +100,36 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, unfollow!",
-    }).then(async result => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(
-          "handleOnUnfollowUser:  " ,
+        const res = await unfollowUser(
+          currentUser._id,
           targetUserId,
-          targetUserUserName,
-          currentUser._id
+          targetUserUserName
         );
-         await  unfollowUser(currentUser._id, targetUserId , targetUserUserName)
+        if (res) {
+          setIsFollowing(false);
+        }
       }
     });
   };
 
   const followStatus = () => {
-    const follower = userDetails.followers.find(
-      f => f.userId === currentUser._id
-    );
-    const request = userDetails.requestsForMe?.find(
-      r => r.userId === currentUser._id
-    );
-
-    if (follower) {
-      return <div>{`Following since ${formatDate(follower.followedAt)}`}</div>;
-    } else if (request) {
-      return <div>{`Requested at ${formatDate(request.followedAt)}`}</div>;
+    if (isFollowing) {
+      return <div>{`Following since ${formatDate(
+        userDetails.followers.find((f) => f.userId === currentUser._id)?.followedAt
+      )}`}</div>;
+    } else if (hasRequested) {
+      return <div>{`Requested at ${formatDate(
+        userDetails.requestsForMe?.find((r) => r.userId === currentUser._id)
+          ?.followedAt
+      )}`}</div>;
     } else {
       return (
         <button
           onClick={() => onFollowUser(userDetails._id, userDetails.username)}
-          className="bg-blue-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm">
+          className="bg-blue-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm"
+        >
           Follow
         </button>
       );
@@ -232,28 +247,26 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           <div className="text-center mt-6 flex gap-4 justify-center align-center">
             <div>{userDetails._id !== currentUser._id && followStatus()}</div>
             <div>
-              {userDetails.requestsForMe?.some(
-                request => request.userId === currentUser._id
-              ) && (
+              {hasRequested && (
                 <button
                   onClick={() =>
                     handleOnCancelRequest(userDetails._id, userDetails.username)
                   }
-                  className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm">
+                  className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm"
+                >
                   Cancel Request
                 </button>
               )}
             </div>
 
             <div>
-              {userDetails.followers?.some(
-                follower => follower.userId === currentUser._id
-              ) && (
+              {isFollowing && (
                 <button
                   onClick={() =>
                     handleOnUnfollowUser(userDetails._id, userDetails.username)
                   }
-                  className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm">
+                  className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm"
+                >
                   Unfollow User
                 </button>
               )}
