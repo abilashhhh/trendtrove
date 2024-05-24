@@ -56,6 +56,11 @@ const FriendsMiddlePage: React.FC = () => {
     }
   }, [activeSection]);
 
+  const handleFollowUser = async (userId: string, username: string) => {
+    await followUser(currentUser, userId, username, users, setUsers, setFollowRequests);
+    setActiveSection(username);
+  };
+
   return (
     <>
       <ToastContainer />
@@ -90,14 +95,7 @@ const FriendsMiddlePage: React.FC = () => {
                         id={`followButton-${user._id}`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          followUser(
-                            currentUser,
-                            user._id,
-                            user.username,
-                            users,
-                            setUsers,
-                            setFollowRequests
-                          );
+                          handleFollowUser(user._id, user.username);
                         }}
                         className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm"
                         disabled={
@@ -129,16 +127,7 @@ const FriendsMiddlePage: React.FC = () => {
                             users.find((u) => u.username === activeSection)!
                           }
                           currentUser={currentUser}
-                          onFollowUser={(targetUserId, targetUserUserName) =>
-                            followUser(
-                              currentUser,
-                              targetUserId,
-                              targetUserUserName,
-                              users,
-                              setUsers,
-                              setFollowRequests
-                            )
-                          }
+                          onFollowUser={handleFollowUser}
                         />
                       </div>
                     )}
@@ -157,16 +146,7 @@ const FriendsMiddlePage: React.FC = () => {
                     users.find((user) => user.username === activeSection)!
                   }
                   currentUser={currentUser}
-                  onFollowUser={(targetUserId, targetUserUserName) =>
-                    followUser(
-                      currentUser,
-                      targetUserId,
-                      targetUserUserName,
-                      users,
-                      setUsers,
-                      setFollowRequests
-                    )
-                  }
+                  onFollowUser={handleFollowUser}
                 />
               ) : (
                 <div className="p-4 text-center">
