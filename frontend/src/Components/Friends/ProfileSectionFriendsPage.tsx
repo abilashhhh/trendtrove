@@ -7,6 +7,8 @@ import {
   faInfoCircle,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
+import { followUser } from "../../utils/followUserHelper";
+import { User } from "./FriendsMiddlePage";
 
 interface UserInfo {
   requestedByMe: any;

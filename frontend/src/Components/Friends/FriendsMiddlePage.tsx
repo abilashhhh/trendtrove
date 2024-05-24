@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers, sendFollowRequest } from "../../API/User/user";
+import { getAllUsers } from "../../API/User/user";
 import ProfileSectionFriendsPage from "./ProfileSectionFriendsPage";
+import { followUser } from "../../utils/followUserHelper";
 
 interface User {
   _id: string;
@@ -44,52 +45,6 @@ const FriendsMiddlePage: React.FC = () => {
     fetchUsers();
   }, [currentUser]);
 
-  const followUser = async (targetUserId: string, targetUserUserName: string) => {
-    console.log("Follow user pressed for: ", targetUserId, targetUserUserName);
-    console.log("Main user: ", currentUser._id, currentUser.name);
-
-    const targetUser = users.find(user => user._id === targetUserId);
-    const isFollowing = targetUser?.followers.some(follower => follower.userId === currentUser._id);
-    const isRequestSent = targetUser?.requestsForMe?.some(request => request.userId === currentUser._id);
-
-    if (isFollowing) {
-      toast.info("You are already following this user");
-      return;
-    }
-
-    if (isRequestSent) {
-      toast.info("Friend request already sent");
-      return;
-    }
-
-    try {
-      const followRequestResult = await sendFollowRequest(currentUser?._id, targetUserId);
-      console.log("followRequestResult: ", followRequestResult);
-
-      const updatedUsers = users.map(user => {
-        if (user._id === targetUserId) {
-          if (followRequestResult.message === "You are now following this user") {
-            toast.success("You are now following this user");
-            return { ...user, followers: [...user.followers, { userId: currentUser._id, followedAt: new Date().toISOString() }] };
-          } else if (followRequestResult.message === "Friend request sent") {
-            toast.success("Friend request sent");
-            return { ...user, requestsForMe: [...user.requestsForMe, { userId: currentUser._id, followedAt: new Date().toISOString() }] };
-          } else if (followRequestResult.message === "Friend request already sent") {
-            toast.info("Friend request already sent");
-          } else if (followRequestResult.message === "Already following this user") {
-            toast.info("You are already following this user");
-          }
-        }
-        return user;
-      });
-
-      setUsers(updatedUsers);
-      setFollowRequests(prev => [...prev, targetUserId]);
-    } catch (error) {
-      toast.error("Failed to send follow request");
-    }
-  };
-
   return (
     <>
       <ToastContainer />
@@ -117,7 +72,7 @@ const FriendsMiddlePage: React.FC = () => {
                         id={`followButton-${user._id}`}
                         onClick={e => {
                           e.stopPropagation();
-                          followUser(user._id, user.username);
+                          followUser(currentUser, user._id, user.username, users, setUsers, setFollowRequests);
                         }}
                         className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm"
                         disabled={followRequests.includes(user._id) || user.followers.some(follower => follower.userId === currentUser._id) || user.requestsForMe?.some(request => request.userId === currentUser._id)}>
@@ -133,7 +88,7 @@ const FriendsMiddlePage: React.FC = () => {
                         <ProfileSectionFriendsPage
                           userDetails={users.find(u => u.username === activeSection)!}
                           currentUser={currentUser}
-                          onFollowUser={followUser}
+                          onFollowUser={(targetUserId, targetUserUserName) => followUser(currentUser, targetUserId, targetUserUserName, users, setUsers, setFollowRequests)}
                         />
                       </div>
                     )}
@@ -148,7 +103,7 @@ const FriendsMiddlePage: React.FC = () => {
                 <ProfileSectionFriendsPage
                   userDetails={users.find(user => user.username === activeSection)!}
                   currentUser={currentUser}
-                  onFollowUser={followUser}
+                  onFollowUser={(targetUserId, targetUserUserName) => followUser(currentUser, targetUserId, targetUserUserName, users, setUsers, setFollowRequests)}
                 />
               ) : (
                 <div className="p-4 text-center">Select a user to see details</div>
