@@ -15,7 +15,6 @@ import { User } from "./FriendsMiddlePage";
 import StatsCard from "./StatsCard";
 
 interface UserInfo {
-  requestedByMe: any;
   _id: string;
   username: string;
   name: string;
@@ -27,6 +26,7 @@ interface UserInfo {
   posts?: any[];
   following?: { userId: string; username: string; followedAt: string }[];
   requestsForMe?: { userId: string; username: string; followedAt: string }[];
+  requestedByMe?: { userId: string; username: string; followedAt: string }[];
 }
 
 interface ProfileProps {
@@ -52,6 +52,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
 }) => {
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [hasRequested, setHasRequested] = useState<boolean>(false);
+  const [hasAcceptedReq, setHsAcceptedReq] = useState<boolean>(false);
 
   useEffect(() => {
     const follower = userDetails.followers.find(
@@ -62,6 +63,11 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       r => r.userId === currentUser._id
     );
 
+    const acceptReq = userDetails.requestedByMe?.find(
+      k => k.userId === currentUser._id
+    )
+
+    setHsAcceptedReq(!!acceptReq)
     setIsFollower(!!follower);
     setHasRequested(!!request);
   }, [userDetails, currentUser]);
@@ -94,6 +100,13 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       }
     });
   };
+
+  const handleAcceptUserRequest = async  (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    console.log("handleaccept user req: ", targetUserId , targetUserUserName)
+  }
 
   const handleOnUnfollowUser = async (
     targetUserId: string,
@@ -286,6 +299,18 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                   }
                   className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm">
                   Unfollow User
+                </button>
+              )}
+            </div>
+
+            <div>
+              {hasAcceptedReq && (
+                <button
+                  onClick={() =>
+                    handleAcceptUserRequest(userDetails._id, userDetails.username)
+                  }
+                  className="bg-green-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-green-600 transition duration-300 ease-in-out shadow-sm">
+                  Accept Request
                 </button>
               )}
             </div>
