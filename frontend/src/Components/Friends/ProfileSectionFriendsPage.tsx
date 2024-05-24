@@ -8,6 +8,8 @@ import {
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import { cancelFollowRequest } from "../../utils/cancelRequestHelper";
+import { unfollowUser } from "../../utils/unfollowUserHelper";
 
 interface UserInfo {
   requestedByMe: any;
@@ -57,7 +59,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Cancel Request!",
-    }).then(result => {
+    }).then(async result => {
       if (result.isConfirmed) {
         console.log(
           "handleOnCancelRequest:  ",
@@ -65,12 +67,13 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           targetUserUserName,
           currentUser._id
         );
-        // Perform unfollow action here
+        await cancelFollowRequest(currentUser._id, targetUserId , targetUserUserName)
+
       }
     });
   };
 
-  const handleOnUnfollowUser = (
+  const handleOnUnfollowUser = async (
     targetUserId: string,
     targetUserUserName: string
   ) => {
@@ -82,15 +85,15 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, unfollow!",
-    }).then(result => {
+    }).then(async result => {
       if (result.isConfirmed) {
         console.log(
-          "handleOnUnfollowUser:  ",
+          "handleOnUnfollowUser:  " ,
           targetUserId,
           targetUserUserName,
           currentUser._id
         );
-        // Perform unfollow action here
+         await  unfollowUser(currentUser._id, targetUserId , targetUserUserName)
       }
     });
   };

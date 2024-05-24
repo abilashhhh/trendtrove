@@ -6,8 +6,6 @@ export const unfollowUser = async (
   currentUser: User,
   targetUserId: string, 
   targetUserUserName: string, 
-  users: User[],
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>,
 ) => {
   try {
     console.log("Follow user pressed for: ", targetUserId, targetUserUserName);
@@ -45,7 +43,6 @@ export const unfollowUser = async (
       return user;
     });
 
-    setUsers(updatedUsers);
   } catch (error) {
     toast.error("Failed to unfollow user");
   }

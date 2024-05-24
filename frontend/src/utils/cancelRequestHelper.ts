@@ -1,13 +1,11 @@
 import { toast } from "react-toastify";
-import { cancelFollowRequestAPI } from "../API/User/user";
+import { sendCancelFollowRequest } from "../API/User/user";
 import { User } from "../Components/Friends/FriendsMiddlePage";
 
 export const cancelFollowRequest = async (
   currentUser: User,
   targetUserId: string,
   targetUserUserName: string,
-  users: User[],
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>
 ) => {
   try {
     console.log("Follow user pressed for: ", targetUserId, targetUserUserName);
@@ -51,7 +49,6 @@ export const cancelFollowRequest = async (
       return user;
     });
 
-    setUsers(updatedUsers);
   } catch (error) {
     toast.error("Failed to cancel follow request");
   }
