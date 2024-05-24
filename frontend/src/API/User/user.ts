@@ -62,7 +62,7 @@ export const sendFollowRequest = async (
   }
 };
 
-export const sendUnollowRequest = async (
+export const sendUnfollowRequest = async (
   userId: string,
   targetUserId: string
 ): Promise<FriendRequestSentResponse> => {

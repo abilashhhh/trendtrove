@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { sendUnollowRequest } from "../API/User/user";
+import { sendUnfollowRequest } from "../API/User/user";
 import { User } from "../Components/Friends/FriendsMiddlePage";
 
 export const unfollowUser = async (
@@ -12,23 +12,9 @@ export const unfollowUser = async (
     console.log("Main user: ", currentUser._id, currentUser.name);
 
 
+ 
 
-    const targetUser = users.find(user => user._id === targetUserId);
-    const isFollowing = targetUser?.followers.some(follower => follower.userId === currentUser._id);
-    const isRequestSent = targetUser?.requestsForMe?.some(request => request.userId === currentUser._id);
-  
-    if (!isFollowing) {
-      toast.info("You are not following this user");
-      return;
-    }
-  
-    if (!isRequestSent) {
-      toast.info("You have not sent a friend request");
-      return;
-    }
-
-
-    const unfollowResult = await sendUnollowRequest(currentUser._id, targetUserId);
+    const unfollowResult = await sendUnfollowRequest(currentUser._id, targetUserId);
 
     console.log("unfollowResult: ", unfollowResult);
 
