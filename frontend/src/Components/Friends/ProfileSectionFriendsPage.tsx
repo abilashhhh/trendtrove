@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -7,8 +7,7 @@ import {
   faInfoCircle,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
-import { followUser } from "../../utils/followUserHelper";
-import { User } from "./FriendsMiddlePage";
+import Swal from "sweetalert2";
 
 interface UserInfo {
   requestedByMe: any;
@@ -17,20 +16,18 @@ interface UserInfo {
   name: string;
   dp: string;
   isPrivate: boolean;
-  followers: { userId: string, followedAt: string }[];
+  followers: { userId: string; followedAt: string }[];
   bio: string;
   createdAt?: string;
   posts?: any[];
-  following?: { userId: string, followedAt: string }[];
-  requestsForMe?: { userId: string, followedAt: string }[];
+  following?: { userId: string; followedAt: string }[];
+  requestsForMe?: { userId: string; followedAt: string }[];
 }
 
 interface ProfileProps {
   userDetails: UserInfo;
   currentUser: UserInfo;
   onFollowUser: (targetUserId: string, targetUserUserName: string) => void;
-  onUnfollowUser: (targetUserId: string) => void; // New handler for unfollow
-  onRemoveRequest: (targetUserId: string) => void; // New handler for removing request
 }
 
 const formatDate = (date: string | undefined) => {
@@ -43,33 +40,73 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails, currentUser, onFollowUser, onUnfollowUser, onRemoveRequest }) => {
+const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
+  userDetails,
+  currentUser,
+  onFollowUser,
+}) => {
+  const handleOnCancelRequest = (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to cancel the follow request to  ${targetUserUserName}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Cancel Request!",
+    }).then(result => {
+      if (result.isConfirmed) {
+        console.log(
+          "handleOnCancelRequest:  ",
+          targetUserId,
+          targetUserUserName,
+          currentUser._id
+        );
+        // Perform unfollow action here
+      }
+    });
+  };
+
+  const handleOnUnfollowUser = (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to unfollow ${targetUserUserName}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, unfollow!",
+    }).then(result => {
+      if (result.isConfirmed) {
+        console.log(
+          "handleOnUnfollowUser:  ",
+          targetUserId,
+          targetUserUserName,
+          currentUser._id
+        );
+        // Perform unfollow action here
+      }
+    });
+  };
+
   const followStatus = () => {
-    const follower = userDetails.followers.find(f => f.userId === currentUser._id);
-    const request = userDetails.requestsForMe?.find(r => r.userId === currentUser._id);
+    const follower = userDetails.followers.find(
+      f => f.userId === currentUser._id
+    );
+    const request = userDetails.requestsForMe?.find(
+      r => r.userId === currentUser._id
+    );
 
     if (follower) {
-      return (
-        <div>
-          {`Following since ${formatDate(follower.followedAt)}`}
-          <button
-            onClick={() => onUnfollowUser(userDetails._id)}
-            className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm">
-            Unfollow
-          </button>
-        </div>
-      );
+      return <div>{`Following since ${formatDate(follower.followedAt)}`}</div>;
     } else if (request) {
-      return (
-        <div>
-          {`Requested at ${formatDate(request.followedAt)}`}
-          <button
-            onClick={() => onRemoveRequest(userDetails._id)}
-            className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm">
-            Remove request
-          </button>
-        </div>
-      );
+      return <div>{`Requested at ${formatDate(request.followedAt)}`}</div>;
     } else {
       return (
         <button
@@ -189,9 +226,35 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({ userDetails, curren
             </div>
           </div>
 
-          {/* Follow Button */}
-          <div className="text-center mt-6">
-            {userDetails._id !== currentUser._id && followStatus()}
+          <div className="text-center mt-6 flex gap-4 justify-center align-center">
+            <div>{userDetails._id !== currentUser._id && followStatus()}</div>
+            <div>
+              {userDetails.requestsForMe?.some(
+                request => request.userId === currentUser._id
+              ) && (
+                <button
+                  onClick={() =>
+                    handleOnCancelRequest(userDetails._id, userDetails.username)
+                  }
+                  className="bg-yellow-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out shadow-sm">
+                  Cancel Request
+                </button>
+              )}
+            </div>
+
+            <div>
+              {userDetails.followers?.some(
+                follower => follower.userId === currentUser._id
+              ) && (
+                <button
+                  onClick={() =>
+                    handleOnUnfollowUser(userDetails._id, userDetails.username)
+                  }
+                  className="bg-red-500 text-white py-1 px-2 ml-2 rounded-md hover:bg-red-600 transition duration-300 ease-in-out shadow-sm">
+                  Unfollow User
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -344,6 +344,27 @@ export const userRepositoryMongoDB = () => {
   };
   
 
+  
+const clearAll = async () => {
+  try {
+    const result = await User.updateMany({}, {
+      $set: {
+        requestsForMe: [],
+        requestedByMe: [],
+        followers: [],
+        following: []
+      }
+    });
+
+    console.log(`Cleared data for  users.`);
+  } catch (error) {
+    console.error('Error clearing data:', error);
+  }
+};
+
+// clearAll();
+
+
   return {
     addUser,
     getUserByEmail,

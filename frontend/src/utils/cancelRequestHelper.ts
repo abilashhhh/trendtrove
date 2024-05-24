@@ -5,12 +5,36 @@ import { User } from "../Components/Friends/FriendsMiddlePage";
 export const cancelFollowRequest = async (
   currentUser: User,
   targetUserId: string,
+  targetUserUserName: string,
   users: User[],
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>,
-  setCancelFollowRequests: React.Dispatch<React.SetStateAction<string[]>>
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>
 ) => {
   try {
-    const cancelResult = await cancelFollowRequestAPI(currentUser._id, targetUserId);
+    console.log("Follow user pressed for: ", targetUserId, targetUserUserName);
+    console.log("Main user: ", currentUser._id, currentUser.name);
+
+    const targetUser = users.find(user => user._id === targetUserId);
+    const isFollowing = targetUser?.followers.some(
+      follower => follower.userId === currentUser._id
+    );
+    const isRequestSent = targetUser?.requestsForMe?.some(
+      request => request.userId === currentUser._id
+    );
+
+    if (isFollowing) {
+      toast.info("You are already following this user");
+      return;
+    }
+
+    if (isRequestSent) {
+      toast.info("Friend request already sent");
+      return;
+    }
+
+    const cancelResult = await cancelFollowRequestAPI(
+      currentUser._id,
+      targetUserId
+    );
     console.log("cancelResult: ", cancelResult);
 
     const updatedUsers = users.map(user => {
@@ -18,14 +42,16 @@ export const cancelFollowRequest = async (
         toast.success("Follow request cancelled");
         return {
           ...user,
-          requestsForMe: user.requestsForMe?.filter(request => request.userId !== currentUser._id) || [],
+          requestsForMe:
+            user.requestsForMe?.filter(
+              request => request.userId !== currentUser._id
+            ) || [],
         };
       }
       return user;
     });
 
     setUsers(updatedUsers);
-    setCancelFollowRequests(prev => prev.filter(id => id !== targetUserId));
   } catch (error) {
     toast.error("Failed to cancel follow request");
   }

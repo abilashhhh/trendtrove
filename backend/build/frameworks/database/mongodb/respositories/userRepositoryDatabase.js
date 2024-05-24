@@ -264,6 +264,23 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in makeUserAFollower");
         }
     });
+    const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const result = yield userModel_1.default.updateMany({}, {
+                $set: {
+                    requestsForMe: [],
+                    requestedByMe: [],
+                    followers: [],
+                    following: []
+                }
+            });
+            console.log(`Cleared data for  users.`);
+        }
+        catch (error) {
+            console.error('Error clearing data:', error);
+        }
+    });
+    // clearAll();
     return {
         addUser,
         getUserByEmail,
