@@ -11,10 +11,10 @@ const errorHandlingMiddleware_1 = __importDefault(require("./frameworks/webserve
 const server_1 = __importDefault(require("./frameworks/webserver/server"));
 const ErrorInApplication_1 = __importDefault(require("./utils/ErrorInApplication"));
 const app = (0, express_1.default)();
-(0, connection_1.default)(); // MongoDB setup
-(0, express_2.default)(app); // Express setup
-(0, routes_1.default)(app); // Routes for each endpoint
-app.use(errorHandlingMiddleware_1.default); // Middleware - error handling
+(0, connection_1.default)();
+(0, express_2.default)(app);
+(0, routes_1.default)(app);
+app.use(errorHandlingMiddleware_1.default);
 app.all('*', (req, res, next) => {
     next(new ErrorInApplication_1.default("Request not found", 404));
 });

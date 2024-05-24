@@ -8,11 +8,11 @@ import ErrorInApplication from "./utils/ErrorInApplication";
 
 const app: Application = express();
 
-connectToMongoDB(); // MongoDB setup
-expressConfigurations(app); // Express setup
-routes(app); // Routes for each endpoint
+connectToMongoDB();  
+expressConfigurations(app);  
+routes(app);  
 
-app.use(errorHandlingMiddleware); // Middleware - error handling
+app.use(errorHandlingMiddleware); 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
     next(new ErrorInApplication("Request not found" , 404));
 });

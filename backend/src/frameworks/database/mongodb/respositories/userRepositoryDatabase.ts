@@ -209,7 +209,7 @@ export const userRepositoryMongoDB = () => {
           isBlocked: { $ne: true },
           isSuspended: { $ne: true },
         },
-        "username dp name bio isPrivate followers requestsForMe"
+        "username dp name bio isPrivate followers following requestedByMe requestsForMe "
       ).exec();
       console.log(users);
       return users;
@@ -225,7 +225,7 @@ export const userRepositoryMongoDB = () => {
         {
           isAdmin: { $ne: true },
         },
-        "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn"
+        "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn "
       ).exec();
       console.log(users);
       return users;
@@ -322,7 +322,7 @@ export const userRepositoryMongoDB = () => {
         return { message: "Already following this user" };
       }
   
-      const followObject = { userId: targetUserId, followedAt: new Date() };
+      const followObject = { targetUserId, followedAt: new Date() };
       const followerObject = { userId, followedAt: new Date() };
   
       await User.updateOne(
@@ -354,7 +354,7 @@ export const userRepositoryMongoDB = () => {
   
       await User.updateOne(
         { _id: userId },
-        { $pull: { following: { userId: targetUserId } } }  
+        { $pull: { following: { targetUserId } } }  
       );
       await User.updateOne(
         { _id: targetUserId },
@@ -381,7 +381,7 @@ export const userRepositoryMongoDB = () => {
   
       await User.updateOne(
         { _id: userId },
-        { $pull: { requestedByMe: { userId: targetUserId } } }  
+        { $pull: { requestedByMe: {  targetUserId } } }  
       );
       await User.updateOne(
         { _id: targetUserId },

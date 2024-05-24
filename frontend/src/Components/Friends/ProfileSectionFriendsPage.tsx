@@ -83,6 +83,9 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         );
         if (res) {
           setHasRequested(false);
+          setTimeout(()=>{
+            window.location.reload()
+           },500)
         }
       }
     });
@@ -109,6 +112,10 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         );
         if (res) {
           setIsFollowing(false);
+         setTimeout(()=>{
+          window.location.reload()
+         },500)
+          
         }
       }
     });

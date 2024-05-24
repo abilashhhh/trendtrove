@@ -168,7 +168,7 @@ const userRepositoryMongoDB = () => {
                 isAdmin: { $ne: true },
                 isBlocked: { $ne: true },
                 isSuspended: { $ne: true },
-            }, "username dp name bio isPrivate followers requestsForMe").exec();
+            }, "username dp name bio isPrivate followers following requestedByMe requestsForMe ").exec();
             console.log(users);
             return users;
         }
@@ -181,7 +181,7 @@ const userRepositoryMongoDB = () => {
         try {
             const users = yield userModel_1.default.find({
                 isAdmin: { $ne: true },
-            }, "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn").exec();
+            }, "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn ").exec();
             console.log(users);
             return users;
         }
@@ -253,7 +253,7 @@ const userRepositoryMongoDB = () => {
             if (alreadyFollowing || alreadyFollowedBy) {
                 return { message: "Already following this user" };
             }
-            const followObject = { userId: targetUserId, followedAt: new Date() };
+            const followObject = { targetUserId, followedAt: new Date() };
             const followerObject = { userId, followedAt: new Date() };
             yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { following: followObject } }, { new: true });
             yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { followers: followerObject } }, { new: true });
@@ -271,7 +271,7 @@ const userRepositoryMongoDB = () => {
             if (!user || !targetUser) {
                 throw new Error("User not found");
             }
-            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { following: { userId: targetUserId } } });
+            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { following: { targetUserId } } });
             yield userModel_1.default.updateOne({ _id: targetUserId }, { $pull: { followers: { userId } } });
             console.log("Unfollow successful");
             return { message: "You have unfollowed this user" };
@@ -288,7 +288,7 @@ const userRepositoryMongoDB = () => {
             if (!user || !targetUser) {
                 throw new Error("User not found");
             }
-            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { requestedByMe: { userId: targetUserId } } });
+            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { requestedByMe: { targetUserId } } });
             yield userModel_1.default.updateOne({ _id: targetUserId }, { $pull: { requestsForMe: { userId } } });
             console.log("Unfollow successful");
             return { message: "You have cancelled the friend request sent" };
