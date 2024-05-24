@@ -17,6 +17,7 @@ const userRouter = () => {
   );
 
   router.get("/getallusers/:id" , controller.getAllUsers);
+  router.post("/followuser" , controller.followUserRequest);
 
   return router;
 };

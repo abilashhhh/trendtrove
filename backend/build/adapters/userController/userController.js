@@ -33,8 +33,43 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    // const followUserRequest = async (req: Request, res: Response) => {
+    //   try {
+    //       const {userId , targetUserId} = req.body
+    //     const user = await handleFollowUserRequest(userId , targetUserId, dbUserRepository);
+    //     console.log(user);
+    //     res.json({
+    //       status: "success",
+    //       message: "Request sent successfully",
+    //       user,
+    //     });
+    //   } catch (err) {
+    //     res.status(401).json({
+    //       status: "error",
+    //       message: "Unable to sent follow request, Please try again",
+    //     });
+    //   }
+    // };
+    const followUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, targetUserId } = req.body;
+            const result = yield (0, profileAuthApplication_1.handleFollowUserRequest)(userId, targetUserId, dbUserRepository);
+            res.json({
+                status: "success",
+                message: result.message,
+                user: result.user,
+            });
+        }
+        catch (err) {
+            res.status(401).json({
+                status: "error",
+                message: "Unable to send follow request, please try again",
+            });
+        }
+    });
     return {
-        getAllUsers
+        getAllUsers,
+        followUserRequest
     };
 };
 exports.default = userController;

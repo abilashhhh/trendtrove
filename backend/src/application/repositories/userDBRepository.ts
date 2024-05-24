@@ -44,10 +44,10 @@ export const userDBRepository = (
 
   const suspendAccount = async (userId: string) =>
     await repository.suspendAccount(userId);
-  
+
   const blockAccount = async (userId: string) =>
     await repository.blockAccount(userId);
-  
+
   const unblockAccount = async (userId: string) =>
     await repository.unblockAccount(userId);
 
@@ -59,6 +59,12 @@ export const userDBRepository = (
 
   const getAllUsersForAdmin = async () =>
     await repository.getAllUsersForAdmin();
+
+  const sendFriendRequest = async (userId : string , targetUserId: string ) =>
+    await repository.sendFriendRequest(userId , targetUserId );
+
+  const makeUserAFollower = async (userId : string , targetUserId: string ) =>
+    await repository.makeUserAFollower(userId , targetUserId );
 
   return {
     addUser,
@@ -78,6 +84,9 @@ export const userDBRepository = (
     getAllUsersForAdmin,
     blockAccount,
     unblockAccount,
+    sendFriendRequest,
+    makeUserAFollower
+
   };
 };
 

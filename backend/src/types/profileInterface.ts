@@ -15,9 +15,13 @@ export interface ProfileInterface {
   bio?: string;
   gender?: string;
   address?: string;
+  requestsForMe?: string[];
+  requestedByMe?: string[];
   followers?: string[];
   following?: string[];
   savedPosts?: string[];
+  requestsForMe?: string[];
+  requestedByMe?: string[];
   isVerifiedAccount?: boolean;
   isGoogleSignedIn?: boolean;
   isBlocked?: boolean;

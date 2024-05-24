@@ -30,6 +30,8 @@ const userDBRepository = (repository) => {
     const privateAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.privateAccount(userId); });
     const getAllUsers = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsers(userId); });
     const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
+    const sendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.sendFriendRequest(userId, targetUserId); });
+    const makeUserAFollower = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.makeUserAFollower(userId, targetUserId); });
     return {
         addUser,
         getUserByEmail,
@@ -48,6 +50,8 @@ const userDBRepository = (repository) => {
         getAllUsersForAdmin,
         blockAccount,
         unblockAccount,
+        sendFriendRequest,
+        makeUserAFollower
     };
 };
 exports.userDBRepository = userDBRepository;

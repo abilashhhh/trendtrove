@@ -3,10 +3,9 @@ import axiosUserInstance from "../Axios/axiosUserInstance";
 import END_POINTS from "../../Constants/endpoints";
 
 import {
+  FriendRequestSentResponse,
   GetRestOfUsersResponse,
 } from "../../Types/userProfile";
- 
-
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -28,9 +27,8 @@ const handleAxiosError = (error: any) => {
   }
 };
 
- 
 export const getAllUsers = async (
-  userId: string,
+  userId: string
 ): Promise<GetRestOfUsersResponse> => {
   try {
     console.log(userId, "from susp acc");
@@ -39,6 +37,24 @@ export const getAllUsers = async (
       `${END_POINTS.GET_ALL_USERS.replace(":userId", userId)}`
     );
     console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const sendFollowRequest = async (
+  userId: string,
+  targetUserId: string
+): Promise<FriendRequestSentResponse> => {
+  try {
+    console.log("Current users id: ", userId);
+    console.log("Target users id: ", targetUserId);
+    const response = await axiosUserInstance.post<FriendRequestSentResponse>(
+      `${END_POINTS.SEND_FRIEND_REQUEST}`,
+      { userId, targetUserId }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);

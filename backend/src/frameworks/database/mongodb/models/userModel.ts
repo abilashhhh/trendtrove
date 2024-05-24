@@ -1,5 +1,23 @@
 import mongoose, { Schema, model } from "mongoose";
 
+const followSchema = new Schema(
+  {
+    userId: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      unique : true,
+      required: true,
+    },
+    followedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    _id: false, 
+  }
+);
+
 const userSchema = new Schema(
   {
     name: {
@@ -61,10 +79,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    role:{
+    role: {
       type: String,
-      enum: ['admin', 'user'],
-      default: 'user',
+      enum: ["admin", "user"],
+      default: "user",
     },
     isSuspended: {
       type: Boolean,
@@ -79,33 +97,14 @@ const userSchema = new Schema(
       default: null,
     },
     posts: [],
-    requests: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    requested: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    followers: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    following: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    requestsForMe: [followSchema],
+    requestedByMe: [followSchema],
+    followers: [followSchema],
+    following: [followSchema],
     savedPosts: [
       {
         type: mongoose.Types.ObjectId,
+        ref: "Post", 
       },
     ],
     notifications: [

@@ -168,7 +168,7 @@ const userRepositoryMongoDB = () => {
                 isAdmin: { $ne: true },
                 isBlocked: { $ne: true },
                 isSuspended: { $ne: true },
-            }, "username dp name bio isPrivate").exec();
+            }, "username dp name bio isPrivate followers requestsForMe").exec();
             console.log(users);
             return users;
         }
@@ -218,6 +218,52 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error changing isAccountVerified field");
         }
     });
+    const sendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            const targetUser = yield userModel_1.default.findById(targetUserId);
+            if (!user || !targetUser) {
+                throw new Error("User not found");
+            }
+            const alreadyRequested = user.requestedByMe.some(request => request.userId === targetUserId);
+            const alreadyHasRequest = targetUser.requestsForMe.some(request => request.userId === userId);
+            if (alreadyRequested || alreadyHasRequest) {
+                return { message: "Friend request already sent" };
+            }
+            const requestedByMeObject = { userId: targetUserId, followedAt: new Date() };
+            const requestsForMeObject = { userId, followedAt: new Date() };
+            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { requestedByMe: requestedByMeObject } }, { new: true });
+            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { requestsForMe: requestsForMeObject } }, { new: true });
+            return { message: "Friend request sent" };
+        }
+        catch (error) {
+            console.error("Error in sendFriendRequest", error);
+            throw new Error("Error in sendFriendRequest");
+        }
+    });
+    const makeUserAFollower = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            const targetUser = yield userModel_1.default.findById(targetUserId);
+            if (!user || !targetUser) {
+                throw new Error("User not found");
+            }
+            const alreadyFollowing = user.following.some(follow => follow.userId === targetUserId);
+            const alreadyFollowedBy = targetUser.followers.some(follower => follower.userId === userId);
+            if (alreadyFollowing || alreadyFollowedBy) {
+                return { message: "Already following this user" };
+            }
+            const followObject = { userId: targetUserId, followedAt: new Date() };
+            const followerObject = { userId, followedAt: new Date() };
+            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { following: followObject } }, { new: true });
+            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { followers: followerObject } }, { new: true });
+            return { message: "You are now following this user" };
+        }
+        catch (error) {
+            console.error("Error in makeUserAFollower", error);
+            throw new Error("Error in makeUserAFollower");
+        }
+    });
     return {
         addUser,
         getUserByEmail,
@@ -236,6 +282,8 @@ const userRepositoryMongoDB = () => {
         getAllUsersForAdmin,
         blockAccount,
         unblockAccount,
+        sendFriendRequest,
+        makeUserAFollower
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

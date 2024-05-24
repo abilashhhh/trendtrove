@@ -19,6 +19,8 @@ export interface User {
     address?: string;
     followers?: string[];
     following?: string[];
+    requestsForMe?: string[];
+    requestedByMe?: string[];
     savedPosts?: string[];
     isVerifiedAccount?: boolean;
     isGoogleSignedIn?: boolean;

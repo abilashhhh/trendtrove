@@ -24,6 +24,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+const followSchema = new mongoose_1.Schema({
+    userId: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "User",
+        unique: true,
+        required: true,
+    },
+    followedAt: {
+        type: Date,
+        default: Date.now,
+    },
+}, {
+    _id: false,
+});
 const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -85,8 +99,8 @@ const userSchema = new mongoose_1.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'user'],
-        default: 'user',
+        enum: ["admin", "user"],
+        default: "user",
     },
     isSuspended: {
         type: Boolean,
@@ -101,33 +115,14 @@ const userSchema = new mongoose_1.Schema({
         default: null,
     },
     posts: [],
-    requests: [
-        {
-            type: mongoose_1.default.Types.ObjectId,
-            ref: "User",
-        },
-    ],
-    requested: [
-        {
-            type: mongoose_1.default.Types.ObjectId,
-            ref: "User",
-        },
-    ],
-    followers: [
-        {
-            type: mongoose_1.default.Types.ObjectId,
-            ref: "User",
-        },
-    ],
-    following: [
-        {
-            type: mongoose_1.default.Types.ObjectId,
-            ref: "User",
-        },
-    ],
+    requestsForMe: [followSchema],
+    requestedByMe: [followSchema],
+    followers: [followSchema],
+    following: [followSchema],
     savedPosts: [
         {
             type: mongoose_1.default.Types.ObjectId,
+            ref: "Post",
         },
     ],
     notifications: [

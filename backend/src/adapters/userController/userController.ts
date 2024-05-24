@@ -13,6 +13,7 @@ import {
 
 import {
 
+  handleFollowUserRequest,
     handleGetAllUsers,
   
 } from "../../application/use-cases/profile/profileAuthApplication";
@@ -49,9 +50,45 @@ const userController = (
     }
   };
 
+  // const followUserRequest = async (req: Request, res: Response) => {
+  //   try {
+  //       const {userId , targetUserId} = req.body
+  //     const user = await handleFollowUserRequest(userId , targetUserId, dbUserRepository);
+  //     console.log(user);
+  //     res.json({
+  //       status: "success",
+  //       message: "Request sent successfully",
+  //       user,
+  //     });
+  //   } catch (err) {
+  //     res.status(401).json({
+  //       status: "error",
+  //       message: "Unable to sent follow request, Please try again",
+  //     });
+  //   }
+  // };
+
+  const followUserRequest = async (req: Request, res: Response) => {
+    try {
+      const { userId, targetUserId } = req.body;
+      const result = await handleFollowUserRequest(userId, targetUserId, dbUserRepository);
+      res.json({
+        status: "success",
+        message: result.message,
+        user: result.user,
+      });
+    } catch (err) {
+      res.status(401).json({
+        status: "error",
+        message: "Unable to send follow request, please try again",
+      });
+    }
+  };
+
   
   return {
-    getAllUsers
+    getAllUsers,
+    followUserRequest
   };
 };
 

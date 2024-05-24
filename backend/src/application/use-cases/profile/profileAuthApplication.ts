@@ -1,3 +1,4 @@
+import { decodeBase64 } from "bcryptjs";
 import { authService } from "../../../frameworks/services/authenticationService";
 import { ProfileInterface } from "../../../types/profileInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
@@ -211,5 +212,65 @@ export const handleGetAllUsers = async (
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};
+
+// export const handleFollowUserRequest = async (
+//   userId : string , targetUserId: string ,
+//   dbUserRepository: ReturnType<UserDBInterface>,
+// ) => {
+//   try {
+
+//     const mainUser = await dbUserRepository.getUserById(userId);
+//     const targetUser = await dbUserRepository.getUserById(targetUserId);
+//     console.log("Main user :", mainUser)
+//     console.log("Target user :", targetUser)
+//     if (!mainUser || !targetUser) {
+//       throw new ErrorInApplication("User dont exist", 401);
+//     }
+
+//     if(targetUser?.isPrivate){
+//       await dbUserRepository.sendFriendRequest(userId, targetUserId)
+//     }else{
+//       await dbUserRepository.makeUserAFollower(userId, targetUserId)
+//     }
+
+//     return;
+//   } catch (err) {
+//     console.error("Error: ", err);
+//     throw new ErrorInApplication("Failed to send handleFollowUserRequest", 401);
+//   }
+// };
+
+
+export const handleFollowUserRequest = async (
+  userId: string,
+  targetUserId: string,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    const mainUser = await dbUserRepository.getUserById(userId);
+    const targetUser = await dbUserRepository.getUserById(targetUserId);
+
+    if (!mainUser || !targetUser) {
+      throw new ErrorInApplication("User doesn't exist", 401);
+    }
+
+    if (targetUser.isPrivate) {
+     let newResult = await dbUserRepository.sendFriendRequest(userId, targetUserId);
+      return {
+        message: newResult.message,
+        user: targetUser
+      };
+    } else {
+      let newResult =  await dbUserRepository.makeUserAFollower(userId, targetUserId);
+      return {
+        message: newResult.message,
+        user: targetUser
+      };
+    }
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to handle follow request", 401);
   }
 };

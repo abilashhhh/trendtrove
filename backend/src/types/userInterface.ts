@@ -9,6 +9,8 @@ export interface UserInterface {
   bio?: string;
   gender?: string;
   address?: string;
+  requestsForMe?: string[];
+  requestedByMe?: string[];
   followers?: string[];
   following?: string[];
   savedPosts?: string[];
@@ -33,6 +35,8 @@ export interface GoogleUserInterface {
   address?: string;
   followers?: string[];
   following?: string[];
+  requestsForMe?: string[];
+  requestedByMe?: string[];
   savedPosts?: string[];
   isVerifiedAccount?: boolean;
   isBlocked?: boolean;
@@ -52,6 +56,8 @@ export interface UserDataInterface {
   bio?: string;
   gender?: string;
   address?: string;
+  requestsForMe?: string[];
+  requestedByMe?: string[];
   followers?: string[];
   following?: string[];
   savedPosts?: string[];

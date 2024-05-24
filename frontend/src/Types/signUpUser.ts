@@ -14,8 +14,8 @@ export interface SignUpUserInterface {
   refreshToken?: string | null;
   refreshTokenExpiresAt?: Date | null;
   posts?: any[];
-  requests?: any[];
-  requested?: any[];
+  requestsForMe?: any[];
+  requestedByMe?: any[];
   followers?: any[];
   following?: any[];
   savedPosts?: any[];

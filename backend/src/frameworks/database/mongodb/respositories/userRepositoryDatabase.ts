@@ -209,7 +209,7 @@ export const userRepositoryMongoDB = () => {
           isBlocked: { $ne: true },
           isSuspended: { $ne: true },
         },
-        "username dp name bio isPrivate"
+        "username dp name bio isPrivate followers requestsForMe"
       ).exec();
       console.log(users);
       return users;
@@ -269,6 +269,81 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const sendFriendRequest = async (userId: string, targetUserId: string) => {
+    try {
+      const user = await User.findById(userId);
+      const targetUser = await User.findById(targetUserId);
+  
+      if (!user || !targetUser) {
+        throw new Error("User not found");
+      }
+  
+      const alreadyRequested = user.requestedByMe.some(request => request.userId === targetUserId);
+      const alreadyHasRequest = targetUser.requestsForMe.some(request => request.userId === userId);
+  
+      if (alreadyRequested || alreadyHasRequest) {
+        return { message: "Friend request already sent" };
+      }
+  
+      const requestedByMeObject = { userId: targetUserId, followedAt: new Date() };
+      const requestsForMeObject = { userId, followedAt: new Date() };
+  
+      await User.updateOne(
+        { _id: userId },
+        { $addToSet: { requestedByMe: requestedByMeObject } },
+        { new: true }
+      );
+      await User.updateOne(
+        { _id: targetUserId },
+        { $addToSet: { requestsForMe: requestsForMeObject } },
+        { new: true }
+      );
+  
+      return { message: "Friend request sent" };
+    } catch (error) {
+      console.error("Error in sendFriendRequest", error);
+      throw new Error("Error in sendFriendRequest");
+    }
+  };
+  
+  const makeUserAFollower = async (userId: string, targetUserId: string) => {
+    try {
+      const user = await User.findById(userId);
+      const targetUser = await User.findById(targetUserId);
+  
+      if (!user || !targetUser) {
+        throw new Error("User not found");
+      }
+  
+      const alreadyFollowing = user.following.some(follow => follow.userId === targetUserId);
+      const alreadyFollowedBy = targetUser.followers.some(follower => follower.userId === userId);
+  
+      if (alreadyFollowing || alreadyFollowedBy) {
+        return { message: "Already following this user" };
+      }
+  
+      const followObject = { userId: targetUserId, followedAt: new Date() };
+      const followerObject = { userId, followedAt: new Date() };
+  
+      await User.updateOne(
+        { _id: userId },
+        { $addToSet: { following: followObject } },
+        { new: true }
+      );
+      await User.updateOne(
+        { _id: targetUserId },
+        { $addToSet: { followers: followerObject } },
+        { new: true }
+      );
+  
+      return { message: "You are now following this user" };
+    } catch (error) {
+      console.error("Error in makeUserAFollower", error);
+      throw new Error("Error in makeUserAFollower");
+    }
+  };
+  
+
   return {
     addUser,
     getUserByEmail,
@@ -287,6 +362,9 @@ export const userRepositoryMongoDB = () => {
     getAllUsersForAdmin,
     blockAccount,
     unblockAccount,
+    sendFriendRequest,
+    makeUserAFollower
+
   };
 };
 //////////////////////////////////////////////////////////

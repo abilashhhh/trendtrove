@@ -25,8 +25,8 @@ export interface UserInfo {
   refreshToken?: string | null;
   refreshTokenExpiresAt?: Date | null;
   posts?: any[];
-  requests?: any[];
-  requested?: any[];
+  requestsForMe?: any[];
+  requestedByMe?: any[];
   followers?: any[];
   following?: any[];
   savedPosts?: any[];
@@ -78,3 +78,7 @@ export interface GetRestOfUsersResponse {
 }
 
  
+export interface FriendRequestSentResponse {
+  status: string, 
+  message: string,
+}
