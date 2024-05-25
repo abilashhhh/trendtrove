@@ -209,7 +209,7 @@ export const userRepositoryMongoDB = () => {
           isBlocked: { $ne: true },
           isSuspended: { $ne: true },
         },
-        "username dp name bio isPrivate followers following requestedByMe requestsForMe "
+        "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts"
       ).exec();
       console.log(users);
       return users;
@@ -269,29 +269,45 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
- 
-  const followUser = async (currentUserId : string, targetUserId: string) => {
+  const followUser = async (currentUserId: string, targetUserId: string) => {
     try {
-      const currentUser  = await User.findById(currentUserId );
+      const currentUser = await User.findById(currentUserId);
       const targetUser = await User.findById(targetUserId);
 
       if (!currentUser || !targetUser) {
         throw new Error("User not found");
       }
 
-    
       if (targetUser.isPrivate) {
-        if (!currentUser.requestedByMe.some(user => user.userId.equals(targetUserId))) {
-          currentUser.requestedByMe.push({ userId: targetUserId, username: targetUser.username });
-          targetUser.requestsForMe.push({ userId: currentUserId, username: currentUser.username });
+        if (
+          !currentUser.requestedByMe.some(user =>
+            user.userId.equals(targetUserId)
+          )
+        ) {
+          currentUser.requestedByMe.push({
+            userId: targetUserId,
+            username: targetUser.username,
+          });
+          targetUser.requestsForMe.push({
+            userId: currentUserId,
+            username: currentUser.username,
+          });
         }
       } else {
-        if (!currentUser.following.some(user => user.userId.equals(targetUserId))) {
-          currentUser.following.push({ userId: targetUserId, username: targetUser.username });
-          targetUser.followers.push({ userId: currentUserId, username: currentUser.username });
+        if (
+          !currentUser.following.some(user => user.userId.equals(targetUserId))
+        ) {
+          currentUser.following.push({
+            userId: targetUserId,
+            username: targetUser.username,
+          });
+          targetUser.followers.push({
+            userId: currentUserId,
+            username: currentUser.username,
+          });
         }
       }
-  
+
       await currentUser.save();
       await targetUser.save();
 
@@ -302,21 +318,24 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
-  const unfollowUser = async (currentUserId : string, targetUserId: string) => {
+  const unfollowUser = async (currentUserId: string, targetUserId: string) => {
     try {
-      const currentUser = await User.findById(currentUserId );
+      const currentUser = await User.findById(currentUserId);
       const targetUser = await User.findById(targetUserId);
 
       if (!currentUser || !targetUser) {
         throw new Error("User not found");
       }
- 
-      currentUser.following = currentUser.following.filter(user => !user.userId.equals(targetUserId));
-      targetUser.followers = targetUser.followers.filter(user => !user.userId.equals(currentUserId));
-  
+
+      currentUser.following = currentUser.following.filter(
+        user => !user.userId.equals(targetUserId)
+      );
+      targetUser.followers = targetUser.followers.filter(
+        user => !user.userId.equals(currentUserId)
+      );
+
       await currentUser.save();
       await targetUser.save();
-      
 
       console.log("Unfollow successful");
       return { message: "You have unfollowed this user" };
@@ -327,20 +346,24 @@ export const userRepositoryMongoDB = () => {
   };
 
   const cancelSendFriendRequest = async (
-    currentUserId : string,
-    requesterUserId : string
+    currentUserId: string,
+    requesterUserId: string
   ) => {
     try {
-      const currentUser = await User.findById(currentUserId );
-      const requesterUser = await User.findById(requesterUserId );
+      const currentUser = await User.findById(currentUserId);
+      const requesterUser = await User.findById(requesterUserId);
 
       if (!currentUser || !requesterUser) {
         throw new Error("User not found");
       }
 
-      currentUser.requestsForMe = currentUser.requestsForMe.filter(user => !user.userId.equals(requesterUserId));
-      requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
-  
+      currentUser.requestsForMe = currentUser.requestsForMe.filter(
+        user => !user.userId.equals(requesterUserId)
+      );
+      requesterUser.requestedByMe = requesterUser.requestedByMe.filter(
+        user => !user.userId.equals(currentUserId)
+      );
+
       await currentUser.save();
       await requesterUser.save();
 
@@ -353,23 +376,33 @@ export const userRepositoryMongoDB = () => {
   };
 
   const acceptFriendRequest = async (
-    currentUserId : string,
+    currentUserId: string,
     requesterUserId: string
   ) => {
     try {
-      const currentUser = await User.findById(currentUserId );
+      const currentUser = await User.findById(currentUserId);
       const requesterUser = await User.findById(requesterUserId);
 
       if (!currentUser || !requesterUser) {
         throw new Error("User not found");
       }
 
-      currentUser.requestsForMe = currentUser.requestsForMe.filter(user => !user.userId.equals(requesterUserId));
-      requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
-  
-      currentUser.followers.push({ userId: requesterUserId, username: requesterUser.username });
-      requesterUser.following.push({ userId: currentUserId, username: currentUser.username });
-  
+      currentUser.requestsForMe = currentUser.requestsForMe.filter(
+        user => !user.userId.equals(requesterUserId)
+      );
+      requesterUser.requestedByMe = requesterUser.requestedByMe.filter(
+        user => !user.userId.equals(currentUserId)
+      );
+
+      currentUser.followers.push({
+        userId: requesterUserId,
+        username: requesterUser.username,
+      });
+      requesterUser.following.push({
+        userId: currentUserId,
+        username: currentUser.username,
+      });
+
       await currentUser.save();
       await requesterUser.save();
 
@@ -377,7 +410,38 @@ export const userRepositoryMongoDB = () => {
       return { message: "Follow request accepted" };
     } catch (error) {
       console.error("Error in acceptFriendRequest", error);
-      throw new Error("Error in accepting the send friend request");
+      throw new Error("Error in accepting the friend request");
+    }
+  };
+
+  const rejectFriendRequest = async (
+    currentUserId: string,
+    requesterUserId: string
+  ) => {
+    try {
+      const currentUser = await User.findById(currentUserId);
+      const requesterUser = await User.findById(requesterUserId);
+
+      if (!currentUser || !requesterUser) {
+        throw new Error("User not found");
+      }
+
+      currentUser.requestsForMe = currentUser.requestsForMe.filter(
+        user => !user.userId.equals(requesterUserId)
+      );
+
+      requesterUser.requestedByMe = requesterUser.requestedByMe.filter(
+        user => !user.userId.equals(currentUserId)
+      );
+
+      await currentUser.save();
+      await requesterUser.save();
+
+      console.log("Follow request rejected");
+      return { message: "Follow request rejected" };
+    } catch (error) {
+      console.error("Error in rejectFriendRequest", error);
+      throw new Error("Error in rejecting the friend request");
     }
   };
 
@@ -424,7 +488,8 @@ export const userRepositoryMongoDB = () => {
     followUser,
     unfollowUser,
     cancelSendFriendRequest,
-    acceptFriendRequest
+    acceptFriendRequest,
+    rejectFriendRequest,
   };
 };
 //////////////////////////////////////////////////////////

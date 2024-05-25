@@ -234,7 +234,7 @@ export const handleFollowUserRequest = async (
       user: targetUser
     };
  
-    }
+    
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to handle follow request", 401);
@@ -315,6 +315,32 @@ export const handleAcceptFollowUserRequest = async (
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to unsend friend request", 401);
+  }
+};
+
+
+export const handleRejectFollowUserRequest = async (
+  userId: string,
+  targetUserId: string,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    const mainUser = await dbUserRepository.getUserById(userId);
+    const targetUser = await dbUserRepository.getUserById(targetUserId);
+
+    if (!mainUser || !targetUser) {
+      throw new ErrorInApplication("User doesn't exist", 401);
+    }
+
+     let newResult = await dbUserRepository.rejectFriendRequest(userId, targetUserId);
+      return {
+        message: newResult.message,
+        user: targetUser
+      };
+    
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to reject friend request", 401);
   }
 };
 

@@ -84,7 +84,7 @@ const userController = (
     } catch (err) {
       res.status(401).json({
         status: "error",
-        message: "Unable to send follow request, please try again",
+        message: "Unable to unfollow user, please try again",
       });
     }
   };
@@ -103,7 +103,7 @@ const userController = (
     } catch (err) {
       res.status(401).json({
         status: "error",
-        message: "Unable to send follow request, please try again",
+        message: "Unable to cancel follow request, please try again",
       });
     }
   };
@@ -122,7 +122,26 @@ const userController = (
     } catch (err) {
       res.status(401).json({
         status: "error",
-        message: "Unable to send follow request, please try again",
+        message: "Unable to accept follow request, please try again",
+      });
+    }
+  };
+  
+  const rejectfollowUserRequest = async (req: Request, res: Response) => {
+    try {
+      const { userId, targetUserId } = req.body;
+      console.log("rejectfollowUserRequest user: ", req.body)
+
+      const result = await handleRejectFollowUserRequest(userId, targetUserId, dbUserRepository);
+      res.json({
+        status: "success",
+        message: result.message,
+        user: result.user,
+      });
+    } catch (err) {
+      res.status(401).json({
+        status: "error",
+        message: "Unable to  reject request, please try again",
       });
     }
   };
@@ -133,7 +152,8 @@ const userController = (
     followUserRequest,
     cancelfollowUserRequest,
     acceptfollowUserRequest,
-    unfollowUserRequest
+    unfollowUserRequest,
+    rejectfollowUserRequest
   };
 };
 

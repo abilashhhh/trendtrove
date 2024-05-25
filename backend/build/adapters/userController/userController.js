@@ -64,7 +64,7 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         catch (err) {
             res.status(401).json({
                 status: "error",
-                message: "Unable to send follow request, please try again",
+                message: "Unable to unfollow user, please try again",
             });
         }
     });
@@ -82,7 +82,7 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         catch (err) {
             res.status(401).json({
                 status: "error",
-                message: "Unable to send follow request, please try again",
+                message: "Unable to cancel follow request, please try again",
             });
         }
     });
@@ -100,7 +100,25 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         catch (err) {
             res.status(401).json({
                 status: "error",
-                message: "Unable to send follow request, please try again",
+                message: "Unable to accept follow request, please try again",
+            });
+        }
+    });
+    const rejectfollowUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, targetUserId } = req.body;
+            console.log("rejectfollowUserRequest user: ", req.body);
+            const result = yield handleRejectFollowUserRequest(userId, targetUserId, dbUserRepository);
+            res.json({
+                status: "success",
+                message: result.message,
+                user: result.user,
+            });
+        }
+        catch (err) {
+            res.status(401).json({
+                status: "error",
+                message: "Unable to  reject request, please try again",
             });
         }
     });
@@ -109,7 +127,8 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         followUserRequest,
         cancelfollowUserRequest,
         acceptfollowUserRequest,
-        unfollowUserRequest
+        unfollowUserRequest,
+        rejectfollowUserRequest
     };
 };
 exports.default = userController;

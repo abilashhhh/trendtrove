@@ -97,3 +97,39 @@ export const sendCancelFollowRequest = async (
     throw error;
   }
 };
+
+export const sendAcceptFollowRequest = async (
+  userId: string,
+  targetUserId: string
+): Promise<FriendRequestSentResponse> => {
+  try {
+    console.log("Current users id: ", userId);
+    console.log("Target users id: ", targetUserId);
+    const response = await axiosUserInstance.post<FriendRequestSentResponse>(
+      `${END_POINTS.ACCEPT_FOLLOW_REQ_FOR_PVT_ACC}`,
+      { userId, targetUserId }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const sendRejectFollowRequest = async (
+  userId: string,
+  targetUserId: string
+): Promise<FriendRequestSentResponse> => {
+  try {
+    console.log("Current users id: ", userId);
+    console.log("Target users id: ", targetUserId);
+    const response = await axiosUserInstance.post<FriendRequestSentResponse>(
+      `${END_POINTS.REJECT_FOLLOW_REQ_FOR_PVT_ACC}`,
+      { userId, targetUserId }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};

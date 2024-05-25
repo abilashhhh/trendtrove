@@ -29,8 +29,6 @@ const FriendsMiddlePage: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const allUsers = await getAllUsers(currentUser._id);
-        console.log("result from get all users:", allUsers);
-        console.log("current user:", currentUser);
         setUsers(allUsers.user);
 
         const savedActiveUser = localStorage.getItem("activeUser");
@@ -88,15 +86,13 @@ const FriendsMiddlePage: React.FC = () => {
                     {activeSection === user.username && (
                       <div className="block sm:hidden">
                         <ProfileSectionFriendsPage
-                          userDetails={
-                            users.find((u) => u.username === activeSection)!
-                          }
+                          userDetails={users.find((u) => u.username === activeSection)!}
                           currentUser={currentUser}
                         />
                       </div>
                     )}
                   </div>
-                ))  
+                ))
               ) : (
                 <p className="text-center text-gray-600 dark:text-gray-300">
                   No users found
@@ -106,9 +102,7 @@ const FriendsMiddlePage: React.FC = () => {
             <div className="hidden md:block md:w-3/4 bg-gray-300 dark:bg-slate-600 rounded-lg p-4 flex text-black dark:text-white text-xl">
               {activeSection ? (
                 <ProfileSectionFriendsPage
-                  userDetails={
-                    users.find((user) => user.username === activeSection)!
-                  }
+                  userDetails={users.find((user) => user.username === activeSection)}
                   currentUser={currentUser}
                 />
               ) : (

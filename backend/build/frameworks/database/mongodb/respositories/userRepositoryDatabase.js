@@ -168,7 +168,7 @@ const userRepositoryMongoDB = () => {
                 isAdmin: { $ne: true },
                 isBlocked: { $ne: true },
                 isSuspended: { $ne: true },
-            }, "username dp name bio isPrivate followers following requestedByMe requestsForMe ").exec();
+            }, "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts").exec();
             console.log(users);
             return users;
         }
@@ -227,14 +227,26 @@ const userRepositoryMongoDB = () => {
             }
             if (targetUser.isPrivate) {
                 if (!currentUser.requestedByMe.some(user => user.userId.equals(targetUserId))) {
-                    currentUser.requestedByMe.push({ userId: targetUserId, username: targetUser.username });
-                    targetUser.requestsForMe.push({ userId: currentUserId, username: currentUser.username });
+                    currentUser.requestedByMe.push({
+                        userId: targetUserId,
+                        username: targetUser.username,
+                    });
+                    targetUser.requestsForMe.push({
+                        userId: currentUserId,
+                        username: currentUser.username,
+                    });
                 }
             }
             else {
                 if (!currentUser.following.some(user => user.userId.equals(targetUserId))) {
-                    currentUser.following.push({ userId: targetUserId, username: targetUser.username });
-                    targetUser.followers.push({ userId: currentUserId, username: currentUser.username });
+                    currentUser.following.push({
+                        userId: targetUserId,
+                        username: targetUser.username,
+                    });
+                    targetUser.followers.push({
+                        userId: currentUserId,
+                        username: currentUser.username,
+                    });
                 }
             }
             yield currentUser.save();
@@ -293,8 +305,14 @@ const userRepositoryMongoDB = () => {
             }
             currentUser.requestsForMe = currentUser.requestsForMe.filter(user => !user.userId.equals(requesterUserId));
             requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
-            currentUser.followers.push({ userId: requesterUserId, username: requesterUser.username });
-            requesterUser.following.push({ userId: currentUserId, username: currentUser.username });
+            currentUser.followers.push({
+                userId: requesterUserId,
+                username: requesterUser.username,
+            });
+            requesterUser.following.push({
+                userId: currentUserId,
+                username: currentUser.username,
+            });
             yield currentUser.save();
             yield requesterUser.save();
             console.log("Follow request accepted");
@@ -302,7 +320,26 @@ const userRepositoryMongoDB = () => {
         }
         catch (error) {
             console.error("Error in acceptFriendRequest", error);
-            throw new Error("Error in accepting the send friend request");
+            throw new Error("Error in accepting the friend request");
+        }
+    });
+    const rejectFriendRequest = (currentUserId, requesterUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const currentUser = yield userModel_1.default.findById(currentUserId);
+            const requesterUser = yield userModel_1.default.findById(requesterUserId);
+            if (!currentUser || !requesterUser) {
+                throw new Error("User not found");
+            }
+            currentUser.requestsForMe = currentUser.requestsForMe.filter(user => !user.userId.equals(requesterUserId));
+            requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
+            yield currentUser.save();
+            yield requesterUser.save();
+            console.log("Follow request rejected");
+            return { message: "Follow request rejected" };
+        }
+        catch (error) {
+            console.error("Error in rejectFriendRequest", error);
+            throw new Error("Error in rejecting the friend request");
         }
     });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -343,7 +380,8 @@ const userRepositoryMongoDB = () => {
         followUser,
         unfollowUser,
         cancelSendFriendRequest,
-        acceptFriendRequest
+        acceptFriendRequest,
+        rejectFriendRequest,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

@@ -25,6 +25,8 @@ const END_POINTS = {
   FOLLOW_REQUEST: 'api/user/followuser',
   UNFOLLOW_REQUEST: 'api/user/unfollowuser',
   CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest',
+  ACCEPT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/acceptrequest',
+  REJECT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/rejectrequest',
   FORGOT_PASSWORD: 'api/auth/forgotpassword',
   FORGOT_PASSWORD_CHANGE: 'api/auth/forgotpasswordchange'
 };

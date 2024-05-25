@@ -21,6 +21,7 @@ const userRouter = () => {
   router.post("/unfollowuser" , controller.unfollowUserRequest);
   router.post("/cancelrequest" , controller.cancelfollowUserRequest);
   router.post("/acceptrequest" , controller.acceptfollowUserRequest);
+  router.post("/rejectrequest" , controller.rejectfollowUserRequest);
 
   return router;
 };

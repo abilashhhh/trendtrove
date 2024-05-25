@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -182,16 +182,12 @@ const handleFollowUserRequest = (userId, targetUserId, dbUserRepository) => __aw
             user: targetUser
         };
     }
-    finally {
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to handle follow request", 401);
     }
 });
 exports.handleFollowUserRequest = handleFollowUserRequest;
-try { }
-catch (err) {
-    console.error("Error: ", err);
-    throw new ErrorInApplication_1.default("Failed to handle follow request", 401);
-}
-;
 const handleUnFollowUserRequest = (userId, targetUserId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const mainUser = yield dbUserRepository.getUserById(userId);
@@ -249,3 +245,22 @@ const handleAcceptFollowUserRequest = (userId, targetUserId, dbUserRepository) =
     }
 });
 exports.handleAcceptFollowUserRequest = handleAcceptFollowUserRequest;
+const handleRejectFollowUserRequest = (userId, targetUserId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const mainUser = yield dbUserRepository.getUserById(userId);
+        const targetUser = yield dbUserRepository.getUserById(targetUserId);
+        if (!mainUser || !targetUser) {
+            throw new ErrorInApplication_1.default("User doesn't exist", 401);
+        }
+        let newResult = yield dbUserRepository.rejectFriendRequest(userId, targetUserId);
+        return {
+            message: newResult.message,
+            user: targetUser
+        };
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to reject friend request", 401);
+    }
+});
+exports.handleRejectFollowUserRequest = handleRejectFollowUserRequest;

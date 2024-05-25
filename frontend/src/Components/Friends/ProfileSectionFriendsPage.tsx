@@ -6,14 +6,11 @@ import {
   faUser,
   faInfoCircle,
   faLock,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
-import { cancelFollowRequest } from "../../utils/cancelRequestHelper";
-import { unfollowUser } from "../../utils/unfollowUserHelper";
+import { cancelFollowRequest ,followUser,unfollowUser ,acceptFollowRequests} from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
-import { User } from "./FriendsMiddlePage";
-import StatsCard from "./StatsCard";
-import { followUser } from "../../utils/followUserHelper";
 
 interface UserInfo {
   _id: string;
@@ -21,10 +18,10 @@ interface UserInfo {
   name: string;
   dp: string;
   isPrivate: boolean;
-  followers: { userId: string; username: string; followedAt: string }[];
   bio: string;
   createdAt?: string;
   posts?: any[];
+  followers: { userId: string; username: string; followedAt: string }[];
   following?: { userId: string; username: string; followedAt: string }[];
   requestsForMe?: { userId: string; username: string; followedAt: string }[];
   requestedByMe?: { userId: string; username: string; followedAt: string }[];
@@ -59,13 +56,19 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       f => f.userId === currentUser._id
     );
 
+    console.log("use effect - follower: ", follower)
+
     const request = userDetails.requestsForMe?.find(
       r => r.userId === currentUser._id
     );
+    console.log("use effect - request: ", request)
+
 
     const acceptReq = userDetails.requestedByMe?.find(
       k => k.userId === currentUser._id
     );
+    console.log("use effect - acceptReq: ", acceptReq)
+
 
     setHsAcceptedReq(!!acceptReq);
     setIsFollower(!!follower);
@@ -101,13 +104,11 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
     });
   };
 
-  const handleFollowUser = async (userId: string, username: string) => {
-    await followUser(
-      currentUser,
-      userId,
-      username,
-      followRequests,
-      setFollowRequests
+  const handleFollowUser = async (targetUserId: string, targetUserUserName: string) => {
+    const res = await followUser(
+      currentUser._id,
+      targetUserId,
+      targetUserUserName
     );
   };
 
@@ -116,6 +117,11 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
     targetUserUserName: string
   ) => {
     console.log("handleaccept user req: ", targetUserId, targetUserUserName);
+    const res = await acceptFollowRequests(
+      currentUser._id,
+      targetUserId,
+      targetUserUserName
+    );
   };
 
   const handleOnUnfollowUser = async (
@@ -171,7 +177,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                 {userDetails.isPrivate && (
                   <FontAwesomeIcon
                     icon={faLock}
-                    className="ml-2 text-gray-600"
+                    className="ml-2 text-green-500"
                     title="Private Account"
                   />
                 )}
@@ -181,11 +187,22 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
               </p>
               <p className="text-gray-600 dark:text-gray-300">
                 Joined on: {formatDate(userDetails.createdAt)}
+                {console.log(userDetails.createdAt)}
               </p>
               <p className="mt-1 text-gray-600 dark:text-gray-300">
                 Bio: {userDetails.bio}
               </p>
               <div className="mt-4">
+                <div className="inline-flex items-center mr-4">
+                  <FontAwesomeIcon
+                    icon={faImage}
+                    className="mr-2 text-gray-600"
+                  />
+                  <span className="text-gray-800 dark:text-gray-200">
+                    {userDetails.posts.length } Posts
+                  </span>
+                </div>
+
                 <div className="inline-flex items-center">
                   <FontAwesomeIcon
                     icon={faUser}
@@ -218,6 +235,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                 Follow
               </button>
             )}
+
             {hasRequested && (
               <button
                 onClick={() =>
@@ -227,6 +245,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                 Cancel Request
               </button>
             )}
+
+
             {isFollower && (
               <button
                 onClick={() =>
@@ -236,6 +256,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                 Unfollow
               </button>
             )}
+             
             {hasAcceptedReq && (
               <button
                 onClick={() =>
