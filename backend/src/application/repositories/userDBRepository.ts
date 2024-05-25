@@ -72,6 +72,9 @@ export const userDBRepository = (
   const cancelSendFriendRequest = async (userId : string , targetUserId: string ) =>
     await repository.cancelSendFriendRequest(userId , targetUserId );
 
+  const acceptFriendRequestSend = async (userId : string , targetUserId: string ) =>
+    await repository.acceptFriendRequestSend(userId , targetUserId );
+
   return {
     addUser,
     getUserByEmail,
@@ -93,7 +96,8 @@ export const userDBRepository = (
     sendFriendRequest,
     makeUserAFollower,
     unfollowUser,
-    cancelSendFriendRequest
+    cancelSendFriendRequest,
+    acceptFriendRequestSend
 
 
   };
