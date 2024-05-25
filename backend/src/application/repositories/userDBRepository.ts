@@ -60,11 +60,8 @@ export const userDBRepository = (
   const getAllUsersForAdmin = async () =>
     await repository.getAllUsersForAdmin();
 
-  const sendFriendRequest = async (userId : string , targetUserId: string ) =>
-    await repository.sendFriendRequest(userId , targetUserId );
-
-  const makeUserAFollower = async (userId : string , targetUserId: string ) =>
-    await repository.makeUserAFollower(userId , targetUserId );
+  const followUser = async (userId : string , targetUserId: string ) =>
+    await repository.followUser(userId , targetUserId );
 
   const unfollowUser = async (userId : string , targetUserId: string ) =>
     await repository.unfollowUser(userId , targetUserId );
@@ -93,8 +90,7 @@ export const userDBRepository = (
     getAllUsersForAdmin,
     blockAccount,
     unblockAccount,
-    sendFriendRequest,
-    makeUserAFollower,
+    followUser,
     unfollowUser,
     cancelSendFriendRequest,
     acceptFriendRequest

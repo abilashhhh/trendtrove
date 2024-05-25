@@ -30,8 +30,7 @@ const userDBRepository = (repository) => {
     const privateAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.privateAccount(userId); });
     const getAllUsers = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsers(userId); });
     const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
-    const sendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.sendFriendRequest(userId, targetUserId); });
-    const makeUserAFollower = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.makeUserAFollower(userId, targetUserId); });
+    const followUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.followUser(userId, targetUserId); });
     const unfollowUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unfollowUser(userId, targetUserId); });
     const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.cancelSendFriendRequest(userId, targetUserId); });
     const acceptFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.acceptFriendRequest(userId, targetUserId); });
@@ -53,8 +52,7 @@ const userDBRepository = (repository) => {
         getAllUsersForAdmin,
         blockAccount,
         unblockAccount,
-        sendFriendRequest,
-        makeUserAFollower,
+        followUser,
         unfollowUser,
         cancelSendFriendRequest,
         acceptFriendRequest

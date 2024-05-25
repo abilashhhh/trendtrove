@@ -228,19 +228,12 @@ export const handleFollowUserRequest = async (
     if (!mainUser || !targetUser) {
       throw new ErrorInApplication("User doesn't exist", 401);
     }
-
-    if (targetUser.isPrivate) {
-     let newResult = await dbUserRepository.sendFriendRequest(userId, targetUserId);
-      return {
-        message: newResult.message,
-        user: targetUser
-      };
-    } else {
-      let newResult =  await dbUserRepository.makeUserAFollower(userId, targetUserId);
-      return {
-        message: newResult.message,
-        user: targetUser
-      };
+    let newResult =  await dbUserRepository.followUser(userId, targetUserId);
+    return {
+      message: newResult.message,
+      user: targetUser
+    };
+ 
     }
   } catch (err) {
     console.error("Error: ", err);

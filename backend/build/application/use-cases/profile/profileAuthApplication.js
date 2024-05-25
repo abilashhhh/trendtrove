@@ -176,27 +176,22 @@ const handleFollowUserRequest = (userId, targetUserId, dbUserRepository) => __aw
         if (!mainUser || !targetUser) {
             throw new ErrorInApplication_1.default("User doesn't exist", 401);
         }
-        if (targetUser.isPrivate) {
-            let newResult = yield dbUserRepository.sendFriendRequest(userId, targetUserId);
-            return {
-                message: newResult.message,
-                user: targetUser
-            };
-        }
-        else {
-            let newResult = yield dbUserRepository.makeUserAFollower(userId, targetUserId);
-            return {
-                message: newResult.message,
-                user: targetUser
-            };
-        }
+        let newResult = yield dbUserRepository.followUser(userId, targetUserId);
+        return {
+            message: newResult.message,
+            user: targetUser
+        };
     }
-    catch (err) {
-        console.error("Error: ", err);
-        throw new ErrorInApplication_1.default("Failed to handle follow request", 401);
+    finally {
     }
 });
 exports.handleFollowUserRequest = handleFollowUserRequest;
+try { }
+catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication_1.default("Failed to handle follow request", 401);
+}
+;
 const handleUnFollowUserRequest = (userId, targetUserId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const mainUser = yield dbUserRepository.getUserById(userId);

@@ -218,62 +218,27 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error changing isAccountVerified field");
         }
     });
-    const sendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    const followUser = (currentUserId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const user = yield userModel_1.default.findById(userId);
+            const currentUser = yield userModel_1.default.findById(currentUserId);
             const targetUser = yield userModel_1.default.findById(targetUserId);
-            if (!user || !targetUser) {
+            if (!currentUser || !targetUser) {
                 throw new Error("User not found");
             }
-            const alreadyRequested = user.requestedByMe.some(request => request.userId === targetUserId);
-            const alreadyHasRequest = targetUser.requestsForMe.some(request => request.userId === userId);
-            if (alreadyRequested || alreadyHasRequest) {
-                return { message: "Friend request already sent" };
+            if (targetUser.isPrivate) {
+                if (!currentUser.requestedByMe.some(user => user.userId.equals(targetUserId))) {
+                    currentUser.requestedByMe.push({ userId: targetUserId, username: targetUser.username });
+                    targetUser.requestsForMe.push({ userId: currentUserId, username: currentUser.username });
+                }
             }
-            const requestedByMeObject = {
-                userId: targetUserId,
-                username: user.username,
-                followedAt: new Date(),
-            };
-            const requestsForMeObject = {
-                userId,
-                username: targetUser.username,
-                followedAt: new Date(),
-            };
-            // correct code, dont change
-            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { requestedByMe: requestsForMeObject } }, { new: true });
-            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { requestsForMe: requestedByMeObject } }, { new: true });
-            return { message: "Friend request sent" };
-        }
-        catch (error) {
-            console.error("Error in sendFriendRequest", error);
-            throw new Error("Error in sendFriendRequest");
-        }
-    });
-    const makeUserAFollower = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const user = yield userModel_1.default.findById(userId);
-            const targetUser = yield userModel_1.default.findById(targetUserId);
-            if (!user || !targetUser) {
-                throw new Error("User not found");
+            else {
+                if (!currentUser.following.some(user => user.userId.equals(targetUserId))) {
+                    currentUser.following.push({ userId: targetUserId, username: targetUser.username });
+                    targetUser.followers.push({ userId: currentUserId, username: currentUser.username });
+                }
             }
-            const alreadyFollowing = user.following.some(follow => follow.userId.toString() === targetUserId);
-            const alreadyFollowedBy = targetUser.followers.some(follower => follower.userId.toString() === userId);
-            if (alreadyFollowing || alreadyFollowedBy) {
-                return { message: "Already following this user" };
-            }
-            const followObject = {
-                userId: targetUserId,
-                username: targetUser.username,
-                followedAt: new Date(),
-            };
-            const followerObject = {
-                userId: userId,
-                username: user.username,
-                followedAt: new Date(),
-            };
-            yield userModel_1.default.updateOne({ _id: userId }, { $addToSet: { following: followObject } });
-            yield userModel_1.default.updateOne({ _id: targetUserId }, { $addToSet: { followers: followerObject } });
+            yield currentUser.save();
+            yield targetUser.save();
             return { message: "You are now following this user" };
         }
         catch (error) {
@@ -281,15 +246,17 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in makeUserAFollower");
         }
     });
-    const unfollowUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    const unfollowUser = (currentUserId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const user = yield userModel_1.default.findById(userId);
+            const currentUser = yield userModel_1.default.findById(currentUserId);
             const targetUser = yield userModel_1.default.findById(targetUserId);
-            if (!user || !targetUser) {
+            if (!currentUser || !targetUser) {
                 throw new Error("User not found");
             }
-            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { following: { targetUserId } } });
-            yield userModel_1.default.updateOne({ _id: targetUserId }, { $pull: { followers: { userId } } });
+            currentUser.following = currentUser.following.filter(user => !user.userId.equals(targetUserId));
+            targetUser.followers = targetUser.followers.filter(user => !user.userId.equals(currentUserId));
+            yield currentUser.save();
+            yield targetUser.save();
             console.log("Unfollow successful");
             return { message: "You have unfollowed this user" };
         }
@@ -298,15 +265,17 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in unfollowing the user");
         }
     });
-    const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    const cancelSendFriendRequest = (currentUserId, requesterUserId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const user = yield userModel_1.default.findById(userId);
-            const targetUser = yield userModel_1.default.findById(targetUserId);
-            if (!user || !targetUser) {
+            const currentUser = yield userModel_1.default.findById(currentUserId);
+            const requesterUser = yield userModel_1.default.findById(requesterUserId);
+            if (!currentUser || !requesterUser) {
                 throw new Error("User not found");
             }
-            yield userModel_1.default.updateOne({ _id: userId }, { $pull: { requestedByMe: { targetUserId } } });
-            yield userModel_1.default.updateOne({ _id: targetUserId }, { $pull: { requestsForMe: { userId } } });
+            currentUser.requestsForMe = currentUser.requestsForMe.filter(user => !user.userId.equals(requesterUserId));
+            requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
+            yield currentUser.save();
+            yield requesterUser.save();
             console.log("Unfollow successful");
             return { message: "You have cancelled the friend request sent" };
         }
@@ -315,20 +284,25 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in cancelling the send friend request");
         }
     });
-    const acceptFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    const acceptFriendRequest = (currentUserId, requesterUserId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const user = yield userModel_1.default.findById(userId);
-            const targetUser = yield userModel_1.default.findById(targetUserId);
-            if (!user || !targetUser) {
+            const currentUser = yield userModel_1.default.findById(currentUserId);
+            const requesterUser = yield userModel_1.default.findById(requesterUserId);
+            if (!currentUser || !requesterUser) {
                 throw new Error("User not found");
             }
-            // correct code
-            console.log("Unfollow successful");
-            return { message: "You have cancelled the friend request sent" };
+            currentUser.requestsForMe = currentUser.requestsForMe.filter(user => !user.userId.equals(requesterUserId));
+            requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
+            currentUser.followers.push({ userId: requesterUserId, username: requesterUser.username });
+            requesterUser.following.push({ userId: currentUserId, username: currentUser.username });
+            yield currentUser.save();
+            yield requesterUser.save();
+            console.log("Follow request accepted");
+            return { message: "Follow request accepted" };
         }
         catch (error) {
-            console.error("Error in cancelSendFriendRequest", error);
-            throw new Error("Error in cancelling the send friend request");
+            console.error("Error in acceptFriendRequest", error);
+            throw new Error("Error in accepting the send friend request");
         }
     });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -366,8 +340,7 @@ const userRepositoryMongoDB = () => {
         getAllUsersForAdmin,
         blockAccount,
         unblockAccount,
-        sendFriendRequest,
-        makeUserAFollower,
+        followUser,
         unfollowUser,
         cancelSendFriendRequest,
         acceptFriendRequest
