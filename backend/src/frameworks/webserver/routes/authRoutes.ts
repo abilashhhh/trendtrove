@@ -33,6 +33,7 @@ const authRouter = () => {
   router.get('/refresh', controller.refreshAccessToken);
   router.delete('/logout', authMiddleware, controller.logoutUser)
   router.post('/forgotpassword' , controller.forgotPassword) 
+  router.post('/forgotpasswordchange' , controller.forgotpasswordchange) 
 
 
   return router;

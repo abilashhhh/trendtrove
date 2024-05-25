@@ -56,6 +56,18 @@ export const verifyMailForForgotPass = async (email : string, text : string): Pr
   }
 };
 
+export const forgotPasswordChangePass = async (email : string, password : string): Promise<forgotPassword> => {
+  try {
+    console.log("email, string :", email, password)
+    const response = await axios.post<SignupUserResponse>(END_POINTS.FORGOT_PASSWORD_CHANGE, {email , password});
+    console.log("response.data; ", response.data)
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 // Check username availability
 export const usernameAvailability = async (username: string): Promise<UsernameAvailabilityResponse> => {
   try {

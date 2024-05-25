@@ -23,6 +23,8 @@ export const mailSenderService = () => {
 
   const sendForgotPasswordEmail = async (email: string, otp: number) => {
     try {
+      console.log("OTP FOR VERIFICATION: ", otp);
+
       const mailResponse = await sendMail(
         email,
         "TRENDTROVE - Forgot Password",
@@ -33,7 +35,8 @@ export const mailSenderService = () => {
                
                 `
       );
-      console.log("Forgot Password Email sent successfully: ", mailResponse);
+      console.log("Sent to :" , mailResponse?.accepted[0])
+
     } catch (err) {
       console.log("Error in sending verification email: ", err);
       throw err;

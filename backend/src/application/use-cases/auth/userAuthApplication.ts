@@ -55,6 +55,32 @@ export const handleSendOtp = async (
   }
 };
 
+
+export const handleForgotPasswordChange = async (
+  userId: string,
+  newPassword: string,
+  authService: ReturnType<AuthServiceInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>,
+
+) => {
+  try {
+
+    const encryptedNewPassword = await authService.encryptPassword(newPassword);
+
+    // Update user's password in the database
+    const user = await dbUserRepository.updatePassword(
+      userId,
+      encryptedNewPassword
+    );
+
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to change password", 401);
+  }
+};
+
+
 // Handle OTP Verification
 export const handleOtpVerification = async (
   email: string,

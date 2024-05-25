@@ -18,7 +18,8 @@ import {
   userLogin,
   userLoginUsingGoogle,
   userRegister,
-  handleGoogleLoginOrSignup, // Import the new function
+  handleGoogleLoginOrSignup,
+  handleForgotPasswordChange, // Import the new function
 } from "../../application/use-cases/auth/userAuthApplication"; 
 
 const authController = (
@@ -120,6 +121,28 @@ const authController = (
       const isAvailable = await dbUserRepository.getUserByEmail(email);
       if(isAvailable){
         await handleSendOtp(email, text, dbOtpRepository, mailSenderService);
+        res.json({
+          status : "success",
+          message : "OTP sent to the given mail id",
+        });
+      }else{
+        res.json({
+          status : "error",
+          message : "Email id not registered, Try signing up",
+        });
+      }
+    } catch (error) {
+      
+    }
+  }
+
+  const forgotpasswordchange =async(req :Request, res :Response ) => {
+    const {email , password} = req.body
+    try {
+      const isAvailable = await dbUserRepository.getUserByEmail(email);
+      if(isAvailable){
+        let userId = isAvailable._id.toString()
+        await handleForgotPasswordChange(userId, password, authService, dbUserRepository);
         res.json({
           status : "success",
           message : "OTP sent to the given mail id",
@@ -275,7 +298,8 @@ const authController = (
     refreshAccessToken,
     logoutUser,
     loginOrSignUpUsingGoogle,
-    forgotPassword
+    forgotPassword,
+    forgotpasswordchange
   };
 };
 

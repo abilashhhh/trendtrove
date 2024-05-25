@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userLoginUsingGoogle = exports.userRegisterUsingGoogle = exports.handleGoogleLoginOrSignup = exports.handleLogoutUser = exports.tokenVerification = exports.accessTokenRefresh = exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleSendOtp = exports.userRegister = void 0;
+exports.userLoginUsingGoogle = exports.userRegisterUsingGoogle = exports.handleGoogleLoginOrSignup = exports.handleLogoutUser = exports.tokenVerification = exports.accessTokenRefresh = exports.userLogin = exports.handleResendOtp = exports.handleOtpVerification = exports.handleForgotPasswordChange = exports.handleSendOtp = exports.userRegister = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const otpGenerator = require("otp-generator");
 // User Registration
@@ -52,6 +52,19 @@ const handleSendOtp = (email, text, dbOtpRepository, mailSenderService) => __awa
     }
 });
 exports.handleSendOtp = handleSendOtp;
+const handleForgotPasswordChange = (userId, newPassword, authService, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const encryptedNewPassword = yield authService.encryptPassword(newPassword);
+        // Update user's password in the database
+        const user = yield dbUserRepository.updatePassword(userId, encryptedNewPassword);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to change password", 401);
+    }
+});
+exports.handleForgotPasswordChange = handleForgotPasswordChange;
 // Handle OTP Verification
 const handleOtpVerification = (email, otp, dbOtpRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {

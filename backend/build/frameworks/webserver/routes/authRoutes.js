@@ -27,6 +27,7 @@ const authRouter = () => {
     router.get('/refresh', controller.refreshAccessToken);
     router.delete('/logout', authMiddleware_1.default, controller.logoutUser);
     router.post('/forgotpassword', controller.forgotPassword);
+    router.post('/forgotpasswordchange', controller.forgotpasswordchange);
     return router;
 };
 exports.default = authRouter;
