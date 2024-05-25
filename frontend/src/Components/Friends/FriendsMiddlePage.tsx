@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import { getAllUsers } from "../../API/User/user";
 import ProfileSectionFriendsPage from "./ProfileSectionFriendsPage";
-import { followUser } from "../../utils/followUserHelper";
 
 interface User {
   _id: string;
@@ -17,7 +16,7 @@ interface User {
   bio: string;
   createdAt?: string;
   posts?: any[];
-  following?: { userId: string, followedAt?: string }[];
+  following?: { userId: string; followedAt?: string }[];
   requestsForMe?: { userId: string }[];
 }
 
@@ -25,7 +24,6 @@ const FriendsMiddlePage: React.FC = () => {
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [users, setUsers] = useState<User[]>([]);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [followRequests, setFollowRequests] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -55,11 +53,6 @@ const FriendsMiddlePage: React.FC = () => {
       localStorage.setItem("activeUser", activeSection);
     }
   }, [activeSection]);
-
-  const handleFollowUser = async (userId: string, username: string) => {
-    await followUser(currentUser, userId, username, users, setUsers, setFollowRequests);
-    setActiveSection(username);
-  };
 
   return (
     <>
@@ -91,34 +84,6 @@ const FriendsMiddlePage: React.FC = () => {
                           {user.name}
                         </p>
                       </div>
-                      <button
-                        id={`followButton-${user._id}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleFollowUser(user._id, user.username);
-                        }}
-                        className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out shadow-sm"
-                        disabled={
-                          followRequests.includes(user._id) ||
-                          user.followers.some(
-                            (follower) => follower.userId === currentUser._id
-                          ) ||
-                          user.requestsForMe?.some(
-                            (request) => request.userId === currentUser._id
-                          )
-                        }
-                      >
-                        {user.followers.some(
-                          (follower) => follower.userId === currentUser._id
-                        )
-                          ? "Following"
-                          : user.requestsForMe?.some(
-                              (request) =>
-                                request.userId === currentUser._id
-                            )
-                          ? "Requested"
-                          : "Follow"}
-                      </button>
                     </button>
                     {activeSection === user.username && (
                       <div className="block sm:hidden">
@@ -127,12 +92,11 @@ const FriendsMiddlePage: React.FC = () => {
                             users.find((u) => u.username === activeSection)!
                           }
                           currentUser={currentUser}
-                          onFollowUser={handleFollowUser}
                         />
                       </div>
                     )}
                   </div>
-                ))
+                ))  
               ) : (
                 <p className="text-center text-gray-600 dark:text-gray-300">
                   No users found
@@ -146,7 +110,6 @@ const FriendsMiddlePage: React.FC = () => {
                     users.find((user) => user.username === activeSection)!
                   }
                   currentUser={currentUser}
-                  onFollowUser={handleFollowUser}
                 />
               ) : (
                 <div className="p-4 text-center">

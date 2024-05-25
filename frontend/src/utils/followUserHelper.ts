@@ -7,7 +7,6 @@ export const followUser = async (
   targetUserId: string,
   targetUserUserName: string,
   users: User[],
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>,
   setFollowRequests: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
   console.log("Follow user pressed for: ", targetUserId, targetUserUserName);
