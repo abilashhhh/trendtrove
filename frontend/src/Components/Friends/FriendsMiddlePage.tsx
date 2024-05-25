@@ -150,7 +150,7 @@ const FriendsMiddlePage: React.FC = () => {
                 />
               ) : (
                 <div className="p-4 text-center">
-                  Select a user to see details
+                  Select a user to see details.
                 </div>
               )}
             </div>
