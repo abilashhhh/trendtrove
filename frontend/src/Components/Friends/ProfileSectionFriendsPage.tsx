@@ -58,6 +58,25 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   const [isMutualFollower, setIsMutualFollower] = useState<boolean>(false);
   const [followDate, setFollowDate] = useState<string | undefined>("");
 
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [showFollowingModal, setShowFollowingModal] = useState(false);
+
+  const handleOpenFollowersModal = () => {
+    setShowFollowersModal(true);
+  };
+
+  const handleCloseFollowersModal = () => {
+    setShowFollowersModal(false);
+  };
+
+  const handleOpenFollowingModal = () => {
+    setShowFollowingModal(true);
+  };
+
+  const handleCloseFollowingModal = () => {
+    setShowFollowingModal(false);
+  };
+
   useEffect(() => {
     const follower = userDetails.followers.find(
       (f) => f.userId === currentUser._id
@@ -247,13 +266,13 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
               </div>
               <div className="inline-flex items-center">
                 <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-600" />
-                <span className="text-gray-800 dark:text-gray-200">
+                <span   onClick={handleOpenFollowersModal} className="text-gray-800 dark:text-gray-200">
                   {userDetails.followers.length} Followers
                 </span>
               </div>
               <div className="inline-flex items-center ml-4">
                 <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-600" />
-                <span className="text-gray-800 dark:text-gray-200">
+                <span  onClick={handleOpenFollowingModal} className="text-gray-800 dark:text-gray-200">
                   {userDetails.following?.length || 0} Following
                 </span>
               </div>
@@ -350,7 +369,18 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         </div>
       </div>
         
-     
+      <Modal
+        isOpen={showFollowersModal}
+        onClose={handleCloseFollowersModal}
+        title="Followers"
+        users={userDetails.followers}
+      />
+      <Modal
+        isOpen={showFollowingModal}
+        onClose={handleCloseFollowingModal}
+        title="Following"
+        users={userDetails.following}
+      />
      
     </div>
     
