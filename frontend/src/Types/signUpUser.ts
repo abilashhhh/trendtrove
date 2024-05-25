@@ -45,3 +45,8 @@ export interface forgotPassword{
   message?: string;
   status?: string;
 }
+
+export interface forgotPasswordChangePass{
+  message?: string;
+  status?: string;
+}

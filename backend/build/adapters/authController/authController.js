@@ -123,8 +123,29 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
                 });
             }
         }
-        catch (error) {
+        catch (error) { }
+    });
+    const forgotpasswordchange = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, password } = req.body;
+        try {
+            const isAvailable = yield dbUserRepository.getUserByEmail(email);
+            if (isAvailable) {
+                let id = isAvailable._id.toString();
+                const encryptedNewPassword = yield authService.encryptPassword(password);
+                yield dbUserRepository.updatePassword(id, encryptedNewPassword);
+                res.json({
+                    status: "success",
+                    message: "Password changed successfully",
+                });
+            }
+            else {
+                res.json({
+                    status: "error",
+                    message: "Password not changed, try again",
+                });
+            }
         }
+        catch (error) { }
     });
     const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
@@ -154,17 +175,17 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         const { email, password } = req.body;
         try {
             const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.userLogin)(email, password, dbUserRepository, authService);
-            res.cookie('refreshToken', refreshToken, {
+            res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+                sameSite: "none",
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             });
             res.json({
                 status: "success",
                 message: "user verified",
                 user: userDetails,
-                accessToken
+                accessToken,
             });
         }
         catch (error) {
@@ -230,13 +251,13 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
             res.json({
                 status: "success",
-                message: "Cookie Cleared"
+                message: "Cookie Cleared",
             });
         }
         catch (error) {
             res.json({
                 status: "fail",
-                message: "Cookie Not Cleared"
+                message: "Cookie Not Cleared",
             });
         }
     });
@@ -250,7 +271,8 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         refreshAccessToken,
         logoutUser,
         loginOrSignUpUsingGoogle,
-        forgotPassword
+        forgotPassword,
+        forgotpasswordchange,
     };
 };
 exports.default = authController;

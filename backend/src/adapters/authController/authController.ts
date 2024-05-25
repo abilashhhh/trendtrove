@@ -19,7 +19,7 @@ import {
   userLoginUsingGoogle,
   userRegister,
   handleGoogleLoginOrSignup, // Import the new function
-} from "../../application/use-cases/auth/userAuthApplication"; 
+} from "../../application/use-cases/auth/userAuthApplication";
 
 const authController = (
   authServiceImplementation: AuthService,
@@ -114,26 +114,48 @@ const authController = (
     }
   };
 
-  const forgotPassword =async(req :Request, res :Response ) => {
-    const {email , text} = req.body
+  const forgotPassword = async (req: Request, res: Response) => {
+    const { email, text } = req.body;
     try {
       const isAvailable = await dbUserRepository.getUserByEmail(email);
-      if(isAvailable){
+      if (isAvailable) {
         await handleSendOtp(email, text, dbOtpRepository, mailSenderService);
         res.json({
-          status : "success",
-          message : "OTP sent to the given mail id",
+          status: "success",
+          message: "OTP sent to the given mail id",
         });
-      }else{
+      } else {
         res.json({
-          status : "error",
-          message : "Email id not registered, Try signing up",
+          status: "error",
+          message: "Email id not registered, Try signing up",
         });
       }
-    } catch (error) {
-      
-    }
-  }
+    } catch (error) {}
+  };
+
+  const forgotpasswordchange = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    try {
+      const isAvailable = await dbUserRepository.getUserByEmail(email);
+      if (isAvailable) {
+        let id = isAvailable._id.toString();
+
+        const encryptedNewPassword = await authService.encryptPassword(
+          password
+        );
+        await dbUserRepository.updatePassword(id, encryptedNewPassword);
+        res.json({
+          status: "success",
+          message: "Password changed successfully",
+        });
+      } else {
+        res.json({
+          status: "error",
+          message: "Password not changed, try again",
+        });
+      }
+    } catch (error) {}
+  };
 
   const sendOtp = async (req: Request, res: Response) => {
     const { email, text }: { email: string; text: string } = req.body;
@@ -170,18 +192,18 @@ const authController = (
         authService
       );
 
-      res.cookie('refreshToken', refreshToken, {
+      res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'none',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
       res.json({
         status: "success",
         message: "user verified",
         user: userDetails,
-        accessToken
+        accessToken,
       });
     } catch (error) {
       res.status(404).json({
@@ -190,25 +212,31 @@ const authController = (
       });
     }
   };
-  
+
   const loginOrSignUpUsingGoogle = async (req: Request, res: Response) => {
     const user = req.body;
     try {
-      const { userDetails, refreshToken, accessToken } = await handleGoogleLoginOrSignup(user, dbUserRepository, authService);
-  
-      console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken , accessToken);
+      const { userDetails, refreshToken, accessToken } =
+        await handleGoogleLoginOrSignup(user, dbUserRepository, authService);
+
+      console.log(
+        "UserDetails in loginOrSignUpUsingGoogle from adapterd: ",
+        userDetails,
+        refreshToken,
+        accessToken
+      );
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true, // use in HTTPS only
         sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-  
+
       // Remove the password from userDetails
       const { password, ...userDetailsWithoutPassword } = userDetails._doc;
-  
+
       console.log("Returning user details: ", userDetailsWithoutPassword);
-  
+
       res.json({
         status: "success",
         message: "User verified",
@@ -223,15 +251,16 @@ const authController = (
       });
     }
   };
-  
 
   const refreshAccessToken = async (req: Request, res: Response) => {
     try {
       const cookies = req.cookies;
       const accessToken = await accessTokenRefresh(
-        cookies, dbUserRepository, authService
+        cookies,
+        dbUserRepository,
+        authService
       );
-      
+
       res.json({ accessToken });
     } catch (error) {
       res.status(404).json({
@@ -255,12 +284,12 @@ const authController = (
       });
       res.json({
         status: "success",
-        message: "Cookie Cleared"
+        message: "Cookie Cleared",
       });
     } catch (error) {
       res.json({
         status: "fail",
-        message: "Cookie Not Cleared"
+        message: "Cookie Not Cleared",
       });
     }
   };
@@ -275,7 +304,8 @@ const authController = (
     refreshAccessToken,
     logoutUser,
     loginOrSignUpUsingGoogle,
-    forgotPassword
+    forgotPassword,
+    forgotpasswordchange,
   };
 };
 

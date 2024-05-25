@@ -1,11 +1,12 @@
 import END_POINTS from "../../Constants/endpoints";
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 import {
   EmailAvailabilityResponse,
   SignUpUserInterface,
   SignupUserResponse,
   UsernameAvailabilityResponse,
   forgotPassword,
+  forgotPasswordChangePass,
 } from "../../Types/signUpUser";
 import {
   GoogleLoginInterface,
@@ -14,29 +15,39 @@ import {
   SignInUserInterface,
   SignInUserResponse,
 } from "../../Types/signInUser";
-import axiosUserInstance, { axiosRefreshInstance } from "../Axios/axiosUserInstance";
+import axiosUserInstance, {
+  axiosRefreshInstance,
+} from "../Axios/axiosUserInstance";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      console.error('Server responded with status:', axiosError.response.status);
-      console.error('Response data:', axiosError.response.data);
+      console.error(
+        "Server responded with status:",
+        axiosError.response.status
+      );
+      console.error("Response data:", axiosError.response.data);
     } else if (axiosError.request) {
-      console.error('No response received from the server');
+      console.error("No response received from the server");
     } else {
-      console.error('Error setting up the request:', axiosError.message);
+      console.error("Error setting up the request:", axiosError.message);
     }
   } else {
-    console.error('An error occurred:', error.message);
+    console.error("An error occurred:", error.message);
   }
 };
 
 // Sign up user
-export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUserResponse> => {
+export const signUpUser = async (
+  payload: SignUpUserInterface
+): Promise<SignupUserResponse> => {
   try {
-    const response = await axios.post<SignupUserResponse>(END_POINTS.SIGNUP_USER, payload);
+    const response = await axios.post<SignupUserResponse>(
+      END_POINTS.SIGNUP_USER,
+      payload
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -44,11 +55,17 @@ export const signUpUser = async (payload: SignUpUserInterface): Promise<SignupUs
   }
 };
 
-export const verifyMailForForgotPass = async (email : string, text : string): Promise<forgotPassword> => {
+export const verifyMailForForgotPass = async (
+  email: string,
+  text: string
+): Promise<forgotPassword> => {
   try {
-    console.log("email, string :", email, text)
-    const response = await axios.post<SignupUserResponse>(END_POINTS.FORGOT_PASSWORD, {email , text});
-    console.log("response.data; ", response.data)
+    console.log("email, string :", email, text);
+    const response = await axios.post<SignupUserResponse>(
+      END_POINTS.FORGOT_PASSWORD,
+      { email, text }
+    );
+    console.log("response.data; ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -57,9 +74,13 @@ export const verifyMailForForgotPass = async (email : string, text : string): Pr
 };
 
 // Check username availability
-export const usernameAvailability = async (username: string): Promise<UsernameAvailabilityResponse> => {
+export const usernameAvailability = async (
+  username: string
+): Promise<UsernameAvailabilityResponse> => {
   try {
-    const response = await axios.get<UsernameAvailabilityResponse>(`${END_POINTS.USERNAME_AVAILABLE}/${username}`);
+    const response = await axios.get<UsernameAvailabilityResponse>(
+      `${END_POINTS.USERNAME_AVAILABLE}/${username}`
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -68,9 +89,13 @@ export const usernameAvailability = async (username: string): Promise<UsernameAv
 };
 
 // Check email availability
-export const emailAvailability = async (email: string): Promise<EmailAvailabilityResponse> => {
+export const emailAvailability = async (
+  email: string
+): Promise<EmailAvailabilityResponse> => {
   try {
-    const response = await axios.get<EmailAvailabilityResponse>(`${END_POINTS.EMAIL_AVAILABLE}/${email}`);
+    const response = await axios.get<EmailAvailabilityResponse>(
+      `${END_POINTS.EMAIL_AVAILABLE}/${email}`
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -79,9 +104,31 @@ export const emailAvailability = async (email: string): Promise<EmailAvailabilit
 };
 
 // Generate OTP
-export const generateOtp = async (email: string, text: string): Promise<void> => {
+export const generateOtp = async (
+  email: string,
+  text: string
+): Promise<void> => {
   try {
     await axios.post(END_POINTS.GENERATE_OTP, { email, text });
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const forgotPasswordChange = async (
+  email: string,
+  password: string
+): Promise<forgotPasswordChangePass> => {
+  try {
+    console.log("forgot password change :", email, password);
+
+    const response = await axios.post(END_POINTS.FORGOT_CHANGE_PASSWORD, {
+      email,
+      password,
+    });
+    console.log("response.data; ", response.data);
+    return response.data;
   } catch (error) {
     handleAxiosError(error);
     throw error;
@@ -100,9 +147,14 @@ export const verifyOtp = async (email: string, otp: string): Promise<any> => {
 };
 
 // Sign in user
-export const signin = async (payload: SignInUserInterface): Promise<SignInUserResponse> => {
+export const signin = async (
+  payload: SignInUserInterface
+): Promise<SignInUserResponse> => {
   try {
-    const response = await axios.post<SignInUserResponse>(END_POINTS.LOGIN_USER, payload);
+    const response = await axios.post<SignInUserResponse>(
+      END_POINTS.LOGIN_USER,
+      payload
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -111,11 +163,22 @@ export const signin = async (payload: SignInUserInterface): Promise<SignInUserRe
 };
 
 // Login using Google
-export const loginUsingGoogle = async (payload: GoogleLoginInterface): Promise<GoogleLoginResponse> => {
+export const loginUsingGoogle = async (
+  payload: GoogleLoginInterface
+): Promise<GoogleLoginResponse> => {
   try {
-    console.log("payload from loginUsingGoogle, data passed to backend ,", payload)
-    const response = await axiosRefreshInstance.post<GoogleLoginResponse>(END_POINTS.GOOGLE_LOGIN_SIGNUP_USER, payload);
-    console.log("loginUsing Google api auth , response data from the backend ", response.data)
+    console.log(
+      "payload from loginUsingGoogle, data passed to backend ,",
+      payload
+    );
+    const response = await axiosRefreshInstance.post<GoogleLoginResponse>(
+      END_POINTS.GOOGLE_LOGIN_SIGNUP_USER,
+      payload
+    );
+    console.log(
+      "loginUsing Google api auth , response data from the backend ",
+      response.data
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -126,7 +189,9 @@ export const loginUsingGoogle = async (payload: GoogleLoginInterface): Promise<G
 // Logout user
 export const logoutUser = async (): Promise<LogoutResponse> => {
   try {
-    const response = await axiosUserInstance.delete<LogoutResponse>(END_POINTS.LOGOUT_USER);
+    const response = await axiosUserInstance.delete<LogoutResponse>(
+      END_POINTS.LOGOUT_USER
+    );
     return response.data;
   } catch (error) {
     console.error("Error occurred during logout:", error);
@@ -135,11 +200,16 @@ export const logoutUser = async (): Promise<LogoutResponse> => {
 };
 
 // Refresh access token
-export const refreshAccessToken = async (): Promise<{ accessToken: string }> => {
+export const refreshAccessToken = async (): Promise<{
+  accessToken: string;
+}> => {
   try {
-    const response = await axiosRefreshInstance.get<{ accessToken: string }>(END_POINTS.REFRESH_TOKEN, {
-      withCredentials: true,
-    });
+    const response = await axiosRefreshInstance.get<{ accessToken: string }>(
+      END_POINTS.REFRESH_TOKEN,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);

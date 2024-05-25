@@ -33,13 +33,14 @@ const mailSenderService = () => {
     });
     const sendForgotPasswordEmail = (email, otp) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            console.log("OTP FOR VERIFICATION: ", otp);
             const mailResponse = yield (0, sendEmail_1.default)(email, "TRENDTROVE - Forgot Password", `
                 <h1>Password Reset Request</h1>
                 <p>We received a request to reset your password. Please use the OTP below to reset your password:</p>
                 <p>OTP: ${otp}</p>
                
                 `);
-            console.log("Forgot Password Email sent successfully: ", mailResponse);
+            console.log("Sent to :", mailResponse === null || mailResponse === void 0 ? void 0 : mailResponse.accepted[0]);
         }
         catch (err) {
             console.log("Error in sending verification email: ", err);
