@@ -32,7 +32,10 @@ const FriendsMiddlePage: React.FC = () => {
         setUsers(allUsers.user);
 
         const savedActiveUser = localStorage.getItem("activeUser");
-        if (savedActiveUser && allUsers.user.some(user => user.username === savedActiveUser)) {
+        if (
+          savedActiveUser &&
+          allUsers.user.some(user => user.username === savedActiveUser)
+        ) {
           setActiveSection(savedActiveUser);
         } else if (allUsers.user.length > 0) {
           setActiveSection(allUsers.user[0].username);
@@ -61,7 +64,7 @@ const FriendsMiddlePage: React.FC = () => {
             Find New Friends
           </h1>
           <div className="flex flex-col md:flex-row gap-6 h-full">
-            <div className="w-full md:w-1/4 bg-gray-300 dark:bg-slate-700 rounded-lg flex flex-col text-black dark:text-white text-xl p-4 space-y-4">
+            <div className="w-full md:w-2/6 bg-gray-300 dark:bg-slate-700 rounded-lg flex flex-col text-black dark:text-white text-xl p-4 space-y-4">
               {users.length > 0 ? (
                 users.map((user) => (
                   <div key={user._id}>
@@ -75,18 +78,14 @@ const FriendsMiddlePage: React.FC = () => {
                         alt={`${user.username}'s profile`}
                       />
                       <div className="flex-1 text-center sm:text-left">
-                        <h3 className="font-semibold text-lg">
-                          {user.username}
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {user.name}
-                        </p>
+                        <h3 className="font-semibold text-lg">{user.username}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{user.name}</p>
                       </div>
                     </button>
                     {activeSection === user.username && (
                       <div className="block sm:hidden">
                         <ProfileSectionFriendsPage
-                          userDetails={users.find((u) => u.username === activeSection)!}
+                          userDetails={user}
                           currentUser={currentUser}
                         />
                       </div>
@@ -94,28 +93,35 @@ const FriendsMiddlePage: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-gray-600 dark:text-gray-300">
-                  No users found
-                </p>
+                <p className="text-center text-gray-600 dark:text-gray-300">No users found</p>
               )}
             </div>
-            <div className="hidden md:block md:w-3/4 bg-gray-300 dark:bg-slate-600 rounded-lg p-4 flex text-black dark:text-white text-xl">
+            <div className="w-full mb-10 md:w-full bg-gray-300 dark:bg-slate-600 rounded-lg p-3 flex flex-col md:flex-row text-black dark:text-white text-xl">
               {activeSection ? (
-                <ProfileSectionFriendsPage
-                  userDetails={users.find((user) => user.username === activeSection)}
-                  currentUser={currentUser}
-                />
+                <>
+                  <div className="hidden md:block md:w-full ">
+                    <ProfileSectionFriendsPage
+                      userDetails={users.find((user) => user.username === activeSection)}
+                      currentUser={currentUser}
+                    />
+                  </div>
+                  
+                </>
               ) : (
-                <div className="p-4 text-center">
-                  Select a user to see details.
-                </div>
+                <div className="p-4 text-center">Select a user to see details.</div>
               )}
             </div>
           </div>
         </div>
+      
+
       </main>
+
     </>
   );
 };
+
+
+
 
 export default FriendsMiddlePage;

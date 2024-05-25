@@ -198,8 +198,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   };
 
   return (
-    <div className="mx-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 overflow-hidden">
-      <div className="bg-cover bg-center h-32">
+    <div className="mx-auto rounded-lg shadow-lg bg-white  dark:bg-gray-800 overflow-hidden">
+      <div className="bg-cover bg-center h-72">
         <img
           src={userDetails?.dp || "/"}
           alt={`${userDetails.username}'s profile`}
@@ -207,14 +207,14 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         />
       </div>
       <div className="p-6">
-        <div className="flex items-center">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white -mt-16">
-            <img
-              src={userDetails.dp || "/default-profile.jpg"}
-              alt={userDetails.username}
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <div className="flex items-center justify-center flex-col">
+        <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-white -mt-16">
+  <img
+    src={userDetails.dp || "/default-profile.jpg"}
+    alt={userDetails.username}
+    className="w-full h-full object-cover"
+  />
+</div>
           <div className="ml-6">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
               {userDetails.username}
@@ -232,9 +232,9 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
             <p className="text-gray-600 dark:text-gray-300">
               Joined on: {formatDate(userDetails.createdAt)}
             </p>
-            <p className="mt-1 text-gray-600 dark:text-gray-300">
+           {userDetails.bio &&  <p className="mt-1 text-gray-600 dark:text-gray-300">
               Bio: {userDetails.bio}
-            </p>
+            </p>}
             <div className="mt-4">
               <div className="inline-flex items-center mr-4">
                 <FontAwesomeIcon
@@ -349,7 +349,11 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           )}
         </div>
       </div>
+        
+     
+     
     </div>
+    
   );
 };
 
