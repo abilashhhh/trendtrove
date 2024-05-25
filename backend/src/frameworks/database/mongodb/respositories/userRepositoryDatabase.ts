@@ -420,6 +420,28 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const acceptFriendRequest = async (
+    userId: string,
+    targetUserId: string
+  ) => {
+    try {
+      const user = await User.findById(userId);
+      const targetUser = await User.findById(targetUserId);
+
+      if (!user || !targetUser) {
+        throw new Error("User not found");
+      }
+
+     // correct code
+
+      console.log("Unfollow successful");
+      return { message: "You have cancelled the friend request sent" };
+    } catch (error) {
+      console.error("Error in cancelSendFriendRequest", error);
+      throw new Error("Error in cancelling the send friend request");
+    }
+  };
+
   const clearAll = async () => {
     try {
       const result = await User.updateMany(
@@ -464,6 +486,7 @@ export const userRepositoryMongoDB = () => {
     makeUserAFollower,
     unfollowUser,
     cancelSendFriendRequest,
+    acceptFriendRequest
   };
 };
 //////////////////////////////////////////////////////////

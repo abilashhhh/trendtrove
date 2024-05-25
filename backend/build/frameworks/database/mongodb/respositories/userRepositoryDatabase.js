@@ -315,6 +315,22 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in cancelling the send friend request");
         }
     });
+    const acceptFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            const targetUser = yield userModel_1.default.findById(targetUserId);
+            if (!user || !targetUser) {
+                throw new Error("User not found");
+            }
+            // correct code
+            console.log("Unfollow successful");
+            return { message: "You have cancelled the friend request sent" };
+        }
+        catch (error) {
+            console.error("Error in cancelSendFriendRequest", error);
+            throw new Error("Error in cancelling the send friend request");
+        }
+    });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -354,6 +370,7 @@ const userRepositoryMongoDB = () => {
         makeUserAFollower,
         unfollowUser,
         cancelSendFriendRequest,
+        acceptFriendRequest
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

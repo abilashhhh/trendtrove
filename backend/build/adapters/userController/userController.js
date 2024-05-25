@@ -86,10 +86,29 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const acceptfollowUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, targetUserId } = req.body;
+            console.log("acceptfollowUserRequest user: ", req.body);
+            const result = yield (0, profileAuthApplication_1.handleAcceptFollowUserRequest)(userId, targetUserId, dbUserRepository);
+            res.json({
+                status: "success",
+                message: result.message,
+                user: result.user,
+            });
+        }
+        catch (err) {
+            res.status(401).json({
+                status: "error",
+                message: "Unable to send follow request, please try again",
+            });
+        }
+    });
     return {
         getAllUsers,
         followUserRequest,
         cancelfollowUserRequest,
+        acceptfollowUserRequest,
         unfollowUserRequest
     };
 };

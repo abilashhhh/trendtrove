@@ -20,6 +20,7 @@ const userRouter = () => {
   router.post("/followuser" , controller.followUserRequest);
   router.post("/unfollowuser" , controller.unfollowUserRequest);
   router.post("/cancelrequest" , controller.cancelfollowUserRequest);
+  router.post("/acceptrequest" , controller.acceptfollowUserRequest);
 
   return router;
 };
