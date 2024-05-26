@@ -218,7 +218,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   };
 
   return (
-    <div className="mx-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 overflow-hidden ">
+    <div className="mx-auto rounded-lg shadow-lg bg-slate-200 dark:bg-slate-800 overflow-hidden ">
       
       <div className="bg-cover bg-center h-72">
         <img

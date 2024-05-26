@@ -26,14 +26,15 @@ const SettingsMiddlePage = () => {
   return (
     <>
       <ToastContainer />
-      <main className="flex-1 min-h-screen pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
-        <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto">
-          <h1 className="text-2xl font-semibold underline text-center mb-4">
+      <main className="flex-1 min-h-screen pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white no-scrollbar">
+        <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
+         
+          <div className="flex flex-col md:flex-row gap-4 h-full">
+            <div className="w-full md:w-1/5 bg-gray-300 dark:bg-slate-700 rounded-lg flex flex-col text-black dark:text-white text-xl">
+              <div className="p-4 space-y-4">
+              <h1 className="text-2xl font-semibold underline text-center mb-4">
             Settings
           </h1>
-          <div className="flex flex-col md:flex-row gap-4 h-full">
-            <div className="w-full md:w-1/2 bg-gray-300 dark:bg-slate-700 rounded-lg flex flex-col text-black dark:text-white text-xl">
-              <div className="p-4 space-y-4">
                 {!currentUser.isGoogleSignedIn && (
                   <button
                     onClick={() => setActiveSection("ChangePassword")}
@@ -58,7 +59,7 @@ const SettingsMiddlePage = () => {
                 </button>
               </div>
             </div>
-            <div className="w-full md:w-1/2 bg-gray-300 dark:bg-slate-600 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto">
+            <div className="w-full md:w-4/5 bg-gray-300 dark:bg-slate-600 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto no-scrollbar">
               <div className="p-4 w-full">
                 {activeSection === "ChangePassword" && (
                   <ChangePassword currentUser={currentUser} />
