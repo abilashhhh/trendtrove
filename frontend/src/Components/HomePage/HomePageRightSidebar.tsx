@@ -1,152 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const RightSidebar = () => {
+  const [isShrunk, setIsShrunk] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsShrunk(!isShrunk);
+  };
+
   return (
-    <aside className="hidden md:block bg-gray-800 dark:bg-gray-700 pt-2 pb-2 pr-2 w-64">
-      <div className="p-4 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
-        <h2 className="text-lg font-semibold underline text-center">Stories</h2>
-        {/* Grid container for images */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* First row with two images */}
-          <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-            <img
-              src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              alt="Story"
-              className="object-cover w-full h-full"
-            />
-            {/* Dummy Username */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-              sampleUser
-            </div>
+    <>
+      <aside
+        className={`${
+          isShrunk ? "w-16" : "md:w-64 w-full"
+        } md:block hidden bg-gray-800 dark:bg-gray-700 pt-2 pb-2 transition-width duration-300 ease-in-out h-full`}
+      >
+        <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar flex flex-col items-center">
+          <div className="flex mb-2 w-full justify-center">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 bg-gray-800 text-white rounded-full"
+            >
+              < FaChevronRight className={`${isShrunk ? "hidden" : "block"}`} />
+              < FaChevronLeft className={`${isShrunk ? "block" : "hidden"}`} />
+            </button>
           </div>
-          <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzuGvSdLLmAgWiCTgUD-6-7GCA_t35cM4o7w3WQXq2w&s"
-              alt="Story"
-              className="object-cover w-full h-full"
-            />
-            {/* Dummy Username */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-              sampleUser
-            </div>
+          <h2
+            className={`text-lg font-semibold underline text-center ${
+              isShrunk ? "hidden" : "block"
+            }`}
+          >
+            Stories
+          </h2>
+          <div className={`grid ${isShrunk ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-2 w-full`}>
+            {[...Array(8)].map((_, index) => (
+              <div
+                key={index}
+                className={`${
+                  isShrunk ? "w-full h-12" : "h-60"
+                } bg-red-300 rounded-lg relative overflow-hidden`}
+              >
+                <img
+                  src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                  alt="Story"
+                  className="object-cover w-full h-full"
+                />
+                <div
+                  className={`absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center ${
+                    isShrunk ? "text-xs" : "text-sm"
+                  } font-semibold`}
+                >
+                  sampleUser
+                </div>
+              </div>
+            ))}
           </div>
-          {/* Below are the remaining images */}
-          <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1I_6KKZO1P0yG0c27Qn312Lv4rxhChLHyB03pUmtDCQ&s"
-              alt="Story"
-              className="object-cover w-full h-full"
-            />
-            {/* Dummy Username */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-              sampleUser
-            </div>
-          </div>
-          <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-            <img
-              src="https://static.vecteezy.com/system/resources/previews/022/448/291/non_2x/save-earth-day-poster-environment-day-nature-green-ai-generative-glossy-background-images-tree-and-water-free-photo.jpg"
-              alt="Story"
-              className="object-cover w-full h-full"
-            />
-            {/* Dummy Username */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-              sampleUser
-            </div>
-          </div>
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzuGvSdLLmAgWiCTgUD-6-7GCA_t35cM4o7w3WQXq2w&s"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            {/* Below are the remaining images */}
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1I_6KKZO1P0yG0c27Qn312Lv4rxhChLHyB03pUmtDCQ&s"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://static.vecteezy.com/system/resources/previews/022/448/291/non_2x/save-earth-day-poster-environment-day-nature-green-ai-generative-glossy-background-images-tree-and-water-free-photo.jpg"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYzuGvSdLLmAgWiCTgUD-6-7GCA_t35cM4o7w3WQXq2w&s"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            {/* Below are the remaining images */}
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1I_6KKZO1P0yG0c27Qn312Lv4rxhChLHyB03pUmtDCQ&s"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-            <div className="bg-red-300 h-60 rounded-lg relative overflow-hidden">
-              <img
-                src="https://static.vecteezy.com/system/resources/previews/022/448/291/non_2x/save-earth-day-poster-environment-day-nature-green-ai-generative-glossy-background-images-tree-and-water-free-photo.jpg"
-                alt="Story"
-                className="object-cover w-full h-full"
-              />
-              {/* Dummy Username */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center text-sm font-semibold">
-                sampleUser
-              </div>
-            </div>
-          {/* Add more divs for additional images */}
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

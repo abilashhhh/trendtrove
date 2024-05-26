@@ -94,12 +94,12 @@ const FriendsMiddlePage: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-gray-600 dark:text-gray-300">No users found</p>
+                <p className="text-center text-gray-600 dark:text-gray-300 no-scrollbar">No users found</p>
               )}
             </div>
-            <div className="w-full md:w-5/6  rounded-lg flex flex-col text-black dark:text-white text-xl">
+            <div className="w-full md:w-5/6 overflow-auto no-scrollbar rounded-lg flex flex-col text-black dark:text-white text-xl">
               {activeSection ? (
-                <div className="hidden md:block w-full">
+                <div className="hidden md:block w-full overflow-auto no-scrollbar">
                   <ProfileSectionFriendsPage
                     userDetails={users.find((user) => user.username === activeSection)}
                     currentUser={currentUser}
