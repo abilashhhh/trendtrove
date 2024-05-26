@@ -16,7 +16,7 @@ const Following = () => {
   };
 
   return (
-    <aside className="hidden p-2 lg:block bg-gray-800 dark:bg-gray-700 h-screen w-64">
+    <aside className="hidden pl-2 lg:block bg-gray-800 dark:bg-gray-700 h-screen w-64">
       <div className="p-4 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
         <h2 className="text-lg font-semibold mb-4 text-center underline">
         Following

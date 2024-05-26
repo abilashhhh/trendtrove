@@ -10,8 +10,10 @@ interface ProfileMainCenterComponentProps {
 
 const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({ userDetails }) => {
   return (
-    <main className="flex flex-auto md:flex-row bg-gray-800 dark:bg-gray-700 text-black dark:text-white min-h-screen overflow-y-auto no-scrollbar">
-      <div className="flex-1 w-full overflow-y-auto no-scrollbar">
+   
+        <main className="flex-1 p-2 overflow-auto bg-slate-800 dark:bg-gray-700 text-black dark:text-white flex">
+ 
+        <div className="flex-1 w-full overflow-y-auto no-scrollbar">
         <Profile userDetails={userDetails} />
       </div>
 
