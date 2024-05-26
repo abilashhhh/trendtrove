@@ -64,7 +64,7 @@ function SettingsPage() {
         
         <Header toggleLeftSidebar={toggleLeftSidebar} />
 
-        <SmallViewRightSidebar isDarkMode={isDarkMode} />
+        {/* <SmallViewRightSidebar isDarkMode={isDarkMode} /> */}
 
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar

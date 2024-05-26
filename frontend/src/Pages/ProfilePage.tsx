@@ -8,7 +8,7 @@ import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 import ProfileMainCenterComponent from "../Components/ProfilePage/ProfileMainCenterComponent";
 import HomePageRightSidebar from "../Components/HomePage/HomePageRightSidebar";
-import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
+// import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import { UserInfo } from "../Types/userProfile";
@@ -121,7 +121,7 @@ function ProfilePage() {
       <ToastContainer />
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
         <Header toggleLeftSidebar={toggleLeftSidebar} />
-        <SmallViewRightSidebar isDarkMode={isDarkMode} />
+        {/* <SmallViewRightSidebar isDarkMode={isDarkMode} /> */}
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}

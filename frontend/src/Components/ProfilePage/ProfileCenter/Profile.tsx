@@ -36,11 +36,11 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
   };
 
   return (
-    <main className="flex-1  bg-red-800 min-h-screen w-full p-3 rounded-lg dark:bg-slate-900 text-white">
+    <main className="flex-1  bg-slate-800 min-h-screen w-full p-3 rounded-lg dark:bg-slate-900 text-white">
       <div className="overflow-y-auto no-scrollbar">
         <div className="max-w-full mx-auto relative">
           {/* Profile Info */}
-          <div className="px-6 py-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg mb-4 relative">
+          <div className="px-6 py-4 bg-white dark:bg-slate-700 rounded-lg shadow-lg mb-4 relative">
             {/* Edit Profile Button */}
             <button
               className="absolute top-4 right-4 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -191,7 +191,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between px-8 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg gap-4">
+          <div className="flex flex-col md:flex-row justify-between px-8 py-2 bg-white dark:bg-slate-700 rounded-lg shadow-lg gap-4">
             <div className="text-center md:w-1/3">
               <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                 Posts
