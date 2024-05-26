@@ -221,8 +221,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
 
     <div className="mx-auto h-screen rounded-lg shadow-lg bg-slate-200 dark:bg-slate-800 overflow-auto no-scrollbar">
     
-  
-      
+
       <div className="bg-cover bg-center h-72">
         <img
           src={userDetails?.coverPhoto || "/"}

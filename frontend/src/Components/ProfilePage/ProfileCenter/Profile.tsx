@@ -49,11 +49,18 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
             </button>
 
             {/* Profile Picture */}
+            <div className="bg-cover bg-center h-72 w-full">
+        <img
+          src={userDetails?.coverPhoto || "/"}
+          alt={`${userDetails.username}'s profile`}
+          className="w-full h-full object-cover "
+        />
+      </div>
             <div className="flex items-center justify-center mb-4">
               <img
                 src={userDetails.dp}
                 alt="Profile Picture"
-                className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-100"
+                className="h-40 w-40 rounded-full object-cover border-4 border-white dark:border-gray-100 -mt-16"
               />
             </div>
 
