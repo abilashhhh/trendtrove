@@ -69,6 +69,7 @@ const userSchema = new mongoose_1.Schema({
     },
     coverPhoto: {
         type: String,
+        default: "http://res.cloudinary.com/ddiqmcmxy/image/upload/v1716730628/dp/pzvs3rggdwbttdwuz3i1.jpg",
     },
     bio: {
         type: String,

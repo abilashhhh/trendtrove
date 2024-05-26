@@ -168,7 +168,7 @@ const userRepositoryMongoDB = () => {
                 isAdmin: { $ne: true },
                 isBlocked: { $ne: true },
                 isSuspended: { $ne: true },
-            }, "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts").exec();
+            }, "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts coverPhoto").exec();
             console.log(users);
             return users;
         }

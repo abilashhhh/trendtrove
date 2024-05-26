@@ -40,7 +40,11 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
       <div className="overflow-y-auto no-scrollbar">
         <div className="max-w-full mx-auto relative">
           {/* Profile Info */}
-          <div className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative">
+          {/* <div className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative"> */}
+          <div
+  className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative"
+  style={{ backgroundImage: `url(${userDetails.coverPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' , }}
+>
             {/* Edit Profile Button */}
             <button
               className="absolute top-4 right-4 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"

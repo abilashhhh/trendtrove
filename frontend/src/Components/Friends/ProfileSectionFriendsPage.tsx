@@ -19,6 +19,7 @@ import {
 import Modal from "../../utils/Modal";
 
 interface UserInfo {
+  coverPhoto: string;
   _id: string;
   username: string;
   name: string;
@@ -217,17 +218,18 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   };
 
   return (
-    <div className="mx-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 overflow-hidden">
+    <div className="mx-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 overflow-hidden ">
+      
       <div className="bg-cover bg-center h-72">
         <img
-          src={userDetails?.dp || "/"}
+          src={userDetails?.coverPhoto || "/"}
           alt={`${userDetails.username}'s profile`}
           className="w-full h-full object-cover"
         />
       </div>
       <div className="p-6">
         <div className="flex items-center justify-center flex-col">
-          <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-white -mt-16">
+          <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-slate-600 -mt-16">
             <img
               src={userDetails.dp || "/default-profile.jpg"}
               alt={userDetails.username}

@@ -32,7 +32,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
       reader.onloadend = async () => {
         const imgData = reader.result as string;
         try {
-          const response = await upload(imgData, (err) => toast.error(err));
+          const response = await upload(imgData, (err) => toast.error(err), "dp");
           if (response?.url) {
             setFormData(prevState => ({
               ...prevState,
@@ -45,10 +45,33 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
           console.error("Error uploading profile picture:", error);
         }
       };
+      reader.readAsDataURL(file); 
+    }
+  };
+
+  const handleCoverPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const imgData = reader.result as string;
+        try {
+          const response = await upload(imgData, (err) => toast.error(err), "cover");
+          if (response?.url) {
+            setFormData(prevState => ({
+              ...prevState,
+              coverPhoto: response.url,
+            }));
+            toast.success("Cover photo updated successfully");
+          }
+        } catch (error) {
+          toast.error("Failed to upload cover photo");
+          console.error("Error uploading cover photo:", error);
+        }
+      };
       reader.readAsDataURL(file);
     }
   };
-  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -111,7 +134,6 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate all fields before submitting
     for (const field in formData) {
       const value = formData[field as keyof UserInfo];
       if (typeof value === "string") {
@@ -272,6 +294,19 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                   <FontAwesomeIcon icon={formData.isPrivate ? faCheckCircle : faTimesCircle} className={`text-lg font-semibold ${formData.isPrivate ? "text-green-500" : "text-red-500"}`} />
                 </div>
               </div>
+
+      {/* Cover Picture */}
+          <div className="flex items-center justify-between mb-4 mt-10">
+                <img src={formData.coverPhoto} alt="Cover photo" className="h-140 w-140   object-cover border-4 border-white dark:border-gray-100" />
+              </div>
+
+              <input type="file" accept="image/*" id="image-input2" className="hidden" onChange={handleCoverPhoto} />
+              <label htmlFor="image-input2" className="block">
+                <p className="text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md cursor-pointer hover:bg-blue-600 focus:outline-none focus:bg-blue-600 sm:text-base sm:p-3 sm:ml-0 mb-7 w-32 md:w-36 lg:w-40">
+                  Upload Cover Photo
+                </p>
+              </label>
+
             </form>
 
             <div className="flex flex-col md:flex-row justify-between px-8 py-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg gap-6">
