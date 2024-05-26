@@ -342,6 +342,32 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in rejecting the friend request");
         }
     });
+    // const updateCoverPhoto = async (userId: string, secure_url: string) => {
+    //   try {
+    //     const user = await User.findByIdAndUpdate(
+    //       userId,
+    //       { coverPhoto: secure_url },
+    //       { new: true }
+    //     );
+    //     return user;
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw new Error("Error updating cover photo!");
+    //   }
+    // };
+    // const updateDp = async (userId: string, secure_url: string) => {
+    //   try {
+    //     const user = await User.findByIdAndUpdate(
+    //       userId,
+    //       { dp: secure_url },
+    //       { new: true }
+    //     );
+    //     return user;
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw new Error("Error updating dp!");
+    //   }
+    // };
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -382,6 +408,8 @@ const userRepositoryMongoDB = () => {
         cancelSendFriendRequest,
         acceptFriendRequest,
         rejectFriendRequest,
+        // updateDp,
+        // updateCoverPhoto,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

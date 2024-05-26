@@ -8,6 +8,8 @@ import {
   EditProfileResponse,
   GetUserInfoResponse,
   SuspendAccountResponse,
+  UploadCoverResponse,
+  UploadDpResponse,
   UserInfo,
 } from "../../Types/userProfile";
 
@@ -142,3 +144,35 @@ export const privateAccount = async (
     throw error;
   }
 };
+
+// export const uploadCoverPhoto = async (
+//   formData: FormData
+// ): Promise<UploadCoverResponse> => {
+//   const response = await axiosUserInstance.post<UploadCoverResponse>(
+//     END_POINTS.UPLOAD_COVER,
+//     formData,
+//     {
+//       headers: {
+//         "Content-Type": `multipart/form-data`,
+//       },
+//     }
+//   );
+//   return response.data;
+// };
+
+// export const uploadDp = async (
+//   formData: FormData
+// ): Promise<UploadDpResponse> => {
+//   console.log("Called upload dp api")
+//   console.log("Called upload dp, formedtaa :", formData)
+//   const response = await axiosUserInstance.post<UploadDpResponse>(
+//     END_POINTS.UPLOAD_DP,
+//     formData,
+//     {
+//       headers: {
+//         "Content-Type": `multipart/form-data`,
+//       },
+//     }
+//   );
+//   return response.data;
+// };

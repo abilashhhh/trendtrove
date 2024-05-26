@@ -10,9 +10,9 @@ const configurationKeys = {
     MONGODB: process.env.MONGODB,
     JWT_ACCESS_CODE: process.env.JWT_ACCESS_CODE,
     JWT_REFRESH_CODE: process.env.JWT_REFRESH_CODE,
-    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
-    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
-    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+    // CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+    // CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+    // CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
     MAIL_USERNAME: process.env.MAIL_USERNAME,
     MAIL_PASSWORD: process.env.MAIL_PASSWORD,
 };

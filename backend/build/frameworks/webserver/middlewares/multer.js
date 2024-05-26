@@ -4,7 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const multer_1 = __importDefault(require("multer"));
-const storage = multer_1.default.memoryStorage();
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
 const fileFilter = (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
         return cb(new Error('Please upload only images.'));

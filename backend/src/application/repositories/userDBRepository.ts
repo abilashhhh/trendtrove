@@ -60,20 +60,26 @@ export const userDBRepository = (
   const getAllUsersForAdmin = async () =>
     await repository.getAllUsersForAdmin();
 
-  const followUser = async (userId : string , targetUserId: string ) =>
-    await repository.followUser(userId , targetUserId );
+  const followUser = async (userId: string, targetUserId: string) =>
+    await repository.followUser(userId, targetUserId);
 
-  const unfollowUser = async (userId : string , targetUserId: string ) =>
-    await repository.unfollowUser(userId , targetUserId );
+  const unfollowUser = async (userId: string, targetUserId: string) =>
+    await repository.unfollowUser(userId, targetUserId);
 
-  const cancelSendFriendRequest = async (userId : string , targetUserId: string ) =>
-    await repository.cancelSendFriendRequest(userId , targetUserId );
+  const cancelSendFriendRequest = async (userId: string, targetUserId: string) => 
+    await repository.cancelSendFriendRequest(userId, targetUserId);
 
-  const acceptFriendRequest = async (userId : string , targetUserId: string ) =>
-    await repository.acceptFriendRequest(userId , targetUserId );
+  const acceptFriendRequest = async (userId: string, targetUserId: string) =>
+    await repository.acceptFriendRequest(userId, targetUserId);
 
-  const rejectFriendRequest = async (userId : string , targetUserId: string ) =>
-    await repository.rejectFriendRequest(userId , targetUserId );
+  const rejectFriendRequest = async (userId: string, targetUserId: string) =>
+    await repository.rejectFriendRequest(userId, targetUserId);
+
+  // const updateCoverPhoto = async (userId: string, secure_url: string) =>
+  //   await repository.updateCoverPhoto(userId, secure_url);
+
+  // const updateDp = async (userId: string, secure_url: string) =>
+  //   await repository.updateDp(userId, secure_url);
 
   return {
     addUser,
@@ -97,8 +103,9 @@ export const userDBRepository = (
     unfollowUser,
     cancelSendFriendRequest,
     acceptFriendRequest,
-    rejectFriendRequest
-
+    rejectFriendRequest,
+    // updateDp,
+    // updateCoverPhoto,
   };
 };
 

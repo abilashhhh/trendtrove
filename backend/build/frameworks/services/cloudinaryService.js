@@ -21,9 +21,9 @@ cloudinary_1.v2.config({
     api_secret: config_1.default.CLOUDINARY_API_SECRET,
 });
 const cloudinaryService = () => {
-    function handleUpload(file) {
+    function handleUpload(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield cloudinary_1.v2.uploader.upload(file, {
+            const res = yield cloudinary_1.v2.uploader.upload(filePath, {
                 resource_type: "auto",
             });
             return res;

@@ -82,3 +82,16 @@ export interface FriendRequestSentResponse {
   status: string, 
   message: string,
 }
+
+export interface UploadCoverResponse {
+  status : string, 
+  message : string ,
+  coverPhoto : string
+}
+
+export interface UploadDpResponse {
+  url: string | undefined;
+  status : string, 
+  message : string ,
+  dp : string
+}

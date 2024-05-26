@@ -11,26 +11,32 @@ import {
   userRepositoryMongoDB,
 } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 
+
 import {
   handleEditProfile,
   handlePasswordChange,
   handleUserInfo,
   handleDeleteAccount,
   handleSuspendAccount,
-  handlePrivateAccount
+  handlePrivateAccount,
+  handleUploadCoverPhoto,
+  handleUploadDp
   // handleOtherUserInfo
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
+// import { CloudinaryService} from "../../frameworks/services/cloudinaryService";
+// import { CloudinaryServiceInterface } from "../../application/services/cloudinaryServiceInterface";
 
 const profileController = (
+  // cloudinaryServiceImpl: CloudinaryService,
+  // cloudinaryServiceInterface: CloudinaryServiceInterface,
   userDBRepositoryImplementation: UserRepositoryMongoDB,
   userDBRepositoryInterface: UserDBInterface,
   authServiceImplementation: AuthService,
-  authServiceInterface: AuthServiceInterface
+  authServiceInterface: AuthServiceInterface,
 ) => {
-  const dbUserRepository = userDBRepositoryInterface(
-    userDBRepositoryImplementation()
-  );
+  // const cloudinaryService = cloudinaryServiceInterface(cloudinaryServiceImpl());
+  const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
   const authService = authServiceInterface(authServiceImplementation());
 
   //////////////////////////////////////////////////
@@ -165,6 +171,63 @@ const profileController = (
     }
   };
 
+  
+  // const uploadCover = async (req: Request, res: Response) => {
+  //   try {
+  //     const { userId }: { userId: string } = req.body;
+  //     const { path } = req.file as Express.Multer.File;
+  
+  //     const { cloudinaryResp, coverPhoto } = await handleUploadCoverPhoto(
+  //       userId,
+  //       path,
+  //       cloudinaryService,
+  //       dbUserRepository
+  //     );
+  
+  //     res.json({
+  //       status: 'success',
+  //       message: 'Cover photo uploaded',
+  //       coverPhoto,
+  //       cloudinaryResp,
+  //     });
+  //   } catch (error: any) {
+  //     console.error('Error uploading cover photo:', error);
+  //     res.status(500).json({
+  //       status: 'error',
+  //       message: 'An error occurred while uploading the cover photo',
+  //       error: error.message,
+  //     });
+  //   }
+  // };
+  
+  // const uploaddp = async (req: Request, res: Response) => {
+  //   try {
+  //     const { userId }: { userId: string } = req.body;
+  //     const { path } = req.file as Express.Multer.File;
+  
+  //     const { cloudinaryResp, dp } = await handleUploadDp(
+  //       userId,
+  //       path,
+  //       cloudinaryService,
+  //       dbUserRepository
+  //     );
+  
+  //     res.json({
+  //       status: 'success',
+  //       message: 'Display picture uploaded',
+  //       dp,
+  //       cloudinaryResp,
+  //     });
+  //   } catch (error: any) {
+  //     console.error('Error uploading display picture:', error);
+  //     res.status(500).json({
+  //       status: 'error',
+  //       message: 'An error occurred while uploading the display picture',
+  //       error: error.message,
+  //     });
+  //   }
+  // };
+
   //////////////////////////////////////////////////
 
   return {
@@ -174,6 +237,8 @@ const profileController = (
     deleteAccount,
     suspendAccount,
     privateAccount,
+    // uploaddp,
+    // uploadCover
   };
 };
 

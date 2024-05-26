@@ -82,11 +82,11 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       (f) => f.userId === currentUser._id
     );
 
-    const request = userDetails.requestsForMe?.find(
+    const request = userDetails.requestedByMe?.find(
       (r) => r.userId === currentUser._id
     );
 
-    const pendingRequest = userDetails.requestedByMe?.find(
+    const pendingRequest = userDetails.requestsForMe?.find(
       (r) => r.userId === currentUser._id
     );
 
@@ -217,7 +217,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   };
 
   return (
-    <div className="mx-auto rounded-lg shadow-lg bg-white  dark:bg-gray-800 overflow-hidden">
+    <div className="mx-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 overflow-hidden">
       <div className="bg-cover bg-center h-72">
         <img
           src={userDetails?.dp || "/"}
@@ -227,13 +227,13 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       </div>
       <div className="p-6">
         <div className="flex items-center justify-center flex-col">
-        <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-white -mt-16">
-  <img
-    src={userDetails.dp || "/default-profile.jpg"}
-    alt={userDetails.username}
-    className="w-full h-full object-cover"
-  />
-</div>
+          <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-white -mt-16">
+            <img
+              src={userDetails.dp || "/default-profile.jpg"}
+              alt={userDetails.username}
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="ml-6">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
               {userDetails.username}
@@ -251,9 +251,11 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
             <p className="text-gray-600 dark:text-gray-300">
               Joined on: {formatDate(userDetails.createdAt)}
             </p>
-           {userDetails.bio &&  <p className="mt-1 text-gray-600 dark:text-gray-300">
-              Bio: {userDetails.bio}
-            </p>}
+            {userDetails.bio && (
+              <p className="mt-1 text-gray-600 dark:text-gray-300">
+                Bio: {userDetails.bio}
+              </p>
+            )}
             <div className="mt-4">
               <div className="inline-flex items-center mr-4">
                 <FontAwesomeIcon
@@ -266,13 +268,19 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
               </div>
               <div className="inline-flex items-center">
                 <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-600" />
-                <span   onClick={handleOpenFollowersModal} className="text-gray-800 dark:text-gray-200">
+                <span
+                  onClick={handleOpenFollowersModal}
+                  className="text-gray-800 dark:text-gray-200 cursor-pointer"
+                >
                   {userDetails.followers.length} Followers
                 </span>
               </div>
               <div className="inline-flex items-center ml-4">
                 <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-600" />
-                <span  onClick={handleOpenFollowingModal} className="text-gray-800 dark:text-gray-200">
+                <span
+                  onClick={handleOpenFollowingModal}
+                  className="text-gray-800 dark:text-gray-200 cursor-pointer"
+                >
                   {userDetails.following?.length || 0} Following
                 </span>
               </div>
@@ -295,7 +303,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         <div className="mt-6 flex space-x-4">
           {userDetails.isPrivate ? (
             <>
-              {!isFollower && !hasRequested && (
+              {!isFollower && !hasRequested && !hasPendingRequest && (
                 <button
                   onClick={() =>
                     handleFollowUser(userDetails._id, userDetails.username)
@@ -368,7 +376,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           )}
         </div>
       </div>
-        
+
       <Modal
         isOpen={showFollowersModal}
         onClose={handleCloseFollowersModal}
@@ -381,9 +389,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         title="Following"
         users={userDetails.following}
       />
-     
     </div>
-    
   );
 };
 

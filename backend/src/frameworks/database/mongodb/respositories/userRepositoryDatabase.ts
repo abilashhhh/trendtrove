@@ -445,6 +445,36 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  
+  // const updateCoverPhoto = async (userId: string, secure_url: string) => {
+  //   try {
+  //     const user = await User.findByIdAndUpdate(
+  //       userId,
+  //       { coverPhoto: secure_url },
+  //       { new: true }
+  //     );
+  //     return user;
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw new Error("Error updating cover photo!");
+  //   }
+  // };
+
+  // const updateDp = async (userId: string, secure_url: string) => {
+  //   try {
+  //     const user = await User.findByIdAndUpdate(
+  //       userId,
+  //       { dp: secure_url },
+  //       { new: true }
+  //     );
+  //     return user;
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw new Error("Error updating dp!");
+  //   }
+  // };
+
+
   const clearAll = async () => {
     try {
       const result = await User.updateMany(
@@ -490,6 +520,8 @@ export const userRepositoryMongoDB = () => {
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
+    // updateDp,
+    // updateCoverPhoto,
   };
 };
 //////////////////////////////////////////////////////////
