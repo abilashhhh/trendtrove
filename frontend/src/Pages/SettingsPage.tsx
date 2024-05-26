@@ -11,6 +11,7 @@ import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import SettingsMiddlePage from "../Components/Settings/SettingsMiddlePage";
+import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
 
 
 function SettingsPage() {
@@ -77,6 +78,8 @@ function SettingsPage() {
 
           <RightSidebar />
         </div>
+        <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+
       </div>
     </>
   );

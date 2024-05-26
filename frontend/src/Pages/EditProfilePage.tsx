@@ -10,6 +10,8 @@ import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 import EditProfileMainCenterComponent from "../Components/ProfilePage/EditProfileMainCenterComponent";
 import HomePageRightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
+import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
+
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import { UserInfo } from "../Types/userProfile";
@@ -119,6 +121,8 @@ function EditProfilePage() {
           <EditProfileMainCenterComponent userDetails={userDetails} />
           <HomePageRightSidebar />
         </div>
+        <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+
       </div>
     </>
   );

@@ -14,6 +14,8 @@ import LoadingSpinner from "../Components/LoadingSpinner";
 import { UserInfo } from "../Types/userProfile";
 import { getUserInfo } from "../API/Profile/profile";
 import { StoreType } from '../Redux/Store/reduxStore';
+import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
+
 
 function ProfilePage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -41,8 +43,8 @@ function ProfilePage() {
     refreshToken: null,
     refreshTokenExpiresAt: null,
     posts: [],
-    requests: [],
-    requested: [],
+    requestsForMe: [],
+    requestedByMe: [],
     followers: [],
     following: [],
     savedPosts: [],
@@ -130,6 +132,8 @@ function ProfilePage() {
           <ProfileMainCenterComponent userDetails={userDetails} />
           <HomePageRightSidebar />
         </div>
+        <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+
       </div>
     </>
   );

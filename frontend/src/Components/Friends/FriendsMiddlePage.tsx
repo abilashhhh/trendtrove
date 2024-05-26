@@ -60,9 +60,7 @@ const FriendsMiddlePage: React.FC = () => {
       <ToastContainer />
       <main className="flex-1 min-h-screen pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
         <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
-          <h1 className="text-3xl font-bold underline text-center mb-6">
-            Find New Friends
-          </h1>
+      
           <div className="flex flex-col md:flex-row gap-6 h-full">
             <div className="w-full md:w-2/6 bg-gray-300 dark:bg-slate-700 rounded-lg flex flex-col text-black dark:text-white text-xl p-4 space-y-4">
               {users.length > 0 ? (

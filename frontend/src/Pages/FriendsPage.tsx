@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
@@ -7,12 +7,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
-import MainContent from "../Components/HomePage/HomePageMiddleContainer";
+
+import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
+
 import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import FriendsMiddlePage from "../Components/Friends/FriendsMiddlePage";
-
 
 function FriendsPage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -40,13 +41,13 @@ function FriendsPage() {
       toast.error("Log out failed");
     }
   };
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500);  
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -59,10 +60,9 @@ function FriendsPage() {
       <ToastContainer />
 
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
-        
         <Header toggleLeftSidebar={toggleLeftSidebar} />
 
-        <SmallViewRightSidebar isDarkMode={isDarkMode} />
+        {/* <SmallViewRightSidebar isDarkMode={isDarkMode} /> */}
 
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar
@@ -71,11 +71,12 @@ function FriendsPage() {
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
           />
-          
-          < FriendsMiddlePage  />
+
+          <FriendsMiddlePage />
 
           <RightSidebar />
         </div>
+        <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
       </div>
     </>
   );
