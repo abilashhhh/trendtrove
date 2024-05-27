@@ -117,7 +117,7 @@ function AddPost() {
       <ToastContainer />
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
         <Header toggleLeftSidebar={toggleLeftSidebar} />
-        <SmallViewRightSidebar isDarkMode={isDarkMode} />
+        {/* <SmallViewRightSidebar isDarkMode={isDarkMode} /> */}
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}
