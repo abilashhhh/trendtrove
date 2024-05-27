@@ -75,17 +75,42 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
         </div>
         {/* ///////////////////////////////////// */}
         {postType === "text" && (
+          // <div className="flex mt-2 justify-evenly items-center gap-2 rounded-lg">
+          //   <div className="flex-1 flex flex-row items-center justify-center gap-2 bg-slate-200 dark:bg-slate-800 p-6 rounded-lg text-center">
+              
+          //     <textarea
+          //       type="text"
+          //       name="textPost"
+          //       id="textPost"
+          //       placeholder="Type here..."
+          //       className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-60 p-3 no-scrollbar rounded-lg"
+          //     />
+          //   </div>
+          // </div>
           <div className="flex mt-2 justify-evenly items-center gap-2 rounded-lg">
-            <div className="flex-1 flex flex-row items-center justify-center gap-2 bg-slate-200 dark:bg-slate-800 p-6 rounded-lg text-center">
-              <textarea
-                type="text"
-                name="textPost"
-                id="textPost"
-                placeholder="Type here..."
-                className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-60 p-3 no-scrollbar rounded-lg"
-              />
-            </div>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2 bg-slate-200 dark:bg-slate-800 p-6 rounded-lg text-center">
+            <label
+              htmlFor="addImage"
+              className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
+            >
+              <FaTextHeight className="text-4xl" />
+              <span className="font-extrabold mt-2" >Add text</span>
+            </label>
+            <input
+              type="file"
+              name="addImage"
+              id="addImage"
+              className="hidden"
+            />
+            <textarea
+              type="text"
+              name="imageCaption"
+              id="imageCaption"
+              placeholder="Add caption..."
+              className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-40 p-3 no-scrollbar  rounded-lg"
+            />
           </div>
+        </div>
         )}
         {postType === "image" && (
           <div className="flex mt-2 justify-evenly items-center gap-2 rounded-lg">
@@ -95,7 +120,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                 className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
               >
                 <FaUpload className="text-4xl" />
-                <span>Upload Image</span>
+                <span className="font-extrabold mt-2" >Upload Image</span>
               </label>
               <input
                 type="file"
@@ -121,7 +146,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                 className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
               >
                 <FaUpload className="text-4xl" />
-                <span>Upload Video</span>
+                <span className="font-extrabold mt-2">Upload Video</span>
               </label>
               <input
                 type="file"

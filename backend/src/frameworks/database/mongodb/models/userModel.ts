@@ -8,43 +8,20 @@ const followSchema = new Schema(
       unique: true,
       required: true,
     },
-    username: {
-      type: String,
-    },
-
-    followedAt: {
-      type: Date,
-      default: Date.now,
-    },
+    username: { type: String },
+    followedAt: { type: Date, default: Date.now },
   },
-  {
-    _id: false,
-  }
+  { _id: false }
 );
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    username: {
-      type: String,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    address: {
-      type: String,
-    },
-    phone: {
-      type: Number,
-    },
-    password: {
-      type: String,
-      minlength: 6,
-    },
+    name: { type: String, required: true },
+    username: { type: String },
+    email: { type: String, required: true },
+    address: { type: String },
+    phone: { type: Number },
+    password: { type: String, minlength: 6 },
     dp: {
       type: String,
       default:
@@ -55,80 +32,28 @@ const userSchema = new Schema(
       default:
         "http://res.cloudinary.com/ddiqmcmxy/image/upload/v1716730807/cover/ogdcobchc5wknx2steow.jpg",
     },
-    bio: {
-      type: String,
-    },
-    gender: {
-      type: String,
-    },
-    isBlocked: {
-      type: Boolean,
-      default: false,
-    },
-    isPrivate: {
-      type: Boolean,
-      default: false,
-    },
-    isVerifiedAccount: {
-      type: Boolean,
-      default: false,
-    },
-    isGoogleSignedIn: {
-      type: Boolean,
-      default: false,
-    },
-    isPremium: {
-      type: Boolean,
-      default: false,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    role: {
-      type: String,
-      enum: ["admin", "user"],
-      default: "user",
-    },
-    isSuspended: {
-      type: Boolean,
-      default: false,
-    },
-    refreshToken: {
-      type: String,
-      default: null,
-    },
-    refreshTokenExpiresAt: {
-      type: Date,
-      default: null,
-    },
+    bio: { type: String },
+    gender: { type: String },
+    isBlocked: { type: Boolean, default: false },
+    isPrivate: { type: Boolean, default: false },
+    isVerifiedAccount: { type: Boolean, default: false },
+    isGoogleSignedIn: { type: Boolean, default: false },
+    isPremium: { type: Boolean, default: false },
+    isAdmin: { type: Boolean, default: false },
+    role: { type: String, enum: ["admin", "user"], default: "user" },
+    isSuspended: { type: Boolean, default: false },
+    refreshToken: { type: String, default: null },
+    refreshTokenExpiresAt: { type: Date, default: null },
     posts: [],
     requestsForMe: [followSchema],
     requestedByMe: [followSchema],
     followers: [followSchema],
     following: [followSchema],
-    savedPosts: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Post",
-      },
-    ],
-    notifications: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Message",
-      },
-    ],
-    blockedUsers: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    savedPosts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
+    notifications: [{ type: mongoose.Types.ObjectId, ref: "Message" }],
+    blockedUsers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const User = model("User", userSchema);
