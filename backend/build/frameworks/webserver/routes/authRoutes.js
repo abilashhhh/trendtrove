@@ -18,7 +18,8 @@ const authRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, authController_1.default)(authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface, userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, otpRepositoryDatabase_1.otpRepositoryMongoDB, OTPDBRepository_1.otpDbRepository, mailSendService_1.mailSenderService, mailServiceInterface_1.mailSenderServiceInterface);
     router.post("/signup", controller.registerUser);
-    router.post("/signin", controller.signInUser);
+    // router.post("/signin", controller.signInUser);
+    router.post("/signin", controller.signIn);
     router.post("/googlesigninup", controller.loginOrSignUpUsingGoogle);
     router.get("/usernameavailablity/:username", controller.usernameAvailability);
     router.get("/emailavailability/:email", controller.emailAvailability);

@@ -19,7 +19,8 @@ import {
   userLoginUsingGoogle,
   userRegister,
   handleGoogleLoginOrSignup,
-  handleForgotPasswordChange, // Import the new function
+  handleForgotPasswordChange,
+  login, // Import the new function
 } from "../../application/use-cases/auth/userAuthApplication"; 
 
 const authController = (
@@ -183,33 +184,64 @@ const authController = (
     }
   };
 
-  const signInUser = async (req: Request, res: Response) => {
+  // const signInUser = async (req: Request, res: Response) => {
+  //   const { email, password }: { email: string; password: string } = req.body;
+  //   try {
+  //     const { userDetails, refreshToken, accessToken } = await userLogin(
+  //       email,
+  //       password,
+  //       dbUserRepository,
+  //       authService
+  //     );
+
+  //     res.cookie('refreshToken', refreshToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: 'none',
+  //       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  //     });
+
+  //     res.json({
+  //       status: "success",
+  //       message: "user verified",
+  //       user: userDetails,
+  //       accessToken
+  //     });
+  //   } catch (error) {
+  //     res.status(404).json({
+  //       status: "error",
+  //       message: "User not found",
+  //     });
+  //   }
+  // };
+
+  const signIn = async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
     try {
-      const { userDetails, refreshToken, accessToken } = await userLogin(
+      const { userDetails, refreshToken, accessToken } = await login(
         email,
         password,
         dbUserRepository,
         authService
       );
-
+  
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000  
       });
-
+  
       res.json({
         status: "success",
         message: "user verified",
         user: userDetails,
         accessToken
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(404).json({
         status: "error",
-        message: "User not found",
+        message: error.message,
       });
     }
   };
@@ -222,7 +254,7 @@ const authController = (
       console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken , accessToken);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true, // use in HTTPS only
+        secure: true, 
         sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
@@ -294,7 +326,8 @@ const authController = (
     sendOtp,
     verifyOtpForEmailVerification,
     emailAvailability,
-    signInUser,
+    // signInUser,
+    signIn,
     refreshAccessToken,
     logoutUser,
     loginOrSignUpUsingGoogle,

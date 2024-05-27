@@ -26,24 +26,24 @@ const adminController = (
 
   //////////////////////////////////////////////////
 
-  const signin  = async (req: Request, res: Response) => {
-    try {
-      const { email, password } = req.body;
-      const user = await handleAdminSignin(email, password, dbUserRepository, authService);
-      console.log(user);
-      res.json({
-        status: "success",
-        message: "Admin login successful",
-        user,
-      });
-    } catch (err) {
-      console.error("Error logging admin:", err);
-      res.status(401).json({
-        status: "error",
-        message: "Failed to do admin login",
-      });
-    }
-  };
+  // const signin  = async (req: Request, res: Response) => {
+  //   try {
+  //     const { email, password } = req.body;
+  //     const user = await handleAdminSignin(email, password, dbUserRepository, authService);
+  //     console.log(user);
+  //     res.json({
+  //       status: "success",
+  //       message: "Admin login successful",
+  //       user,
+  //     });
+  //   } catch (err) {
+  //     console.error("Error logging admin:", err);
+  //     res.status(401).json({
+  //       status: "error",
+  //       message: "Failed to do admin login",
+  //     });
+  //   }
+  // };
 
 
   const logout = async (req: Request, res: Response) => {
@@ -120,7 +120,7 @@ const adminController = (
   //////////////////////////////////////////////////
 
   return {
-    signin,
+    // signin,
     logout,
     getAllUsersForAdmin,
     blockAccount,

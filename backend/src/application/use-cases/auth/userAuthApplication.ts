@@ -124,8 +124,55 @@ export const handleResendOtp = async (
   }
 };
 
-// User Login
-export const userLogin = async (
+// // User Login
+// export const userLogin = async (
+//   email: string,
+//   password: string,
+//   dbUserRepository: ReturnType<UserDBInterface>,
+//   authService: ReturnType<AuthServiceInterface>
+// ) => {
+//   const user = await dbUserRepository.getUserByEmail(email);
+//   if (!user) {
+//     throw new ErrorInApplication("Invalid email or password!", 401);
+//   }
+//   if (user.isAdmin) {
+//     throw new ErrorInApplication("Admins cant login!", 401);
+//   }
+//   if (user.isBlocked) {
+//     throw new ErrorInApplication("Your account has been blocked!", 401);
+//   }
+
+//   const isPasswordCorrect = await authService.comparePassword(password, user?.password?.toString() || "");
+//   if (!isPasswordCorrect) {
+//     throw new ErrorInApplication("Invalid email or password!", 401);
+//   }
+
+//   const userDetails = {
+//     _id: user?._id.toString(),
+//     name: user?.name,
+//     username: user?.username,
+//     email: user?.email,
+//     phone: user?.phone,
+//     coverPhoto: user?.coverPhoto,
+//     dp: user?.dp,
+//     bio: user?.bio,
+//     gender: user?.gender,
+//     address: user?.address,
+//     followers: user?.followers,
+//     following: user?.following,
+//     isVerifiedAccount: user?.isVerifiedAccount,
+//     isGoogleSignedIn: user?.isGoogleSignedIn,
+//     isBlocked: user?.isBlocked,
+//   };
+
+//   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
+//   const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
+//   await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); // setting the expiry to 7 days
+
+//   return { userDetails, refreshToken, accessToken };
+// };
+
+export const login = async (
   email: string,
   password: string,
   dbUserRepository: ReturnType<UserDBInterface>,
@@ -134,9 +181,6 @@ export const userLogin = async (
   const user = await dbUserRepository.getUserByEmail(email);
   if (!user) {
     throw new ErrorInApplication("Invalid email or password!", 401);
-  }
-  if (user.isAdmin) {
-    throw new ErrorInApplication("Admins cant login!", 401);
   }
   if (user.isBlocked) {
     throw new ErrorInApplication("Your account has been blocked!", 401);
@@ -163,14 +207,17 @@ export const userLogin = async (
     isVerifiedAccount: user?.isVerifiedAccount,
     isGoogleSignedIn: user?.isGoogleSignedIn,
     isBlocked: user?.isBlocked,
+    isAdmin: user?.isAdmin,
   };
 
-  const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
-  const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
-  await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); // setting the expiry to 7 days
+  const role = user.isAdmin ? "admin" : "user";
+  const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role });
+  const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role });
+  await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); 
 
   return { userDetails, refreshToken, accessToken };
 };
+
 
 // Access Token Refresh
 export const accessTokenRefresh = async (

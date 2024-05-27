@@ -172,15 +172,43 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             });
         }
     });
-    const signInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const signInUser = async (req: Request, res: Response) => {
+    //   const { email, password }: { email: string; password: string } = req.body;
+    //   try {
+    //     const { userDetails, refreshToken, accessToken } = await userLogin(
+    //       email,
+    //       password,
+    //       dbUserRepository,
+    //       authService
+    //     );
+    //     res.cookie('refreshToken', refreshToken, {
+    //       httpOnly: true,
+    //       secure: true,
+    //       sameSite: 'none',
+    //       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    //     });
+    //     res.json({
+    //       status: "success",
+    //       message: "user verified",
+    //       user: userDetails,
+    //       accessToken
+    //     });
+    //   } catch (error) {
+    //     res.status(404).json({
+    //       status: "error",
+    //       message: "User not found",
+    //     });
+    //   }
+    // };
+    const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         try {
-            const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.userLogin)(email, password, dbUserRepository, authService);
+            const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.login)(email, password, dbUserRepository, authService);
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+                maxAge: 7 * 24 * 60 * 60 * 1000
             });
             res.json({
                 status: "success",
@@ -192,7 +220,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         catch (error) {
             res.status(404).json({
                 status: "error",
-                message: "User not found",
+                message: error.message,
             });
         }
     });
@@ -203,7 +231,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken, accessToken);
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: true, // use in HTTPS only
+                secure: true,
                 sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             });
@@ -268,7 +296,8 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         sendOtp,
         verifyOtpForEmailVerification,
         emailAvailability,
-        signInUser,
+        // signInUser,
+        signIn,
         refreshAccessToken,
         logoutUser,
         loginOrSignUpUsingGoogle,

@@ -114,7 +114,7 @@ export const verifyOtp = async (email: string, otp: string): Promise<any> => {
 // Sign in user
 export const signin = async (payload: SignInUserInterface): Promise<SignInUserResponse> => {
   try {
-    const response = await axios.post<SignInUserResponse>(END_POINTS.LOGIN_USER, payload);
+    const response = await axios.post<SignInUserResponse>(END_POINTS.LOGIN, payload);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

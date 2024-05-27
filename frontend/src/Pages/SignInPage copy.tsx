@@ -8,7 +8,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../Redux/UserAuthSlice/authSlice";
-import { setAdminCredentials } from "../Redux/AdminSlice/adminSlice";
 
 const SignInPage: React.FC = () => {
   const [formData, setFormData] = useState<SignInUserInterface>({
@@ -44,13 +43,7 @@ const SignInPage: React.FC = () => {
     try {
       const response = await signin(formData);
 
-      if (response.status === "success" && response.user.isAdmin) {
-        dispatch(
-          setAdminCredentials({
-            accessToken: response.accessToken,
-          })
-        );
-      } else if (response.status === "success" && !response.user.isAdmin) {
+      if (response.status === "success") {
         dispatch(
           setCredentials({
             user: response.user,
@@ -60,12 +53,9 @@ const SignInPage: React.FC = () => {
         console.log("response.user : ", response.user);
         console.log("response.accessToken : ", response.accessToken);
         toast.success("Sign in successful");
+        toast.success("Navigating to homepage...");
         setTimeout(() => {
-          if (response.user.isAdmin) {
-            navigate("/admin/home");
-          } else {
-            navigate("/home");
-          }
+          navigate("/home");
         }, 2000);
       } else {
         toast.error(`Failed to sign in, ${response.message}`);

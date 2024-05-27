@@ -14,25 +14,24 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
     //////////////////////////////////////////////////
-    const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { email, password } = req.body;
-            const user = yield (0, adminAuthApplication_1.handleAdminSignin)(email, password, dbUserRepository, authService);
-            console.log(user);
-            res.json({
-                status: "success",
-                message: "Admin login successful",
-                user,
-            });
-        }
-        catch (err) {
-            console.error("Error logging admin:", err);
-            res.status(401).json({
-                status: "error",
-                message: "Failed to do admin login",
-            });
-        }
-    });
+    // const signin  = async (req: Request, res: Response) => {
+    //   try {
+    //     const { email, password } = req.body;
+    //     const user = await handleAdminSignin(email, password, dbUserRepository, authService);
+    //     console.log(user);
+    //     res.json({
+    //       status: "success",
+    //       message: "Admin login successful",
+    //       user,
+    //     });
+    //   } catch (err) {
+    //     console.error("Error logging admin:", err);
+    //     res.status(401).json({
+    //       status: "error",
+    //       message: "Failed to do admin login",
+    //     });
+    //   }
+    // };
     const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { userId } = req.body;
@@ -105,7 +104,7 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
     });
     //////////////////////////////////////////////////
     return {
-        signin,
+        // signin,
         logout,
         getAllUsersForAdmin,
         blockAccount,

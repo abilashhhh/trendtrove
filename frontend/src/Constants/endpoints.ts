@@ -1,6 +1,6 @@
 const END_POINTS = {
 
-  LOGIN_USER: "/api/auth/signin",
+  LOGIN: "/api/auth/signin",
   GOOGLE_LOGIN_SIGNUP_USER: "/api/auth/googlesigninup",
   SIGNUP_USER: "/api/auth/signup",
   LOGOUT_USER: "/api/auth/logout",

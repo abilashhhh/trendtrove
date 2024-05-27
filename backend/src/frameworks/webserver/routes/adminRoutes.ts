@@ -16,7 +16,7 @@ const adminRouter = () => {
     authServiceInterface
   );
 
-  router.post("/signin" , controller.signin);
+  // router.post("/signin" , controller.signin);
   router.post("/logout", controller.logout);
   router.get("/getusersforadmin", controller.getAllUsersForAdmin);
   router.patch("/blockuser/:id" ,controller.blockAccount);
