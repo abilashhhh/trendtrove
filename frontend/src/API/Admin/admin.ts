@@ -3,23 +3,22 @@ import axiosAdminInstance, {
 } from "../Axios/axiosAdminInstance";
 import END_POINTS from "../../Constants/endpoints";
 import {
-  AdminLoginInterface,
-  AdminLoginResponse,
   BlockUserResponse,
   GetUsersResponse,
 } from "../../Types/admin";
-import { GetRestOfUsersResponse } from "../../Types/userProfile";
 import axios, { AxiosError } from "axios";
 
-export const adminLogin = async (
-  payload: AdminLoginInterface
-): Promise<AdminLoginResponse> => {
-  const response = await axiosAdminRefreshInstance.post<AdminLoginResponse>(
-    END_POINTS.ADMIN_LOGIN,
-    payload
-  );
-  return response.data;
-};
+// import { GetRestOfUsersResponse } from "../../Types/userProfile";
+
+// export const adminLogin = async (
+//   payload: AdminLoginInterface
+// ): Promise<AdminLoginResponse> => {
+//   const response = await axiosAdminRefreshInstance.post<AdminLoginResponse>(
+//     END_POINTS.ADMIN_LOGIN,
+//     payload
+//   );
+//   return response.data;
+// };
 
 export const refreshAdminAccessToken = async (): Promise<{
   accessToken: string;

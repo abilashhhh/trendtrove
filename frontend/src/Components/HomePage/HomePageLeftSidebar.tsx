@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaSearch, FaCommentAlt, FaPhoneAlt, FaUserFriends, FaCog, FaUser, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaHome, FaPlusCircle, FaCommentAlt, FaPhoneAlt, FaUserFriends, FaCog, FaUser, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BsExposure } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +23,10 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
     navigate("/friends");
   };
 
+  const addPost = () => {
+    navigate("/addpost")
+  }
+
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -41,6 +45,10 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
           <button className="flex items-center justify-center w-full bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded font-bold hover:bg-slate-600 hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
             <BsExposure className="inline-block mr-2" />
             {!isCollapsed && "Explore"}
+          </button>
+          <button onClick={addPost} className="flex items-center justify-center w-full bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded font-bold hover:bg-slate-600 hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
+            < FaPlusCircle className="inline-block mr-2" />
+            {!isCollapsed && "Add Post"}
           </button>
           <button className="flex items-center justify-center w-full bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded font-bold hover:bg-slate-600 hover:dark:bg-slate-200 hover:dark:text-black hover:text-white">
             <FaCommentAlt className="inline-block mr-2" />

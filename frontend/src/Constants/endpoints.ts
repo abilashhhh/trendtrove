@@ -29,7 +29,7 @@ const END_POINTS = {
   ACCEPT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/acceptrequest',
   REJECT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/rejectrequest',
 
-  ADMIN_LOGIN: 'api/admin/signin',
+  // ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',
   REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
   GET_USERS: 'api/admin/getusersforadmin',

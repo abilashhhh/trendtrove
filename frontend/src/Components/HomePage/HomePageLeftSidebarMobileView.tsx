@@ -13,11 +13,11 @@ const BottomNavBar = ({ toggleDarkMode, isDarkMode }) => {
       </button>
       <button onClick={() => navigate("/friends")} className="text-white p-2 flex flex-col items-center">
         <FaUserFriends className="text-xl" />
-        <span className="text-xs">Friendds</span>
+        <span className="text-xs">Friends</span>
       </button>
-      <button onClick={() => navigate("/add")} className="text-white p-2 flex flex-col items-center">
+      <button onClick={() => navigate("/addpost")} className="text-white p-2 flex flex-col items-center">
         <FaPlusSquare className="text-xl" />
-        <span className="text-xs">Add</span>
+        <span className="text-xs">Post</span>
       </button>
       <button onClick={() => navigate("/chats")} className="text-white p-2 flex flex-col items-center">
         <FaCommentAlt className="text-xl" />

@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { StoreType } from "../../Redux/Store/reduxStore";
+import { FaBell } from "react-icons/fa";
 
 interface HeaderProps {
   toggleLeftSidebar: () => void;
@@ -27,8 +28,13 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
           </h1>
         </div>
 
-        <div className="flex items-center space-x-2">
-          {currentUser && currentUser.dp &&
+        <div className="flex items-center space-x-4">
+          {currentUser && currentUser.dp && (
+            <Link to="/notifications" className="relative p-2 text-gray-600 dark:text-gray-400">
+              <FaBell className="text-lg" />
+            </Link>
+          )}
+          {currentUser && currentUser.dp && (
             <Link to="/profile">
               <img
                 className="rounded-full h-8 w-8 object-cover"
@@ -36,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
                 alt="User Profile"
               />
             </Link>
-          }
+          )}
         </div>
       </div>
     </div>

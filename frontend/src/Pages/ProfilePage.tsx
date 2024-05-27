@@ -110,8 +110,8 @@ function ProfilePage() {
     };
 
     fetchUserInfo();
-  }, [userId]); // Add userId as a dependency
-
+  }, [userId]);  
+  
   if (loading) {
     return <LoadingSpinner />;
   }

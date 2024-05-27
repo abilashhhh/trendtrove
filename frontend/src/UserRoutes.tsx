@@ -13,6 +13,7 @@ import FriendsPage from "./Pages/FriendsPage";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import ForgotPassword from "./Pages/ForgotPassword";
+import Addpost from "./Pages/Addpost";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/editprofile" element={<EditProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/addpost" element={<Addpost/>} />
       </Route>
 
       <Route path="/error" element={<ErrorPage />} />
