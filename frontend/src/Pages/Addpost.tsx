@@ -8,7 +8,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
-import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
 import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import AddPostMiddlePage from "../Components/Post/AddPostMiddlePage";
@@ -125,7 +124,6 @@ function AddPost() {
             handleLogout={handleLogout}
           />
           <AddPostMiddlePage userDetails={userDetails}  />
-          <RightSidebar />
         </div>
         <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
       </div>
