@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { UserInfo } from "../../Types/userProfile";
 import { Post } from "../../Types/Post";
-import { FaTextHeight, FaUpload } from "react-icons/fa";
+import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
 import { uploadPost } from "../../API/Post/post";
+import { useNavigate } from "react-router-dom";
+import debounce from "../../utils/debouncer";
+import { usernameAvailability } from "../../API/Auth/auth";
 
 interface AddPostProps {
   userDetails: UserInfo;
@@ -23,7 +26,7 @@ const formatDate = (date: string | undefined) => {
 
 const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const [postData, setPostData] = useState<Partial<Post>>({
-    user: userDetails._id,
+    userId: userDetails._id,
     isArchived: false,
     captions: "",
     images: [],
@@ -32,7 +35,59 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     mentions: [],
   });
 
+  const [mentionStatuses, setMentionStatuses] = useState<
+    { username: string; available: boolean | null }[]
+  >(
+    Array(5).fill({ username: "", available: null })
+  );
+
+
+  
+  const [hashtags, setHashtags] = useState<string[]>(["", "", "", "", ""]);
+  const handleHashtagChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newHashtags = [...hashtags];
+    newHashtags[index] = e.target.value;
+    setHashtags(newHashtags);
+  };
+  const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  const debouncedCheckUsernameAvailability = useCallback(
+    debounce(async (index: number, username: string) => {
+      if (!username) {
+        setMentionStatuses((prevState) =>
+          prevState.map((mention, idx) =>
+            idx === index ? { ...mention, available: null } : mention
+          )
+        );
+        return;
+      }
+      try {
+        const response = await usernameAvailability(username);
+        setMentionStatuses((prevState) =>
+          prevState.map((mention, idx) =>
+            idx === index ? { ...mention, available: response.available } : mention
+          )
+        );
+      } catch (error) {
+        console.error("Error checking username availability:", error);
+      }
+    }, 500),
+    []
+  );
+
+  const handleMentionChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const { value } = e.target;
+    setMentionStatuses((prevState) =>
+      prevState.map((mention, idx) =>
+        idx === index ? { ...mention, username: value } : mention
+      )
+    );
+    debouncedCheckUsernameAvailability(index, value);
+  };
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -141,12 +196,22 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   };
 
   const handleSubmit = async () => {
-    console.log("Post data: ", postData);
+    const validMentions = mentionStatuses
+      .filter((mention) => mention.available === false)
+      .map((mention) => mention.username);
+      console.log("valid mentions : ", validMentions)
+  
+    const dataToSubmit = { ...postData, mentions: validMentions };
+  
+    console.log("Post data: ", dataToSubmit);
     try {
-      const response = await uploadPost(postData);
-
+      const response = await uploadPost(dataToSubmit);
+  
       if (response.status === "success") {
         toast.success("Post created successfully");
+        setTimeout(() => {
+          navigate('/home');
+        }, 1500);
       } else {
         toast.error("Failed to create post");
       }
@@ -155,6 +220,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
       console.log("Error creating post: ", error);
     }
   };
+  
 
   return (
     <main className="flex-1 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
@@ -291,15 +357,47 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
 
         <div className="flex md:flex-row mt-2 justify-evenly items-center gap-2 rounded-lg">
           <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
-            <span>Add mentions:</span>
-            <textarea
-              name="mentions"
-              placeholder="Mention someone here.."
-              className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-20 p-3 no-scrollbar rounded-lg"
-              onChange={handleInputChange}
-            />
+            <span>Add mentions (Up to 5):</span>
+
+            {mentionStatuses.map((mention, index) => (
+              <div key={index} className="flex gap-2 items-center">
+                <input
+                  type="text"
+                  name={`mention${index + 1}`}
+                  value={mention.username}
+                  onChange={(e) => handleMentionChange(e, index)}
+                  className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
+                />
+                {mention.available !== null && (
+                  <span className="ml-2">
+                    {!mention.available ? (
+                      <FaCheckCircle className="text-green-500" />
+                    ) : (
+                      <FaTimesCircle className="text-red-500" />
+                    )}
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
           <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
+            <span>Add hashtags (Up to 5):</span>
+            {hashtags.map((hashtag, index) => (
+              <div key={index} className="flex gap-2 items-center">
+               #   <input
+                  type="text"
+                  name={`hashtag${index + 1}`}
+                  value ={hashtag}
+                  onChange={(e) => handleHashtagChange(e, index)}
+                  className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
+                />
+              </div>
+            ))}
+        </div>
+        
+          
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 mt-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
             <span>Add location:</span>
             <textarea
               name="location"
@@ -308,17 +406,6 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
-            <span>Add hashtags:</span>
-            <textarea
-              name="hashtags"
-              placeholder="Add your hashtags here.."
-              className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-20 p-3 no-scrollbar rounded-lg"
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-
         <button
           onClick={handleSubmit}
           className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5"
