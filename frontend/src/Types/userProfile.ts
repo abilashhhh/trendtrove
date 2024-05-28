@@ -95,3 +95,4 @@ export interface UploadDpResponse {
   message : string ,
   dp : string
 }
+

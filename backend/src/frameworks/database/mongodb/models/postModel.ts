@@ -9,7 +9,7 @@ const postSchema = new Schema(
       required: true,
     },
     isArchived: { type: Boolean, default: false },
-    text: { type: String },
+    captions: { type: String },
     location: { type: String },
     images: [{ type: String }],
     videos: [{ type: String }],

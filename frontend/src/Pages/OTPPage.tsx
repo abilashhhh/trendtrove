@@ -98,11 +98,11 @@ const OTPPage: React.FC = () => {
               OTP VERIFICATION
             </h5>
             <p className="mt-2 text-sm text-gray-600">
-              New here?{" "}
+            Already have an account ?{" "}
               <Link
                 to="/signin"
                 className="font-medium text-blue-400 hover:text-blue-600">
-               Already have an account ? Login
+              Login
               </Link>
             </p>
           </div>

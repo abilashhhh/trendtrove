@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
-import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import AddPostMiddlePage from "../Components/Post/AddPostMiddlePage";

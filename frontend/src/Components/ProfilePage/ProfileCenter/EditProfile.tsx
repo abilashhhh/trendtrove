@@ -49,7 +49,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
       reader.onloadend = async () => {
         const imgData = reader.result as string;
         try {
-          const response = await upload(imgData, err => toast.error(err), "dp");
+          const response = await upload(imgData, err => toast.error(err), "dp", "image");
           if (response?.url) {
             setFormData(prevState => ({
               ...prevState,
@@ -76,7 +76,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
           const response = await upload(
             imgData,
             err => toast.error(err),
-            "cover"
+            "cover", "image"
           );
           if (response?.url) {
             setFormData(prevState => ({
