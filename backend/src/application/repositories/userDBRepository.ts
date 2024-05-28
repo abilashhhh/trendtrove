@@ -1,4 +1,5 @@
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
+import { PostDataInterface } from "../../types/postsInterface";
 import { ProfileInterface } from "../../types/profileInterface";
 import { UserInterface, GoogleUserInterface } from "../../types/userInterface";
 
@@ -75,12 +76,12 @@ export const userDBRepository = (
   const rejectFriendRequest = async (userId: string, targetUserId: string) =>
     await repository.rejectFriendRequest(userId, targetUserId);
 
-  // const updateCoverPhoto = async (userId: string, secure_url: string) =>
-  //   await repository.updateCoverPhoto(userId, secure_url);
+  const addNewPost = async( postData :PostDataInterface) => {
+    await repository.addNewPost(postData)
+  } 
 
-  // const updateDp = async (userId: string, secure_url: string) =>
-  //   await repository.updateDp(userId, secure_url);
 
+ 
   return {
     addUser,
     getUserByEmail,
@@ -104,8 +105,7 @@ export const userDBRepository = (
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
-    // updateDp,
-    // updateCoverPhoto,
+    addNewPost,
   };
 };
 

@@ -2,15 +2,14 @@ import mongoose, { Schema, model } from "mongoose";
 
 const postSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    contentType: {
-      type: String,
-      enum: ["text", "image", "video"],
-      required: true,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     isArchived: { type: Boolean, default: false },
+    isBlocked: { type: Boolean, default: false },
     captions: { type: String },
+    username: { type: String },
+    dp: { type: String },
     location: { type: String },
+    reports: [{ type: String }],
     images: [{ type: String }],
     videos: [{ type: String }],
     hashtags: [{ type: String }],

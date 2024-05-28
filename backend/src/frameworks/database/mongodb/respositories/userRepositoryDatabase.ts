@@ -1,8 +1,10 @@
+import { PostDataInterface } from "../../../../types/postsInterface";
 import { ProfileInterface } from "../../../../types/profileInterface";
 import {
   GoogleUserInterface,
   UserInterface,
 } from "../../../../types/userInterface";
+import Post from "../models/postModel";
 
 import User from "../models/userModel";
 
@@ -444,35 +446,7 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error in rejecting the friend request");
     }
   };
-
-  
-  // const updateCoverPhoto = async (userId: string, secure_url: string) => {
-  //   try {
-  //     const user = await User.findByIdAndUpdate(
-  //       userId,
-  //       { coverPhoto: secure_url },
-  //       { new: true }
-  //     );
-  //     return user;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new Error("Error updating cover photo!");
-  //   }
-  // };
-
-  // const updateDp = async (userId: string, secure_url: string) => {
-  //   try {
-  //     const user = await User.findByIdAndUpdate(
-  //       userId,
-  //       { dp: secure_url },
-  //       { new: true }
-  //     );
-  //     return user;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new Error("Error updating dp!");
-  //   }
-  // };
+ 
 
 
   const clearAll = async () => {
@@ -497,6 +471,21 @@ export const userRepositoryMongoDB = () => {
 
   // clearAll();
 
+  //////////////////////////////////////////////////////
+
+  const addNewPost = async (postData :PostDataInterface) => {
+    try {    
+      const newPost = new Post(postData);
+      return await newPost.save();
+
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error adding new post!");
+    }
+  }
+
+  ////////////////////////////////////////////////
+
   return {
     addUser,
     getUserByEmail,
@@ -520,8 +509,7 @@ export const userRepositoryMongoDB = () => {
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
-    // updateDp,
-    // updateCoverPhoto,
+    addNewPost
   };
 };
 //////////////////////////////////////////////////////////

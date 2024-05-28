@@ -4,8 +4,8 @@ import { UserInfo } from "../../Types/userProfile";
 import { Post } from "../../Types/Post";
 import { FaTextHeight, FaUpload } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
-import axios from "axios";
 import { Oval } from "react-loader-spinner";
+import { uploadPost } from "../../API/Post/post";
 
 interface AddPostProps {
   userDetails: UserInfo;
@@ -37,19 +37,14 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      if (
-        postData.images!.length + postData.videos!.length + files.length >
-        5
-      ) {
-        toast.error(
-          "You can only upload up to a total of 5 images and videos."
-        );
+      if (postData.images!.length + postData.videos!.length + files.length > 5) {
+        toast.error("You can only upload up to a total of 5 images and videos.");
         return;
       }
       setIsUploading(true);
       try {
         const urls = await Promise.all(
-          files.map(async file => {
+          files.map(async (file) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             return new Promise<string>((resolve, reject) => {
@@ -58,7 +53,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                   const imgData = reader.result as string;
                   const response = await upload(
                     imgData,
-                    err => toast.error(err),
+                    (err) => toast.error(err),
                     "postimage",
                     "image"
                   );
@@ -74,7 +69,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             });
           })
         );
-        setPostData(prevState => ({
+        setPostData((prevState) => ({
           ...prevState,
           images: [...(prevState.images || []), ...urls],
         }));
@@ -91,19 +86,14 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const handleAddVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      if (
-        postData.images!.length + postData.videos!.length + files.length >
-        5
-      ) {
-        toast.error(
-          "You can only upload up to a total of 5 images and videos."
-        );
+      if (postData.images!.length + postData.videos!.length + files.length > 5) {
+        toast.error("You can only upload up to a total of 5 images and videos.");
         return;
       }
       setIsUploading(true);
       try {
         const urls = await Promise.all(
-          files.map(async file => {
+          files.map(async (file) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             return new Promise<string>((resolve, reject) => {
@@ -112,7 +102,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                   const videoData = reader.result as string;
                   const response = await upload(
                     videoData,
-                    err => toast.error(err),
+                    (err) => toast.error(err),
                     "postVideo",
                     "video"
                   );
@@ -128,7 +118,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             });
           })
         );
-        setPostData(prevState => ({
+        setPostData((prevState) => ({
           ...prevState,
           videos: [...(prevState.videos || []), ...urls],
         }));
@@ -144,26 +134,26 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setPostData(prevState => ({
+    setPostData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
   const handleSubmit = async () => {
-    console.log("Post data : ", postData)
-    // try {
-    //   const response = await axios.post("/api/posts", postData);
+    console.log("Post data: ", postData);
+    try {
+      const response = await uploadPost(postData);
 
-    //   if (response.status === 201) {
-    //     toast.success("Post created successfully");
-    //   } else {
-    //     toast.error("Failed to create post");
-    //   }
-    // } catch (error) {
-    //   toast.error("Failed to create post");
-    //   console.log("Error creating post: ", error);
-    // }
+      if (response.status === "success") {
+        toast.success("Post created successfully");
+      } else {
+        toast.error("Failed to create post");
+      }
+    } catch (error) {
+      toast.error("Failed to create post");
+      console.log("Error creating post: ", error);
+    }
   };
 
   return (
@@ -188,14 +178,15 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
         </div>
 
         <div className="flex mt-2 gap-2 rounded-lg">
-          <div className="flex-1 flex flex-row items-center gap-2 bg-slate-200 dark:bg-slate-800 p-6 rounded-lg  text-center">
+          <div className="flex-1 flex flex-row items-center gap-2 bg-slate-200 dark:bg-slate-800 p-6 rounded-lg text-center">
             <div>
               <label
                 htmlFor="addText"
-                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600  mr-5 dark:text-gray-300 p-6 rounded-lg cursor-pointer">
+                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600 mr-5 dark:text-gray-300 p-6 rounded-lg cursor-pointer"
+              >
                 <FaTextHeight className="text-4xl" />
-                <span className="font-extrabold mt-2">Add </span>
-                <span className="font-extrabold ">text</span>
+                <span className="font-extrabold mt-2">Add</span>
+                <span className="font-extrabold">text</span>
               </label>
             </div>
             <div className="flex-1">
@@ -203,7 +194,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                 name="captions"
                 id="captions"
                 placeholder="Add texts here..."
-                className="bg-slate-300  dark:bg-gray-700 text-black dark:text-white w-full h-40 p-3 no-scrollbar rounded-lg"
+                className="bg-slate-300 dark:bg-gray-700 text-black dark:text-white w-full h-40 p-3 no-scrollbar rounded-lg"
                 onChange={handleInputChange}
               />
             </div>
@@ -215,10 +206,11 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <div>
               <label
                 htmlFor="addImage"
-                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900  mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer">
+                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
+              >
                 <FaUpload className="text-4xl" />
-                <span className="font-extrabold mt-2">Upload </span>
-                <span className="font-extrabold ">Image</span>
+                <span className="font-extrabold mt-2">Upload</span>
+                <span className="font-extrabold">Image</span>
               </label>
               <input
                 type="file"
@@ -258,10 +250,11 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <div>
               <label
                 htmlFor="addVideo"
-                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer">
+                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
+              >
                 <FaUpload className="text-4xl" />
-                <span className="font-extrabold mt-2">Upload </span>
-                <span className="font-extrabold ">Video</span>
+                <span className="font-extrabold mt-2">Upload</span>
+                <span className="font-extrabold">Video</span>
               </label>
               <input
                 type="file"
@@ -328,7 +321,8 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
 
         <button
           onClick={handleSubmit}
-          className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5">
+          className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5"
+        >
           POST
         </button>
       </div>

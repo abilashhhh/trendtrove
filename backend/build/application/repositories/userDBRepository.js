@@ -35,10 +35,9 @@ const userDBRepository = (repository) => {
     const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.cancelSendFriendRequest(userId, targetUserId); });
     const acceptFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.acceptFriendRequest(userId, targetUserId); });
     const rejectFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.rejectFriendRequest(userId, targetUserId); });
-    // const updateCoverPhoto = async (userId: string, secure_url: string) =>
-    //   await repository.updateCoverPhoto(userId, secure_url);
-    // const updateDp = async (userId: string, secure_url: string) =>
-    //   await repository.updateDp(userId, secure_url);
+    const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.addNewPost(postData);
+    });
     return {
         addUser,
         getUserByEmail,
@@ -62,8 +61,7 @@ const userDBRepository = (repository) => {
         cancelSendFriendRequest,
         acceptFriendRequest,
         rejectFriendRequest,
-        // updateDp,
-        // updateCoverPhoto,
+        addNewPost,
     };
 };
 exports.userDBRepository = userDBRepository;

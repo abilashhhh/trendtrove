@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRepositoryMongoDB = void 0;
+const postModel_1 = __importDefault(require("../models/postModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 //////////////////////////////////////////////////////////
 const userRepositoryMongoDB = () => {
@@ -342,32 +343,6 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in rejecting the friend request");
         }
     });
-    // const updateCoverPhoto = async (userId: string, secure_url: string) => {
-    //   try {
-    //     const user = await User.findByIdAndUpdate(
-    //       userId,
-    //       { coverPhoto: secure_url },
-    //       { new: true }
-    //     );
-    //     return user;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw new Error("Error updating cover photo!");
-    //   }
-    // };
-    // const updateDp = async (userId: string, secure_url: string) => {
-    //   try {
-    //     const user = await User.findByIdAndUpdate(
-    //       userId,
-    //       { dp: secure_url },
-    //       { new: true }
-    //     );
-    //     return user;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw new Error("Error updating dp!");
-    //   }
-    // };
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -385,6 +360,18 @@ const userRepositoryMongoDB = () => {
         }
     });
     // clearAll();
+    //////////////////////////////////////////////////////
+    const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const newPost = new postModel_1.default(postData);
+            return yield newPost.save();
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error adding new post!");
+        }
+    });
+    ////////////////////////////////////////////////
     return {
         addUser,
         getUserByEmail,
@@ -408,8 +395,7 @@ const userRepositoryMongoDB = () => {
         cancelSendFriendRequest,
         acceptFriendRequest,
         rejectFriendRequest,
-        // updateDp,
-        // updateCoverPhoto,
+        addNewPost
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

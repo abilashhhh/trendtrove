@@ -28,6 +28,9 @@ const END_POINTS = {
   CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest',
   ACCEPT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/acceptrequest',
   REJECT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/rejectrequest',
+  
+  ADD_POST :'api/post/addpost',
+
 
   // ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',

@@ -264,35 +264,3 @@ const handleRejectFollowUserRequest = (userId, targetUserId, dbUserRepository) =
     }
 });
 exports.handleRejectFollowUserRequest = handleRejectFollowUserRequest;
-// export const handleUploadCoverPhoto = async (
-//   userId: string,
-//   filePath: string,
-//   cloudinaryService: ReturnType<CloudinaryServiceInterface>,
-//   dbUserRepository: ReturnType<UserDBInterface>,
-// ) => {
-//   try {
-//     const cloudinaryResp = await cloudinaryService.handleUpload(filePath);
-//     const user = await dbUserRepository.updateCoverPhoto(userId, cloudinaryResp.secure_url);
-//     const coverPhoto = user?.coverPhoto;
-//     return { cloudinaryResp, coverPhoto };
-//   } catch (err) {
-//     console.log('Error uploading cover photo:', err);
-//     throw new Error('Error uploading cover photo!');
-//   }
-// };
-// export const handleUploadDp = async (
-//   userId: string,
-//   filePath: string,
-//   cloudinaryService: ReturnType<CloudinaryServiceInterface>,
-//   dbUserRepository: ReturnType<UserDBInterface>,
-// ) => {
-//   try {
-//     const cloudinaryResp = await cloudinaryService.handleUpload(filePath);
-//     const user = await dbUserRepository.updateDp(userId, cloudinaryResp.secure_url);
-//     const dp = user?.dp;
-//     return { cloudinaryResp, dp };
-//   } catch (err) {
-//     console.log('Error uploading display picture:', err);
-//     throw new Error('Error uploading display picture!');
-//   }
-// };

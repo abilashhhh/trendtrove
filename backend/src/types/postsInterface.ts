@@ -1,13 +1,20 @@
 export interface PostDataInterface {
   userId?: string;
-  description?: string;
+  captions?: string;
   hashtags?: string[];
-  image?: string[];
-  video?: string[];
+  images?: string[];
+  videos?: string[];
   reports?: string[];
   likes?: string[];
+  location?: string;
   saved?: string;
-  name?: string;
+  dp?: string;
   username?: string;
   isBlocked?: boolean;
+  isArchived: boolean;
+  mentions?: string[];
+  shares?: string[];
+  comments?: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
