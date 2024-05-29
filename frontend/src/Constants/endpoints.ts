@@ -23,6 +23,7 @@ const END_POINTS = {
   UPLOAD_DP: 'api/profile/uploaddp',
 
   GET_ALL_USERS : '/api/user/getallusers/:userId',
+  GET_USER_PROFILE : '/api/user/getuserprofile/:username',
   FOLLOW_REQUEST: 'api/user/followuser',
   UNFOLLOW_REQUEST: 'api/user/unfollowuser',
   CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest',

@@ -14,17 +14,18 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Addpost from "./Pages/Addpost";
+import ProfilePageIndividual from "./Pages/ProfilePageIndividual";
 
 const UserRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<BasePage />} />
-      
+
       <Route element={<PublicRoute />}>
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/otp" element={<OTPPage />} />
         <Route path="/signin" element={<SignInPage />} />
-        <Route path="/forgotpassword" element={<ForgotPassword/>} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
       </Route>
 
       <Route element={<PrivateRoute />}>
@@ -33,7 +34,8 @@ const UserRoutes: React.FC = () => {
         <Route path="/editprofile" element={<EditProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
-        <Route path="/addpost" element={<Addpost/>} />
+        <Route path="/addpost" element={<Addpost />} />
+        <Route path="/profiles/:username" element={<ProfilePageIndividual />} />
       </Route>
 
       <Route path="/error" element={<ErrorPage />} />

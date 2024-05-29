@@ -205,8 +205,21 @@ export const handleGetAllUsers = async (
   dbUserRepository: ReturnType<UserDBInterface>,
 ) => {
   try {
-
     const user = await dbUserRepository.getAllUsers(id);
+    return user;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};
+
+export const handleUserbyUsername = async (
+  username:string ,
+  dbUserRepository: ReturnType<UserDBInterface>,
+) => {
+  try {
+
+    const user = await dbUserRepository.getUserByUsername(username);
 
     return user;
   } catch (err) {

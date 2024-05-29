@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -169,6 +169,17 @@ const handleGetAllUsers = (id, dbUserRepository) => __awaiter(void 0, void 0, vo
     }
 });
 exports.handleGetAllUsers = handleGetAllUsers;
+const handleUserbyUsername = (username, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield dbUserRepository.getUserByUsername(username);
+        return user;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to get all users data", 401);
+    }
+});
+exports.handleUserbyUsername = handleUserbyUsername;
 const handleFollowUserRequest = (userId, targetUserId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const mainUser = yield dbUserRepository.getUserById(userId);

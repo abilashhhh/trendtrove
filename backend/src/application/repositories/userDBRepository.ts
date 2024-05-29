@@ -75,15 +75,7 @@ export const userDBRepository = (
 
   const rejectFriendRequest = async (userId: string, targetUserId: string) =>
     await repository.rejectFriendRequest(userId, targetUserId);
-
-  const addNewPost = async( postData :PostDataInterface) => {
-    await repository.addNewPost(postData)
-  } 
-  
-  const getAllPostsForUser = async( id: string) => {
-    await repository.getAllPostsForUser(id)
-  } 
-
+ 
 
  
   return {
@@ -109,8 +101,7 @@ export const userDBRepository = (
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
-    addNewPost,
-    getAllPostsForUser,
+ 
 
   };
 };

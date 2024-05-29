@@ -33,6 +33,25 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const getuserprofile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { username } = req.params;
+            const user = yield (0, profileAuthApplication_1.handleUserbyUsername)(username, dbUserRepository);
+            console.log(user);
+            res.json({
+                status: "success",
+                message: "User info fetched",
+                user,
+            });
+        }
+        catch (err) {
+            console.error("Error fetching users info:", err);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to fetch users info",
+            });
+        }
+    });
     const followUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { userId, targetUserId } = req.body;
@@ -124,6 +143,7 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
     });
     return {
         getAllUsers,
+        getuserprofile,
         followUserRequest,
         cancelfollowUserRequest,
         acceptfollowUserRequest,

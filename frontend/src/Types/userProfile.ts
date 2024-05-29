@@ -70,6 +70,12 @@ export interface GetOtherUserInfoResponse {
   otherUser: UserInfo,
 }
 
+export interface GetProfileResponse {
+  status: string,
+  message: string,
+  user: UserInfo,
+}
+
 
 export interface GetRestOfUsersResponse {
   status: string,

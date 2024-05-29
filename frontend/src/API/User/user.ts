@@ -4,7 +4,9 @@ import END_POINTS from "../../Constants/endpoints";
 
 import {
   FriendRequestSentResponse,
+  GetProfileResponse,
   GetRestOfUsersResponse,
+  UserInfo,
 } from "../../Types/userProfile";
 
 // Utility function for handling Axios errors
@@ -38,6 +40,23 @@ export const getAllUsers = async (
     );
     console.log(response.data);
     return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getUserProfile = async (
+  username: string
+): Promise<UserInfo> => {
+  try {
+    console.log(username, "from  acc");
+
+    const response = await axiosUserInstance.get<UserInfo>(
+      `${END_POINTS.GET_USER_PROFILE.replace(":username", username)}`
+    );
+    console.log(response.data?.user);
+    return response.data?.user;
   } catch (error) {
     handleAxiosError(error);
     throw error;

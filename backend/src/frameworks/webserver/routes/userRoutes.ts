@@ -17,6 +17,7 @@ const userRouter = () => {
   );
 
   router.get("/getallusers/:id" , controller.getAllUsers);
+  router.get("/getuserprofile/:username" , controller.getuserprofile);
   router.post("/followuser" , controller.followUserRequest);
   router.post("/unfollowuser" , controller.unfollowUserRequest);
   router.post("/cancelrequest" , controller.cancelfollowUserRequest);

@@ -7,18 +7,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
-
+import ProfilePageIndividualComponent from "../Components/ProfilePage/ProfilePageIndividualComponent";
 import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
-
-import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
-import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import FriendsMiddlePage from "../Components/Friends/FriendsMiddlePage";
 
-function FriendsPage() {
+const ProfilePageIndividual: React.FC = () => {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [isDarkMode, setDarkMode] = useState(true);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   const toggleDarkMode = () => {
     setDarkMode(!isDarkMode);
@@ -42,8 +39,6 @@ function FriendsPage() {
     }
   };
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -58,12 +53,8 @@ function FriendsPage() {
   return (
     <>
       <ToastContainer />
-
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
         <Header toggleLeftSidebar={toggleLeftSidebar} />
-
-        {/* <SmallViewRightSidebar isDarkMode={isDarkMode} /> */}
-
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}
@@ -71,15 +62,12 @@ function FriendsPage() {
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
           />
-
-          <FriendsMiddlePage />
-
-          {/* <RightSidebar /> */}
+          <ProfilePageIndividualComponent />
         </div>
         <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
       </div>
     </>
   );
-}
+};
 
-export default FriendsPage;
+export default ProfilePageIndividual;
