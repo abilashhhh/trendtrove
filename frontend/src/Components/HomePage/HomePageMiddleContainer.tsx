@@ -104,12 +104,12 @@ const MiddleContainer: React.FC = () => {
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-white">
       <ToastContainer />
 
-      <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
+      <div className=" rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
         {posts.length > 0 ? (
           posts.map(post => (
             <div
               key={post._id}
-              className="p-2 m-2 border rounded-lg bg-white dark:bg-gray-800">
+              className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2 cursor-pointer ">
                   <img
@@ -147,7 +147,7 @@ const MiddleContainer: React.FC = () => {
                         View Profile
                       </p>
                       <p
-                        onClick={() => navigate(`/reportpost/${post._id}`)}
+                        onClick={() => navigate(`/reportPost/${post._id}`)}
                         className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Report Post
                       </p>

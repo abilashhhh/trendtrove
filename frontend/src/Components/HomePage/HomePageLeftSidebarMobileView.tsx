@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 const BottomNavBar = ({ toggleDarkMode, isDarkMode }) => {
   const navigate = useNavigate();
-  const navHeight = 60; // Set this to the height of your nav bar in pixels
+  const navHeight = 45; // Set this to the height of your nav bar in pixels
 
   return (
     <>
       <div className="block md:hidden" style={{ height: navHeight }} />
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-gray-800 dark:bg-gray-700 shadow-lg p-2 flex justify-between md:hidden"
+        className="fixed bottom-0 left-0 right-0 bg-gray-800 dark:bg-gray-900  shadow-lg  flex justify-between md:hidden"
         style={{ height: navHeight }}
       >
         <button onClick={() => navigate("/home")} className="text-white p-2 flex flex-col items-center">

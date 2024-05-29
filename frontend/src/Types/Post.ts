@@ -42,3 +42,16 @@ export interface GetAllPostsForUser {
   postData :Post
 }
 
+
+export interface ReportPostResponse {
+  status: string;
+  message: string;
+}
+
+ 
+export interface ReportPostData {
+  reason: string;
+  comments: string;
+  reporterId: string;
+  reporterUsername: string;
+}
