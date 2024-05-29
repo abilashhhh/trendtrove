@@ -9,8 +9,13 @@ import { StoreType } from "../../Redux/Store/reduxStore";
 import { getAllPostsForUser as fetchAllPostsForUser } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import { AiOutlineLike, AiOutlineDislike, AiOutlineComment, AiFillLike, AiFillDislike } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 const MiddleContainer: React.FC = () => {
+
+  const navigate = useNavigate()
+
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [posts, setPosts] = useState<any[]>([]);
   const [showOptions, setShowOptions] = useState<string | null>(null);
@@ -53,10 +58,7 @@ const MiddleContainer: React.FC = () => {
     }
   };
 
-  const redirectToUserProfile = () => {
-    console.log("Redirect to user profile . full page profile")
-  }
-
+ 
   const handleDislike = (postId: string) => {
     setDislikedPosts(prev => ({
       ...prev,
@@ -95,15 +97,16 @@ const MiddleContainer: React.FC = () => {
           posts.map(post => (
             <div key={post._id} className="p-2 m-2 border rounded-lg bg-white dark:bg-gray-800">
               <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2 cursor-pointer " onClick={redirectToUserProfile}>
+                <div className="flex items-center gap-2 cursor-pointer " >
                   <img
                     src={post.dp}
                     alt=""
-                    className="rounded-full m-2 h-10 w-10"
+                    className="rounded-full h-10 w-10"
+                    onClick={ () => navigate(`/profiles/${post.username}`)}
                   />
                   <div>
-                    <p className="font-bold">{post.username}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 font-extralight">{post.location}</p>
+                    <p className="font-bold" onClick={ () => navigate(`/profiles/${post.username}`)}>{post.username}</p>
+                    <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight"> < FaMapMarkedAlt/> {post.location}</p>
                     <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
                       {new Date(post.createdAt).toLocaleString()}
                     </p>
@@ -118,8 +121,8 @@ const MiddleContainer: React.FC = () => {
                   </button>
                   {showOptions === post._id && (
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800  text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                      <a href="#" className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">View Profile</a>
-                      <a href="#" className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Report Post</a>
+                      <p onClick={ () => navigate(`/profiles/${post.username}`)} className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">View Profile</p>
+                      <p onClick={ () => navigate(`/reportpost/${post._id}`)} className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Report Post</p>
                       <a href="#" className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Save Post</a>
                     </div>
                   )}

@@ -17,6 +17,7 @@ import {
   rejectFollowRequests,
 } from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface UserInfo {
   coverPhoto: string;
@@ -53,6 +54,9 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   userDetails,
   currentUser,
 }) => {
+
+  const navigate = useNavigate()
+
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [hasRequested, setHasRequested] = useState<boolean>(false);
   const [hasPendingRequest, setHasPendingRequest] = useState<boolean>(false);
@@ -380,6 +384,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           )}
         </div>
       </div>
+
+      <button type="button" onClick={()=> navigate(`/profiles/${userDetails.username}`)} className="bg-blue-500 hover:bg-blue-700 ml-5 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" >View Full Profile</button>
 
       <Modal
         isOpen={showFollowersModal}
