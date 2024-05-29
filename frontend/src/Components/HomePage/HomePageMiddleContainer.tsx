@@ -12,15 +12,12 @@ const MiddleContainer: React.FC = () => {
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [posts, setPosts] = useState<any[]>([]);
 
-  console.log("Current user:", currentUser);
-
   const fetchUserPosts = async (id: string | undefined) => {
     try {
       if (id) {
         const response = await fetchAllPostsForUser(id);
         if (response && response.data) {
           setPosts(response.data);
-          console.log("Got posts of users: ", response.data);
         } else {
           console.log("No posts of users");
         }
@@ -54,35 +51,48 @@ const MiddleContainer: React.FC = () => {
         {posts.length > 0 ? (
           posts.map((post) => (
             <div key={post._id} className="p-2 m-2 border rounded-lg">
+              <p>{post.captions}</p>
               {post.images.length > 0 && post.videos.length > 0 ? (
-                <>
-                  <p>{post.captions}</p>
+                <Slider {...settings}>
+                  {post.images.map((image: string, index: number) => (
+                    <div key={index}>
+                      <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
+                    </div>
+                  ))}
+                  {post.videos.map((video: string, index: number) => (
+                    <div key={index}>
+                      <video src={video} controls autoPlay muted className="w-full h-auto" />
+                    </div>
+                  ))}
+                </Slider>
+              ) : post.images.length > 0 ? (
+                post.images.length === 1 ? (
+                  <img src={post.images[0]} alt={`Post image`} className="w-full h-auto" />
+                ) : (
                   <Slider {...settings}>
                     {post.images.map((image: string, index: number) => (
                       <div key={index}>
                         <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
                       </div>
                     ))}
+                  </Slider>
+                )
+              ) : post.videos.length > 0 ? (
+                post.videos.length === 1 ? (
+                  <video src={post.videos[0]} controls autoPlay muted className="w-full h-auto" />
+                ) : (
+                  <Slider {...settings}>
                     {post.videos.map((video: string, index: number) => (
                       <div key={index}>
                         <video src={video} controls autoPlay muted className="w-full h-auto" />
                       </div>
                     ))}
                   </Slider>
-                  <p>{new Date(post.createdAt).toLocaleString()}</p>
-                </>
+                )
               ) : (
-                <>
-                  <p>{post.captions}</p>
-                  {post.images.length === 1 && (
-                    <img src={post.images[0]} alt={`Post image`} className="w-full h-auto" />
-                  )}
-                  {post.videos.length === 1 && (
-                    <video src={post.videos[0]} controls autoPlay muted className="w-full h-auto" />
-                  )}
-                  <p>{new Date(post.createdAt).toLocaleString()}</p>
-                </>
+                <p>No media available</p>
               )}
+              <p>{new Date(post.createdAt).toLocaleString()}</p>
             </div>
           ))
         ) : (
