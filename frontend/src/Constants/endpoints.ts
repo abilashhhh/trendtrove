@@ -32,7 +32,7 @@ const END_POINTS = {
   
   ADD_POST :'api/post/addpost',
   GET_POSTS_FOR_USER:'api/post/getpostforuser',
-  REPORT_POST : '/api/post/reportpost/:postid',
+  REPORT_POST : '/api/post/reportpost',
 
   // ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',

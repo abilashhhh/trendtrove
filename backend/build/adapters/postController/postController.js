@@ -53,9 +53,30 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const reportPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const data = req.body;
+            console.log("reportPost data received from frontend:", data);
+            const reportPost = yield (0, postAuthApplications_1.handleReportPosts)(data, dbPostRepository);
+            console.log('reportPost:', reportPost);
+            res.status(201).json({
+                status: "success",
+                message: "Posts reported successfully",
+                data: reportPost,
+            });
+        }
+        catch (error) {
+            console.error("Error reporting posts for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to report posts",
+            });
+        }
+    });
     return {
         addPost,
         getpostforuser,
+        reportPost
     };
 };
 exports.default = postController;

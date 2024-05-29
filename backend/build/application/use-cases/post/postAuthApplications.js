@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -58,3 +58,22 @@ const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0
     }
 });
 exports.handleGetPostsForUser = handleGetPostsForUser;
+const handleReportPosts = (data, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleReportPosts reached");
+        if (!data.postId) {
+            throw new ErrorInApplication_1.default("Post ID is required to report post", 400);
+        }
+        const reportPostsForUser = yield dbPostRepository.reportPostsForUser(data);
+        console.log("All posts from reportPostsForUser :", reportPostsForUser);
+        return reportPostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleGetPostsForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all posts", 500);
+    }
+});
+exports.handleReportPosts = handleReportPosts;

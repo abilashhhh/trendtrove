@@ -22,6 +22,7 @@ const postRouter = () => {
 
   router.post("/addpost", authMiddleware, controller.addPost);
   router.get("/getpostforuser/:id", authMiddleware, controller.getpostforuser);
+  router.post("/reportpost", authMiddleware, controller.reportPost);
 
   return router;
 };

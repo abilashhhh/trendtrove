@@ -17,6 +17,7 @@ const postRouter = () => {
     const controller = (0, postController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, PostDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.post("/addpost", authMiddleware_1.default, controller.addPost);
     router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
+    router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
     return router;
 };
 exports.default = postRouter;

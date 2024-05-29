@@ -11,10 +11,14 @@ export const postDBRepository = (
   const getAllPostsForUser = async (id: string) => 
   await repository.getAllPostsForUser(id);
   
+  const reportPostsForUser = async (id: string) => 
+  await repository.reportPostsForUser(id);
+  
 
   return {
     addNewPost,
     getAllPostsForUser,
+    reportPostsForUser
   };
 };
 

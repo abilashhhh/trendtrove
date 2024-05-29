@@ -1,6 +1,7 @@
-import { PostDataInterface } from "../../../../types/postsInterface";
+import { PostDataInterface, ReportPost } from "../../../../types/postsInterface";
 
 import Post from "../models/postModel";
+import ReportPostModel from "../models/reportPostModel";
 import User from "../models/userModel";
 
 //////////////////////////////////////////////////////////
@@ -53,11 +54,25 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+
+  const reportPostsForUser = async (data:  ReportPost) => {
+    try {
+      const newPeport = new ReportPostModel(data);
+      return await newPeport.save();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error reporting new post!");
+    }
+  }
+
+
+
   ////////////////////////////////////////////////
 
   return {
     addNewPost,
     getAllPostsForUser,
+    reportPostsForUser
   };
 };
 //////////////////////////////////////////////////////////

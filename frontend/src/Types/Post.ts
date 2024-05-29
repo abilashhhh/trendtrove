@@ -50,6 +50,7 @@ export interface ReportPostResponse {
 
  
 export interface ReportPostData {
+  postId: string,
   reason: string;
   comments: string;
   reporterId: string;

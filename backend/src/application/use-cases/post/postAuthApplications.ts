@@ -1,4 +1,4 @@
-import { PostDataInterface } from "../../../types/postsInterface";
+import { PostDataInterface, ReportPost } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/PostDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
@@ -38,6 +38,7 @@ export const handleCreatePost = async (
   }
 };
 
+
 export const handleGetPostsForUser = async (
   id: string,
   dbPostRepository: ReturnType<PostDBInterface>
@@ -50,6 +51,28 @@ export const handleGetPostsForUser = async (
     const allPostsForUser  = await dbPostRepository.getAllPostsForUser(id);
     console.log("All posts from handleGetPostsForuser :", allPostsForUser);
     return allPostsForUser;
+  } catch (error) {
+    console.log("Error in handleGetPostsForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all posts", 500);
+  }
+};
+
+
+export const handleReportPosts = async (
+  data : ReportPost,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleReportPosts reached");
+    if (!data.postId) {
+      throw new ErrorInApplication("Post ID is required to report post", 400);
+    }
+    const reportPostsForUser  = await dbPostRepository.reportPostsForUser(data);
+    console.log("All posts from reportPostsForUser :", reportPostsForUser);
+    return reportPostsForUser;
   } catch (error) {
     console.log("Error in handleGetPostsForUser");
     if (error instanceof ErrorInApplication) {

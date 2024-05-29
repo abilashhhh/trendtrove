@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postRepositoryMongoDB = void 0;
 const postModel_1 = __importDefault(require("../models/postModel"));
+const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
@@ -56,10 +57,21 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error getting all posts for user!");
         }
     });
+    const reportPostsForUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const newPeport = new reportPostModel_1.default(data);
+            return yield newPeport.save();
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error reporting new post!");
+        }
+    });
     ////////////////////////////////////////////////
     return {
         addNewPost,
         getAllPostsForUser,
+        reportPostsForUser
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

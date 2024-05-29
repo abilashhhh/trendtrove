@@ -58,14 +58,12 @@ export const getAllPostsForUser = async (
 
 
 export const reportPost = async (
-  postId: string,
   data: ReportPostData
 ): Promise<ReportPostResponse> => {
   try {
-    console.log("Report post api, postId: ", postId)
     console.log("Report post api, data: ",data)
     const response = await axiosUserInstance.post<ReportPostResponse>(
-      `${END_POINTS.REPORT_POST}/${postId}`,
+      `${END_POINTS.REPORT_POST}`,
       data
     );
     console.log("response: ", response.data);

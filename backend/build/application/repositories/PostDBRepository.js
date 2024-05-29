@@ -15,9 +15,11 @@ const postDBRepository = (repository) => {
         yield repository.addNewPost(postData);
     });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUser(id); });
+    const reportPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(id); });
     return {
         addNewPost,
         getAllPostsForUser,
+        reportPostsForUser
     };
 };
 exports.postDBRepository = postDBRepository;

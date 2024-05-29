@@ -18,3 +18,12 @@ export interface PostDataInterface {
   createdAt: Date;
   updatedAt: Date;
 }
+
+
+export interface ReportPost {
+  postId: string,
+  reason: string;
+  comments: string;
+  reporterId: string;
+  reporterUsername: string;
+}

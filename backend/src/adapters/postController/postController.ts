@@ -3,8 +3,8 @@ import { AuthService } from "../../frameworks/services/authenticationService";
 import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-import { PostDataInterface } from "../../types/postsInterface";
-import { handleCreatePost, handleGetPostsForUser } from "../../application/use-cases/post/postAuthApplications";
+import { PostDataInterface, ReportPost } from "../../types/postsInterface";
+import { handleCreatePost, handleGetPostsForUser, handleReportPosts } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -67,9 +67,32 @@ const postController = (
     }
   };
 
+  const reportPost = async (req: Request, res: Response) => {
+    try {
+      const data : ReportPost  = req.body;
+      console.log("reportPost data received from frontend:", data);
+      
+      const reportPost  = await handleReportPosts(data,dbPostRepository);
+      console.log('reportPost:', reportPost);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts reported successfully",
+        data: reportPost,
+      });
+    } catch (error) {
+      console.error("Error reporting posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to report posts",
+      });
+    }
+  };
+
   return {
     addPost,
     getpostforuser,
+    reportPost
   };
 };
 

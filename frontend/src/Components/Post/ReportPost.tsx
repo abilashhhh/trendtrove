@@ -61,7 +61,8 @@ const ReportPost: React.FC = () => {
       return;
     }
     try {
-      const response = await reportPost(postId, {
+      const response = await reportPost( {
+        postId,
         reason: reportReason,
         comments: additionalComments,
         reporterId: currentUser._id,
@@ -69,7 +70,9 @@ const ReportPost: React.FC = () => {
       });
       if (response && response.data) {
         toast.success("Report submitted successfully.");
+       setTimeout(() => {
         navigate("/home");
+       },1500)
       }
     } catch (error) {
       console.error("Error reporting post:", error);
