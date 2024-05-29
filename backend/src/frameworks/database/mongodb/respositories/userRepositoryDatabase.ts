@@ -481,34 +481,44 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
-    const getAllPostsForUser = async (id: string) => {
-      try {
-        const requesterUser = await User.findById(id);
-        if (!requesterUser) {
-          throw new Error("User not found");
-        }
-
-        const followingOfRequestedUser = await User.findById(id, { following: 1 }).exec();
-        // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
-        if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
-          throw new Error("User not following anyone");
-        }
-
-        const followingUsersId = followingOfRequestedUser.following.map(follow => follow.userId)
-        // console.log("followingUsersId Id s : ", followingUsersId)
-
-        const userIdsToFetch = [...followingUsersId, id];
-        console.log("User ids to fetch posts for:", userIdsToFetch);
-    
-        const gettingPosts = await Post.find({ userId: { $in: userIdsToFetch } }).exec();
-        console.log("Getting posts:", gettingPosts);
-    
-
-      } catch (error) {
-        console.log(error);
-        throw new Error("Error getting all posts for user!");
+  const getAllPostsForUser = async (id: string) => {
+    try {
+      const requesterUser = await User.findById(id);
+      if (!requesterUser) {
+        throw new Error("User not found");
       }
-    };
+
+      const followingOfRequestedUser = await User.findById(id, {
+        following: 1,
+      }).exec();
+      // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
+      if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
+        throw new Error("User not following anyone");
+      }
+
+      const followingUsersId = followingOfRequestedUser.following.map(
+        follow => follow.userId
+      );
+      // console.log("followingUsersId Id s : ", followingUsersId)
+
+      const userIdsToFetch = [...followingUsersId, id];
+      console.log("User ids to fetch posts for:", userIdsToFetch);
+
+      const gettingPosts = await Post.find({
+        userId: { $in: userIdsToFetch },
+      }).exec();
+      console.log("Getting posts:", gettingPosts);
+     
+       return gettingPosts;
+     
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting all posts for user!");
+    }
+  };
+
+ 
+  
 
   ////////////////////////////////////////////////
 

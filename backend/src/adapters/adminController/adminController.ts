@@ -11,7 +11,7 @@ import {
   userRepositoryMongoDB,
 } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 
-import { handleAdminSignin, handleBlockAccount, handleGetAllUsersForAdmin, handleLogoutAdmin, handleUnBlockAccount } from "../../application/use-cases/admin/adminAuthApplication";
+import {  handleBlockAccount, handleGetAllUsersForAdmin, handleLogoutAdmin, handleUnBlockAccount } from "../../application/use-cases/admin/adminAuthApplication";
 
 const adminController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,

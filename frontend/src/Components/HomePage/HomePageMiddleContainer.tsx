@@ -14,7 +14,7 @@ const MiddleContainer: React.FC = () => {
       if (id) {
         const allPostsForUser = await fetchAllPostsForUser(id);
         if (allPostsForUser !== null) {
-          console.log("Got posts of users");
+          console.log("Got posts of users: ", allPostsForUser);
         } else {
           console.log("No posts of users");
         }

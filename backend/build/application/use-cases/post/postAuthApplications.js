@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
-const handleCreatePost = (postData, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Post data in handleCreatePost:", postData);
         if (!postData.userId) {
@@ -25,7 +25,7 @@ const handleCreatePost = (postData, dbUserRepository) => __awaiter(void 0, void 
             throw new ErrorInApplication_1.default("User not found", 404);
         }
         console.log("User exists....");
-        const newPost = yield dbUserRepository.addNewPost(postData);
+        const newPost = yield dbPostRepository.addNewPost(postData);
         console.log("New post data:", newPost);
         return newPost;
     }
@@ -38,13 +38,13 @@ const handleCreatePost = (postData, dbUserRepository) => __awaiter(void 0, void 
     }
 });
 exports.handleCreatePost = handleCreatePost;
-const handleGetPostsForUser = (id, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("handleGetPostsForUser reached");
         if (!id) {
             throw new ErrorInApplication_1.default("User ID is required to get all posts", 400);
         }
-        const allPostsForUser = yield dbUserRepository.getAllPostsForUser(id);
+        const allPostsForUser = yield dbPostRepository.getAllPostsForUser(id);
         console.log("All posts from handleGetPostsForuser :", allPostsForUser);
         return allPostsForUser;
     }
@@ -54,6 +54,7 @@ const handleGetPostsForUser = (id, dbUserRepository) => __awaiter(void 0, void 0
             throw error;
         }
         throw new ErrorInApplication_1.default("Failed to get all posts", 500);
+        return;
     }
 });
 exports.handleGetPostsForUser = handleGetPostsForUser;

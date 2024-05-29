@@ -48,6 +48,7 @@ export const getAllPostsForUser = async (
     const response = await axiosUserInstance.get<GetAllPostsForUser>(
       `${END_POINTS.GET_POSTS_FOR_USER}/${id}`
     );
+    console.log("respose: ",response)
     return response.data;
   } catch (error) {
     handleAxiosError(error);

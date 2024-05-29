@@ -79,7 +79,7 @@ export const userDBRepository = (
   const addNewPost = async( postData :PostDataInterface) => {
     await repository.addNewPost(postData)
   } 
-
+  
   const getAllPostsForUser = async( id: string) => {
     await repository.getAllPostsForUser(id)
   } 

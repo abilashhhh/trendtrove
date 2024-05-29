@@ -377,7 +377,9 @@ const userRepositoryMongoDB = () => {
             if (!requesterUser) {
                 throw new Error("User not found");
             }
-            const followingOfRequestedUser = yield userModel_1.default.findById(id, { following: 1 }).exec();
+            const followingOfRequestedUser = yield userModel_1.default.findById(id, {
+                following: 1,
+            }).exec();
             // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
             if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
                 throw new Error("User not following anyone");
@@ -386,8 +388,11 @@ const userRepositoryMongoDB = () => {
             // console.log("followingUsersId Id s : ", followingUsersId)
             const userIdsToFetch = [...followingUsersId, id];
             console.log("User ids to fetch posts for:", userIdsToFetch);
-            const gettingPosts = yield postModel_1.default.find({ userId: { $in: userIdsToFetch } }).exec();
+            const gettingPosts = yield postModel_1.default.find({
+                userId: { $in: userIdsToFetch },
+            }).exec();
             console.log("Getting posts:", gettingPosts);
+            return gettingPosts;
         }
         catch (error) {
             console.log(error);

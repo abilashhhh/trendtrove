@@ -10,14 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const postAuthApplications_1 = require("../../application/use-cases/post/postAuthApplications");
-const postController = (userDBRepositoryImplementation, userDBRepositoryInterface, authServiceImplementation, authenticationServiceInterface) => {
+const postController = (userDBRepositoryImplementation, userDBRepositoryInterface, postDBRepositoryImplementation, postDBRepositoryInterface, authServiceImplementation, authenticationServiceInterface) => {
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
+    const dbPostRepository = postDBRepositoryInterface(postDBRepositoryImplementation());
     const authService = authenticationServiceInterface(authServiceImplementation());
     const addPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const postData = req.body;
             console.log(postData);
-            const createPost = yield (0, postAuthApplications_1.handleCreatePost)(postData, dbUserRepository);
+            const createPost = yield (0, postAuthApplications_1.handleCreatePost)(postData, dbPostRepository, dbUserRepository);
             res.status(201).json({
                 status: "success",
                 message: "post created successfully",
@@ -35,8 +36,9 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
     const getpostforuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { id } = req.params;
-            console.log("Id received from frontend : ", id);
-            const getPosts = yield (0, postAuthApplications_1.handleGetPostsForUser)(id, dbUserRepository);
+            console.log("Id received from frontend:", id);
+            const getPosts = yield (0, postAuthApplications_1.handleGetPostsForUser)(id, dbPostRepository);
+            console.log('getPosts:', getPosts);
             res.status(201).json({
                 status: "success",
                 message: "Posts fetched for user",
@@ -44,7 +46,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
         catch (error) {
-            console.error("Error getting all post for user:", error);
+            console.error("Error getting all posts for user:", error);
             res.status(401).json({
                 status: "error",
                 message: "Failed to get all posts",

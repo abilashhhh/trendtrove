@@ -5,6 +5,8 @@ import { authService } from "../../services/authenticationService";
 import { userDBRepository } from "../../../application/repositories/userDBRepository";
 import { userRepositoryMongoDB } from "../../database/mongodb/respositories/userRepositoryDatabase";
 import postController from "../../../adapters/postController/postController";
+import { postRepositoryMongoDB } from "../../database/mongodb/respositories/postRepositoryDatabase";
+import { postDBRepository } from "../../../application/repositories/PostDBRepository";
 
 const postRouter = () => {
   const router = express();
@@ -12,6 +14,8 @@ const postRouter = () => {
   const controller = postController(
     userRepositoryMongoDB,
     userDBRepository,
+    postRepositoryMongoDB,
+    postDBRepository,
     authService,
     authServiceInterface
   );
