@@ -18,8 +18,15 @@ export const handleCreatePost = async (
     if (!userData) {
       throw new ErrorInApplication("User not found", 404);
     }
+
+    const newPostData = {
+      ...postData,
+      username: userData?.username,
+      dp: userData?.dp,
+    };
+
     console.log("User exists....");
-    const newPost = await dbPostRepository.addNewPost(postData);
+    const newPost = await dbPostRepository.addNewPost(newPostData);
     console.log("New post data:", newPost);
     return newPost;
   } catch (error) {

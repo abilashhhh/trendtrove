@@ -49,50 +49,97 @@ const MiddleContainer: React.FC = () => {
 
       <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post._id} className="p-2 m-2 border rounded-lg">
-              <p>{post.captions}</p>
-              {post.images.length > 0 && post.videos.length > 0 ? (
-                <Slider {...settings}>
-                  {post.images.map((image: string, index: number) => (
-                    <div key={index}>
-                      <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
-                    </div>
-                  ))}
-                  {post.videos.map((video: string, index: number) => (
-                    <div key={index}>
-                      <video src={video} controls autoPlay muted className="w-full h-auto" />
-                    </div>
-                  ))}
-                </Slider>
-              ) : post.images.length > 0 ? (
-                post.images.length === 1 ? (
-                  <img src={post.images[0]} alt={`Post image`} className="w-full h-auto" />
-                ) : (
+          posts.map(post => (
+            <div>
+              <div key={post._id} className="p-2 m-2 border rounded-lg">
+                <div className="flex gap-2 mb-2 items-center bg-slate-200 dark:bg-slate-700 rounded-lg">
+                  <img
+                    src={post.dp}
+                    alt=""
+                    className="rounded-full m-2 h-10 w-10"
+                  />
+                  <div>
+                    <p className="font-bold">{post.username}</p>
+                    <p className="text-xs">{post.location} adsad</p>
+                    <p className="text-xs">
+                      {new Date(post.createdAt).toLocaleString()}
+                    </p>
+            
+                  </div>
+                </div>
+
+                {post.images.length > 0 && post.videos.length > 0 ? (
                   <Slider {...settings}>
                     {post.images.map((image: string, index: number) => (
                       <div key={index}>
-                        <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
+                        <img
+                          src={image}
+                          alt={`Post image ${index}`}
+                          className="w-full h-auto"
+                        />
                       </div>
                     ))}
-                  </Slider>
-                )
-              ) : post.videos.length > 0 ? (
-                post.videos.length === 1 ? (
-                  <video src={post.videos[0]} controls autoPlay muted className="w-full h-auto" />
-                ) : (
-                  <Slider {...settings}>
                     {post.videos.map((video: string, index: number) => (
                       <div key={index}>
-                        <video src={video} controls autoPlay muted className="w-full h-auto" />
+                        <video
+                          src={video}
+                          controls
+                          autoPlay
+                          muted
+                          className="w-full h-auto"
+                        />
                       </div>
                     ))}
                   </Slider>
-                )
-              ) : (
-                <p>No media available</p>
-              )}
-              <p>{new Date(post.createdAt).toLocaleString()}</p>
+                ) : post.images.length > 0 ? (
+                  post.images.length === 1 ? (
+                    <img
+                      src={post.images[0]}
+                      alt={`Post image`}
+                      className="w-full h-auto"
+                    />
+                  ) : (
+                    <Slider {...settings}>
+                      {post.images.map((image: string, index: number) => (
+                        <div key={index}>
+                          <img
+                            src={image}
+                            alt={`Post image ${index}`}
+                            className="w-full h-auto"
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  )
+                ) : post.videos.length > 0 ? (
+                  post.videos.length === 1 ? (
+                    <video
+                      src={post.videos[0]}
+                      controls
+                      autoPlay
+                      muted
+                      className="w-full h-auto"
+                    />
+                  ) : (
+                    <Slider {...settings}>
+                      {post.videos.map((video: string, index: number) => (
+                        <div key={index}>
+                          <video
+                            src={video}
+                            controls
+                            autoPlay
+                            muted
+                            className="w-full h-auto"
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  )
+                ) : (
+                  <p></p>
+                )}
+                <p>{post.captions}</p>
+              </div>
             </div>
           ))
         ) : (

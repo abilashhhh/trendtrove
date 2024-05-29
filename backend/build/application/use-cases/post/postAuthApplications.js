@@ -24,8 +24,9 @@ const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awa
         if (!userData) {
             throw new ErrorInApplication_1.default("User not found", 404);
         }
+        const newPostData = Object.assign(Object.assign({}, postData), { username: userData === null || userData === void 0 ? void 0 : userData.username, dp: userData === null || userData === void 0 ? void 0 : userData.dp });
         console.log("User exists....");
-        const newPost = yield dbPostRepository.addNewPost(postData);
+        const newPost = yield dbPostRepository.addNewPost(newPostData);
         console.log("New post data:", newPost);
         return newPost;
     }
