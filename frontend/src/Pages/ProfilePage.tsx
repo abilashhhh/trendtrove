@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 import ProfileMainCenterComponent from "../Components/ProfilePage/ProfileMainCenterComponent";
-import HomePageRightSidebar from "../Components/HomePage/HomePageRightSidebar";
+// import HomePageRightSidebar from "../Components/HomePage/HomePageRightSidebar";
 // import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../Components/LoadingSpinner";
@@ -130,7 +130,7 @@ function ProfilePage() {
             handleLogout={handleLogout}
           />
           <ProfileMainCenterComponent userDetails={userDetails} />
-          <HomePageRightSidebar />
+          {/* <HomePageRightSidebar /> */}
         </div>
         <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
 

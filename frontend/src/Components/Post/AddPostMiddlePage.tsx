@@ -199,28 +199,35 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     const validMentions = mentionStatuses
       .filter((mention) => mention.available === false)
       .map((mention) => mention.username);
-      console.log("valid mentions : ", validMentions)
   
-    const dataToSubmit = { ...postData, mentions: validMentions };
+    const dataToSubmit = {
+      ...postData,
+      mentions: validMentions,
+    };
   
-    console.log("Post data: ", dataToSubmit);
-    try {
-      const response = await uploadPost(dataToSubmit);
-  
-      if (response.status === "success") {
-        toast.success("Post created successfully");
-        setTimeout(() => {
-          navigate('/home');
-        }, 1500);
-      } else {
+    if (
+      postData.images.length > 0 ||
+      postData.videos.length > 0 ||
+      postData.captions.trim() !== ""
+    ) {
+      try {
+        const response = await uploadPost(dataToSubmit);
+        if (response.status === "success") {
+          toast.success("Post created successfully");
+          setTimeout(() => {
+            navigate("/home");
+          }, 1500);
+        } else {
+          toast.error("Failed to create post");
+        }
+      } catch (error) {
         toast.error("Failed to create post");
+        console.log("Error creating post: ", error);
       }
-    } catch (error) {
-      toast.error("Failed to create post");
-      console.log("Error creating post: ", error);
+    } else {
+      toast.error("Please add at least one image, video, or caption.");
     }
   };
-  
 
   return (
     <main className="flex-1 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
