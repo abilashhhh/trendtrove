@@ -80,6 +80,10 @@ export const userDBRepository = (
     await repository.addNewPost(postData)
   } 
 
+  const getAllPostsForUser = async( id: string) => {
+    await repository.getAllPostsForUser(id)
+  } 
+
 
  
   return {
@@ -106,6 +110,8 @@ export const userDBRepository = (
     acceptFriendRequest,
     rejectFriendRequest,
     addNewPost,
+    getAllPostsForUser,
+
   };
 };
 

@@ -371,6 +371,29 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error adding new post!");
         }
     });
+    const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const requesterUser = yield userModel_1.default.findById(id);
+            if (!requesterUser) {
+                throw new Error("User not found");
+            }
+            const followingOfRequestedUser = yield userModel_1.default.findById(id, { following: 1 }).exec();
+            // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
+            if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
+                throw new Error("User not following anyone");
+            }
+            const followingUsersId = followingOfRequestedUser.following.map(follow => follow.userId);
+            // console.log("followingUsersId Id s : ", followingUsersId)
+            const userIdsToFetch = [...followingUsersId, id];
+            console.log("User ids to fetch posts for:", userIdsToFetch);
+            const gettingPosts = yield postModel_1.default.find({ userId: { $in: userIdsToFetch } }).exec();
+            console.log("Getting posts:", gettingPosts);
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error getting all posts for user!");
+        }
+    });
     ////////////////////////////////////////////////
     return {
         addUser,
@@ -395,7 +418,8 @@ const userRepositoryMongoDB = () => {
         cancelSendFriendRequest,
         acceptFriendRequest,
         rejectFriendRequest,
-        addNewPost
+        addNewPost,
+        getAllPostsForUser,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

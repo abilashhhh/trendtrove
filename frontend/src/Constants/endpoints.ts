@@ -30,6 +30,7 @@ const END_POINTS = {
   REJECT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/rejectrequest',
   
   ADD_POST :'api/post/addpost',
+  GET_POSTS_FOR_USER:'api/post/getpostforuser',
 
 
   // ADMIN_LOGIN: 'api/admin/signin',

@@ -1,7 +1,7 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { Post, PostResponse } from "../../Types/Post";
+import { GetAllPostsForUser, Post, PostResponse } from "../../Types/Post";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -23,7 +23,9 @@ const handleAxiosError = (error: any) => {
   }
 };
 
-export const uploadPost = async (payload: Partial<Post>): Promise<PostResponse> => {
+export const uploadPost = async (
+  payload: Partial<Post>
+): Promise<PostResponse> => {
   try {
     console.log("Upload post function, payload: ", payload);
     const response = await axiosUserInstance.post<PostResponse>(
@@ -31,6 +33,21 @@ export const uploadPost = async (payload: Partial<Post>): Promise<PostResponse> 
       payload
     );
     console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const getAllPostsForUser = async (
+  id: string
+): Promise<GetAllPostsForUser> => {
+  try {
+    const response = await axiosUserInstance.get<GetAllPostsForUser>(
+      `${END_POINTS.GET_POSTS_FOR_USER}/${id}`
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);

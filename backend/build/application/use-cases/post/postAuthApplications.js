@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleCreatePost = void 0;
+exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -38,3 +38,22 @@ const handleCreatePost = (postData, dbUserRepository) => __awaiter(void 0, void 
     }
 });
 exports.handleCreatePost = handleCreatePost;
+const handleGetPostsForUser = (id, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetPostsForUser reached");
+        if (!id) {
+            throw new ErrorInApplication_1.default("User ID is required to get all posts", 400);
+        }
+        const allPostsForUser = yield dbUserRepository.getAllPostsForUser(id);
+        console.log("All posts from handleGetPostsForuser :", allPostsForUser);
+        return allPostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleGetPostsForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all posts", 500);
+    }
+});
+exports.handleGetPostsForUser = handleGetPostsForUser;

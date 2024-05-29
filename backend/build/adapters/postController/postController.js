@@ -32,8 +32,28 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const getpostforuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            console.log("Id received from frontend : ", id);
+            const getPosts = yield (0, postAuthApplications_1.handleGetPostsForUser)(id, dbUserRepository);
+            res.status(201).json({
+                status: "success",
+                message: "Posts fetched for user",
+                data: getPosts,
+            });
+        }
+        catch (error) {
+            console.error("Error getting all post for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to get all posts",
+            });
+        }
+    });
     return {
         addPost,
+        getpostforuser,
     };
 };
 exports.default = postController;

@@ -38,6 +38,9 @@ const userDBRepository = (repository) => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewPost(postData);
     });
+    const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.getAllPostsForUser(id);
+    });
     return {
         addUser,
         getUserByEmail,
@@ -62,6 +65,7 @@ const userDBRepository = (repository) => {
         acceptFriendRequest,
         rejectFriendRequest,
         addNewPost,
+        getAllPostsForUser,
     };
 };
 exports.userDBRepository = userDBRepository;

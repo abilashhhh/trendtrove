@@ -14,6 +14,7 @@ const postRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, postController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.post("/addpost", authMiddleware_1.default, controller.addPost);
+    router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
     return router;
 };
 exports.default = postRouter;

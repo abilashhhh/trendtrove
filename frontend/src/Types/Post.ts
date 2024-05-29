@@ -34,3 +34,11 @@ export interface PostResponse {
   status: string;
   message: string;
 }
+
+
+export interface GetAllPostsForUser {
+  status: string;
+  message: string;
+  postData :Post
+}
+
