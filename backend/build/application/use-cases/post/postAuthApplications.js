@@ -54,7 +54,6 @@ const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0
             throw error;
         }
         throw new ErrorInApplication_1.default("Failed to get all posts", 500);
-        return;
     }
 });
 exports.handleGetPostsForUser = handleGetPostsForUser;

@@ -8,9 +8,9 @@ export const postDBRepository = (
     await repository.addNewPost(postData);
   };
 
-  const getAllPostsForUser = async (id: string) => {
-    await repository.getAllPostsForUser(id);
-  };
+  const getAllPostsForUser = async (id: string) => 
+  await repository.getAllPostsForUser(id);
+  
 
   return {
     addNewPost,

@@ -1,6 +1,6 @@
 import { PostDataInterface } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
-import { PostDBInterface } from "../../repositories/postDBRepository";
+import { PostDBInterface } from "../../repositories/PostDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 
 export const handleCreatePost = async (
@@ -49,6 +49,5 @@ export const handleGetPostsForUser = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to get all posts", 500);
-    return
   }
 };

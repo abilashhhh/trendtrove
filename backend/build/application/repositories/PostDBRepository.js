@@ -14,9 +14,7 @@ const postDBRepository = (repository) => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewPost(postData);
     });
-    const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
-        yield repository.getAllPostsForUser(id);
-    });
+    const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUser(id); });
     return {
         addNewPost,
         getAllPostsForUser,
