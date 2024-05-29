@@ -1,7 +1,7 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { GetAllPostsForUser, Post, PostResponse, ReportPostData, ReportPostResponse } from "../../Types/Post";
+import { GetAllPostsForUser, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -65,6 +65,25 @@ export const reportPost = async (
     const response = await axiosUserInstance.post<ReportPostResponse>(
       `${END_POINTS.REPORT_POST}`,
       data
+    );
+    console.log("response: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+export const savePost = async (
+  userId : string , postId : string ,
+): Promise<SavePostResponse> => {
+  try {
+    console.log("savePost post api, userId: ",userId)
+    console.log("savePost post api, postId: ",postId)
+    const response = await axiosUserInstance.post<SavePostResponse>(
+      `${END_POINTS.SAVE_POST}`,
+      {
+        userId, postId
+      }
     );
     console.log("response: ", response.data);
     return response.data;

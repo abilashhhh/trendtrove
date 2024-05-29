@@ -15,7 +15,6 @@ const postSchema = new mongoose_1.Schema({
     // mentions: [{ type: Schema.Types.ObjectId, ref: "User" }],
     // likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     // shares: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    saved: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
     // comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 }, {
     timestamps: true,

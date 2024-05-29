@@ -81,3 +81,26 @@ export const handleReportPosts = async (
     throw new ErrorInApplication("Failed to get all posts", 500);
   }
 };
+
+
+export const handleSavePosts = async (
+  userId: string,
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleSavePosts reached");
+    if (!postId) {
+      throw new ErrorInApplication("Post ID and user id is required to save post", 400);
+    }
+    const savePostsForUser  = await dbPostRepository.savePostsForUser(userId, postId);
+    console.log("All posts from savePostsForUser :", savePostsForUser);
+    return savePostsForUser;
+  } catch (error) {
+    console.log("Error in savePostsForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to save posts", 500);
+  }
+};

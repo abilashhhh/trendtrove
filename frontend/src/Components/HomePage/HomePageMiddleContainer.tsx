@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { StoreType } from "../../Redux/Store/reduxStore";
-import { getAllPostsForUser as fetchAllPostsForUser } from "../../API/Post/post";
+import { getAllPostsForUser as fetchAllPostsForUser, savePost } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
   AiOutlineLike,
@@ -51,6 +51,18 @@ const MiddleContainer: React.FC = () => {
       fetchUserPosts(currentUser._id);
     }
   }, [currentUser?._id]);
+
+  const handleSavePost= async (postId : string)  =>{
+
+    console.log("handleSavePost : ", postId)
+   const response = await savePost(currentUser?._id, postId)
+   if(response.status === "success"){
+    toast.success("Post saved successfully")
+  }else{
+     toast.error("Error saving post")
+
+   }
+  }
 
   const handleLike = (postId: string) => {
     setLikedPosts(prev => ({
@@ -151,11 +163,11 @@ const MiddleContainer: React.FC = () => {
                         className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Report Post
                       </p>
-                      <a
-                        href="#"
+                      <p
+                        onClick={() => handleSavePost(post._id)}
                         className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Save Post
-                      </a>
+                      </p>
                     </div>
                   )}
                 </div>

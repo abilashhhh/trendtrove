@@ -48,6 +48,11 @@ export interface ReportPostResponse {
   message: string;
 }
 
+export interface SavePostResponse {
+  status: string;
+  message: string;
+}
+
  
 export interface ReportPostData {
   postId: string,

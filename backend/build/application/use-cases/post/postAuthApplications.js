@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -77,3 +77,22 @@ const handleReportPosts = (data, dbPostRepository) => __awaiter(void 0, void 0, 
     }
 });
 exports.handleReportPosts = handleReportPosts;
+const handleSavePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleSavePosts reached");
+        if (!postId) {
+            throw new ErrorInApplication_1.default("Post ID and user id is required to save post", 400);
+        }
+        const savePostsForUser = yield dbPostRepository.savePostsForUser(userId, postId);
+        console.log("All posts from savePostsForUser :", savePostsForUser);
+        return savePostsForUser;
+    }
+    catch (error) {
+        console.log("Error in savePostsForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to save posts", 500);
+    }
+});
+exports.handleSavePosts = handleSavePosts;

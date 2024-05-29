@@ -16,10 +16,12 @@ const postDBRepository = (repository) => {
     });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUser(id); });
     const reportPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(id); });
+    const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.savePostsForUser(userId, postId); });
     return {
         addNewPost,
         getAllPostsForUser,
-        reportPostsForUser
+        reportPostsForUser,
+        savePostsForUser
     };
 };
 exports.postDBRepository = postDBRepository;

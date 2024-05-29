@@ -73,10 +73,31 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const savePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, postId } = req.body;
+            console.log("savePost data received from frontend:", userId, postId);
+            const savePost = yield (0, postAuthApplications_1.handleSavePosts)(userId, postId, dbPostRepository);
+            console.log('savePost:', savePost);
+            res.status(201).json({
+                status: "success",
+                message: "Posts reported successfully",
+                data: savePost,
+            });
+        }
+        catch (error) {
+            console.error("Error reporting posts for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to report posts",
+            });
+        }
+    });
     return {
         addPost,
         getpostforuser,
-        reportPost
+        reportPost,
+        savePost
     };
 };
 exports.default = postController;

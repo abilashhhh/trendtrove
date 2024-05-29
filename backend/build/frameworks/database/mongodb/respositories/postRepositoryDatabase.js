@@ -67,11 +67,32 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error reporting new post!");
         }
     });
+    const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            console.log("Data in postRepository, userId, postId: ", userId, postId);
+            const user = yield userModel_1.default.findById(userId);
+            if (!user)
+                throw new Error('User not found');
+            if (!user.savedPosts.includes(postId)) {
+                user.savedPosts.push(postId);
+                yield user.save();
+                console.log('Post saved successfully');
+            }
+            else {
+                console.log('Post already saved');
+            }
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error saving post!");
+        }
+    });
     ////////////////////////////////////////////////
     return {
         addNewPost,
         getAllPostsForUser,
-        reportPostsForUser
+        reportPostsForUser,
+        savePostsForUser
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

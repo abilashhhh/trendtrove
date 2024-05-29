@@ -18,6 +18,7 @@ const postRouter = () => {
     router.post("/addpost", authMiddleware_1.default, controller.addPost);
     router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
     router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
+    router.post("/savepost", authMiddleware_1.default, controller.savePost);
     return router;
 };
 exports.default = postRouter;

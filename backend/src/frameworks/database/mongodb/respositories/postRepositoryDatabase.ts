@@ -67,12 +67,33 @@ export const postRepositoryMongoDB = () => {
 
 
 
+  const savePostsForUser = async (userId : string, postId:string) => {
+    try {
+      console.log("Data in postRepository, userId, postId: ", userId, postId);
+  
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+  
+      if (!user.savedPosts.includes(postId)) {
+        user.savedPosts.push(postId);  
+        await user.save();  
+        console.log('Post saved successfully');
+      } else {
+        console.log('Post already saved');
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error saving post!");
+    }
+  };
+
   ////////////////////////////////////////////////
 
   return {
     addNewPost,
     getAllPostsForUser,
-    reportPostsForUser
+    reportPostsForUser,
+    savePostsForUser
   };
 };
 //////////////////////////////////////////////////////////

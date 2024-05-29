@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleGetPostsForUser, handleReportPosts } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleGetPostsForUser, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -89,10 +89,34 @@ const postController = (
     }
   };
 
+
+  const savePost = async (req: Request, res: Response) => {
+    try {
+      const {userId, postId}  = req.body;
+      console.log("savePost data received from frontend:", userId, postId);
+      
+      const savePost  = await handleSavePosts(userId,postId,dbPostRepository);
+      console.log('savePost:', savePost);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts reported successfully",
+        data: savePost,
+      });
+    } catch (error) {
+      console.error("Error reporting posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to report posts",
+      });
+    }
+  };
+
   return {
     addPost,
     getpostforuser,
-    reportPost
+    reportPost,
+    savePost
   };
 };
 

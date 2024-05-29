@@ -14,11 +14,15 @@ export const postDBRepository = (
   const reportPostsForUser = async (id: string) => 
   await repository.reportPostsForUser(id);
   
+  const savePostsForUser = async (userId: string, postId: string) => 
+  await repository.savePostsForUser(userId, postId);
+  
 
   return {
     addNewPost,
     getAllPostsForUser,
-    reportPostsForUser
+    reportPostsForUser,
+    savePostsForUser
   };
 };
 
