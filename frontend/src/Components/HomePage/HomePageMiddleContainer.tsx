@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import { getAllPostsForUser as fetchAllPostsForUser } from "../../API/Post/post";
 
@@ -35,24 +38,51 @@ const MiddleContainer: React.FC = () => {
     }
   }, [currentUser?._id]);
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
       <ToastContainer />
 
       <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
-        <h1 className="text-2xl font-semibold">Home Page - Get new posts</h1>
         {posts.length > 0 ? (
           posts.map((post) => (
             <div key={post._id} className="p-2 m-2 border rounded-lg">
-              <p>{post.captions}</p>
-              {post.images && post.images.length > 0 && (
-                <img src={post.images[0]} alt="Post" className="w-full h-auto" />
+              {post.images.length > 0 && post.videos.length > 0 ? (
+                <>
+                  <p>{post.captions}</p>
+                  <Slider {...settings}>
+                    {post.images.map((image: string, index: number) => (
+                      <div key={index}>
+                        <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
+                      </div>
+                    ))}
+                    {post.videos.map((video: string, index: number) => (
+                      <div key={index}>
+                        <video src={video} controls autoPlay muted className="w-full h-auto" />
+                      </div>
+                    ))}
+                  </Slider>
+                  <p>{new Date(post.createdAt).toLocaleString()}</p>
+                </>
+              ) : (
+                <>
+                  <p>{post.captions}</p>
+                  {post.images.length === 1 && (
+                    <img src={post.images[0]} alt={`Post image`} className="w-full h-auto" />
+                  )}
+                  {post.videos.length === 1 && (
+                    <video src={post.videos[0]} controls autoPlay muted className="w-full h-auto" />
+                  )}
+                  <p>{new Date(post.createdAt).toLocaleString()}</p>
+                </>
               )}
-            {post.videos && post.videos.length > 0 && (
-  <video src={post.videos[0]} controls autoPlay muted loop className="w-full h-auto" />
-)}
-
-              <p>{new Date(post.createdAt).toLocaleString()}</p>
             </div>
           ))
         ) : (

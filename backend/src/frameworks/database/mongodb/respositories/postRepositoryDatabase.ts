@@ -43,11 +43,10 @@ export const postRepositoryMongoDB = () => {
 
       const gettingPosts = await Post.find({
         userId: { $in: userIdsToFetch },
-      });
+      }).sort({ createdAt: -1 });    
       console.log("Getting posts beefore returning:", gettingPosts);
 
       return gettingPosts;
-      console.log("after return");
     } catch (error) {
       console.log(error);
       throw new Error("Error getting all posts for user!");
