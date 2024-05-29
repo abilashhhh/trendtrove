@@ -43,10 +43,11 @@ export const postRepositoryMongoDB = () => {
 
       const gettingPosts = await Post.find({
         userId: { $in: userIdsToFetch },
-      }).exec();
-      console.log("Getting posts:", gettingPosts);
+      });
+      console.log("Getting posts beefore returning:", gettingPosts);
 
       return gettingPosts;
+      console.log("after return");
     } catch (error) {
       console.log(error);
       throw new Error("Error getting all posts for user!");

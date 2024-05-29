@@ -1,6 +1,6 @@
 import { PostDataInterface } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
-import { PostDBInterface } from "../../repositories/PostDBRepository";
+import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 
 export const handleCreatePost = async (

@@ -47,9 +47,10 @@ const postRepositoryMongoDB = () => {
             console.log("User ids to fetch posts for:", userIdsToFetch);
             const gettingPosts = yield postModel_1.default.find({
                 userId: { $in: userIdsToFetch },
-            }).exec();
-            console.log("Getting posts:", gettingPosts);
+            });
+            console.log("Getting posts beefore returning:", gettingPosts);
             return gettingPosts;
+            console.log("after return");
         }
         catch (error) {
             console.log(error);

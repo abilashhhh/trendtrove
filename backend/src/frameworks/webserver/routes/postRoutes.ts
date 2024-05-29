@@ -6,7 +6,7 @@ import { userDBRepository } from "../../../application/repositories/userDBReposi
 import { userRepositoryMongoDB } from "../../database/mongodb/respositories/userRepositoryDatabase";
 import postController from "../../../adapters/postController/postController";
 import { postRepositoryMongoDB } from "../../database/mongodb/respositories/postRepositoryDatabase";
-import { postDBRepository } from "../../../application/repositories/PostDBRepository";
+import { postDBRepository } from "../../../application/repositories/postDBRepository";
 
 const postRouter = () => {
   const router = express();

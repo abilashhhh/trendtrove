@@ -6,7 +6,7 @@ import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/resposi
 import { PostDataInterface } from "../../types/postsInterface";
 import { handleCreatePost, handleGetPostsForUser } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
-import { PostDBInterface } from "../../application/repositories/PostDBRepository";
+import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
 const postController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
