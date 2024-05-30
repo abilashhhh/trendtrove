@@ -165,7 +165,26 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error saving post!");
     }
   };
-
+  const removeSavePostsForUser = async (userId: string, postId: string) => {
+    try {
+      console.log("Data in postRepository, userId, postId: ", userId, postId);
+  
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+  
+      if (user.savedPosts.includes(postId)) {
+        user.savedPosts.pull(postId); 
+        await user.save();
+        console.log("Post removed successfully from saved posts");
+      } else {
+        console.log("Post not present in saved posts");
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error removing saved post!");
+    }
+  };
+  
   const likePostsForUser = async (userId: string, postId: string) => {
     try {
       await Dislike.findOneAndDelete({ userId, postId });
@@ -263,6 +282,7 @@ export const postRepositoryMongoDB = () => {
     getParticularPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
+    removeSavePostsForUser,
     likePostsForUser,
     dislikePostsForUser,
     getLikedPosts,

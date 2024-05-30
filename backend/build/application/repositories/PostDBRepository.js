@@ -23,6 +23,7 @@ const postDBRepository = (repository) => {
     const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getParticularPostsForCurrentUser(id); });
     const reportPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(id); });
     const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.savePostsForUser(userId, postId); });
+    const removeSavePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.removeSavePostsForUser(userId, postId); });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.likePostsForUser(userId, postId); });
     const dislikePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.dislikePostsForUser(userId, postId); });
     const getLikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getLikedPosts(userId); });
@@ -38,6 +39,7 @@ const postDBRepository = (repository) => {
         getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
+        removeSavePostsForUser,
         likePostsForUser,
         dislikePostsForUser,
         getLikedPosts,

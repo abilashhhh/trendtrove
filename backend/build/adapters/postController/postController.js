@@ -160,7 +160,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             console.log('savePost:', savePost);
             res.status(201).json({
                 status: "success",
-                message: "Posts reported successfully",
+                message: "Posts saved successfully",
                 data: savePost,
             });
         }
@@ -168,7 +168,27 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             console.error("Error reporting posts for user:", error);
             res.status(401).json({
                 status: "error",
-                message: "Failed to report posts",
+                message: "Failed to save posts",
+            });
+        }
+    });
+    const removesavePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, postId } = req.body;
+            console.log("removesavePost data received from frontend:", userId, postId);
+            const removesavePost = yield (0, postAuthApplications_1.handleRemoveSavePosts)(userId, postId, dbPostRepository);
+            console.log('removesavePost:', removesavePost);
+            res.status(201).json({
+                status: "success",
+                message: "Posts removed from saved successfully",
+                data: removesavePost,
+            });
+        }
+        catch (error) {
+            console.error("Error removing posts from saved:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to remove from saved posts",
             });
         }
     });
@@ -275,6 +295,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getparticularpostofcurrentuser,
         reportPost,
         savePost,
+        removesavePost,
         likePost,
         dislikePost,
         getlikedposts,

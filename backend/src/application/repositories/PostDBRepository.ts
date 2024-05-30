@@ -30,6 +30,9 @@ export const postDBRepository = (
   const savePostsForUser = async (userId: string, postId: string) => 
   await repository.savePostsForUser(userId, postId);
   
+  const removeSavePostsForUser = async (userId: string, postId: string) => 
+  await repository.removeSavePostsForUser(userId, postId);
+  
   const likePostsForUser = async (userId: string, postId: string) => 
   await repository.likePostsForUser(userId, postId);
    
@@ -58,6 +61,7 @@ export const postDBRepository = (
     getParticularPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
+    removeSavePostsForUser,
     likePostsForUser,
     dislikePostsForUser,
     getLikedPosts,

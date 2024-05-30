@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -176,6 +176,25 @@ const handleSavePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, 
     }
 });
 exports.handleSavePosts = handleSavePosts;
+const handleRemoveSavePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleRemoveSavePosts reached");
+        if (!postId) {
+            throw new ErrorInApplication_1.default("Post ID and user id is required to save post", 400);
+        }
+        const removeSavePostsForUser = yield dbPostRepository.removeSavePostsForUser(userId, postId);
+        console.log("All posts from removeSavePostsForUser :", removeSavePostsForUser);
+        return removeSavePostsForUser;
+    }
+    catch (error) {
+        console.log("Error in removeSavePostsForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to remove saved post", 500);
+    }
+});
+exports.handleRemoveSavePosts = handleRemoveSavePosts;
 const handleLikePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("handleSavePosts reached");

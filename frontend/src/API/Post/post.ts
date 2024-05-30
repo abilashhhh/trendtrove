@@ -170,6 +170,29 @@ export const savePost = async (
   }
 };
 
+// correct this
+export const removeSavedPostForUser = async (
+  userId: string,
+  postId: string
+): Promise<SavePostResponse> => {
+  try {
+    console.log("removeSavedPostForUser post api, userId: ", userId);
+    console.log("saveremoveSavedPostForUserPost post api, postId: ", postId);
+    const response = await axiosUserInstance.post<SavePostResponse>(
+      `${END_POINTS.REMOVE_SAVE_POST}`,
+      {
+        userId,
+        postId,
+      }
+    );
+    console.log("response: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 
 
 export const deletePostForUser = async (

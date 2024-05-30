@@ -157,6 +157,26 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error saving post!");
         }
     });
+    const removeSavePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            console.log("Data in postRepository, userId, postId: ", userId, postId);
+            const user = yield userModel_1.default.findById(userId);
+            if (!user)
+                throw new Error("User not found");
+            if (user.savedPosts.includes(postId)) {
+                user.savedPosts.pull(postId);
+                yield user.save();
+                console.log("Post removed successfully from saved posts");
+            }
+            else {
+                console.log("Post not present in saved posts");
+            }
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error removing saved post!");
+        }
+    });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield dislikePostModel_1.default.findOneAndDelete({ userId, postId });
@@ -246,6 +266,7 @@ const postRepositoryMongoDB = () => {
         getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
+        removeSavePostsForUser,
         likePostsForUser,
         dislikePostsForUser,
         getLikedPosts,

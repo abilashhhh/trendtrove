@@ -198,6 +198,29 @@ export const handleSavePosts = async (
   }
 };
 
+
+export const handleRemoveSavePosts = async (
+  userId: string,
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleRemoveSavePosts reached");
+    if (!postId) {
+      throw new ErrorInApplication("Post ID and user id is required to save post", 400);
+    }
+    const removeSavePostsForUser  = await dbPostRepository.removeSavePostsForUser(userId, postId);
+    console.log("All posts from removeSavePostsForUser :", removeSavePostsForUser);
+    return removeSavePostsForUser;
+  } catch (error) {
+    console.log("Error in removeSavePostsForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to remove saved post", 500);
+  }
+};
+
 export const handleLikePosts = async (
   userId: string,
   postId: string,

@@ -23,6 +23,7 @@ const postRouter = () => {
     router.get("/getparticularpost/:id", authMiddleware_1.default, controller.getparticularpostofcurrentuser);
     router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
     router.post("/savepost", authMiddleware_1.default, controller.savePost);
+    router.post("/removesavepost", authMiddleware_1.default, controller.removesavePost);
     router.post("/likepost", authMiddleware_1.default, controller.likePost);
     router.post("/dislikepost", authMiddleware_1.default, controller.dislikePost);
     router.get("/getlikedposts/:userId", authMiddleware_1.default, controller.getlikedposts);

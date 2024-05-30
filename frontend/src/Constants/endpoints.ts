@@ -38,6 +38,7 @@ const END_POINTS = {
   GET_PARTICULAR_POSTS_OF_CURRENT_USER:'api/post/getparticularpost',
   REPORT_POST : '/api/post/reportpost',
   SAVE_POST : '/api/post/savepost',
+  REMOVE_SAVE_POST : '/api/post/removesavepost',
   LIKE_POST : '/api/post/likepost',
   DISLIKE_POST : '/api/post/dislikepost',
   DELETE_POST : '/api/post/deletepost/:postId',

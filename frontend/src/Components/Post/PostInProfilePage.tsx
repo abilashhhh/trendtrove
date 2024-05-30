@@ -16,6 +16,8 @@ import {
   getPostLikesAndDislikesInfo,
   fetchPostsOfTheCurrentUser,
   deletePostForUser,
+  fetchSavedPostsOfTheCurrentUser,
+  removeSavedPostForUser,
 } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -34,6 +36,7 @@ const PostInProfilePage = () => {
 
   const sections = ["MY POSTS", "SAVED POSTS", "TAGGED POSTS"];
   const [posts, setPosts] = useState<any[]>([]);
+  const [savedPosts , setSavedPosts] = useState<any[]>([]);
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
   const [dislikedPosts, setDislikedPosts] = useState<{
@@ -109,6 +112,11 @@ const PostInProfilePage = () => {
         console.log("data : ", data);
         if (data) {
           setPosts(data);
+        }
+        const savedPostData = await fetchSavedPostsOfTheCurrentUser(currentUser._id);
+        console.log("savedPostData : ", savedPostData);
+        if (data) {
+          setSavedPosts(savedPostData);
         }
         fetchUserLikesAndDislikes(currentUser._id);
       };
@@ -205,6 +213,26 @@ const PostInProfilePage = () => {
         await deletePostForUser(postId);
 
         Swal.fire("Deleted!", "Your post has been deleted.", "success");
+        window.location.reload();
+      }
+    });
+  };
+
+  const handleUnsavePost = async (postId: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This post will be removed from the saved list!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove it!",
+    }).then(async result => {
+      if (result.isConfirmed) {
+        console.log("removing post, postId:", postId);
+        await removeSavedPostForUser(currentUser._id , postId );
+
+        Swal.fire("Removed!", "Your post has been removed from saved list.", "success");
         window.location.reload();
       }
     });
@@ -414,7 +442,186 @@ const PostInProfilePage = () => {
           </div>
         )}
 
-        {activeSection === "SAVED POSTS" && <div>Saved posts content here</div>}
+        {activeSection === "SAVED POSTS" && 
+       <div className="rounded-lg bg-gray-100  lg:grid lg:grid-cols-2 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar  justify-center">
+       {savedPosts.length > 0 ? (
+         savedPosts.map(post => (
+           <div
+             key={post._id}
+             className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
+             <div className="flex justify-between items-center mb-2">
+               <div className="flex items-center gap-2 cursor-pointer">
+                 <img
+                   src={post.dp}
+                   alt=""
+                   className="rounded-full h-10 w-10"
+                   onClick={() => navigate(`/profiles/${post.username}`)}
+                 />
+                 <div>
+                   <p
+                     className="font-bold"
+                     onClick={() =>
+                       navigate(`/profiles/${post.username}`)
+                     }>
+                     {post.username}
+                   </p>
+                   {post.location && (
+                     <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight">
+                       <FaMapMarkedAlt /> {post.location}
+                     </p>
+                   )}
+                   <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
+                     {new Date(post.createdAt).toLocaleString()}
+                   </p>
+                 </div>
+               </div>
+               <div className="relative">
+                 <button
+                   className="focus:outline-none mr-2"
+                   onClick={() => toggleOptions(post._id)}>
+                   <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
+                 </button>
+                 {showOptions === post._id && (
+                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 cursor-pointer rounded-lg shadow-lg z-10">
+                     <p
+                       onClick={() => handleUnsavePost(post._id)}
+                       className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                       Unsave Post
+                     </p>
+ 
+                   </div>
+                 )}
+               </div>
+             </div>
+
+             {post.images.length > 0 && post.videos.length > 0 ? (
+               <Slider {...settings}>
+                 {post.images.map((image: string, index: number) => (
+                   <div key={index}>
+                     <img
+                       src={image}
+                       alt={`Post image ${index}`}
+                       className="w-full h-auto"
+                     />
+                   </div>
+                 ))}
+                 {post.videos.map((video: string, index: number) => (
+                   <div key={index}>
+                     <video
+                       src={video}
+                       controls
+                       autoPlay
+                       muted
+                       className="w-full h-auto"
+                     />
+                   </div>
+                 ))}
+               </Slider>
+             ) : post.images.length > 0 ? (
+               post.images.length === 1 ? (
+                 <img
+                   src={post.images[0]}
+                   alt={`Post image`}
+                   className="w-full h-auto"
+                 />
+               ) : (
+                 <Slider {...settings}>
+                   {post.images.map((image: string, index: number) => (
+                     <div key={index}>
+                       <img
+                         src={image}
+                         alt={`Post image ${index}`}
+                         className="w-full h-auto"
+                       />
+                     </div>
+                   ))}
+                 </Slider>
+               )
+             ) : post.videos.length > 0 ? (
+               post.videos.length === 1 ? (
+                 <video
+                   src={post.videos[0]}
+                   controls
+                   autoPlay
+                   muted
+                   className="w-full h-auto"
+                 />
+               ) : (
+                 <Slider {...settings}>
+                   {post.videos.map((video: string, index: number) => (
+                     <div key={index}>
+                       <video
+                         src={video}
+                         controls
+                         autoPlay
+                         muted
+                         className="w-full h-auto"
+                       />
+                     </div>
+                   ))}
+                 </Slider>
+               )
+             ) : (
+               <p></p>
+             )}
+             <p className="mt-2">{post.captions}</p>
+             <div className="flex justify-between">
+               <div className="flex gap-2 items-center mt-4">
+                 <button
+                   className={`flex items-center space-x-2 hover:text-blue-600 ${
+                     likedPosts[post._id]
+                       ? "text-blue-600"
+                       : "text-gray-600 dark:text-gray-400"
+                   }`}
+                   onClick={() => handleLike(post._id)}>
+                   {likedPosts[post._id] ? (
+                     <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
+                   ) : (
+                     <AiOutlineLike className="text-xl md:text-2xl lg:text-3xl" />
+                   )}
+                 </button>
+                 <button
+                   className={`flex items-center space-x-2 hover:text-red-600 ${
+                     dislikedPosts[post._id]
+                       ? "text-red-600"
+                       : "text-gray-600 dark:text-gray-400"
+                   }`}
+                   onClick={() => handleDislike(post._id)}>
+                   {dislikedPosts[post._id] ? (
+                     <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
+                   ) : (
+                     <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
+                   )}
+                 </button>
+                 <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
+                   <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
+                 </button>
+               </div>
+               <div>
+                 <div className="gap-2 flex mt-4 text-xs">
+                   <div>
+                     Likes:{" "}
+                     {likesDislikesData[post._id]?.likesdislikesinfo
+                       ?.likesCount || 0}
+                   </div>
+
+                   <div>
+                     Dislikes:{" "}
+                     {likesDislikesData[post._id]?.likesdislikesinfo
+                       ?.dislikesCount || 0}
+                   </div>
+                   {/* <LikesDislikesModale show={showModal} handleClose={handleCloseModal} users={modalContent} /> */}
+                 </div>
+               </div>
+             </div>
+           </div>
+         ))
+       ) : (
+         <p>No posts available</p>
+       )}
+     </div>
+        }
+
         {activeSection === "TAGGED POSTS" && (
           <div>Tagged posts content here</div>
         )}
