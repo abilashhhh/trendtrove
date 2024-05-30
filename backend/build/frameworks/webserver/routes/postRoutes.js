@@ -19,6 +19,7 @@ const postRouter = () => {
     router.post("/updatepost", authMiddleware_1.default, controller.updatepost);
     router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
     router.get("/getpostofcurrentuser/:id", authMiddleware_1.default, controller.getpostofcurrentuser);
+    router.get("/getsavedpostofcurrentuser/:id", authMiddleware_1.default, controller.getsavedpostofcurrentuser);
     router.get("/getparticularpost/:id", authMiddleware_1.default, controller.getparticularpostofcurrentuser);
     router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
     router.post("/savepost", authMiddleware_1.default, controller.savePost);

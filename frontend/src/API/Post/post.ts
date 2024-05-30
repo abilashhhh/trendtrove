@@ -101,6 +101,21 @@ export const fetchPostsOfTheCurrentUser = async (
   }
 };
 
+export const fetchSavedPostsOfTheCurrentUser = async (
+  id: string // should be the user id
+): Promise<GetAllPostsOfCurrentUser> => {
+  try {
+    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+      `${END_POINTS.GET_SAVED_POSTS_OF_CURRENT_USER}/${id}`
+    );
+    console.log("fetchSavedPostsOfTheCurrentUser respose: ", response.data?.data);
+    return response.data?.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const getThePostDataOfParticularPost = async (
   id: string
 ): Promise<GetAllPostsOfCurrentUser> => {
@@ -154,6 +169,7 @@ export const savePost = async (
     throw error;
   }
 };
+
 
 
 export const deletePostForUser = async (

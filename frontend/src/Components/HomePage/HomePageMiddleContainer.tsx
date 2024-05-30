@@ -237,7 +237,7 @@ const MiddleContainer: React.FC = () => {
                     <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
                   </button>
                   {showOptions === post._id && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                       <p
                         onClick={() => navigate(`/profiles/${post.username}`)}
                         className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">

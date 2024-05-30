@@ -18,6 +18,9 @@ export const postDBRepository = (
   const getAllPostsForCurrentUser = async (id: string) => 
   await repository.getAllPostsForCurrentUser(id);
 
+  const getAllSavedPostsForCurrentUser = async (id: string) => 
+  await repository.getAllSavedPostsForCurrentUser(id);
+
   const getParticularPostsForCurrentUser = async (id: string) => 
   await repository.getParticularPostsForCurrentUser(id);
   
@@ -51,6 +54,7 @@ export const postDBRepository = (
     updatePost,
     getAllPostsForUser,
     getAllPostsForCurrentUser,
+    getAllSavedPostsForCurrentUser,
     getParticularPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,

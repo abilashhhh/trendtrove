@@ -111,6 +111,27 @@ export const handleGetPostsOfCurrentUser = async (
   }
 };
 
+export const handleGetSavedPostsOfCurrentUser = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetSavedPostsOfCurrentUser reached");
+    if (!id) {
+      throw new ErrorInApplication("ID is required to get all posts", 400);
+    }
+    const allPostsForUser  = await dbPostRepository.getAllSavedPostsForCurrentUser(id);
+    console.log("All posts from handleGetSavedPostsOfCurrentUser :", allPostsForUser);
+    return allPostsForUser;
+  } catch (error) {
+    console.log("Error in handleGetSavedPostsOfCurrentUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all  saved posts of current user", 500);
+  }
+};
+
 export const handleGetParticularPost = async (
   id: string,
   dbPostRepository: ReturnType<PostDBInterface>

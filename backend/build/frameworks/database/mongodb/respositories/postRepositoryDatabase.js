@@ -78,13 +78,39 @@ const postRepositoryMongoDB = () => {
             if (!requesterUser) {
                 throw new Error("User not found");
             }
-            const gettingPosts = yield postModel_1.default.find({ userId: id }).sort({ createdAt: -1 });
+            const gettingPosts = yield postModel_1.default.find({ userId: id }).sort({
+                createdAt: -1,
+            });
             console.log("Getting posts before returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
             console.error(error.message);
             throw new Error("Error getting all posts of current user!");
+        }
+    });
+    const getAllSavedPostsForCurrentUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (!userId) {
+                throw new Error("User ID is required");
+            }
+            const user = yield userModel_1.default.findById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const savedPostIds = user.savedPosts;
+            if (!savedPostIds || savedPostIds.length === 0) {
+                return [];
+            }
+            const savedPosts = yield postModel_1.default.find({ _id: { $in: savedPostIds } }).sort({
+                createdAt: -1,
+            });
+            console.log("savedposts: ", savedPosts);
+            return savedPosts;
+        }
+        catch (error) {
+            console.error(error.message);
+            throw new Error("Error getting saved posts of current user!");
         }
     });
     const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -116,14 +142,14 @@ const postRepositoryMongoDB = () => {
             console.log("Data in postRepository, userId, postId: ", userId, postId);
             const user = yield userModel_1.default.findById(userId);
             if (!user)
-                throw new Error('User not found');
+                throw new Error("User not found");
             if (!user.savedPosts.includes(postId)) {
                 user.savedPosts.push(postId);
                 yield user.save();
-                console.log('Post saved successfully');
+                console.log("Post saved successfully");
             }
             else {
-                console.log('Post already saved');
+                console.log("Post already saved");
             }
         }
         catch (error) {
@@ -136,7 +162,7 @@ const postRepositoryMongoDB = () => {
             yield dislikePostModel_1.default.findOneAndDelete({ userId, postId });
             const like = new likePostModel_1.default({ userId, postId });
             yield like.save();
-            console.log('Post liked successfully!');
+            console.log("Post liked successfully!");
         }
         catch (error) {
             console.error(error);
@@ -148,7 +174,7 @@ const postRepositoryMongoDB = () => {
             yield likePostModel_1.default.findOneAndDelete({ userId, postId });
             const dislike = new dislikePostModel_1.default({ userId, postId });
             yield dislike.save();
-            console.log('Post disliked successfully!');
+            console.log("Post disliked successfully!");
         }
         catch (error) {
             console.error(error);
@@ -179,14 +205,14 @@ const postRepositoryMongoDB = () => {
     });
     const getlikesdislikesInfo = (postId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const likes = yield likePostModel_1.default.find({ postId }).populate('userId', 'username');
-            const dislikes = yield dislikePostModel_1.default.find({ postId }).populate('userId', 'username');
+            const likes = yield likePostModel_1.default.find({ postId }).populate("userId", "username");
+            const dislikes = yield dislikePostModel_1.default.find({ postId }).populate("userId", "username");
             const data = {
                 postId: postId,
                 likesCount: likes.length,
                 dislikesCount: dislikes.length,
                 likedUsers: likes.map(like => like.userId.username),
-                dislikedUsers: dislikes.map(dislike => dislike.userId.username)
+                dislikedUsers: dislikes.map(dislike => dislike.userId.username),
             };
             console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo);
             return data;
@@ -216,6 +242,7 @@ const postRepositoryMongoDB = () => {
         updatePost,
         getAllPostsForUser,
         getAllPostsForCurrentUser,
+        getAllSavedPostsForCurrentUser,
         getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
@@ -224,7 +251,7 @@ const postRepositoryMongoDB = () => {
         getLikedPosts,
         getDislikedPosts,
         getlikesdislikesInfo,
-        deltePostForUser
+        deltePostForUser,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

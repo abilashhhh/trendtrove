@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetParticularPost, handleGetPostsForUser, handleGetPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleReportPosts, handleSavePosts, handleupdatepost } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetParticularPost, handleGetPostsForUser, handleGetPostsOfCurrentUser, handleGetSavedPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleReportPosts, handleSavePosts, handleupdatepost } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -101,6 +101,28 @@ const postController = (
       });
     } catch (error) {
       console.error("Error getting all posts of current user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to get all posts",
+      });
+    }
+  };
+
+  const getsavedpostofcurrentuser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      console.log(" getsavedpostofcurrentuser received from frontend:", id);
+      
+      const getPosts  = await handleGetSavedPostsOfCurrentUser(id,dbPostRepository);
+      console.log('getPosts:', getPosts);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts fetched for current user",
+        data: getPosts,
+      });
+    } catch (error) {
+      console.error("Error getting all saved posts of current user:", error);
       res.status(401).json({
         status: "error",
         message: "Failed to get all posts",
@@ -286,6 +308,7 @@ const postController = (
     updatepost,
     getpostforuser,
     getpostofcurrentuser,
+    getsavedpostofcurrentuser,
     getparticularpostofcurrentuser,
     reportPost,
     savePost,
