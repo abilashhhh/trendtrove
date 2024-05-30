@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { StoreType } from "../../Redux/Store/reduxStore";
-import { getAllPostsForUser as fetchAllPostsForUser, savePost } from "../../API/Post/post";
+import { dislikePost, getAllPostsForUser as fetchAllPostsForUser, likePost, savePost } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
   AiOutlineLike,
@@ -64,20 +64,30 @@ const MiddleContainer: React.FC = () => {
    }
   }
 
-  const handleLike = (postId: string) => {
+  const handleLike = async (postId: string) => {
+
+    const result = await likePost( currentUser._id, postId)
+    console.log("Result of handlelike : " , result)
+
     setLikedPosts(prev => ({
       ...prev,
       [postId]: !prev[postId],
     }));
+
     if (dislikedPosts[postId]) {
       setDislikedPosts(prev => ({
         ...prev,
         [postId]: false,
       }));
     }
+
   };
 
-  const handleDislike = (postId: string) => {
+  const handleDislike = async (postId: string) => {
+
+    const result = await dislikePost(currentUser._id, postId)
+console.log("Result of handleDislike : " , result)
+
     setDislikedPosts(prev => ({
       ...prev,
       [postId]: !prev[postId],
@@ -113,10 +123,10 @@ const MiddleContainer: React.FC = () => {
   
 
   return (
-    <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-white">
+    <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 lg:pl-48 lg:pr-48 text-white items-center justify-center">
       <ToastContainer />
 
-      <div className=" rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
+      <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full  overflow-y-auto no-scrollbar   items-center justify-center">
         {posts.length > 0 ? (
           posts.map(post => (
             <div
@@ -136,10 +146,10 @@ const MiddleContainer: React.FC = () => {
                       onClick={() => navigate(`/profiles/${post.username}`)}>
                       {post.username}
                     </p>
-                    <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight">
+                    {post.location &&  <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight">
                       {" "}
                       <FaMapMarkedAlt /> {post.location}
-                    </p>
+                    </p> }
                     <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
                       {new Date(post.createdAt).toLocaleString()}
                     </p>
@@ -244,6 +254,7 @@ const MiddleContainer: React.FC = () => {
                 <p></p>
               )}
               <p className="mt-2">{post.captions}</p>
+              <div className="flex justify-between">
               <div className="flex gap-2 items-center mt-4">
                 <button
                   className={`flex items-center space-x-2 hover:text-blue-600 ${
@@ -275,11 +286,12 @@ const MiddleContainer: React.FC = () => {
                   <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                 </button>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-4 cursor-pointer">
                 {" "}
-                <p className="text-xs mt-2">Liked by </p>
+                <p className="text-xs mt-2">Likes</p>
                 <p className="text-xs mt-2">|</p>
-                <p className="text-xs mt-2">Disliked by </p>
+                <p className="text-xs mt-2">Dislikes</p>
+              </div>
               </div>
             </div>
           ))

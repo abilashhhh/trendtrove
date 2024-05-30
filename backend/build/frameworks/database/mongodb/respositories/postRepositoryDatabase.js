@@ -16,6 +16,8 @@ exports.postRepositoryMongoDB = void 0;
 const postModel_1 = __importDefault(require("../models/postModel"));
 const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const likePostModel_1 = __importDefault(require("../models/likePostModel"));
+const dislikePostModel_1 = __importDefault(require("../models/dislikePostModel"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
@@ -87,12 +89,38 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error saving post!");
         }
     });
+    const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            yield dislikePostModel_1.default.findOneAndDelete({ userId, postId });
+            const like = new likePostModel_1.default({ userId, postId });
+            yield like.save();
+            console.log('Post liked successfully!');
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error("Error liking post!");
+        }
+    });
+    const dislikePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            yield likePostModel_1.default.findOneAndDelete({ userId, postId });
+            const dislike = new dislikePostModel_1.default({ userId, postId });
+            yield dislike.save();
+            console.log('Post disliked successfully!');
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error("Error disliking post!");
+        }
+    });
     ////////////////////////////////////////////////
     return {
         addNewPost,
         getAllPostsForUser,
         reportPostsForUser,
-        savePostsForUser
+        savePostsForUser,
+        likePostsForUser,
+        dislikePostsForUser
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

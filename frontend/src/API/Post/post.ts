@@ -1,7 +1,7 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { GetAllPostsForUser, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
+import { DislikePostResponse, GetAllPostsForUser, LikePostResponse, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -73,6 +73,8 @@ export const reportPost = async (
     throw error;
   }
 };
+
+
 export const savePost = async (
   userId : string , postId : string ,
 ): Promise<SavePostResponse> => {
@@ -86,6 +88,47 @@ export const savePost = async (
       }
     );
     console.log("response: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const likePost = async (
+  userId : string , postId : string ,
+): Promise<LikePostResponse> => {
+  try {
+    console.log("likePost post api, userId: ",userId)
+    console.log("likePost post api, postId: ",postId)
+    const response = await axiosUserInstance.post<LikePostResponse>(
+      `${END_POINTS.LIKE_POST}`,
+      {
+        userId, postId
+      } 
+    );
+    console.log(" likePost response: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const dislikePost = async (
+  userId : string , postId : string ,
+): Promise<DislikePostResponse> => {
+  try {
+    console.log("dislikePost post api, userId: ",userId)
+    console.log("dislikePost post api, postId: ",postId)
+    const response = await axiosUserInstance.post<DislikePostResponse>(
+      `${END_POINTS.DISLIKE_POST}`,
+      {
+        userId, postId
+      }
+    );
+    console.log( " dislikePost response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

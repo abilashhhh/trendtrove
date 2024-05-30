@@ -52,6 +52,14 @@ export interface SavePostResponse {
   status: string;
   message: string;
 }
+export interface LikePostResponse {
+  status: string;
+  message: string;
+}
+export interface DislikePostResponse {
+  status: string;
+  message: string;
+}
 
  
 export interface ReportPostData {

@@ -34,6 +34,8 @@ const END_POINTS = {
   GET_POSTS_FOR_USER:'api/post/getpostforuser',
   REPORT_POST : '/api/post/reportpost',
   SAVE_POST : '/api/post/savepost',
+  LIKE_POST : '/api/post/likepost',
+  DISLIKE_POST : '/api/post/dislikepost',
 
   // ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',

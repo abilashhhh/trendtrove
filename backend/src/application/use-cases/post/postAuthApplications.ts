@@ -104,3 +104,47 @@ export const handleSavePosts = async (
     throw new ErrorInApplication("Failed to save posts", 500);
   }
 };
+
+export const handleLikePosts = async (
+  userId: string,
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleSavePosts reached");
+    if (!postId) {
+      throw new ErrorInApplication("Post ID and user id is required to like post", 400);
+    }
+    const handleLikePostsForUser  = await dbPostRepository.likePostsForUser(userId, postId);
+    console.log("All posts from handleLikePostsForUser :", handleLikePostsForUser);
+    return handleLikePostsForUser;
+  } catch (error) {
+    console.log("Error in handleLikePosts");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to like posts", 500);
+  }
+};
+
+export const handleDislikePosts = async (
+  userId: string,
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleDislikePosts reached");
+    if (!postId) {
+      throw new ErrorInApplication("Post ID and user id is required to dislike post", 400);
+    }
+    const handleDislikePostsForUser  = await dbPostRepository.dislikePostsForUser(userId, postId);
+    console.log("All posts from handleDislikePostsForUser :", handleDislikePostsForUser);
+    return handleDislikePostsForUser;
+  } catch (error) {
+    console.log("Error in handleDislikePostsForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to dislike posts", 500);
+  }
+};

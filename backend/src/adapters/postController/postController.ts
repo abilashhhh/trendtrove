@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleGetPostsForUser, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleDislikePosts, handleGetPostsForUser, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -112,11 +112,57 @@ const postController = (
     }
   };
 
+  const likePost = async (req: Request, res: Response) => {
+    try {
+      const {userId, postId}  = req.body;
+      console.log("likePost data received from frontend:", userId, postId);
+      
+      const likePost  = await handleLikePosts(userId,postId,dbPostRepository);
+      console.log('likePost:', likePost);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts liked successfully",
+        data: likePost,
+      });
+    } catch (error) {
+      console.error("Error liking posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to like posts",
+      });
+    }
+  };
+
+  const dislikePost = async (req: Request, res: Response) => {
+    try {
+      const {userId, postId}  = req.body;
+      console.log("dislikePost data received from frontend:", userId, postId);
+      
+      const dislikePost  = await handleDislikePosts(userId,postId,dbPostRepository);
+      console.log('dislikePost:', dislikePost);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts disliked successfully",
+        data: dislikePost,
+      });
+    } catch (error) {
+      console.error("Error disliking posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to dislike posts",
+      });
+    }
+  };
+
   return {
     addPost,
     getpostforuser,
     reportPost,
-    savePost
+    savePost,
+    likePost,
+    dislikePost,
   };
 };
 

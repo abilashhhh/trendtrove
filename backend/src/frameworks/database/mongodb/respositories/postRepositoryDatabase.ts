@@ -3,6 +3,8 @@ import { PostDataInterface, ReportPost } from "../../../../types/postsInterface"
 import Post from "../models/postModel";
 import ReportPostModel from "../models/reportPostModel";
 import User from "../models/userModel";
+import Like from "../models/likePostModel";
+import Dislike from "../models/dislikePostModel";
 
 //////////////////////////////////////////////////////////
 
@@ -87,13 +89,44 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  
+const likePostsForUser = async (userId: string, postId: string) => {
+  try {
+    await Dislike.findOneAndDelete({ userId, postId });
+
+    const like = new Like({ userId, postId });
+    await like.save();
+
+    console.log('Post liked successfully!');
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error liking post!");
+  }
+};
+
+const dislikePostsForUser = async (userId: string, postId: string) => {
+  try {
+    await Like.findOneAndDelete({ userId, postId });
+
+    const dislike = new Dislike({ userId, postId });
+    await dislike.save();
+
+    console.log('Post disliked successfully!');
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error disliking post!");
+  }
+};
+
   ////////////////////////////////////////////////
 
   return {
     addNewPost,
     getAllPostsForUser,
     reportPostsForUser,
-    savePostsForUser
+    savePostsForUser,
+    likePostsForUser,
+    dislikePostsForUser
   };
 };
 //////////////////////////////////////////////////////////

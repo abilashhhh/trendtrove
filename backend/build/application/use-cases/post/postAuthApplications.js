@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -96,3 +96,41 @@ const handleSavePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, 
     }
 });
 exports.handleSavePosts = handleSavePosts;
+const handleLikePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleSavePosts reached");
+        if (!postId) {
+            throw new ErrorInApplication_1.default("Post ID and user id is required to like post", 400);
+        }
+        const handleLikePostsForUser = yield dbPostRepository.likePostsForUser(userId, postId);
+        console.log("All posts from handleLikePostsForUser :", handleLikePostsForUser);
+        return handleLikePostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleLikePosts");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to like posts", 500);
+    }
+});
+exports.handleLikePosts = handleLikePosts;
+const handleDislikePosts = (userId, postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleDislikePosts reached");
+        if (!postId) {
+            throw new ErrorInApplication_1.default("Post ID and user id is required to dislike post", 400);
+        }
+        const handleDislikePostsForUser = yield dbPostRepository.dislikePostsForUser(userId, postId);
+        console.log("All posts from handleDislikePostsForUser :", handleDislikePostsForUser);
+        return handleDislikePostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleDislikePostsForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to dislike posts", 500);
+    }
+});
+exports.handleDislikePosts = handleDislikePosts;

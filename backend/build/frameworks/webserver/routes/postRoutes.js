@@ -19,6 +19,8 @@ const postRouter = () => {
     router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
     router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
     router.post("/savepost", authMiddleware_1.default, controller.savePost);
+    router.post("/likepost", authMiddleware_1.default, controller.likePost);
+    router.post("/dislikepost", authMiddleware_1.default, controller.dislikePost);
     return router;
 };
 exports.default = postRouter;

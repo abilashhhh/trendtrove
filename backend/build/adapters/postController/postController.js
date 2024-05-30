@@ -93,11 +93,53 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const likePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, postId } = req.body;
+            console.log("likePost data received from frontend:", userId, postId);
+            const likePost = yield (0, postAuthApplications_1.handleLikePosts)(userId, postId, dbPostRepository);
+            console.log('likePost:', likePost);
+            res.status(201).json({
+                status: "success",
+                message: "Posts liked successfully",
+                data: likePost,
+            });
+        }
+        catch (error) {
+            console.error("Error liking posts for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to like posts",
+            });
+        }
+    });
+    const dislikePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId, postId } = req.body;
+            console.log("dislikePost data received from frontend:", userId, postId);
+            const dislikePost = yield (0, postAuthApplications_1.handleDislikePosts)(userId, postId, dbPostRepository);
+            console.log('dislikePost:', dislikePost);
+            res.status(201).json({
+                status: "success",
+                message: "Posts disliked successfully",
+                data: dislikePost,
+            });
+        }
+        catch (error) {
+            console.error("Error disliking posts for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to dislike posts",
+            });
+        }
+    });
     return {
         addPost,
         getpostforuser,
         reportPost,
-        savePost
+        savePost,
+        likePost,
+        dislikePost,
     };
 };
 exports.default = postController;
