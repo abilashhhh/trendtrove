@@ -5,7 +5,7 @@ import { Post } from "../../Types/Post";
 import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
-import { updatePost, uploadPost } from "../../API/Post/post";
+import { updatePost } from "../../API/Post/post";
 import { useNavigate, useParams } from "react-router-dom";
 import debounce from "../../utils/debouncer";
 import { usernameAvailability } from "../../API/Auth/auth";
@@ -215,16 +215,16 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
       try {
         const response = await updatePost(dataToSubmit);
         if (response.status === "success") {
-          toast.success("Post created successfully");
+          toast.success("Post updated successfully");
           setTimeout(() => {
             navigate("/home");
           }, 1500);
         } else {
-          toast.error("Failed to create post");
+          toast.error("Failed to update post");
         }
       } catch (error) {
-        toast.error("Failed to create post");
-        console.log("Error creating post: ", error);
+        toast.error("Failed to update post");
+        console.log("Error updating post: ", error);
       }
     } else {
       toast.error("Please add at least one image, video, or caption.");
@@ -419,7 +419,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
           onClick={handleSubmit}
           className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5"
         >
-          POST
+          UPDATE POST
         </button>
       </div>
     </main>

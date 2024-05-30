@@ -47,11 +47,11 @@ export const handleupdatepost = async (
     console.log("Post data in handleupdatepost:", postData);
 
     if (!postData.userId) {
-      throw new ErrorInApplication("User ID is required to create a post", 400);
+      throw new ErrorInApplication("User ID is required to update a post", 400);
     }
 
     if (!postData.postId) {
-      throw new ErrorInApplication("post ID is required to create a post", 400);
+      throw new ErrorInApplication("post ID is required to update a post", 400);
     }
   
 

@@ -37,7 +37,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         try {
             const postData = req.body;
             console.log(postData);
-            const createPost = yield handleupdatepost(postData, dbPostRepository, dbUserRepository);
+            const createPost = yield (0, postAuthApplications_1.handleupdatepost)(postData, dbPostRepository, dbUserRepository);
             res.status(201).json({
                 status: "success",
                 message: "post updated successfully",

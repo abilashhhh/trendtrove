@@ -43,10 +43,10 @@ const handleupdatepost = (postData, dbPostRepository, dbUserRepository) => __awa
     try {
         console.log("Post data in handleupdatepost:", postData);
         if (!postData.userId) {
-            throw new ErrorInApplication_1.default("User ID is required to create a post", 400);
+            throw new ErrorInApplication_1.default("User ID is required to update a post", 400);
         }
         if (!postData.postId) {
-            throw new ErrorInApplication_1.default("post ID is required to create a post", 400);
+            throw new ErrorInApplication_1.default("post ID is required to update a post", 400);
         }
         console.log("User exists....");
         const newPost = yield dbPostRepository.updatePost(postData);

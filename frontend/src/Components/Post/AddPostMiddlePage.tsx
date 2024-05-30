@@ -5,7 +5,7 @@ import { Post } from "../../Types/Post";
 import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
-import { updatePost, uploadPost } from "../../API/Post/post";
+import { uploadPost } from "../../API/Post/post";
 import { useNavigate } from "react-router-dom";
 import debounce from "../../utils/debouncer";
 import { usernameAvailability } from "../../API/Auth/auth";
@@ -211,7 +211,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
       postData.captions.trim() !== ""
     ) {
       try {
-        const response = await updatePost(dataToSubmit);
+        const response = await uploadPost(dataToSubmit);
         if (response.status === "success") {
           toast.success("Post created successfully");
           setTimeout(() => {
@@ -418,7 +418,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
           onClick={handleSubmit}
           className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5"
         >
-          UPDATE POST
+            POST
         </button>
       </div>
     </main>

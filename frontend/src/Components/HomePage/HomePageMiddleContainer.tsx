@@ -200,7 +200,7 @@ const MiddleContainer: React.FC = () => {
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700   text-white items-center justify-center">
       <ToastContainer />
 
-      <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar items-center  lg:grid lg:grid-cols-2 gap-1      ">
+      <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar   lg:grid lg:grid-cols-2    ">
         {posts.length > 0 ? (
           posts.map(post => (
             <div
