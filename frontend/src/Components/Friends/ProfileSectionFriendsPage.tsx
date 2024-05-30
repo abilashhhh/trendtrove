@@ -18,6 +18,7 @@ import {
 } from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
 import { Navigate, useNavigate } from "react-router-dom";
+import { getPostsLengthOfTheUser } from "../../API/Post/post";
 
 interface UserInfo {
   coverPhoto: string;
@@ -221,6 +222,30 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
     });
   };
 
+  
+  const [postCount, setPostCount] = useState(0);
+
+
+  const fetchPostCount = async () => {
+    try {
+      let username;
+      console.log("userDetails.username : ", userDetails.username)
+      if(userDetails && userDetails.username){
+         username = userDetails.username
+      }
+      const count = await getPostsLengthOfTheUser(username);
+      console.log(count.data)
+      setPostCount(count.data);
+    } catch (error) {
+      console.error("Error fetching post count:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPostCount();
+  }, );
+
+
   return (
 
     <div className="mx-auto h-screen rounded-lg shadow-lg bg-slate-200 dark:bg-slate-800 overflow-auto no-scrollbar">
@@ -271,7 +296,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                   className="mr-2 text-gray-600"
                 />
                 <span className="text-gray-800 dark:text-gray-200">
-                  {userDetails.posts?.length || 0} Posts
+                  {postCount && postCount || 0} Posts
                 </span>
               </div>
               <div className="inline-flex items-center">

@@ -72,6 +72,46 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const getpostforuserusername = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { username } = req.params;
+            console.log("username received from frontend:", username);
+            const getPosts = yield (0, postAuthApplications_1.handleGetPostsForUserUsername)(username, dbPostRepository);
+            console.log('getPosts:', getPosts);
+            res.status(201).json({
+                status: "success",
+                message: "Posts fetched for user",
+                data: getPosts,
+            });
+        }
+        catch (error) {
+            console.error("Error getting all posts for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to get all posts",
+            });
+        }
+    });
+    const getpostlengthofuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { username } = req.params;
+            console.log("Id received from frontend:", username);
+            const getPostsLength = yield (0, postAuthApplications_1.handleGetLengthForUser)(username, dbPostRepository);
+            console.log('getPostsLength:', getPostsLength);
+            res.status(201).json({
+                status: "success",
+                message: "Posts fetched for user",
+                data: getPostsLength,
+            });
+        }
+        catch (error) {
+            console.error("Error getting all posts for user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to get all posts",
+            });
+        }
+    });
     const getpostofcurrentuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { id } = req.params;
@@ -290,6 +330,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         addPost,
         updatepost,
         getpostforuser,
+        getpostforuserusername,
+        getpostlengthofuser,
         getpostofcurrentuser,
         getsavedpostofcurrentuser,
         getparticularpostofcurrentuser,

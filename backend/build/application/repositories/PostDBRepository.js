@@ -18,6 +18,8 @@ const postDBRepository = (repository) => {
         yield repository.updatePost(postData);
     });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUser(id); });
+    const getAllPostsForUserUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUserUsername(username); });
+    const lengthofPostsForUser = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.lengthofPostsForUser(username); });
     const getAllPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForCurrentUser(id); });
     const getAllSavedPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllSavedPostsForCurrentUser(id); });
     const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getParticularPostsForCurrentUser(id); });
@@ -34,6 +36,8 @@ const postDBRepository = (repository) => {
         addNewPost,
         updatePost,
         getAllPostsForUser,
+        getAllPostsForUserUsername,
+        lengthofPostsForUser,
         getAllPostsForCurrentUser,
         getAllSavedPostsForCurrentUser,
         getParticularPostsForCurrentUser,

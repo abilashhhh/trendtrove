@@ -72,6 +72,45 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting all posts for user!");
     }
   };
+  const getAllPostsForUserUsername = async (username :string) => {
+    try {
+      const requesterUser = await User.findOne({ username: username });
+      if (!requesterUser) {
+        throw new Error("User not found");
+      }
+  
+      const currentuserId = requesterUser._id;
+  
+       
+      const gettingPosts = await Post.find({
+        userId:currentuserId ,
+      }).sort({ createdAt: -1 });
+  
+      console.log("Getting posts before returning:", gettingPosts);
+  
+      return gettingPosts;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting all posts for user!");
+    }
+  };
+  
+
+  const lengthofPostsForUser = async (username: string) => {
+    try {
+      const user = await User.findOne({ username: username });
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      const postCount = await Post.countDocuments({ userId: user._id });
+      return postCount;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting length of posts for user!");
+    }
+  };
+  
 
   const getAllPostsForCurrentUser = async (id: string) => {
     try {
@@ -277,6 +316,8 @@ export const postRepositoryMongoDB = () => {
     addNewPost,
     updatePost,
     getAllPostsForUser,
+    getAllPostsForUserUsername,
+    lengthofPostsForUser,
     getAllPostsForCurrentUser,
     getAllSavedPostsForCurrentUser,
     getParticularPostsForCurrentUser,

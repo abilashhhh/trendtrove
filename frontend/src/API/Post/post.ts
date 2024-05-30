@@ -86,6 +86,21 @@ export const getAllPostsForUser = async (
   }
 };
 
+export const fetchAllPostsForUserUsingUsername = async (
+  username: string
+): Promise<GetAllPostsForUser> => {
+  try {
+    const response = await axiosUserInstance.get<GetAllPostsForUser>(
+      `${END_POINTS.GET_POSTS_FOR_USER_USERNAME}/${username}`
+    );
+    console.log("respose: ", response.data?.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const fetchPostsOfTheCurrentUser = async (
   id: string
 ): Promise<GetAllPostsOfCurrentUser> => {
@@ -124,6 +139,21 @@ export const getThePostDataOfParticularPost = async (
       `${END_POINTS.GET_PARTICULAR_POSTS_OF_CURRENT_USER}/${id}`
     );
     console.log("getThePostDataOfParticularPost respose: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getPostsLengthOfTheUser = async (
+  username: string
+): Promise<GetAllPostsOfCurrentUser> => {
+  try {
+    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+      `${END_POINTS.GET_POSTS_LENGTH_OF_USER}/${username}`
+    );
+    console.log("getPostsLengthOfTheUser respose: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -200,11 +230,9 @@ export const deletePostForUser = async (
 ): Promise<DeletePostResponse> => {
   try {
     console.log("deletePostForUser post API, postId:", postId);
-
     const response = await axiosUserInstance.delete<DeletePostResponse>(
       `${END_POINTS.DELETE_POST.replace(":postId", postId)}`
     );
-
     console.log("response:", response.data);
     return response.data;
   } catch (error) {

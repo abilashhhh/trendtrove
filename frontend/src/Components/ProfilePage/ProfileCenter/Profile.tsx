@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -15,6 +15,7 @@ import {
 import { UserInfo } from "../../../Types/userProfile";
 import { useNavigate } from "react-router-dom";
 import PostInProfilePage from "../../Post/PostInProfilePage";
+import { getPostsLengthOfTheUser } from "../../../API/Post/post";
 
 interface ProfileProps {
   userDetails: UserInfo;
@@ -30,11 +31,36 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
+ 
+
+
 const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate("/editProfile");
   };
+
+  const [postCount, setPostCount] = useState(0);
+
+
+  const fetchPostCount = async () => {
+    try {
+      let username;
+      console.log("userDetails.username : ", userDetails.username)
+      if(userDetails && userDetails.username){
+         username = userDetails.username
+      }
+      const count = await getPostsLengthOfTheUser(username);
+      console.log(count.data)
+      setPostCount(count.data);
+    } catch (error) {
+      console.error("Error fetching post count:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPostCount();
+  }, );
 
   return (
     <main className="flex-1  bg-slate-800 min-h-screen w-full p-3 rounded-lg dark:bg-slate-900 text-white">
@@ -205,8 +231,8 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                 Posts
               </h2>
               <p className="text-lg font-bold text-gray-800 dark:text-white">
-                {userDetails.posts ? userDetails.posts.length : "0"}
-              </p>
+                {postCount && postCount || "0"}
+               </p>
             </div>
 
             <div className="text-center md:w-1/3">

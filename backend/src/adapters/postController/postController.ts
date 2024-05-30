@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetParticularPost, handleGetPostsForUser, handleGetPostsOfCurrentUser, handleGetSavedPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleRemoveSavePosts, handleReportPosts, handleSavePosts, handleupdatepost } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLengthForUser, handleGetLikedPosts, handleGetParticularPost, handleGetPostsForUser, handleGetPostsForUserUsername, handleGetPostsOfCurrentUser, handleGetSavedPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleRemoveSavePosts, handleReportPosts, handleSavePosts, handleupdatepost } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -85,6 +85,52 @@ const postController = (
       });
     }
   };
+
+  const getpostforuserusername = async (req: Request, res: Response) => {
+    try {
+      const { username } = req.params;
+      console.log("username received from frontend:", username);
+      
+      const getPosts  = await handleGetPostsForUserUsername(username,dbPostRepository);
+      console.log('getPosts:', getPosts);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts fetched for user",
+        data: getPosts,
+      });
+    } catch (error) {
+      console.error("Error getting all posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to get all posts",
+      });
+    }
+  };
+
+  const getpostlengthofuser = async (req: Request, res: Response) => {
+    try {
+      const { username } = req.params;
+      console.log("Id received from frontend:", username);
+      
+      const getPostsLength  = await handleGetLengthForUser(username,dbPostRepository);
+      console.log('getPostsLength:', getPostsLength);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts fetched for user",
+        data: getPostsLength,
+      });
+    } catch (error) {
+      console.error("Error getting all posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to get all posts",
+      });
+    }
+  };
+
+ 
 
   const getpostofcurrentuser = async (req: Request, res: Response) => {
     try {
@@ -329,6 +375,8 @@ const postController = (
     addPost,
     updatepost,
     getpostforuser,
+    getpostforuserusername,
+    getpostlengthofuser,
     getpostofcurrentuser,
     getsavedpostofcurrentuser,
     getparticularpostofcurrentuser,

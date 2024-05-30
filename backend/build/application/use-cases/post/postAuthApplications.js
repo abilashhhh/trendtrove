@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -81,6 +81,44 @@ const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0
     }
 });
 exports.handleGetPostsForUser = handleGetPostsForUser;
+const handleGetPostsForUserUsername = (username, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetPostsForUserUsername reached");
+        if (!username) {
+            throw new ErrorInApplication_1.default("username is required to get all posts", 400);
+        }
+        const allPostsForUser = yield dbPostRepository.getAllPostsForUserUsername(username);
+        console.log("All posts from handleGetPostsForuserusername :", allPostsForUser);
+        return allPostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleGetPostsForUserUsername");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all posts", 500);
+    }
+});
+exports.handleGetPostsForUserUsername = handleGetPostsForUserUsername;
+const handleGetLengthForUser = (username, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetLengthForUser reached");
+        if (!username) {
+            throw new ErrorInApplication_1.default("User ID is required to get all posts", 400);
+        }
+        const length = yield dbPostRepository.lengthofPostsForUser(username);
+        console.log("All posts from handleGetPostsForuser :", length);
+        return length;
+    }
+    catch (error) {
+        console.log("Error in handleGetLengthForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all posts", 500);
+    }
+});
+exports.handleGetLengthForUser = handleGetLengthForUser;
 const handleGetPostsOfCurrentUser = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("handleGetPostsOfCurrentUser reached");

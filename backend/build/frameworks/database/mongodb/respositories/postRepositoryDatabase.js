@@ -69,6 +69,38 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error getting all posts for user!");
         }
     });
+    const getAllPostsForUserUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const requesterUser = yield userModel_1.default.findOne({ username: username });
+            if (!requesterUser) {
+                throw new Error("User not found");
+            }
+            const currentuserId = requesterUser._id;
+            const gettingPosts = yield postModel_1.default.find({
+                userId: currentuserId,
+            }).sort({ createdAt: -1 });
+            console.log("Getting posts before returning:", gettingPosts);
+            return gettingPosts;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error getting all posts for user!");
+        }
+    });
+    const lengthofPostsForUser = (username) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findOne({ username: username });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const postCount = yield postModel_1.default.countDocuments({ userId: user._id });
+            return postCount;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error getting length of posts for user!");
+        }
+    });
     const getAllPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (!id) {
@@ -261,6 +293,8 @@ const postRepositoryMongoDB = () => {
         addNewPost,
         updatePost,
         getAllPostsForUser,
+        getAllPostsForUserUsername,
+        lengthofPostsForUser,
         getAllPostsForCurrentUser,
         getAllSavedPostsForCurrentUser,
         getParticularPostsForCurrentUser,

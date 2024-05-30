@@ -15,6 +15,12 @@ export const postDBRepository = (
   const getAllPostsForUser = async (id: string) => 
   await repository.getAllPostsForUser(id);
 
+  const getAllPostsForUserUsername = async (username: string) => 
+  await repository.getAllPostsForUserUsername(username);
+
+  const lengthofPostsForUser = async (username: string) => 
+  await repository.lengthofPostsForUser(username);
+
   const getAllPostsForCurrentUser = async (id: string) => 
   await repository.getAllPostsForCurrentUser(id);
 
@@ -56,6 +62,8 @@ export const postDBRepository = (
     addNewPost,
     updatePost,
     getAllPostsForUser,
+    getAllPostsForUserUsername,
+    lengthofPostsForUser,
     getAllPostsForCurrentUser,
     getAllSavedPostsForCurrentUser,
     getParticularPostsForCurrentUser,

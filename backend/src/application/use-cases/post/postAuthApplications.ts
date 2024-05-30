@@ -90,6 +90,49 @@ export const handleGetPostsForUser = async (
   }
 };
 
+export const handleGetPostsForUserUsername = async (
+  username: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetPostsForUserUsername reached");
+    if (!username) {
+      throw new ErrorInApplication("username is required to get all posts", 400);
+    }
+    const allPostsForUser  = await dbPostRepository.getAllPostsForUserUsername(username);
+    console.log("All posts from handleGetPostsForuserusername :", allPostsForUser);
+    return allPostsForUser;
+  } catch (error) {
+    console.log("Error in handleGetPostsForUserUsername");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all posts", 500);
+  }
+};
+
+
+export const handleGetLengthForUser = async (
+  username: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetLengthForUser reached");
+    if (!username) {
+      throw new ErrorInApplication("User ID is required to get all posts", 400);
+    }
+    const length  = await dbPostRepository.lengthofPostsForUser(username);
+    console.log("All posts from handleGetPostsForuser :", length);
+    return length;
+  } catch (error) {
+    console.log("Error in handleGetLengthForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all posts", 500);
+  }
+};
+
 export const handleGetPostsOfCurrentUser = async (
   id: string,
   dbPostRepository: ReturnType<PostDBInterface>
