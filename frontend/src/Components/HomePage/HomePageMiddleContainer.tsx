@@ -173,16 +173,7 @@ const MiddleContainer: React.FC = () => {
 
     fetchLikesDislikesData(postId);
   };
-
-  const fetchLikesAndDislikesInfo = async (postId: string) => {
-    try {
-      const response = await fetch(`/api/post/likes-dislikes/${postId}`);
-      const data = await response.json();
-      setLikesDislikesInfo(prev => ({ ...prev, [postId]: data }));
-    } catch (error) {
-      console.log("Error fetching likes and dislikes info:", error);
-    }
-  };
+ 
 
   const toggleOptions = (postId: string) => {
     if (showOptions === postId) {
@@ -206,10 +197,10 @@ const MiddleContainer: React.FC = () => {
   };
 
   return (
-    <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 lg:pl-48 lg:pr-48 text-white items-center justify-center">
+    <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700   text-white items-center justify-center">
       <ToastContainer />
 
-      <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar items-center justify-center">
+      <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar items-center  lg:grid lg:grid-cols-2 gap-1      ">
         {posts.length > 0 ? (
           posts.map(post => (
             <div
@@ -337,7 +328,7 @@ const MiddleContainer: React.FC = () => {
               ) : (
                 <p></p>
               )}
-              <p className="mt-2">{post.captions}</p>
+              <p className="mt-2 h">{post.captions}</p>
               <div className="flex justify-between">
                 <div className="flex gap-2 items-center mt-4">
                   <button

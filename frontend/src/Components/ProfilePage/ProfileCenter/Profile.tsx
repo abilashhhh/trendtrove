@@ -14,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { UserInfo } from "../../../Types/userProfile";
 import { useNavigate } from "react-router-dom";
+import PostInProfilePage from "../../Post/PostInProfilePage";
 
 interface ProfileProps {
   userDetails: UserInfo;
@@ -229,6 +230,9 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
 
 
 
+<div>
+  <PostInProfilePage />
+</div>
 
 
 
@@ -238,9 +242,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
 
 
 
-          <div className="h-36 "></div>
-          <div className="h-4 ">
-          </div>
+ 
         </div>
       </div>
     </main>

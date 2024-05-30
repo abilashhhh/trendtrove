@@ -6,7 +6,7 @@ import { userDBRepository } from "../../../application/repositories/userDBReposi
 import { userRepositoryMongoDB } from "../../database/mongodb/respositories/userRepositoryDatabase";
 import postController from "../../../adapters/postController/postController";
 import { postRepositoryMongoDB } from "../../database/mongodb/respositories/postRepositoryDatabase";
-import { postDBRepository } from "../../../application/repositories/PostDBRepository";
+import { postDBRepository } from "../../../application/repositories/postDBRepository";
 
 const postRouter = () => {
   const router = express();
@@ -22,6 +22,7 @@ const postRouter = () => {
 
   router.post("/addpost", authMiddleware, controller.addPost);
   router.get("/getpostforuser/:id", authMiddleware, controller.getpostforuser);
+  router.get("/getpostofcurrentuser/:id", authMiddleware, controller.getpostofcurrentuser);
   router.post("/reportpost", authMiddleware, controller.reportPost);
   router.post("/savepost", authMiddleware, controller.savePost);
   router.post("/likepost", authMiddleware, controller.likePost);
@@ -29,6 +30,7 @@ const postRouter = () => {
   router.get("/getlikedposts/:userId", authMiddleware, controller.getlikedposts);
   router.get("/getdislikedposts/:userId", authMiddleware, controller.getdislikedposts);
   router.get("/getlikesdislikesinfo/:postId", authMiddleware, controller.getlikesdislikesinfo);
+  router.delete("/deletepost/:postId", authMiddleware, controller.deletepost);
 
   return router;
 };

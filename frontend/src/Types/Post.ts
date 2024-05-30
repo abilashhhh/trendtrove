@@ -42,6 +42,12 @@ export interface GetAllPostsForUser {
   postData :Post
 }
 
+export interface GetAllPostsOfCurrentUser {
+  status: string;
+  message: string;
+  postData :Post
+}
+
 
 export interface ReportPostResponse {
   status: string;
@@ -49,6 +55,11 @@ export interface ReportPostResponse {
 }
 
 export interface SavePostResponse {
+  status: string;
+  message: string;
+}
+
+export interface DeletePostResponse {
   status: string;
   message: string;
 }

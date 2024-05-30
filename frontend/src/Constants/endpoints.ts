@@ -32,10 +32,12 @@ const END_POINTS = {
   
   ADD_POST :'api/post/addpost',
   GET_POSTS_FOR_USER:'api/post/getpostforuser',
+  GET_POSTS_OF_CURRENT_USER:'api/post/getpostofcurrentuser',
   REPORT_POST : '/api/post/reportpost',
   SAVE_POST : '/api/post/savepost',
   LIKE_POST : '/api/post/likepost',
   DISLIKE_POST : '/api/post/dislikepost',
+  DELETE_POST : '/api/post/deletepost/:postId',
   GET_LIKED_POSTS : '/api/post/getlikedposts/:userId',
   GET_DISLIKED_POSTS : '/api/post/getdislikedposts/:userId',
   GET_LIKES_DISLIKES_INFO : '/api/post/getlikesdislikesinfo/:postId',

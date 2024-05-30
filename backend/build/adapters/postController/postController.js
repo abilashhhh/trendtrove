@@ -53,6 +53,26 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const getpostofcurrentuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            console.log(" getpostofcurrentuserId received from frontend:", id);
+            const getPosts = yield (0, postAuthApplications_1.handleGetPostsOfCurrentUser)(id, dbPostRepository);
+            console.log('getPosts:', getPosts);
+            res.status(201).json({
+                status: "success",
+                message: "Posts fetched for current user",
+                data: getPosts,
+            });
+        }
+        catch (error) {
+            console.error("Error getting all posts of current user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to get all posts",
+            });
+        }
+    });
     const reportPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const data = req.body;
@@ -164,7 +184,6 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
     const getlikesdislikesinfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { postId } = req.params;
-            console.log("Req.params on getlikesdislikesinfo: ", req.params);
             console.log("getlikesdislikesinfo data received from frontend:", postId);
             const likesdislikesinfo = yield (0, postAuthApplications_1.handleGetlikesdislikesinfo)(postId, dbPostRepository);
             console.log('likesdislikesinfo:', likesdislikesinfo);
@@ -175,16 +194,31 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             res.status(500).json({ error: "Failed to get likesdislikesinfo for posts" });
         }
     });
+    const deletepost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { postId } = req.params;
+            console.log("deletepost data received from frontend:", postId);
+            const deltePostResult = yield (0, postAuthApplications_1.handleDeltePosts)(postId, dbPostRepository);
+            console.log('deltePostResult:', deltePostResult);
+            res.status(200).json({ deltePostResult });
+        }
+        catch (error) {
+            console.error("Error getting deltePostResult for posts :", error);
+            res.status(500).json({ error: "Failed to get deltePostResult" });
+        }
+    });
     return {
         addPost,
         getpostforuser,
+        getpostofcurrentuser,
         reportPost,
         savePost,
         likePost,
         dislikePost,
         getlikedposts,
         getdislikedposts,
-        getlikesdislikesinfo
+        getlikesdislikesinfo,
+        deletepost
     };
 };
 exports.default = postController;

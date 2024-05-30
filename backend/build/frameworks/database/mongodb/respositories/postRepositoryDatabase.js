@@ -59,6 +59,24 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error getting all posts for user!");
         }
     });
+    const getAllPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (!id) {
+                throw new Error("User ID is required");
+            }
+            const requesterUser = yield userModel_1.default.findById(id);
+            if (!requesterUser) {
+                throw new Error("User not found");
+            }
+            const gettingPosts = yield postModel_1.default.find({ userId: id }).sort({ createdAt: -1 });
+            console.log("Getting posts before returning:", gettingPosts);
+            return gettingPosts;
+        }
+        catch (error) {
+            console.error(error.message);
+            throw new Error("Error getting all posts of current user!");
+        }
+    });
     const reportPostsForUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const newPeport = new reportPostModel_1.default(data);
@@ -154,17 +172,33 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error fetching disliked posts!");
         }
     });
+    const deltePostForUser = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const deletedPost = yield postModel_1.default.findByIdAndDelete(postId);
+            if (!deletedPost) {
+                throw new Error("Post not found");
+            }
+            console.log("Post deleted successfully:", deletedPost);
+            return { status: "success", message: "post deleted" };
+        }
+        catch (error) {
+            console.error("Error deleting post:", error);
+            throw new Error("Error deleting post!");
+        }
+    });
     ////////////////////////////////////////////////
     return {
         addNewPost,
         getAllPostsForUser,
+        getAllPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
         likePostsForUser,
         dislikePostsForUser,
         getLikedPosts,
         getDislikedPosts,
-        getlikesdislikesInfo
+        getlikesdislikesInfo,
+        deltePostForUser
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

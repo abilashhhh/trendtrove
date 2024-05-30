@@ -10,6 +10,9 @@ export const postDBRepository = (
 
   const getAllPostsForUser = async (id: string) => 
   await repository.getAllPostsForUser(id);
+
+  const getAllPostsForCurrentUser = async (id: string) => 
+  await repository.getAllPostsForCurrentUser(id);
   
   const reportPostsForUser = async (id: string) => 
   await repository.reportPostsForUser(id);
@@ -32,17 +35,22 @@ export const postDBRepository = (
   const getlikesdislikesInfo = async (postId: string) => 
   await repository.getlikesdislikesInfo(postId);
   
+  const deltePostForUser = async (postId: string) => 
+  await repository.deltePostForUser(postId);
+  
 
   return {
     addNewPost,
     getAllPostsForUser,
+    getAllPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
     likePostsForUser,
     dislikePostsForUser,
     getLikedPosts,
     getDislikedPosts,
-    getlikesdislikesInfo
+    getlikesdislikesInfo,
+    deltePostForUser
   };
 };
 

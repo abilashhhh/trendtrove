@@ -1,6 +1,6 @@
 import { PostDataInterface, ReportPost } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
-import { PostDBInterface } from "../../repositories/PostDBRepository";
+import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 
 export const handleCreatePost = async (
@@ -57,6 +57,27 @@ export const handleGetPostsForUser = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to get all posts", 500);
+  }
+};
+
+export const handleGetPostsOfCurrentUser = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetPostsOfCurrentUser reached");
+    if (!id) {
+      throw new ErrorInApplication("User ID is required to get all posts", 400);
+    }
+    const allPostsForUser  = await dbPostRepository.getAllPostsForCurrentUser(id);
+    console.log("All posts from handleGetPostsOfCurrentUser :", allPostsForUser);
+    return allPostsForUser;
+  } catch (error) {
+    console.log("Error in handleGetPostsOfCurrentUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all  posts of current user", 500);
   }
 };
 
@@ -203,5 +224,24 @@ export const handleGetlikesdislikesinfo = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to get liked posts", 500);
+  }
+};
+
+export const handleDeltePosts = async (
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleDeltePosts reached");
+   
+    const handleDeltePostsForUser  = await dbPostRepository.deltePostForUser(postId);
+    console.log("All posts from handleDeltePostsForUser :", handleGetlikesdislikesinfo);
+    return handleDeltePostsForUser;
+  } catch (error) {
+    console.log("Error in handleDeltePostsForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get delete posts", 500);
   }
 };

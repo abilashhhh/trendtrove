@@ -11,12 +11,13 @@ const userDBRepository_1 = require("../../../application/repositories/userDBRepo
 const userRepositoryDatabase_1 = require("../../database/mongodb/respositories/userRepositoryDatabase");
 const postController_1 = __importDefault(require("../../../adapters/postController/postController"));
 const postRepositoryDatabase_1 = require("../../database/mongodb/respositories/postRepositoryDatabase");
-const PostDBRepository_1 = require("../../../application/repositories/PostDBRepository");
+const postDBRepository_1 = require("../../../application/repositories/postDBRepository");
 const postRouter = () => {
     const router = (0, express_1.default)();
-    const controller = (0, postController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, PostDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
+    const controller = (0, postController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, postDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.post("/addpost", authMiddleware_1.default, controller.addPost);
     router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
+    router.get("/getpostofcurrentuser/:id", authMiddleware_1.default, controller.getpostofcurrentuser);
     router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
     router.post("/savepost", authMiddleware_1.default, controller.savePost);
     router.post("/likepost", authMiddleware_1.default, controller.likePost);
@@ -24,6 +25,7 @@ const postRouter = () => {
     router.get("/getlikedposts/:userId", authMiddleware_1.default, controller.getlikedposts);
     router.get("/getdislikedposts/:userId", authMiddleware_1.default, controller.getdislikedposts);
     router.get("/getlikesdislikesinfo/:postId", authMiddleware_1.default, controller.getlikesdislikesinfo);
+    router.delete("/deletepost/:postId", authMiddleware_1.default, controller.deletepost);
     return router;
 };
 exports.default = postRouter;

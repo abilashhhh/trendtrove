@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsOfCurrentUser = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -58,6 +58,25 @@ const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0
     }
 });
 exports.handleGetPostsForUser = handleGetPostsForUser;
+const handleGetPostsOfCurrentUser = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetPostsOfCurrentUser reached");
+        if (!id) {
+            throw new ErrorInApplication_1.default("User ID is required to get all posts", 400);
+        }
+        const allPostsForUser = yield dbPostRepository.getAllPostsForCurrentUser(id);
+        console.log("All posts from handleGetPostsOfCurrentUser :", allPostsForUser);
+        return allPostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleGetPostsOfCurrentUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all  posts of current user", 500);
+    }
+});
+exports.handleGetPostsOfCurrentUser = handleGetPostsOfCurrentUser;
 const handleReportPosts = (data, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("handleReportPosts reached");
@@ -182,3 +201,19 @@ const handleGetlikesdislikesinfo = (postId, dbPostRepository) => __awaiter(void 
     }
 });
 exports.handleGetlikesdislikesinfo = handleGetlikesdislikesinfo;
+const handleDeltePosts = (postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleDeltePosts reached");
+        const handleDeltePostsForUser = yield dbPostRepository.deltePostForUser(postId);
+        console.log("All posts from handleDeltePostsForUser :", exports.handleGetlikesdislikesinfo);
+        return handleDeltePostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleDeltePostsForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get delete posts", 500);
+    }
+});
+exports.handleDeltePosts = handleDeltePosts;

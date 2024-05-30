@@ -15,6 +15,7 @@ const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({
  
         <div className="flex-1 w-full overflow-y-auto no-scrollbar">
         <Profile userDetails={userDetails} />
+        
       </div>
 
       <div className=" md:flex flex-col gap-2 overflow-y-auto">
@@ -25,7 +26,9 @@ const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({
         <div className="overflow-y-auto no-scrollbar">
           <Following userDetails={userDetails} />
         </div>
+ 
       </div>
+
     </main>
   );
 };

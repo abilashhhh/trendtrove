@@ -57,6 +57,26 @@ export const postRepositoryMongoDB = () => {
   };
 
 
+  const getAllPostsForCurrentUser = async (id: string) => {
+    try {
+      if (!id) {
+        throw new Error("User ID is required");
+      }
+  
+      const requesterUser = await User.findById(id);
+      if (!requesterUser) {
+        throw new Error("User not found");
+      }
+  
+      const gettingPosts = await Post.find({ userId: id }).sort({ createdAt: -1 });
+      console.log("Getting posts before returning:", gettingPosts);
+      return gettingPosts;
+    } catch (error : any) {
+      console.error(error.message);
+      throw new Error("Error getting all posts of current user!");
+    }
+  };
+   
   const reportPostsForUser = async (data:  ReportPost) => {
     try {
       const newPeport = new ReportPostModel(data);
@@ -150,7 +170,6 @@ const data = {
   dislikesCount: dislikes.length,
   likedUsers: likes.map(like => like.userId.username),
   dislikedUsers: dislikes.map(dislike => dislike.userId.username)
-
 }
 console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo)
 return data
@@ -160,18 +179,34 @@ return data
   }
 };
 
+const deltePostForUser = async (postId: string) => {
+  try {
+    const deletedPost = await Post.findByIdAndDelete(postId);
+    if (!deletedPost) {
+      throw new Error("Post not found");
+    }
+    console.log("Post deleted successfully:", deletedPost);
+    return {status: "success" , message: "post deleted"};
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw new Error("Error deleting post!");
+  }
+};
+
   ////////////////////////////////////////////////
 
   return {
     addNewPost,
     getAllPostsForUser,
+    getAllPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
     likePostsForUser,
     dislikePostsForUser,
     getLikedPosts,
     getDislikedPosts,
-    getlikesdislikesInfo
+    getlikesdislikesInfo,
+    deltePostForUser
   };
 };
 //////////////////////////////////////////////////////////

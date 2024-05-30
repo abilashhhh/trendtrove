@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetPostsForUser, handleGetlikesdislikesinfo, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetPostsForUser, handleGetPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -60,6 +60,28 @@ const postController = (
       });
     } catch (error) {
       console.error("Error getting all posts for user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to get all posts",
+      });
+    }
+  };
+
+  const getpostofcurrentuser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      console.log(" getpostofcurrentuserId received from frontend:", id);
+      
+      const getPosts  = await handleGetPostsOfCurrentUser(id,dbPostRepository);
+      console.log('getPosts:', getPosts);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts fetched for current user",
+        data: getPosts,
+      });
+    } catch (error) {
+      console.error("Error getting all posts of current user:", error);
       res.status(401).json({
         status: "error",
         message: "Failed to get all posts",
@@ -190,7 +212,6 @@ const postController = (
   const getlikesdislikesinfo = async (req: Request, res: Response) => {
     try {
       const { postId } = req.params;
-      console.log("Req.params on getlikesdislikesinfo: ", req.params);
       console.log("getlikesdislikesinfo data received from frontend:", postId);
   
       const likesdislikesinfo = await handleGetlikesdislikesinfo(postId, dbPostRepository);
@@ -202,18 +223,35 @@ const postController = (
       res.status(500).json({ error: "Failed to get likesdislikesinfo for posts" });
     }
   };
+
+  const deletepost = async (req: Request, res: Response) => {
+    try {
+      const { postId } = req.params;
+      console.log("deletepost data received from frontend:", postId);
+  
+      const deltePostResult = await handleDeltePosts(postId, dbPostRepository);
+      console.log('deltePostResult:', deltePostResult);
+  
+      res.status(200).json({ deltePostResult });
+    } catch (error) {
+      console.error("Error getting deltePostResult for posts :", error);
+      res.status(500).json({ error: "Failed to get deltePostResult" });
+    }
+  };
   
 
   return {
     addPost,
     getpostforuser,
+    getpostofcurrentuser,
     reportPost,
     savePost,
     likePost,
     dislikePost,
     getlikedposts,
     getdislikedposts,
-    getlikesdislikesinfo
+    getlikesdislikesinfo,
+    deletepost
   };
 };
 
