@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -134,3 +134,35 @@ const handleDislikePosts = (userId, postId, dbPostRepository) => __awaiter(void 
     }
 });
 exports.handleDislikePosts = handleDislikePosts;
+const handleGetLikedPosts = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetLikedPosts reached");
+        const handleGetLikedPosts = yield dbPostRepository.getLikedPosts(userId);
+        console.log("All posts from handleGetLikedPosts :", handleGetLikedPosts);
+        return handleGetLikedPosts;
+    }
+    catch (error) {
+        console.log("Error in handleGetLikedPosts");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get liked posts", 500);
+    }
+});
+exports.handleGetLikedPosts = handleGetLikedPosts;
+const handleGetDislikedPosts = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetDislikedPosts reached");
+        const handleGetDislikedPosts = yield dbPostRepository.getDislikedPosts(userId);
+        console.log("All posts from handleGetDislikedPosts :", handleGetDislikedPosts);
+        return handleGetDislikedPosts;
+    }
+    catch (error) {
+        console.log("Error in handleGetDislikedPosts");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get liked posts", 500);
+    }
+});
+exports.handleGetDislikedPosts = handleGetDislikedPosts;

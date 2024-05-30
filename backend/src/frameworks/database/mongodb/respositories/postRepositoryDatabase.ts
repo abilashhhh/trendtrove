@@ -118,6 +118,28 @@ const dislikePostsForUser = async (userId: string, postId: string) => {
   }
 };
 
+const getLikedPosts = async (userId: string) => {
+  try {
+    const likedPosts = await Like.find({ userId });
+    console.log("Liked posts:", likedPosts);
+    return likedPosts;
+  } catch (error) {
+    console.error("Error fetching liked posts:", error);
+    throw new Error("Error fetching liked posts!");
+  }
+};
+
+const getDislikedPosts = async (userId: string) => {
+  try {
+    const dislikedPosts = await Dislike.find({ userId });
+    console.log("Disliked posts:", dislikedPosts);
+    return dislikedPosts;
+  } catch (error) {
+    console.error("Error fetching disliked posts:", error);
+    throw new Error("Error fetching disliked posts!");
+  }
+};
+
   ////////////////////////////////////////////////
 
   return {
@@ -126,7 +148,9 @@ const dislikePostsForUser = async (userId: string, postId: string) => {
     reportPostsForUser,
     savePostsForUser,
     likePostsForUser,
-    dislikePostsForUser
+    dislikePostsForUser,
+    getLikedPosts,
+    getDislikedPosts
   };
 };
 //////////////////////////////////////////////////////////

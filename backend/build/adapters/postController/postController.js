@@ -133,6 +133,34 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const getlikedposts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId } = req.params;
+            console.log("Req.params on getlikedposts: ", req.params);
+            console.log("getlikedposts data received from frontend:", userId);
+            const likedPosts = yield (0, postAuthApplications_1.handleGetLikedPosts)(userId, dbPostRepository);
+            console.log('Liked posts:', likedPosts);
+            res.status(200).json({ likedPosts });
+        }
+        catch (error) {
+            console.error("Error getting liked posts for user:", error);
+            res.status(500).json({ error: "Failed to get liked posts" });
+        }
+    });
+    const getdislikedposts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId } = req.params;
+            console.log("Req.params on getdislikedposts: ", req.params);
+            console.log("getdislikedposts data received from frontend:", userId);
+            const dislikedPosts = yield (0, postAuthApplications_1.handleGetDislikedPosts)(userId, dbPostRepository);
+            console.log('Disliked posts:', dislikedPosts);
+            res.status(200).json({ dislikedPosts });
+        }
+        catch (error) {
+            console.error("Error getting disliked posts for user:", error);
+            res.status(500).json({ error: "Failed to get disliked posts" });
+        }
+    });
     return {
         addPost,
         getpostforuser,
@@ -140,6 +168,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         savePost,
         likePost,
         dislikePost,
+        getlikedposts,
+        getdislikedposts
     };
 };
 exports.default = postController;

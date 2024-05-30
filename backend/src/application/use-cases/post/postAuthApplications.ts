@@ -148,3 +148,41 @@ export const handleDislikePosts = async (
     throw new ErrorInApplication("Failed to dislike posts", 500);
   }
 };
+
+export const handleGetLikedPosts = async (
+  userId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetLikedPosts reached");
+   
+    const handleGetLikedPosts  = await dbPostRepository.getLikedPosts(userId);
+    console.log("All posts from handleGetLikedPosts :", handleGetLikedPosts);
+    return handleGetLikedPosts;
+  } catch (error) {
+    console.log("Error in handleGetLikedPosts");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get liked posts", 500);
+  }
+};
+
+export const handleGetDislikedPosts = async (
+  userId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetDislikedPosts reached");
+   
+    const handleGetDislikedPosts  = await dbPostRepository.getDislikedPosts(userId);
+    console.log("All posts from handleGetDislikedPosts :", handleGetDislikedPosts);
+    return handleGetDislikedPosts;
+  } catch (error) {
+    console.log("Error in handleGetDislikedPosts");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get liked posts", 500);
+  }
+};

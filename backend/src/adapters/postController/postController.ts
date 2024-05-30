@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleDislikePosts, handleGetPostsForUser, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetPostsForUser, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -155,6 +155,38 @@ const postController = (
       });
     }
   };
+  const getlikedposts = async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
+      console.log("Req.params on getlikedposts: ", req.params);
+      console.log("getlikedposts data received from frontend:", userId);
+  
+      const likedPosts = await handleGetLikedPosts(userId, dbPostRepository);
+      console.log('Liked posts:', likedPosts);
+  
+      res.status(200).json({ likedPosts });
+    } catch (error) {
+      console.error("Error getting liked posts for user:", error);
+      res.status(500).json({ error: "Failed to get liked posts" });
+    }
+  };
+  
+  const getdislikedposts = async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
+      console.log("Req.params on getdislikedposts: ", req.params);
+      console.log("getdislikedposts data received from frontend:", userId);
+  
+      const dislikedPosts = await handleGetDislikedPosts(userId, dbPostRepository);
+      console.log('Disliked posts:', dislikedPosts);
+  
+      res.status(200).json({ dislikedPosts });
+    } catch (error) {
+      console.error("Error getting disliked posts for user:", error);
+      res.status(500).json({ error: "Failed to get disliked posts" });
+    }
+  };
+  
 
   return {
     addPost,
@@ -163,6 +195,8 @@ const postController = (
     savePost,
     likePost,
     dislikePost,
+    getlikedposts,
+    getdislikedposts
   };
 };
 

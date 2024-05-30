@@ -1,7 +1,7 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { DislikePostResponse, GetAllPostsForUser, LikePostResponse, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
+import { DislikePostResponse, GetAllPostsForUser, GetDislikedPostsResponse, GetLikedPostsResponse, LikePostResponse, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -129,6 +129,37 @@ export const dislikePost = async (
       }
     );
     console.log( " dislikePost response: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const getLikedPosts = async (userId: string) => {
+  try {
+    console.log("getLikedPosts , userid: ", userId)
+ 
+    
+    const response = await axiosUserInstance.get<GetLikedPostsResponse>(
+      `${END_POINTS.GET_LIKED_POSTS.replace(":userId", userId)}`
+    );
+    console.log("getLikedPosts response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getDislikedPosts = async (userId: string) => {
+  try {
+    console.log("getDislikedPosts , userid: ", userId)
+     const response = await axiosUserInstance.get<GetDislikedPostsResponse>(
+      `${END_POINTS.GET_DISLIKED_POSTS.replace(":userId", userId)}`
+    );
+    console.log("getDislikedPosts response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

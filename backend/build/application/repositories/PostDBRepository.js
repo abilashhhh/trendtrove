@@ -19,13 +19,17 @@ const postDBRepository = (repository) => {
     const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.savePostsForUser(userId, postId); });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.likePostsForUser(userId, postId); });
     const dislikePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.dislikePostsForUser(userId, postId); });
+    const getLikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getLikedPosts(userId); });
+    const getDislikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getDislikedPosts(userId); });
     return {
         addNewPost,
         getAllPostsForUser,
         reportPostsForUser,
         savePostsForUser,
         likePostsForUser,
-        dislikePostsForUser
+        dislikePostsForUser,
+        getLikedPosts,
+        getDislikedPosts
     };
 };
 exports.postDBRepository = postDBRepository;

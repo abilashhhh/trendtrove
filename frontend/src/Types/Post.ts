@@ -69,3 +69,18 @@ export interface ReportPostData {
   reporterId: string;
   reporterUsername: string;
 }
+
+
+export interface GetLikedPostsResponse {
+  likedPosts: any;
+ 
+  data: string[]
+
+}
+export interface GetDislikedPostsResponse {
+  dislikedPosts: any;
+ 
+  data: string[]
+}
+
+ 

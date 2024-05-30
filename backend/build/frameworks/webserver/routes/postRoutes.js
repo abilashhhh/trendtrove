@@ -21,6 +21,8 @@ const postRouter = () => {
     router.post("/savepost", authMiddleware_1.default, controller.savePost);
     router.post("/likepost", authMiddleware_1.default, controller.likePost);
     router.post("/dislikepost", authMiddleware_1.default, controller.dislikePost);
+    router.get("/getlikedposts/:userId", authMiddleware_1.default, controller.getlikedposts);
+    router.get("/getdislikedposts/:userId", authMiddleware_1.default, controller.getdislikedposts);
     return router;
 };
 exports.default = postRouter;

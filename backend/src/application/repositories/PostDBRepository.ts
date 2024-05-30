@@ -19,9 +19,15 @@ export const postDBRepository = (
   
   const likePostsForUser = async (userId: string, postId: string) => 
   await repository.likePostsForUser(userId, postId);
-  
+   
   const dislikePostsForUser = async (userId: string, postId: string) => 
   await repository.dislikePostsForUser(userId, postId);
+  
+  const getLikedPosts = async (userId: string) => 
+  await repository.getLikedPosts(userId);  
+   
+  const getDislikedPosts = async (userId: string) => 
+  await repository.getDislikedPosts(userId);
   
 
   return {
@@ -30,7 +36,9 @@ export const postDBRepository = (
     reportPostsForUser,
     savePostsForUser,
     likePostsForUser,
-    dislikePostsForUser
+    dislikePostsForUser,
+    getLikedPosts,
+    getDislikedPosts
   };
 };
 

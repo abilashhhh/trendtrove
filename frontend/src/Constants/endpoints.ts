@@ -36,6 +36,8 @@ const END_POINTS = {
   SAVE_POST : '/api/post/savepost',
   LIKE_POST : '/api/post/likepost',
   DISLIKE_POST : '/api/post/dislikepost',
+  GET_LIKED_POSTS : '/api/post/getlikedposts/:userId',
+  GET_DISLIKED_POSTS : '/api/post/getdislikedposts/:userId',
 
   // ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',

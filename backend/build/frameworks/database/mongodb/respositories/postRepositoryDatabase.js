@@ -113,6 +113,28 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error disliking post!");
         }
     });
+    const getLikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const likedPosts = yield likePostModel_1.default.find({ userId });
+            console.log("Liked posts:", likedPosts);
+            return likedPosts;
+        }
+        catch (error) {
+            console.error("Error fetching liked posts:", error);
+            throw new Error("Error fetching liked posts!");
+        }
+    });
+    const getDislikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const dislikedPosts = yield dislikePostModel_1.default.find({ userId });
+            console.log("Disliked posts:", dislikedPosts);
+            return dislikedPosts;
+        }
+        catch (error) {
+            console.error("Error fetching disliked posts:", error);
+            throw new Error("Error fetching disliked posts!");
+        }
+    });
     ////////////////////////////////////////////////
     return {
         addNewPost,
@@ -120,7 +142,9 @@ const postRepositoryMongoDB = () => {
         reportPostsForUser,
         savePostsForUser,
         likePostsForUser,
-        dislikePostsForUser
+        dislikePostsForUser,
+        getLikedPosts,
+        getDislikedPosts
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;
