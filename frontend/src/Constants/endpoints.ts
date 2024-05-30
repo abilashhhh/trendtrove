@@ -38,6 +38,7 @@ const END_POINTS = {
   DISLIKE_POST : '/api/post/dislikepost',
   GET_LIKED_POSTS : '/api/post/getlikedposts/:userId',
   GET_DISLIKED_POSTS : '/api/post/getdislikedposts/:userId',
+  GET_LIKES_DISLIKES_INFO : '/api/post/getlikesdislikesinfo/:postId',
 
   // ADMIN_LOGIN: 'api/admin/signin',
   ADMIN_LOGOUT: 'api/admin/logout',

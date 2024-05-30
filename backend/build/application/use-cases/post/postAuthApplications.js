@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -166,3 +166,19 @@ const handleGetDislikedPosts = (userId, dbPostRepository) => __awaiter(void 0, v
     }
 });
 exports.handleGetDislikedPosts = handleGetDislikedPosts;
+const handleGetlikesdislikesinfo = (postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetlikesdislikesinfo reached");
+        const handleGetlikesdislikesinfo = yield dbPostRepository.getlikesdislikesInfo(postId);
+        console.log("All posts from handleGetlikesdislikesinfo :", handleGetlikesdislikesinfo);
+        return handleGetlikesdislikesinfo;
+    }
+    catch (error) {
+        console.log("Error in handleGetlikesdislikesinfo");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get liked posts", 500);
+    }
+});
+exports.handleGetlikesdislikesinfo = handleGetlikesdislikesinfo;

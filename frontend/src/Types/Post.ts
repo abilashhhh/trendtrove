@@ -79,8 +79,13 @@ export interface GetLikedPostsResponse {
 }
 export interface GetDislikedPostsResponse {
   dislikedPosts: any;
- 
   data: string[]
+}
+export interface GetLikesDislikesInfoResponse {
+  likesCount: number,
+  dislikesCount: number,
+  likedUsers: string[]
+  dislikedUsers:string[]
 }
 
  

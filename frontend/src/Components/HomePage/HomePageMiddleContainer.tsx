@@ -12,7 +12,8 @@ import {
   likePost,
   savePost,
   getLikedPosts,
-  getDislikedPosts
+  getDislikedPosts,
+  getPostLikesAndDislikesInfo,
 } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -20,7 +21,7 @@ import {
   AiOutlineDislike,
   AiOutlineComment,
   AiFillLike,
-  AiFillDislike
+  AiFillDislike,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -32,7 +33,34 @@ const MiddleContainer: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [showOptions, setShowOptions] = useState<string | null>(null);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
-  const [dislikedPosts, setDislikedPosts] = useState<{ [key: string]: boolean }>({});
+  const [dislikedPosts, setDislikedPosts] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [likesDislikesData, setLikesDislikesData] = useState<{
+    [key: string]: {
+      likesCount: number;
+      dislikesCount: number;
+      likedUsers: string[];
+      dislikedUsers: string[];
+    };
+  }>({});
+
+  console.log("The likesDislikesData : ", likesDislikesData);
+
+  const fetchLikesDislikesData = async (postId: string) => {
+    try {
+      const data = await getPostLikesAndDislikesInfo(postId);
+      setLikesDislikesData(prev => ({ ...prev, [postId]: data }));
+    } catch (error) {
+      console.error("Error fetching likes and dislikes data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      posts.forEach(post => fetchLikesDislikesData(post._id));
+    }
+  }, [posts]);
 
   const fetchUserPosts = async (id: string | undefined) => {
     try {
@@ -56,29 +84,35 @@ const MiddleContainer: React.FC = () => {
       if (userId) {
         const [likedResponse, dislikedResponse] = await Promise.all([
           getLikedPosts(userId),
-          getDislikedPosts(userId)
+          getDislikedPosts(userId),
         ]);
-  
+
         console.log("Liked posts:", likedResponse);
         console.log("Disliked posts:", dislikedResponse);
-  
+
         if (likedResponse) {
-          const likedPostsData = likedResponse.likedPosts.reduce((acc: { [key: string]: boolean }, post: any) => {
-            if (post.userId === userId) {
-              acc[post.postId] = true;
-            }
-            return acc;
-          }, {});
+          const likedPostsData = likedResponse.likedPosts.reduce(
+            (acc: { [key: string]: boolean }, post: any) => {
+              if (post.userId === userId) {
+                acc[post.postId] = true;
+              }
+              return acc;
+            },
+            {}
+          );
           setLikedPosts(likedPostsData);
         }
-  
+
         if (dislikedResponse) {
-          const dislikedPostsData = dislikedResponse.dislikedPosts.reduce((acc: { [key: string]: boolean }, post: any) => {
-            if (post.userId === userId) {
-              acc[post.postId] = true;
-            }
-            return acc;
-          }, {});
+          const dislikedPostsData = dislikedResponse.dislikedPosts.reduce(
+            (acc: { [key: string]: boolean }, post: any) => {
+              if (post.userId === userId) {
+                acc[post.postId] = true;
+              }
+              return acc;
+            },
+            {}
+          );
           setDislikedPosts(dislikedPostsData);
         }
       }
@@ -86,7 +120,7 @@ const MiddleContainer: React.FC = () => {
       console.log("Error fetching liked and disliked posts:", error);
     }
   };
-  
+
   useEffect(() => {
     if (currentUser?._id) {
       fetchUserPosts(currentUser._id);
@@ -108,32 +142,45 @@ const MiddleContainer: React.FC = () => {
     const result = await likePost(currentUser._id, postId);
     console.log("Result of handleLike: ", result);
 
-    setLikedPosts((prev) => ({
+    setLikedPosts(prev => ({
       ...prev,
-      [postId]: !prev[postId]
+      [postId]: !prev[postId],
     }));
 
     if (dislikedPosts[postId]) {
-      setDislikedPosts((prev) => ({
+      setDislikedPosts(prev => ({
         ...prev,
-        [postId]: false
+        [postId]: false,
       }));
     }
+    fetchLikesDislikesData(postId);
   };
 
   const handleDislike = async (postId: string) => {
     const result = await dislikePost(currentUser._id, postId);
     console.log("Result of handleDislike: ", result);
 
-    setDislikedPosts((prev) => ({
+    setDislikedPosts(prev => ({
       ...prev,
-      [postId]: !prev[postId]
+      [postId]: !prev[postId],
     }));
     if (likedPosts[postId]) {
-      setLikedPosts((prev) => ({
+      setLikedPosts(prev => ({
         ...prev,
-        [postId]: false
+        [postId]: false,
       }));
+    }
+
+    fetchLikesDislikesData(postId);
+  };
+
+  const fetchLikesAndDislikesInfo = async (postId: string) => {
+    try {
+      const response = await fetch(`/api/post/likes-dislikes/${postId}`);
+      const data = await response.json();
+      setLikesDislikesInfo(prev => ({ ...prev, [postId]: data }));
+    } catch (error) {
+      console.log("Error fetching likes and dislikes info:", error);
     }
   };
 
@@ -155,7 +202,7 @@ const MiddleContainer: React.FC = () => {
     customPaging: () => (
       <div className="w-5 h-0.5 rounded-lg mt-2 bg-gray-500 dark:bg-gray-500"></div>
     ),
-    dotsClass: "slick-dots slick-thumb flex justify-center"
+    dotsClass: "slick-dots slick-thumb flex justify-center",
   };
 
   return (
@@ -164,8 +211,10 @@ const MiddleContainer: React.FC = () => {
 
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar items-center justify-center">
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post._id} className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
+          posts.map(post => (
+            <div
+              key={post._id}
+              className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2 cursor-pointer">
                   <img
@@ -175,7 +224,9 @@ const MiddleContainer: React.FC = () => {
                     onClick={() => navigate(`/profiles/${post.username}`)}
                   />
                   <div>
-                    <p className="font-bold" onClick={() => navigate(`/profiles/${post.username}`)}>
+                    <p
+                      className="font-bold"
+                      onClick={() => navigate(`/profiles/${post.username}`)}>
                       {post.username}
                     </p>
                     {post.location && (
@@ -189,27 +240,26 @@ const MiddleContainer: React.FC = () => {
                   </div>
                 </div>
                 <div className="relative">
-                  <button className="focus:outline-none mr-2" onClick={() => toggleOptions(post._id)}>
+                  <button
+                    className="focus:outline-none mr-2"
+                    onClick={() => toggleOptions(post._id)}>
                     <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
                   </button>
                   {showOptions === post._id && (
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                       <p
                         onClick={() => navigate(`/profiles/${post.username}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         View Profile
                       </p>
                       <p
                         onClick={() => navigate(`/reportPost/${post._id}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Report Post
                       </p>
                       <p
                         onClick={() => handleSavePost(post._id)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Save Post
                       </p>
                     </div>
@@ -221,35 +271,65 @@ const MiddleContainer: React.FC = () => {
                 <Slider {...settings}>
                   {post.images.map((image: string, index: number) => (
                     <div key={index}>
-                      <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
+                      <img
+                        src={image}
+                        alt={`Post image ${index}`}
+                        className="w-full h-auto"
+                      />
                     </div>
                   ))}
                   {post.videos.map((video: string, index: number) => (
                     <div key={index}>
-                      <video src={video} controls autoPlay muted className="w-full h-auto" />
+                      <video
+                        src={video}
+                        controls
+                        autoPlay
+                        muted
+                        className="w-full h-auto"
+                      />
                     </div>
                   ))}
                 </Slider>
               ) : post.images.length > 0 ? (
                 post.images.length === 1 ? (
-                  <img src={post.images[0]} alt={`Post image`} className="w-full h-auto" />
+                  <img
+                    src={post.images[0]}
+                    alt={`Post image`}
+                    className="w-full h-auto"
+                  />
                 ) : (
                   <Slider {...settings}>
                     {post.images.map((image: string, index: number) => (
                       <div key={index}>
-                        <img src={image} alt={`Post image ${index}`} className="w-full h-auto" />
+                        <img
+                          src={image}
+                          alt={`Post image ${index}`}
+                          className="w-full h-auto"
+                        />
                       </div>
                     ))}
                   </Slider>
                 )
               ) : post.videos.length > 0 ? (
                 post.videos.length === 1 ? (
-                  <video src={post.videos[0]} controls autoPlay muted className="w-full h-auto" />
+                  <video
+                    src={post.videos[0]}
+                    controls
+                    autoPlay
+                    muted
+                    className="w-full h-auto"
+                  />
                 ) : (
                   <Slider {...settings}>
                     {post.videos.map((video: string, index: number) => (
                       <div key={index}>
-                        <video src={video} controls autoPlay muted className="w-full h-auto" />
+                        <video
+                          src={video}
+                          controls
+                          autoPlay
+                          muted
+                          className="w-full h-auto"
+                        />
                       </div>
                     ))}
                   </Slider>
@@ -262,10 +342,11 @@ const MiddleContainer: React.FC = () => {
                 <div className="flex gap-2 items-center mt-4">
                   <button
                     className={`flex items-center space-x-2 hover:text-blue-600 ${
-                      likedPosts[post._id] ? "text-blue-600" : "text-gray-600 dark:text-gray-400"
+                      likedPosts[post._id]
+                        ? "text-blue-600"
+                        : "text-gray-600 dark:text-gray-400"
                     }`}
-                    onClick={() => handleLike(post._id)}
-                  >
+                    onClick={() => handleLike(post._id)}>
                     {likedPosts[post._id] ? (
                       <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
                     ) : (
@@ -274,10 +355,11 @@ const MiddleContainer: React.FC = () => {
                   </button>
                   <button
                     className={`flex items-center space-x-2 hover:text-red-600 ${
-                      dislikedPosts[post._id] ? "text-red-600" : "text-gray-600 dark:text-gray-400"
+                      dislikedPosts[post._id]
+                        ? "text-red-600"
+                        : "text-gray-600 dark:text-gray-400"
                     }`}
-                    onClick={() => handleDislike(post._id)}
-                  >
+                    onClick={() => handleDislike(post._id)}>
                     {dislikedPosts[post._id] ? (
                       <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
                     ) : (
@@ -289,9 +371,21 @@ const MiddleContainer: React.FC = () => {
                   </button>
                 </div>
                 <div className="flex gap-2 mt-4 cursor-pointer">
-                  <p className="text-xs mt-2">Likes</p>
+                  <p className="text-xs mt-2">
+                    Likes:{" "}
+                    {(likesDislikesData[post._id] &&
+                      likesDislikesData[post._id].likesdislikesinfo
+                        ?.likesCount) ||
+                      0}
+                  </p>
                   <p className="text-xs mt-2">|</p>
-                  <p className="text-xs mt-2">Dislikes</p>
+                  <p className="text-xs mt-2">
+                    Disikes:{" "}
+                    {(likesDislikesData[post._id] &&
+                      likesDislikesData[post._id].likesdislikesinfo
+                        ?.dislikesCount) ||
+                      0}
+                  </p>
                 </div>
               </div>
             </div>

@@ -21,6 +21,7 @@ const postDBRepository = (repository) => {
     const dislikePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.dislikePostsForUser(userId, postId); });
     const getLikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getLikedPosts(userId); });
     const getDislikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getDislikedPosts(userId); });
+    const getlikesdislikesInfo = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getlikesdislikesInfo(postId); });
     return {
         addNewPost,
         getAllPostsForUser,
@@ -29,7 +30,8 @@ const postDBRepository = (repository) => {
         likePostsForUser,
         dislikePostsForUser,
         getLikedPosts,
-        getDislikedPosts
+        getDislikedPosts,
+        getlikesdislikesInfo
     };
 };
 exports.postDBRepository = postDBRepository;

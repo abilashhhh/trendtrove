@@ -28,6 +28,7 @@ const postRouter = () => {
   router.post("/dislikepost", authMiddleware, controller.dislikePost);
   router.get("/getlikedposts/:userId", authMiddleware, controller.getlikedposts);
   router.get("/getdislikedposts/:userId", authMiddleware, controller.getdislikedposts);
+  router.get("/getlikesdislikesinfo/:postId", authMiddleware, controller.getlikesdislikesinfo);
 
   return router;
 };

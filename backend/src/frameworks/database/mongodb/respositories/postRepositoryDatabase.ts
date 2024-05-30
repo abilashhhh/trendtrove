@@ -140,6 +140,26 @@ const getDislikedPosts = async (userId: string) => {
   }
 };
 
+const getlikesdislikesInfo = async (postId: string) => {
+  try {
+    const likes = await Like.find({ postId }).populate('userId', 'username');
+    const dislikes = await Dislike.find({ postId }).populate('userId', 'username');
+const data = {
+  postId : postId,
+  likesCount: likes.length,
+  dislikesCount: dislikes.length,
+  likedUsers: likes.map(like => like.userId.username),
+  dislikedUsers: dislikes.map(dislike => dislike.userId.username)
+
+}
+console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo)
+return data
+  } catch (error) {
+    console.error("Error fetching disliked posts:", error);
+    throw new Error("Error fetching disliked posts!");
+  }
+};
+
   ////////////////////////////////////////////////
 
   return {
@@ -150,7 +170,8 @@ const getDislikedPosts = async (userId: string) => {
     likePostsForUser,
     dislikePostsForUser,
     getLikedPosts,
-    getDislikedPosts
+    getDislikedPosts,
+    getlikesdislikesInfo
   };
 };
 //////////////////////////////////////////////////////////

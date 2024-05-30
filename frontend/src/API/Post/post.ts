@@ -1,7 +1,7 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { DislikePostResponse, GetAllPostsForUser, GetDislikedPostsResponse, GetLikedPostsResponse, LikePostResponse, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
+import { DislikePostResponse, GetAllPostsForUser, GetDislikedPostsResponse, GetLikedPostsResponse, GetLikesDislikesInfoResponse, LikePostResponse, Post, PostResponse, ReportPostData, ReportPostResponse, SavePostResponse } from "../../Types/Post";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -166,3 +166,21 @@ export const getDislikedPosts = async (userId: string) => {
     throw error;
   }
 };
+
+
+
+export const getPostLikesAndDislikesInfo = async (postId: string) => {
+  try {
+    console.log("getDislikedPosts , postId: ", postId)
+     const response = await axiosUserInstance.get<GetLikesDislikesInfoResponse>(
+      `${END_POINTS.GET_LIKES_DISLIKES_INFO.replace(":postId", postId)}`
+    );
+    console.log("getPostLikesAndDislikesInfo response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+

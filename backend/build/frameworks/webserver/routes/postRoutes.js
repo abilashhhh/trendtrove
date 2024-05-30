@@ -23,6 +23,7 @@ const postRouter = () => {
     router.post("/dislikepost", authMiddleware_1.default, controller.dislikePost);
     router.get("/getlikedposts/:userId", authMiddleware_1.default, controller.getlikedposts);
     router.get("/getdislikedposts/:userId", authMiddleware_1.default, controller.getdislikedposts);
+    router.get("/getlikesdislikesinfo/:postId", authMiddleware_1.default, controller.getlikesdislikesinfo);
     return router;
 };
 exports.default = postRouter;

@@ -161,6 +161,20 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             res.status(500).json({ error: "Failed to get disliked posts" });
         }
     });
+    const getlikesdislikesinfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { postId } = req.params;
+            console.log("Req.params on getlikesdislikesinfo: ", req.params);
+            console.log("getlikesdislikesinfo data received from frontend:", postId);
+            const likesdislikesinfo = yield (0, postAuthApplications_1.handleGetlikesdislikesinfo)(postId, dbPostRepository);
+            console.log('likesdislikesinfo:', likesdislikesinfo);
+            res.status(200).json({ likesdislikesinfo });
+        }
+        catch (error) {
+            console.error("Error getting likesdislikesinfo for posts :", error);
+            res.status(500).json({ error: "Failed to get likesdislikesinfo for posts" });
+        }
+    });
     return {
         addPost,
         getpostforuser,
@@ -169,7 +183,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         likePost,
         dislikePost,
         getlikedposts,
-        getdislikedposts
+        getdislikedposts,
+        getlikesdislikesinfo
     };
 };
 exports.default = postController;
