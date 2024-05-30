@@ -39,6 +39,11 @@ function AdminHomePage() {
     navigate("/admin/userslist");
   };
 
+  const handleUsersReports = () => {
+    navigate("/admin/postReport");
+  };
+
+
   const handleHome = () => {
     navigate("/admin/home");
   };
@@ -68,6 +73,8 @@ function AdminHomePage() {
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
             handleUsersList={handleUsersList}
+            handleUsersReports={handleUsersReports}
+
             handleHome={handleHome}
           />
           <AdminHomePageContent />

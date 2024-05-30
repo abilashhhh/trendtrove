@@ -68,7 +68,6 @@ export const handleupdatepost = async (
   }
 };
 
-
 export const handleGetPostsForUser = async (
   id: string,
   dbPostRepository: ReturnType<PostDBInterface>
@@ -78,9 +77,10 @@ export const handleGetPostsForUser = async (
     if (!id) {
       throw new ErrorInApplication("User ID is required to get all posts", 400);
     }
-    const allPostsForUser  = await dbPostRepository.getAllPostsForUser(id);
-    console.log("All posts from handleGetPostsForuser :", allPostsForUser);
-    return allPostsForUser;
+    const allPostsForUser = await dbPostRepository.getAllPostsForUser(id);
+    const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
+    console.log("Filtered posts from handleGetPostsForUser :", filteredPosts);
+    return filteredPosts;
   } catch (error) {
     console.log("Error in handleGetPostsForUser");
     if (error instanceof ErrorInApplication) {
@@ -99,9 +99,10 @@ export const handleGetPostsForUserUsername = async (
     if (!username) {
       throw new ErrorInApplication("username is required to get all posts", 400);
     }
-    const allPostsForUser  = await dbPostRepository.getAllPostsForUserUsername(username);
-    console.log("All posts from handleGetPostsForuserusername :", allPostsForUser);
-    return allPostsForUser;
+    const allPostsForUser = await dbPostRepository.getAllPostsForUserUsername(username);
+    const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
+    console.log("Filtered posts from handleGetPostsForUserUsername :", filteredPosts);
+    return filteredPosts;
   } catch (error) {
     console.log("Error in handleGetPostsForUserUsername");
     if (error instanceof ErrorInApplication) {

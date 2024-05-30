@@ -69,8 +69,9 @@ const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0
             throw new ErrorInApplication_1.default("User ID is required to get all posts", 400);
         }
         const allPostsForUser = yield dbPostRepository.getAllPostsForUser(id);
-        console.log("All posts from handleGetPostsForuser :", allPostsForUser);
-        return allPostsForUser;
+        const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
+        console.log("Filtered posts from handleGetPostsForUser :", filteredPosts);
+        return filteredPosts;
     }
     catch (error) {
         console.log("Error in handleGetPostsForUser");
@@ -88,8 +89,9 @@ const handleGetPostsForUserUsername = (username, dbPostRepository) => __awaiter(
             throw new ErrorInApplication_1.default("username is required to get all posts", 400);
         }
         const allPostsForUser = yield dbPostRepository.getAllPostsForUserUsername(username);
-        console.log("All posts from handleGetPostsForuserusername :", allPostsForUser);
-        return allPostsForUser;
+        const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
+        console.log("Filtered posts from handleGetPostsForUserUsername :", filteredPosts);
+        return filteredPosts;
     }
     catch (error) {
         console.log("Error in handleGetPostsForUserUsername");

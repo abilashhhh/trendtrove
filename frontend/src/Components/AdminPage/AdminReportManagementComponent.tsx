@@ -116,10 +116,9 @@ function AdminReportManagementComponent() {
                   <td className="border px-4 py-2">{report.postId}</td>
                   <td className="border px-4 py-2">
                     <div>
-                      <img src={report.postDetails.images[0]} alt="Post" className="w-16 h-16 object-cover"/>
-                      <p>{report.postDetails.captions}</p>
-                      <p>{report.postDetails.location}</p>
-                      <p>By: {report.postDetails.username}</p>
+                      <img src={report.postDetails.images[0]} alt="Post" className="w-32 h-w-32 object-cover"/>
+                      <p>Caption :{report.postDetails.captions}</p>
+                      <p>Username: {report.postDetails.username}</p>
                     </div>
                   </td>
                   <td className="border px-4 py-2">{report.reporterUsername}</td>
