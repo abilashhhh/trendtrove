@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handleGetAllUsersForAdmin = exports.handleLogoutAdmin = void 0;
+exports.handleUnblockPost = exports.handleBlockPost = exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handkeGetallpostreports = exports.handleGetAllUsersForAdmin = exports.handleLogoutAdmin = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 // // User Login
 // export const handleAdminSignin = async (
@@ -74,6 +74,18 @@ const handleGetAllUsersForAdmin = (dbUserRepository) => __awaiter(void 0, void 0
     }
 });
 exports.handleGetAllUsersForAdmin = handleGetAllUsersForAdmin;
+const handkeGetallpostreports = (dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handkeGetallpostreports called");
+        const reports = yield dbUserRepository.getAllReportsForAdmin();
+        return reports;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to get all users data", 401);
+    }
+});
+exports.handkeGetallpostreports = handkeGetallpostreports;
 const handleBlockAccount = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Userdetails in handle block: ", userId);
@@ -108,3 +120,27 @@ const handleUnBlockAccount = (userId, dbUserRepository) => __awaiter(void 0, voi
     }
 });
 exports.handleUnBlockAccount = handleUnBlockAccount;
+const handleBlockPost = (postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Post details in handle block: ", postId);
+        const post = yield dbPostRepository.blockPost(postId);
+        return post;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to block post", 401);
+    }
+});
+exports.handleBlockPost = handleBlockPost;
+const handleUnblockPost = (postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Post details in handle unblock: ", postId);
+        const post = yield dbPostRepository.unblockPost(postId);
+        return post;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to unblock post", 401);
+    }
+});
+exports.handleUnblockPost = handleUnblockPost;

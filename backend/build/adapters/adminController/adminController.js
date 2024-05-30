@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const adminAuthApplication_1 = require("../../application/use-cases/admin/adminAuthApplication");
-const adminController = (userDBRepositoryImplementation, userDBRepositoryInterface, authServiceImplementation, authServiceInterface) => {
+const adminController = (userDBRepositoryImplementation, userDBRepositoryInterface, postDBRepositoryImplementation, postDBRepositoryInterface, authServiceImplementation, authServiceInterface) => {
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
+    const dbPostRepository = postDBRepositoryInterface(postDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
     //////////////////////////////////////////////////
     // const signin  = async (req: Request, res: Response) => {
@@ -64,6 +65,24 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             });
         }
     });
+    const getallpostreports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reports = yield (0, adminAuthApplication_1.handkeGetallpostreports)(dbUserRepository);
+            console.log(reports);
+            res.json({
+                status: "success",
+                message: "All reports info fetched",
+                reports,
+            });
+        }
+        catch (err) {
+            console.error("Error fetching all users info:", err);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to fetch all reports info",
+            });
+        }
+    });
     const blockAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { id } = req.params;
@@ -102,13 +121,54 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             });
         }
     });
+    const blockPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { postId } = req.params;
+            console.log("req params in block post: ", req.params);
+            const result = yield (0, adminAuthApplication_1.handleBlockPost)(postId, dbPostRepository);
+            res.json({
+                status: "success",
+                message: "Post blocked successfully",
+                result,
+            });
+        }
+        catch (err) {
+            console.error("Error blocking post:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to block the post",
+            });
+        }
+    });
+    const unblockPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { postId } = req.params;
+            console.log("req params in unblock post: ", req.params);
+            const result = yield (0, adminAuthApplication_1.handleUnblockPost)(postId, dbPostRepository);
+            res.json({
+                status: "success",
+                message: "Post unblocked successfully",
+                result,
+            });
+        }
+        catch (err) {
+            console.error("Error unblocking post:", err);
+            res.status(500).json({
+                status: "error",
+                message: err.message || "Failed to unblock the post",
+            });
+        }
+    });
     //////////////////////////////////////////////////
     return {
         // signin,
         logout,
         getAllUsersForAdmin,
+        getallpostreports,
         blockAccount,
-        unblockAccount
+        unblockAccount,
+        blockPost,
+        unblockPost,
     };
 };
 exports.default = adminController;

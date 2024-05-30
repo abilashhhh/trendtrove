@@ -18,6 +18,7 @@ const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const likePostModel_1 = __importDefault(require("../models/likePostModel"));
 const dislikePostModel_1 = __importDefault(require("../models/dislikePostModel"));
+const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInApplication"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
@@ -288,9 +289,28 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error deleting post!");
         }
     });
+    const getPostById = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield postModel_1.default.findById(postId);
+    });
+    const blockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+        const post = yield postModel_1.default.findByIdAndUpdate(postId, { isBlocked: true }, { new: true });
+        if (!post) {
+            throw new ErrorInApplication_1.default("Post not found", 404);
+        }
+        return post;
+    });
+    // blockPost("66573ce27fb722f5923b31de")
+    const unblockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+        const post = yield postModel_1.default.findByIdAndUpdate(postId, { isBlocked: false }, { new: true });
+        if (!post) {
+            throw new ErrorInApplication_1.default("Post not found", 404);
+        }
+        return post;
+    });
     ////////////////////////////////////////////////
     return {
         addNewPost,
+        getPostById,
         updatePost,
         getAllPostsForUser,
         getAllPostsForUserUsername,
@@ -307,6 +327,8 @@ const postRepositoryMongoDB = () => {
         getDislikedPosts,
         getlikesdislikesInfo,
         deltePostForUser,
+        blockPost,
+        unblockPost,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

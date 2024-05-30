@@ -3,7 +3,9 @@ import axiosAdminInstance, {
 } from "../Axios/axiosAdminInstance";
 import END_POINTS from "../../Constants/endpoints";
 import {
+  BlockPostResponse,
   BlockUserResponse,
+  GetPostReportsResponse,
   GetUsersResponse,
 } from "../../Types/admin";
 import axios, { AxiosError } from "axios";
@@ -45,6 +47,18 @@ export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {
   try {
     console.log("called getallusersadmin")
     const response = await axiosAdminInstance.get<GetUsersResponse>(END_POINTS.GET_USERS);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+ 
+ 
+export const fetchAllPostReportsAndPosts = async (): Promise<GetPostReportsResponse> => {
+  try {
+    console.log("called fetchAllPostReports")
+    const response = await axiosAdminInstance.get<GetPostReportsResponse>(END_POINTS.GET_POST_REPORTS);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -101,6 +115,37 @@ export const unblockUser = async (
 
     const response = await axiosAdminInstance.patch<BlockUserResponse>(
       `${END_POINTS.UNBLOCK_USER.replace(":userId", userId)}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const blockPost = async (postId: string): Promise<BlockPostResponse> => {
+  try {
+    console.log(postId, "from blockPost");
+
+    const response = await axiosAdminInstance.patch<BlockPostResponse>(
+      `${END_POINTS.BLOCK_POST.replace(":postId", postId)}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const unblockPost = async (postId: string): Promise<BlockPostResponse> => {
+  try {
+    console.log(postId, "from unblockPost");
+
+    const response = await axiosAdminInstance.patch<BlockPostResponse>(
+      `${END_POINTS.UNBLOCK_POST.replace(":postId", postId)}`
     );
     console.log(response.data);
     return response.data;

@@ -8,6 +8,11 @@ export const postDBRepository = (
     await repository.addNewPost(postData);
   };
 
+  const getPostById = async (postId: string) => {
+    return await repository.getPostById(postId);
+  };
+
+
   const updatePost = async (postData: PostDataInterface) => {
     await repository.updatePost(postData);
   };
@@ -56,11 +61,21 @@ export const postDBRepository = (
   
   const deltePostForUser = async (postId: string) => 
   await repository.deltePostForUser(postId);
+
+  const blockPost = async (postId: string) => 
+  await repository.blockPost(postId);
+  
+
+  const unblockPost = async (postId: string) => 
+  await repository.unblockPost(postId);
   
 
   return {
     addNewPost,
     updatePost,
+    getPostById,
+    blockPost,
+    unblockPost,
     getAllPostsForUser,
     getAllPostsForUserUsername,
     lengthofPostsForUser,

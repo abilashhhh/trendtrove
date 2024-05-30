@@ -10,17 +10,37 @@ import {
   UserRepositoryMongoDB,
   userRepositoryMongoDB,
 } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-
-import {  handleBlockAccount, handleGetAllUsersForAdmin, handleLogoutAdmin, handleUnBlockAccount } from "../../application/use-cases/admin/adminAuthApplication";
+import {
+  PostDBInterface,
+  postDBRepository,
+} from "../../application/repositories/postDBRepository";
+import {
+  PostRepositoryMongoDB,
+  postRepositoryMongoDB,
+} from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
+import {
+  handleBlockAccount,
+  handleGetAllUsersForAdmin,
+  handleLogoutAdmin,
+  handleUnBlockAccount,
+  handleBlockPost,
+  handleUnblockPost,
+  handkeGetallpostreports,
+} from "../../application/use-cases/admin/adminAuthApplication";
 
 const adminController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
   userDBRepositoryInterface: UserDBInterface,
+  postDBRepositoryImplementation: PostRepositoryMongoDB,
+  postDBRepositoryInterface: PostDBInterface,
   authServiceImplementation: AuthService,
   authServiceInterface: AuthServiceInterface
 ) => {
   const dbUserRepository = userDBRepositoryInterface(
     userDBRepositoryImplementation()
+  );
+  const dbPostRepository = postDBRepositoryInterface(
+    postDBRepositoryImplementation()
   );
   const authService = authServiceInterface(authServiceImplementation());
 
@@ -78,6 +98,24 @@ const adminController = (
     }
   };
 
+  const getallpostreports = async (req: Request, res: Response) => {
+    try {
+      const reports = await handkeGetallpostreports(dbUserRepository);
+      console.log(reports);
+      res.json({
+        status: "success",
+        message: "All reports info fetched",
+        reports,
+      });
+    } catch (err) {
+      console.error("Error fetching all users info:", err);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to fetch all reports info",
+      });
+    }
+  };
+
   const blockAccount = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -117,14 +155,58 @@ const adminController = (
     }
   };
 
+  const blockPost = async (req: Request, res: Response) => {
+    try {
+      const { postId } = req.params;
+      console.log("req params in block post: ", req.params);
+      const result = await handleBlockPost(postId, dbPostRepository);
+  
+      res.json({
+        status: "success",
+        message: "Post blocked successfully",
+        result,
+      });
+    } catch (err: any) {
+      console.error("Error blocking post:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to block the post",
+      });
+    }
+  };
+  
+  const unblockPost = async (req: Request, res: Response) => {
+    try {
+      const { postId } = req.params;
+      console.log("req params in unblock post: ", req.params);
+      const result = await handleUnblockPost(postId, dbPostRepository);
+  
+      res.json({
+        status: "success",
+        message: "Post unblocked successfully",
+        result,
+      });
+    } catch (err: any) {
+      console.error("Error unblocking post:", err);
+      res.status(500).json({
+        status: "error",
+        message: err.message || "Failed to unblock the post",
+      });
+    }
+  };
+  
+
   //////////////////////////////////////////////////
 
   return {
     // signin,
     logout,
     getAllUsersForAdmin,
+    getallpostreports,
     blockAccount,
-    unblockAccount
+    unblockAccount,
+    blockPost,
+    unblockPost,
   };
 };
 

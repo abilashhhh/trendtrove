@@ -8,6 +8,7 @@ import ReportPostModel from "../models/reportPostModel";
 import User from "../models/userModel";
 import Like from "../models/likePostModel";
 import Dislike from "../models/dislikePostModel";
+import ErrorInApplication from "../../../../utils/ErrorInApplication";
 
 //////////////////////////////////////////////////////////
 
@@ -310,10 +311,40 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  const getPostById = async (postId: string)  => {
+    return await Post.findById(postId);
+  };
+  
+  const blockPost = async (postId: string) => {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { isBlocked: true },
+      { new: true }
+    );
+    if (!post) {
+      throw new ErrorInApplication("Post not found", 404);
+    }
+    return post;
+  };
+
+  // blockPost("66573ce27fb722f5923b31de")
+
+  const unblockPost = async (postId: string) => {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { isBlocked: false },
+      { new: true }
+    );
+    if (!post) {
+      throw new ErrorInApplication("Post not found", 404);
+    }
+    return post;
+  };
   ////////////////////////////////////////////////
 
   return {
     addNewPost,
+    getPostById,
     updatePost,
     getAllPostsForUser,
     getAllPostsForUserUsername,
@@ -330,6 +361,8 @@ export const postRepositoryMongoDB = () => {
     getDislikedPosts,
     getlikesdislikesInfo,
     deltePostForUser,
+    blockPost,
+    unblockPost,
   };
 };
 //////////////////////////////////////////////////////////

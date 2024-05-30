@@ -7,9 +7,9 @@ import LoadingSpinner from "../../Components/LoadingSpinner";
 import AdminLeftSidebar from "../../Components/AdminPage/AdminLeftSidebar";
 import AdminHeader from "../../Components/AdminPage/AdminHeader";
 import { useNavigate } from "react-router-dom";
-import AdminUsersListComponent from "../../Components/AdminPage/AdminUsersListComponent";
+import AdminReportManagementComponent from "../../Components/AdminPage/AdminReportManagementComponent";
 
-function AdminUsersList() {
+function AdminReportManagement() {
   const navigate = useNavigate();
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(true);
   const [isDarkMode, setDarkMode] = useState(true);
@@ -38,7 +38,6 @@ function AdminUsersList() {
   const handleUsersList = () => {
     navigate("/admin/userslist");
   };
-
   const handleUsersReports = () => {
     navigate("/admin/postReport");
   };
@@ -71,15 +70,15 @@ function AdminUsersList() {
             toggleDarkMode={toggleDarkMode}
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
-             handleUsersList={handleUsersList}
+            handleUsersList={handleUsersList}
             handleUsersReports={handleUsersReports}
             handleHome={handleHome}
           />
-          <AdminUsersListComponent />
+          <AdminReportManagementComponent />
         </div>
       </div>
     </>
   );
 }
 
-export default AdminUsersList;
+export default AdminReportManagement;

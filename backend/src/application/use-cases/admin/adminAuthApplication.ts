@@ -1,4 +1,5 @@
 import ErrorInApplication from "../../../utils/ErrorInApplication";
+import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 import { AuthServiceInterface } from "../../services/authenticationServiceInterface";
  
@@ -75,6 +76,20 @@ console.log("handleyeallusers called")
 };
 
 
+export const handkeGetallpostreports = async (
+  dbUserRepository: ReturnType<UserDBInterface>,
+) => {
+  try {
+console.log("handkeGetallpostreports called")
+    const reports = await dbUserRepository.getAllReportsForAdmin();
+    return reports;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};
+
+
 
 
 
@@ -118,5 +133,38 @@ export const handleUnBlockAccount = async (
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to unblock user", 401);
+  }
+};
+
+
+export const handleBlockPost = async (
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>,
+) => {
+  try {
+    console.log("Post details in handle block: ", postId);
+     
+    const post = await dbPostRepository.blockPost(postId);
+
+    return post;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to block post", 401);
+  }
+};
+
+export const handleUnblockPost = async (
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>,
+) => {
+  try {
+    console.log("Post details in handle unblock: ", postId);
+    
+    const post = await dbPostRepository.unblockPost(postId);
+
+    return post;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to unblock post", 401);
   }
 };

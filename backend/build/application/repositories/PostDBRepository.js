@@ -14,6 +14,9 @@ const postDBRepository = (repository) => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewPost(postData);
     });
+    const getPostById = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield repository.getPostById(postId);
+    });
     const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.updatePost(postData);
     });
@@ -32,9 +35,14 @@ const postDBRepository = (repository) => {
     const getDislikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getDislikedPosts(userId); });
     const getlikesdislikesInfo = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getlikesdislikesInfo(postId); });
     const deltePostForUser = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deltePostForUser(postId); });
+    const blockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.blockPost(postId); });
+    const unblockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unblockPost(postId); });
     return {
         addNewPost,
         updatePost,
+        getPostById,
+        blockPost,
+        unblockPost,
         getAllPostsForUser,
         getAllPostsForUserUsername,
         lengthofPostsForUser,

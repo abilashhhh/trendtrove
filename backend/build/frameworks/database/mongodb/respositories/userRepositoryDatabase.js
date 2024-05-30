@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRepositoryMongoDB = void 0;
+const postModel_1 = __importDefault(require("../models/postModel"));
+const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 //////////////////////////////////////////////////////////
 const userRepositoryMongoDB = () => {
@@ -188,6 +190,20 @@ const userRepositoryMongoDB = () => {
         catch (error) {
             console.error("Error getting all users", error);
             throw new Error("Error getting all users");
+        }
+    });
+    const getAllReportsForAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reports = yield reportPostModel_1.default.find().exec();
+            const detailedReports = yield Promise.all(reports.map((report) => __awaiter(void 0, void 0, void 0, function* () {
+                const post = yield postModel_1.default.findById(report.postId).exec();
+                return Object.assign(Object.assign({}, report.toObject()), { postDetails: post });
+            })));
+            return detailedReports;
+        }
+        catch (error) {
+            console.error("Error getting all reports", error);
+            throw new Error("Error getting all reports");
         }
     });
     const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
@@ -376,6 +392,7 @@ const userRepositoryMongoDB = () => {
         privateAccount,
         getAllUsers,
         getAllUsersForAdmin,
+        getAllReportsForAdmin,
         blockAccount,
         unblockAccount,
         followUser,

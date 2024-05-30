@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaUserFriends } from "react-icons/fa";
+import { FaHome, FaImages, FaUserFriends } from "react-icons/fa";
 
 const AdminLeftSidebar = ({
   isLeftSidebarOpen,
@@ -7,6 +7,7 @@ const AdminLeftSidebar = ({
   isDarkMode,
   handleLogout,
   handleUsersList,
+  handleUsersReports,
   handleHome,
 }) => {
   return (
@@ -28,6 +29,12 @@ const AdminLeftSidebar = ({
             onClick={handleUsersList}>
             <FaUserFriends className="inline-block mr-2" />
             Users
+          </button>
+          <button
+            className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600 hover:dark:bg-slate-200 hover:dark:text-black hover:text-white"
+            onClick={handleUsersReports}>
+            <FaImages className="inline-block mr-2" />
+            Post Reports
           </button>
           <button
             onClick={toggleDarkMode}

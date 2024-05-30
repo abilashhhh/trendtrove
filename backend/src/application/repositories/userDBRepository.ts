@@ -61,6 +61,9 @@ export const userDBRepository = (
   const getAllUsersForAdmin = async () =>
     await repository.getAllUsersForAdmin();
 
+  const getAllReportsForAdmin = async () =>
+    await repository.getAllReportsForAdmin();
+
   const followUser = async (userId: string, targetUserId: string) =>
     await repository.followUser(userId, targetUserId);
 
@@ -94,6 +97,7 @@ export const userDBRepository = (
     changeIsAccountUnverified,
     getAllUsers,
     getAllUsersForAdmin,
+    getAllReportsForAdmin,
     blockAccount,
     unblockAccount,
     followUser,

@@ -5,6 +5,7 @@ import {
   UserInterface,
 } from "../../../../types/userInterface";
 import Post from "../models/postModel";
+import ReportPostModel from "../models/reportPostModel";
 
 import User from "../models/userModel";
 
@@ -236,7 +237,27 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error getting all users");
     }
   };
-
+  const getAllReportsForAdmin = async () => {
+    try {
+      const reports = await ReportPostModel.find().exec();
+  
+      const detailedReports = await Promise.all(
+        reports.map(async (report) => {
+          const post = await Post.findById(report.postId).exec();
+          return {
+            ...report.toObject(),
+            postDetails: post,
+          };
+        })
+      );
+  
+      return detailedReports;
+    } catch (error) {
+      console.error("Error getting all reports", error);
+      throw new Error("Error getting all reports");
+    }
+  };
+  
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne(
@@ -489,6 +510,7 @@ export const userRepositoryMongoDB = () => {
     privateAccount,
     getAllUsers,
     getAllUsersForAdmin,
+    getAllReportsForAdmin,
     blockAccount,
     unblockAccount,
     followUser,

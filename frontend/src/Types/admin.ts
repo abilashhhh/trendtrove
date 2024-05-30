@@ -1,3 +1,4 @@
+import { ReportPostData } from "./Post";
 import {User} from "./signInUser"
 
 export interface AdminLoginInterface {
@@ -17,6 +18,11 @@ export interface GetUsersResponse {
     message: string,
     users: User[],
 }
+export interface GetPostReportsResponse {
+    status: string,
+    message: string,
+    reports: ReportPostData[],
+}
 
 export interface BlockUserResponse {
     status: string,
@@ -27,3 +33,8 @@ export interface UnBlockUserResponse {
     status: string,
     message: string,
 }
+
+export interface BlockPostResponse {
+    success: boolean;
+    message: string;
+  }
