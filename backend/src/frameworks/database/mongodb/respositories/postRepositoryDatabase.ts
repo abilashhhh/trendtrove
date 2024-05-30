@@ -21,6 +21,20 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  const updatePost = async ( postData: PostDataInterface) => {
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        postData.postId,
+        postData,
+        { new: true }
+      );
+      return updatedPost;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error updating post!");
+    }
+  };
+  
   const getAllPostsForUser = async (id: string) => {
     try {
       const requesterUser = await User.findById(id);
@@ -69,6 +83,21 @@ export const postRepositoryMongoDB = () => {
       }
   
       const gettingPosts = await Post.find({ userId: id }).sort({ createdAt: -1 });
+      console.log("Getting posts before returning:", gettingPosts);
+      return gettingPosts;
+    } catch (error : any) {
+      console.error(error.message);
+      throw new Error("Error getting all posts of current user!");
+    }
+  };
+   
+  
+  const getParticularPostsForCurrentUser = async (id: string) => {
+    try {
+      if (!id) {
+        throw new Error("User ID is required");
+      }      
+      const gettingPosts = await Post.findById(id);
       console.log("Getting posts before returning:", gettingPosts);
       return gettingPosts;
     } catch (error : any) {
@@ -197,8 +226,10 @@ const deltePostForUser = async (postId: string) => {
 
   return {
     addNewPost,
+    updatePost,
     getAllPostsForUser,
     getAllPostsForCurrentUser,
+    getParticularPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
     likePostsForUser,

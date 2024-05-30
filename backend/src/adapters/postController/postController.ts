@@ -4,7 +4,7 @@ import { AuthServiceInterface } from "../../application/services/authenticationS
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetPostsForUser, handleGetPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
+import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLikedPosts, handleGetParticularPost, handleGetPostsForUser, handleGetPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleReportPosts, handleSavePosts } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
 
@@ -45,6 +45,25 @@ const postController = (
     }
   };
 
+  const updatepost = async (req: Request, res: Response) => {
+    try {
+      const postData: PostDataInterface = req.body;
+      console.log(postData);
+      const createPost = await handleupdatepost(postData, dbPostRepository, dbUserRepository);
+      res.status(201).json({
+        status: "success",
+        message: "post updated successfully",
+        data: createPost,
+      });
+    } catch (error) {
+      console.error("Error updating post:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to update post info",
+      });
+    }
+  };
+
   const getpostforuser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -73,6 +92,28 @@ const postController = (
       console.log(" getpostofcurrentuserId received from frontend:", id);
       
       const getPosts  = await handleGetPostsOfCurrentUser(id,dbPostRepository);
+      console.log('getPosts:', getPosts);
+      
+      res.status(201).json({
+        status: "success",
+        message: "Posts fetched for current user",
+        data: getPosts,
+      });
+    } catch (error) {
+      console.error("Error getting all posts of current user:", error);
+      res.status(401).json({
+        status: "error",
+        message: "Failed to get all posts",
+      });
+    }
+  };
+
+  const getparticularpostofcurrentuser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      console.log(" getparticularpostofcurrentuser received from frontend:", id);
+      
+      const getPosts  = await handleGetParticularPost(id,dbPostRepository);
       console.log('getPosts:', getPosts);
       
       res.status(201).json({
@@ -242,8 +283,10 @@ const postController = (
 
   return {
     addPost,
+    updatepost,
     getpostforuser,
     getpostofcurrentuser,
+    getparticularpostofcurrentuser,
     reportPost,
     savePost,
     likePost,

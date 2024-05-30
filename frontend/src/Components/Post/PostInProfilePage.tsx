@@ -4,9 +4,10 @@ import { StoreType } from "../../Redux/Store/reduxStore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Slider from "react-slick";
+import LikesDislikesModale from "../../utils/LikesDislikesModale";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import {
   dislikePost,
   likePost,
@@ -27,7 +28,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkedAlt } from "react-icons/fa";
 
-const   PostInProfilePage = () => {
+const PostInProfilePage = () => {
   const [activeSection, setActiveSection] = useState("MY POSTS");
   const navigate = useNavigate();
 
@@ -35,8 +36,29 @@ const   PostInProfilePage = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
-  const [dislikedPosts, setDislikedPosts] = useState<{ [key: string]: boolean }>({});
-  const [likesDislikesData, setLikesDislikesData] = useState<{ [key: string]: { likesCount: number; dislikesCount: number; likedUsers: string[]; dislikedUsers: string[]; }; }>({});
+  const [dislikedPosts, setDislikedPosts] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [likesDislikesData, setLikesDislikesData] = useState<{
+    [key: string]: {
+      likesCount: number;
+      dislikesCount: number;
+      likedUsers: string[];
+      dislikedUsers: string[];
+    };
+  }>({});
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState([]);
+
+  const handleModal = (users: any) => {
+    setModalContent(users);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   const fetchUserLikesAndDislikes = async (userId: string | undefined) => {
     try {
@@ -170,27 +192,20 @@ const   PostInProfilePage = () => {
 
   const handleDeletePost = async (postId: string) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this post!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "You will not be able to recover this post!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then(async (result) => {
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async result => {
       if (result.isConfirmed) {
-       
-        console.log('Deleting post, postId:', postId);
-   await deletePostForUser(postId)
-   
-   Swal.fire(
-     'Deleted!',
-     'Your post has been deleted.',
-     'success'
-    );
-    window.location.reload()
-        
-        
+        console.log("Deleting post, postId:", postId);
+        await deletePostForUser(postId);
+
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+        window.location.reload();
       }
     });
   };
@@ -200,19 +215,22 @@ const   PostInProfilePage = () => {
       <div className="flex flex-col md:flex-row justify-between px-8 py-2 mt-2 rounded-lg shadow-lg gap-4">
         <ToastContainer />
 
-        {sections.map((section) => (
+        {sections.map(section => (
           <button
             key={section}
-            className={`p-3 rounded-lg border-2 font-bold ${activeSection === section ? "bg-blue-500 text-white border-blue-500" : "bg-slate-300 text-black dark:text-white dark:bg-slate-900 border-red-500"}`}
-            onClick={() => setActiveSection(section)}
-          >
+            className={`p-3 rounded-lg border-2 font-bold ${
+              activeSection === section
+                ? "bg-blue-500 text-white border-blue-500"
+                : "bg-slate-300 text-black dark:text-white dark:bg-slate-900 border-red-500"
+            }`}
+            onClick={() => setActiveSection(section)}>
             {section}
           </button>
         ))}
       </div>
 
       <div className="mt-4 p-2 bg-white text-black dark:text-white dark:bg-slate-700 rounded-lg shadow-lg">
-        {activeSection === "MY POSTS" &&
+        {activeSection === "MY POSTS" && (
           <div className="rounded-lg bg-gray-100  lg:grid lg:grid-cols-2 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar  justify-center">
             {posts.length > 0 ? (
               posts.map(post => (
@@ -230,7 +248,9 @@ const   PostInProfilePage = () => {
                       <div>
                         <p
                           className="font-bold"
-                          onClick={() => navigate(`/profiles/${post.username}`)}>
+                          onClick={() =>
+                            navigate(`/profiles/${post.username}`)
+                          }>
                           {post.username}
                         </p>
                         {post.location && (
@@ -244,27 +264,26 @@ const   PostInProfilePage = () => {
                       </div>
                     </div>
                     <div className="relative">
-                  <button
-                    className="focus:outline-none mr-2"
-                    onClick={() => toggleOptions(post._id)}>
-                    <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
-                  </button>
-                  {showOptions === post._id && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                      <p
-                        onClick={() => navigate(`/editpost/${post._id}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Edit Post
-                      </p>
-                      <p
-                        onClick={() => handleDeletePost(post._id)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-                        Delete Post
-                      </p>
-                      
+                      <button
+                        className="focus:outline-none mr-2"
+                        onClick={() => toggleOptions(post._id)}>
+                        <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
+                      </button>
+                      {showOptions === post._id && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                          <p
+                            onClick={() => navigate(`/editpost/${post._id}`)}
+                            className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Edit Post
+                          </p>
+                          <p
+                            onClick={() => handleDeletePost(post._id)}
+                            className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                            Delete Post
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
                   </div>
 
                   {post.images.length > 0 && post.videos.length > 0 ? (
@@ -341,7 +360,11 @@ const   PostInProfilePage = () => {
                   <div className="flex justify-between">
                     <div className="flex gap-2 items-center mt-4">
                       <button
-                        className={`flex items-center space-x-2 hover:text-blue-600 ${likedPosts[post._id] ? "text-blue-600" : "text-gray-600 dark:text-gray-400"}`}
+                        className={`flex items-center space-x-2 hover:text-blue-600 ${
+                          likedPosts[post._id]
+                            ? "text-blue-600"
+                            : "text-gray-600 dark:text-gray-400"
+                        }`}
                         onClick={() => handleLike(post._id)}>
                         {likedPosts[post._id] ? (
                           <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
@@ -350,7 +373,11 @@ const   PostInProfilePage = () => {
                         )}
                       </button>
                       <button
-                        className={`flex items-center space-x-2 hover:text-red-600 ${dislikedPosts[post._id] ? "text-red-600" : "text-gray-600 dark:text-gray-400"}`}
+                        className={`flex items-center space-x-2 hover:text-red-600 ${
+                          dislikedPosts[post._id]
+                            ? "text-red-600"
+                            : "text-gray-600 dark:text-gray-400"
+                        }`}
                         onClick={() => handleDislike(post._id)}>
                         {dislikedPosts[post._id] ? (
                           <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
@@ -362,22 +389,21 @@ const   PostInProfilePage = () => {
                         <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                       </button>
                     </div>
-                    <div className="flex gap-2 mt-4 cursor-pointer">
-                      <p className="text-xs mt-2">
-                        Likes: {" "}
-                        {(likesDislikesData[post._id] &&
-                      likesDislikesData[post._id].likesdislikesinfo
-                        ?.likesCount) ||
-                      0}
-                      </p>
-                      <p className="text-xs mt-2">|</p>
-                      <p className="text-xs mt-2">
-                        Dislikes: {" "}
-                        {(likesDislikesData[post._id] &&
-                      likesDislikesData[post._id].likesdislikesinfo
-                        ?.dislikesCount) ||
-                      0}
-                      </p>
+                    <div>
+                      <div className="gap-2 flex mt-4 text-xs">
+                        <div>
+                          Likes:{" "}
+                          {likesDislikesData[post._id]?.likesdislikesinfo
+                            ?.likesCount || 0}
+                        </div>
+
+                        <div>
+                          Dislikes:{" "}
+                          {likesDislikesData[post._id]?.likesdislikesinfo
+                            ?.dislikesCount || 0}
+                        </div>
+                        {/* <LikesDislikesModale show={showModal} handleClose={handleCloseModal} users={modalContent} /> */}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -386,13 +412,15 @@ const   PostInProfilePage = () => {
               <p>No posts available</p>
             )}
           </div>
-        }
+        )}
 
         {activeSection === "SAVED POSTS" && <div>Saved posts content here</div>}
-        {activeSection === "TAGGED POSTS" && <div>Tagged posts content here</div>}
+        {activeSection === "TAGGED POSTS" && (
+          <div>Tagged posts content here</div>
+        )}
       </div>
     </>
   );
-}
+};
 
 export default PostInProfilePage;

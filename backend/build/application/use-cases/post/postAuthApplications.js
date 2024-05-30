@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetPostsOfCurrentUser = exports.handleGetPostsForUser = exports.handleCreatePost = void 0;
+exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetPostsOfCurrentUser = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -39,6 +39,29 @@ const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awa
     }
 });
 exports.handleCreatePost = handleCreatePost;
+const handleupdatepost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Post data in handleupdatepost:", postData);
+        if (!postData.userId) {
+            throw new ErrorInApplication_1.default("User ID is required to create a post", 400);
+        }
+        if (!postData.postId) {
+            throw new ErrorInApplication_1.default("post ID is required to create a post", 400);
+        }
+        console.log("User exists....");
+        const newPost = yield dbPostRepository.updatePost(postData);
+        console.log("updated post data:", newPost);
+        return newPost;
+    }
+    catch (error) {
+        console.error("Error in updatePost:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to updatePost post", 500);
+    }
+});
+exports.handleupdatepost = handleupdatepost;
 const handleGetPostsForUser = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("handleGetPostsForUser reached");
@@ -62,7 +85,7 @@ const handleGetPostsOfCurrentUser = (id, dbPostRepository) => __awaiter(void 0, 
     try {
         console.log("handleGetPostsOfCurrentUser reached");
         if (!id) {
-            throw new ErrorInApplication_1.default("User ID is required to get all posts", 400);
+            throw new ErrorInApplication_1.default("ID is required to get all posts", 400);
         }
         const allPostsForUser = yield dbPostRepository.getAllPostsForCurrentUser(id);
         console.log("All posts from handleGetPostsOfCurrentUser :", allPostsForUser);
@@ -77,6 +100,25 @@ const handleGetPostsOfCurrentUser = (id, dbPostRepository) => __awaiter(void 0, 
     }
 });
 exports.handleGetPostsOfCurrentUser = handleGetPostsOfCurrentUser;
+const handleGetParticularPost = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetParticularPost reached");
+        if (!id) {
+            throw new ErrorInApplication_1.default(" ID is required to get all posts", 400);
+        }
+        const allPostsForUser = yield dbPostRepository.getParticularPostsForCurrentUser(id);
+        console.log("All posts from handleGetParticularPost :", allPostsForUser);
+        return allPostsForUser;
+    }
+    catch (error) {
+        console.log("Error in handleGetParticularPost");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all  posts of current user", 500);
+    }
+});
+exports.handleGetParticularPost = handleGetParticularPost;
 const handleReportPosts = (data, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("handleReportPosts reached");

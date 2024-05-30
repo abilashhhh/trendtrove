@@ -16,6 +16,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import Addpost from "./Pages/Addpost";
 import ProfilePageIndividual from "./Pages/ProfilePageIndividual";
 import ReportPost from "./Components/Post/ReportPost";
+import EditPost from "./Pages/EditPost";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/addpost" element={<Addpost />} />
         <Route path="/profiles/:username" element={<ProfilePageIndividual />} />
         <Route path="/reportpost/:postId" element={<ReportPost />} />
+        <Route path="/editpost/:postId" element={<EditPost />} />
       </Route>
 
       <Route path="/error" element={<ErrorPage />} />

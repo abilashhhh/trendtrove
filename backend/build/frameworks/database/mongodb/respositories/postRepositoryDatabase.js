@@ -31,6 +31,16 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error adding new post!");
         }
     });
+    const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const updatedPost = yield postModel_1.default.findByIdAndUpdate(postData.postId, postData, { new: true });
+            return updatedPost;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error updating post!");
+        }
+    });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const requesterUser = yield userModel_1.default.findById(id);
@@ -69,6 +79,20 @@ const postRepositoryMongoDB = () => {
                 throw new Error("User not found");
             }
             const gettingPosts = yield postModel_1.default.find({ userId: id }).sort({ createdAt: -1 });
+            console.log("Getting posts before returning:", gettingPosts);
+            return gettingPosts;
+        }
+        catch (error) {
+            console.error(error.message);
+            throw new Error("Error getting all posts of current user!");
+        }
+    });
+    const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (!id) {
+                throw new Error("User ID is required");
+            }
+            const gettingPosts = yield postModel_1.default.findById(id);
             console.log("Getting posts before returning:", gettingPosts);
             return gettingPosts;
         }
@@ -189,8 +213,10 @@ const postRepositoryMongoDB = () => {
     ////////////////////////////////////////////////
     return {
         addNewPost,
+        updatePost,
         getAllPostsForUser,
         getAllPostsForCurrentUser,
+        getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
         likePostsForUser,

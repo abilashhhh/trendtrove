@@ -38,6 +38,36 @@ export const handleCreatePost = async (
   }
 };
 
+export const handleupdatepost = async (
+  postData: PostDataInterface,
+  dbPostRepository: ReturnType<PostDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    console.log("Post data in handleupdatepost:", postData);
+
+    if (!postData.userId) {
+      throw new ErrorInApplication("User ID is required to create a post", 400);
+    }
+
+    if (!postData.postId) {
+      throw new ErrorInApplication("post ID is required to create a post", 400);
+    }
+  
+
+    console.log("User exists....");
+    const newPost = await dbPostRepository.updatePost(postData);
+    console.log("updated post data:", newPost);
+    return newPost;
+  } catch (error) {
+    console.error("Error in updatePost:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to updatePost post", 500);
+  }
+};
+
 
 export const handleGetPostsForUser = async (
   id: string,
@@ -67,13 +97,34 @@ export const handleGetPostsOfCurrentUser = async (
   try {
     console.log("handleGetPostsOfCurrentUser reached");
     if (!id) {
-      throw new ErrorInApplication("User ID is required to get all posts", 400);
+      throw new ErrorInApplication("ID is required to get all posts", 400);
     }
     const allPostsForUser  = await dbPostRepository.getAllPostsForCurrentUser(id);
     console.log("All posts from handleGetPostsOfCurrentUser :", allPostsForUser);
     return allPostsForUser;
   } catch (error) {
     console.log("Error in handleGetPostsOfCurrentUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all  posts of current user", 500);
+  }
+};
+
+export const handleGetParticularPost = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetParticularPost reached");
+    if (!id) {
+      throw new ErrorInApplication(" ID is required to get all posts", 400);
+    }
+    const allPostsForUser  = await dbPostRepository.getParticularPostsForCurrentUser(id);
+    console.log("All posts from handleGetParticularPost :", allPostsForUser);
+    return allPostsForUser;
+  } catch (error) {
+    console.log("Error in handleGetParticularPost");
     if (error instanceof ErrorInApplication) {
       throw error;
     }

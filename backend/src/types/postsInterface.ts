@@ -1,4 +1,5 @@
 export interface PostDataInterface {
+  postId?: any;
   userId?: string;
   captions?: string;
   hashtags?: string[];

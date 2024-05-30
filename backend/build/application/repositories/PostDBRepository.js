@@ -14,8 +14,12 @@ const postDBRepository = (repository) => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewPost(postData);
     });
+    const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.updatePost(postData);
+    });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUser(id); });
     const getAllPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForCurrentUser(id); });
+    const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getParticularPostsForCurrentUser(id); });
     const reportPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(id); });
     const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.savePostsForUser(userId, postId); });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.likePostsForUser(userId, postId); });
@@ -26,8 +30,10 @@ const postDBRepository = (repository) => {
     const deltePostForUser = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deltePostForUser(postId); });
     return {
         addNewPost,
+        updatePost,
         getAllPostsForUser,
         getAllPostsForCurrentUser,
+        getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
         likePostsForUser,

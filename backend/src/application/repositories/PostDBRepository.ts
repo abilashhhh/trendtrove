@@ -8,11 +8,18 @@ export const postDBRepository = (
     await repository.addNewPost(postData);
   };
 
+  const updatePost = async (postData: PostDataInterface) => {
+    await repository.updatePost(postData);
+  };
+
   const getAllPostsForUser = async (id: string) => 
   await repository.getAllPostsForUser(id);
 
   const getAllPostsForCurrentUser = async (id: string) => 
   await repository.getAllPostsForCurrentUser(id);
+
+  const getParticularPostsForCurrentUser = async (id: string) => 
+  await repository.getParticularPostsForCurrentUser(id);
   
   const reportPostsForUser = async (id: string) => 
   await repository.reportPostsForUser(id);
@@ -41,8 +48,10 @@ export const postDBRepository = (
 
   return {
     addNewPost,
+    updatePost,
     getAllPostsForUser,
     getAllPostsForCurrentUser,
+    getParticularPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
     likePostsForUser,

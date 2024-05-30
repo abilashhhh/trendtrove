@@ -33,6 +33,25 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     });
+    const updatepost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const postData = req.body;
+            console.log(postData);
+            const createPost = yield handleupdatepost(postData, dbPostRepository, dbUserRepository);
+            res.status(201).json({
+                status: "success",
+                message: "post updated successfully",
+                data: createPost,
+            });
+        }
+        catch (error) {
+            console.error("Error updating post:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to update post info",
+            });
+        }
+    });
     const getpostforuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { id } = req.params;
@@ -58,6 +77,26 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             const { id } = req.params;
             console.log(" getpostofcurrentuserId received from frontend:", id);
             const getPosts = yield (0, postAuthApplications_1.handleGetPostsOfCurrentUser)(id, dbPostRepository);
+            console.log('getPosts:', getPosts);
+            res.status(201).json({
+                status: "success",
+                message: "Posts fetched for current user",
+                data: getPosts,
+            });
+        }
+        catch (error) {
+            console.error("Error getting all posts of current user:", error);
+            res.status(401).json({
+                status: "error",
+                message: "Failed to get all posts",
+            });
+        }
+    });
+    const getparticularpostofcurrentuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            console.log(" getparticularpostofcurrentuser received from frontend:", id);
+            const getPosts = yield (0, postAuthApplications_1.handleGetParticularPost)(id, dbPostRepository);
             console.log('getPosts:', getPosts);
             res.status(201).json({
                 status: "success",
@@ -209,8 +248,10 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
     });
     return {
         addPost,
+        updatepost,
         getpostforuser,
         getpostofcurrentuser,
+        getparticularpostofcurrentuser,
         reportPost,
         savePost,
         likePost,

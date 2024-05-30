@@ -6,7 +6,7 @@ import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icon
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
 import { updatePost, uploadPost } from "../../API/Post/post";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import debounce from "../../utils/debouncer";
 import { usernameAvailability } from "../../API/Auth/auth";
 
@@ -24,7 +24,8 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
+const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
+  const { postId } = useParams<{ postId: string }>();
   const [postData, setPostData] = useState<Partial<Post>>({
     userId: userDetails._id,
     isArchived: false,
@@ -203,6 +204,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     const dataToSubmit = {
       ...postData,
       mentions: validMentions,
+      postId: postId
     };
   
     if (
@@ -363,8 +365,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
         </div>
 
         <div className="lg:flex mt-2 justify-evenly items-center gap-2 rounded-lg">
-
-          <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
+          <div className="flex-1 flex  flex-col  items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
             <span>Add mentions (Up to 5):</span>
 
             {mentionStatuses.map((mention, index) => (
@@ -418,11 +419,11 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
           onClick={handleSubmit}
           className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5"
         >
-          UPDATE POST
+          POST
         </button>
       </div>
     </main>
   );
 };
 
-export default AddPostMiddlePage;
+export default EditPostMiddlePage;
