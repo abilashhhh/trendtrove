@@ -70,6 +70,10 @@ const ProfilePageIndividualComponent: React.FC = () => {
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   let navigate = useNavigate();
 
+  if(username === currentUser?.username){
+    navigate('/profile')
+  }
+
   const [userDetails, setUserDetails] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isFollower, setIsFollower] = useState<boolean>(false);
