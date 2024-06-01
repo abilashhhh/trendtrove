@@ -163,7 +163,7 @@ const SignupPage: React.FC = () => {
         // Removing confirmPassword data
         const { confirmPassword, ...userData } = formData;
         localStorage.setItem("signupData", JSON.stringify(formData));
-        generateOtp(userData.email, "email-verification");
+        await generateOtp(userData.email, "email-verification");
         toast.success("OTP sent successfully");
         setTimeout(() => {
           navigate("/otp");

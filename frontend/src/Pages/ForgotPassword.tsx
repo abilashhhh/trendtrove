@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { forgotPasswordChangePass, verifyMailForForgotPass, verifyOtp } from "../API/Auth/auth";
-import {
-  validateEmail,
-  validatePassword,
-  validateConfirmPassword
-} from "../utils/validations";
+import { validateEmail, validatePassword, validateConfirmPassword } from "../utils/validations";
 import { useNavigate } from "react-router-dom";
 
 interface ForgotPasswordData {
@@ -18,126 +14,110 @@ interface ForgotPasswordData {
 }
 
 const ForgotPassword: React.FC = () => {
-  const navigate = useNavigate()
-  const [formData, setFormData] = useState<ForgotPasswordData>({
-    email: "",
-    otp: "",
-    password: "",
-    confirmPassword: "",
+  const navigate = useNavigate();
+  const [state, setState] = useState({
+    formData: { email: "", otp: "", password: "", confirmPassword: "" },
+    otpSent: false,
+    otpVerified: false,
+    emailData: true,
+    errors: { email: "", password: "", confirmPassword: "" },
   });
 
-  const [otpSent, setOtpSent] = useState(false);
-  const [OtpVerified, setOtpVeried] = useState(false);
-  const [emailData, setEmailData] = useState(true);
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const setFormData = useCallback((data: Partial<ForgotPasswordData>) => {
+    setState(prevState => ({
+      ...prevState,
+      formData: { ...prevState.formData, ...data },
+    }));
+  }, []);
+
+  const setErrors = useCallback((data: Partial<typeof state.errors>) => {
+    setState(prevState => ({
+      ...prevState,
+      errors: { ...prevState.errors, ...data },
+    }));
+  }, []);
+
+  const setStatus = useCallback((data: Partial<Omit<typeof state, 'formData' | 'errors'>>) => {
+    setState(prevState => ({ ...prevState, ...data }));
+  }, []);
 
   useEffect(() => {
-    const savedFormData = localStorage.getItem("forgotPasswordData");
-    if (savedFormData) {
-      setFormData(JSON.parse(savedFormData));
+    const savedState = localStorage.getItem("forgotPasswordState");
+    if (savedState) {
+      setState(JSON.parse(savedState));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("forgotPasswordData", JSON.stringify(formData));
-  }, [formData]);
+    localStorage.setItem("forgotPasswordState", JSON.stringify(state));
+  }, [state]);
 
-  useEffect(() => {
-    localStorage.setItem("otpSent", JSON.stringify(otpSent));
-  }, [otpSent]);
-
-  useEffect(() => {
-    localStorage.setItem("OtpVerified", JSON.stringify(OtpVerified));
-  }, [OtpVerified]);
-
-  useEffect(() => {
-    localStorage.setItem("emailData", JSON.stringify(emailData));
-  }, [emailData]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [id]: value,
-    }));
+    setFormData({ [id]: value });
 
-    // Validate input
-   if (id === "password") {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        password: validatePassword(value),
-      }));
+    if (id === "password") {
+      setErrors({ password: validatePassword(value) });
     } else if (id === "confirmPassword") {
-      const confirmPasswordError = value !== formData.password ? "Passwords do not match" : "";
-      setErrors(prevErrors => ({
-        ...prevErrors,
+      const confirmPasswordError = value !== state.formData.password ? "Passwords do not match" : "";
+      setErrors({
         confirmPassword: confirmPasswordError || validateConfirmPassword(value),
-      }));
+      });
     }
-  };
+  }, [setFormData, setErrors, state.formData.password]);
 
   const generateOtp = async () => {
-    const emailError = validateEmail(formData.email);
+    const emailError = validateEmail(state.formData.email);
     if (emailError) {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        email: emailError,
-      }));
+      setErrors({ email: emailError });
       return;
     }
 
-    const result = await verifyMailForForgotPass(formData.email, "forgot-password");
+    const result = await verifyMailForForgotPass(state.formData.email, "forgot-password");
     if (result.status === "success") {
       toast.success(result.message);
-      setOtpSent(true);
+      setStatus({ otpSent: true });
     } else {
       toast.error(result.message);
     }
   };
 
   const verifyOtpHandler = async () => {
-    const result = await verifyOtp(formData.email, formData.otp);
+    const result = await verifyOtp(state.formData.email, state.formData.otp);
     if (result.status === "success") {
       toast.success("OTP verified successfully!");
-      setOtpVeried(true);
-      setOtpSent(false);
-      setEmailData(false);
+      setStatus({ otpVerified: true, otpSent: false, emailData: false });
     } else {
       toast.error("Failed to verify OTP. Please try again.");
     }
   };
 
   const verifyPasswordHandler = async () => {
-    const passwordError = validatePassword(formData.password);
-    const confirmPasswordError = formData.password !== formData.confirmPassword ? "Passwords do not match" : "";
+    const passwordError = validatePassword(state.formData.password);
+    const confirmPasswordError = state.formData.password !== state.formData.confirmPassword ? "Passwords do not match" : "";
 
     if (passwordError || confirmPasswordError) {
       setErrors({
-        ...errors,
         password: passwordError,
         confirmPassword: confirmPasswordError,
       });
       return;
     }
 
-    const result = await forgotPasswordChangePass(formData.email, formData.password);
+    const result = await forgotPasswordChangePass(state.formData.email, state.formData.password);
     if (result.status === "success") {
       toast.success("Password changed successfully!");
-      localStorage.removeItem("forgotPasswordData");
-      localStorage.removeItem("otpSent");
-      localStorage.removeItem("OtpVerified");
-      localStorage.removeItem("emailData");
-      setFormData({ email: "", otp: "", password: "", confirmPassword: "" });
-      setOtpSent(false);
-      setOtpVeried(false);
-      setEmailData(true);
-      setTimeout(()=>{
-        navigate('/')
-      },2000)
+      localStorage.removeItem("forgotPasswordState");
+      setState({
+        formData: { email: "", otp: "", password: "", confirmPassword: "" },
+        otpSent: false,
+        otpVerified: false,
+        emailData: true,
+        errors: { email: "", password: "", confirmPassword: "" },
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } else {
       toast.error("Failed to change password. Please try again.");
     }
@@ -150,7 +130,7 @@ const ForgotPassword: React.FC = () => {
       <div className="w-full max-w-4xl mx-auto mt-10 p-10 border rounded-lg bg-white">
         <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
 
-        {emailData && (
+        {state.emailData && (
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Enter your email address:
@@ -163,10 +143,10 @@ const ForgotPassword: React.FC = () => {
                   id="email"
                   name="email"
                   required
-                  value={formData.email}
+                  value={state.formData.email}
                   className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
                 />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                {state.errors.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
               </div>
               <div className="ml-2">
                 <button
@@ -181,7 +161,7 @@ const ForgotPassword: React.FC = () => {
           </div>
         )}
 
-        {otpSent && (
+        {state.otpSent && (
           <>
             <div className="mb-4">
               <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
@@ -195,7 +175,7 @@ const ForgotPassword: React.FC = () => {
                     id="otp"
                     name="otp"
                     required
-                    value={formData.otp}
+                    value={state.formData.otp}
                     className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
                   />
                 </div>
@@ -213,7 +193,7 @@ const ForgotPassword: React.FC = () => {
           </>
         )}
 
-        {OtpVerified && (
+        {state.otpVerified && (
           <>
             <div className="mb-4">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -225,10 +205,10 @@ const ForgotPassword: React.FC = () => {
                 id="password"
                 name="password"
                 required
-                value={formData.password}
+                value={state.formData.password}
                 className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
               />
-              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+              {state.errors.password && <p className="text-red-500 text-sm">{state.errors.password}</p>}
             </div>
             <div className="mb-4">
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
@@ -240,10 +220,10 @@ const ForgotPassword: React.FC = () => {
                 id="confirmPassword"
                 name="confirmPassword"
                 required
-                value={formData.confirmPassword}
+                value={state.formData.confirmPassword}
                 className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
               />
-              {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+              {state.errors.confirmPassword && <p className="text-red-500 text-sm">{state.errors.confirmPassword}</p>}
             </div>
             <div className="flex justify-center items-center mt-1">
               <button
