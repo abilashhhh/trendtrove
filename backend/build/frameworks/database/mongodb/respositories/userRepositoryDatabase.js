@@ -21,7 +21,7 @@ const userRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
     const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("Add user tried to run, data : ", user);
+            // console.log("Add user tried to run, data : ", user);
             const newUser = new userModel_1.default(user);
             return yield newUser.save();
         }
@@ -34,6 +34,7 @@ const userRepositoryMongoDB = () => {
     const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const user = yield userModel_1.default.findOne({ email });
+            console.log("User from getUserByEmail : ", user);
             return user;
         }
         catch (error) {
@@ -55,7 +56,7 @@ const userRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
     const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("repo ;", username);
+            // console.log("repo ;", username);
             const user = yield userModel_1.default.findOne({ username });
             return user;
         }
@@ -245,11 +246,13 @@ const userRepositoryMongoDB = () => {
                 if (!currentUser.requestedByMe.some(user => user.userId.equals(targetUserId))) {
                     currentUser.requestedByMe.push({
                         userId: targetUserId,
+                        dp: targetUser.dp,
                         username: targetUser.username,
                     });
                     targetUser.requestsForMe.push({
                         userId: currentUserId,
                         username: currentUser.username,
+                        dp: currentUser.dp,
                     });
                 }
             }
@@ -258,10 +261,12 @@ const userRepositoryMongoDB = () => {
                     currentUser.following.push({
                         userId: targetUserId,
                         username: targetUser.username,
+                        dp: targetUser.dp,
                     });
                     targetUser.followers.push({
                         userId: currentUserId,
                         username: currentUser.username,
+                        dp: currentUser.dp,
                     });
                 }
             }
@@ -324,10 +329,12 @@ const userRepositoryMongoDB = () => {
             currentUser.followers.push({
                 userId: requesterUserId,
                 username: requesterUser.username,
+                dp: requesterUser.dp
             });
             requesterUser.following.push({
                 userId: currentUserId,
                 username: currentUser.username,
+                dp: currentUser.dp,
             });
             yield currentUser.save();
             yield requesterUser.save();

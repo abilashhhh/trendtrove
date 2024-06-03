@@ -9,6 +9,7 @@ const followSchema = new Schema(
       required: true,
     },
     username: { type: String },
+    dp: { type: String },
     followedAt: { type: Date, default: Date.now },
   },
   { _id: false }
@@ -54,7 +55,7 @@ const userSchema = new Schema(
     blockedUsers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
-);
+);  
 
 const User = model("User", userSchema);
 

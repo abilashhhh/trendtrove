@@ -16,7 +16,7 @@ export const userRepositoryMongoDB = () => {
 
   const addUser = async (user: UserInterface | GoogleUserInterface) => {
     try {
-      console.log("Add user tried to run, data : ", user);
+      // console.log("Add user tried to run, data : ", user);
 
       const newUser = new User(user);
       return await newUser.save();
@@ -31,6 +31,7 @@ export const userRepositoryMongoDB = () => {
   const getUserByEmail = async (email: string) => {
     try {
       const user = await User.findOne({ email });
+      console.log("User from getUserByEmail : ", user)
       return user;
     } catch (error) {
       console.log(error);
@@ -54,7 +55,7 @@ export const userRepositoryMongoDB = () => {
 
   const getUserByUsername = async (username: string) => {
     try {
-      console.log("repo ;", username);
+      // console.log("repo ;", username);
       const user = await User.findOne({ username });
       return user;
     } catch (error) {
@@ -309,11 +310,13 @@ export const userRepositoryMongoDB = () => {
         ) {
           currentUser.requestedByMe.push({
             userId: targetUserId,
+            dp: targetUser.dp,
             username: targetUser.username,
           });
           targetUser.requestsForMe.push({
             userId: currentUserId,
             username: currentUser.username,
+            dp: currentUser.dp,
           });
         }
       } else {
@@ -323,10 +326,12 @@ export const userRepositoryMongoDB = () => {
           currentUser.following.push({
             userId: targetUserId,
             username: targetUser.username,
+            dp: targetUser.dp,
           });
           targetUser.followers.push({
             userId: currentUserId,
             username: currentUser.username,
+            dp: currentUser.dp,
           });
         }
       }
@@ -420,10 +425,12 @@ export const userRepositoryMongoDB = () => {
       currentUser.followers.push({
         userId: requesterUserId,
         username: requesterUser.username,
+        dp: requesterUser.dp
       });
       requesterUser.following.push({
         userId: currentUserId,
         username: currentUser.username,
+        dp: currentUser.dp,
       });
 
       await currentUser.save();

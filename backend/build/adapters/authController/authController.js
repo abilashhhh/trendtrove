@@ -1,4 +1,15 @@
 "use strict";
+// import { Request, Response } from "express";
+// import ErrorInApplication from "../../utils/ErrorInApplication";
+// import { AuthService } from "../../frameworks/services/authenticationService";
+// import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
+// import { UserDBInterface } from "../../application/repositories/userDBRepository";
+// import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
+// import { OtpDbInterface } from "../../application/repositories/OTPDBRepository";
+// import { OtpRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/otpRepositoryDatabase";
+// import { MailSenderService } from "../../frameworks/services/mailSendService";
+// import { MailSenderServiceInterface } from "../../application/services/mailServiceInterface";
+// import { UserInterface } from "../../types/userInterface";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -23,280 +34,175 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ErrorInApplication_1 = __importDefault(require("../../utils/ErrorInApplication"));
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userAuthApplication_1 = require("../../application/use-cases/auth/userAuthApplication");
 const authController = (authServiceImplementation, authServiceInterface, userDBRepositoryImplementation, userDBRepositoryInterface, otpDBRepositoryImplementation, otpDbRepositoryInterface, mailSenderServiceImplementation, mailSenderServiceInterface) => {
     const authService = authServiceInterface(authServiceImplementation());
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const dbOtpRepository = otpDbRepositoryInterface(otpDBRepositoryImplementation());
     const mailSenderService = mailSenderServiceInterface(mailSenderServiceImplementation());
-    const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const registerUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
-        try {
-            yield (0, userAuthApplication_1.userRegister)(user, dbUserRepository, authService);
-            res.status(200).json({
-                status: "success",
-                message: "User registered successfully",
-            });
-        }
-        catch (error) {
-            console.error("Error registering user:", error);
-            if (error instanceof ErrorInApplication_1.default) {
-                res.status(error.statusCode).json({
-                    status: error.status,
-                    message: error.message,
-                });
-            }
-            else {
-                res.status(500).json({
-                    status: "error",
-                    message: "Failed to register the user",
-                });
-            }
-        }
-    });
-    const usernameAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, userAuthApplication_1.userRegister)(user, dbUserRepository, authService);
+        res.status(200).json({
+            status: "success",
+            message: "User registered successfully",
+        });
+    }));
+    const usernameAvailability = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = req.params;
-        try {
-            const isAvailable = yield dbUserRepository.getUserByUsername(username);
-            if (!isAvailable) {
-                res.json({
-                    available: true,
-                    status: "Username is available",
-                });
-            }
-            else {
-                res.json({
-                    available: false,
-                    status: "Username not available",
-                });
-            }
-        }
-        catch (error) {
-            console.error("Error checking username availability:", error);
-            res.status(500).json({
-                status: "error",
-                message: "Failed to check username availability",
+        const isAvailable = yield dbUserRepository.getUserByUsername(username);
+        if (!isAvailable) {
+            res.json({
+                available: true,
+                status: "Username is available",
             });
         }
-    });
-    const emailAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        else {
+            res.json({
+                available: false,
+                status: "Username not available",
+            });
+        }
+    }));
+    const emailAvailability = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email } = req.params;
-        try {
-            const isAvailable = yield dbUserRepository.getUserByEmail(email);
-            if (!isAvailable) {
-                res.json({
-                    available: true,
-                    status: "",
-                });
-            }
-            else {
-                res.json({
-                    available: false,
-                    status: "Email id already registered, Try logging in",
-                });
-            }
-        }
-        catch (error) {
-            console.error("Error checking email availability:", error);
-            res.status(500).json({
-                status: "error",
-                message: "Failed to check email availability",
+        const isUsed = yield dbUserRepository.getUserByEmail(email);
+        if (!isUsed) {
+            res.json({
+                available: true,
+                status: "",
             });
         }
-    });
-    const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        else {
+            res.json({
+                available: false,
+                status: "Email id already registered, Try logging in",
+            });
+        }
+    }));
+    const forgotPassword = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
-        try {
-            const isAvailable = yield dbUserRepository.getUserByEmail(email);
-            if (isAvailable) {
-                yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
-                res.json({
-                    status: "success",
-                    message: "OTP sent to the given mail id",
-                });
-            }
-            else {
-                res.json({
-                    status: "error",
-                    message: "Email id not registered, Try signing up",
-                });
-            }
+        const isUsed = yield dbUserRepository.getUserByEmail(email);
+        if (isUsed) {
+            yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
+            res.json({
+                status: "success",
+                message: "OTP sent to the given mail id",
+            });
         }
-        catch (error) {
+        else {
+            res.json({
+                status: "error",
+                message: "Email id not registered, Try signing up",
+            });
         }
-    });
-    const forgotpasswordchange = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    const forgotpasswordchange = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
-        try {
-            const isAvailable = yield dbUserRepository.getUserByEmail(email);
-            if (isAvailable) {
-                let userId = isAvailable._id.toString();
-                yield (0, userAuthApplication_1.handleForgotPasswordChange)(userId, password, authService, dbUserRepository);
-                res.json({
-                    status: "success",
-                    message: "OTP sent to the given mail id",
-                });
-            }
-            else {
-                res.json({
-                    status: "error",
-                    message: "Email id not registered, Try signing up",
-                });
-            }
+        const isAvailable = yield dbUserRepository.getUserByEmail(email);
+        if (isAvailable) {
+            let userId = isAvailable._id.toString();
+            yield (0, userAuthApplication_1.handleForgotPasswordChange)(userId, password, authService, dbUserRepository);
+            res.json({
+                status: "success",
+                message: "Password changed successfully",
+            });
         }
-        catch (error) {
+        else {
+            res.json({
+                status: "error",
+                message: "Email id not registered, Try signing up",
+            });
         }
-    });
-    const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    const sendOtp = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, text } = req.body;
         yield (0, userAuthApplication_1.handleSendOtp)(email, text, dbOtpRepository, mailSenderService);
         res.json({
             status: "success",
             message: "OTP sent",
         });
-    });
-    const verifyOtpForEmailVerification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    const verifyOtpForEmailVerification = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, otp } = req.body;
         const isOtpValid = yield (0, userAuthApplication_1.handleOtpVerification)(email, otp, dbOtpRepository);
         if (isOtpValid) {
-            return res.json({
+            res.json({
                 status: "success",
                 message: "OTP verified",
             });
         }
         else {
-            return res.status(400).json({
+            res.status(400).json({
                 status: "failed",
                 message: "Invalid OTP",
             });
         }
-    });
-    // const signInUser = async (req: Request, res: Response) => {
-    //   const { email, password }: { email: string; password: string } = req.body;
-    //   try {
-    //     const { userDetails, refreshToken, accessToken } = await userLogin(
-    //       email,
-    //       password,
-    //       dbUserRepository,
-    //       authService
-    //     );
-    //     res.cookie('refreshToken', refreshToken, {
-    //       httpOnly: true,
-    //       secure: true,
-    //       sameSite: 'none',
-    //       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    //     });
-    //     res.json({
-    //       status: "success",
-    //       message: "user verified",
-    //       user: userDetails,
-    //       accessToken
-    //     });
-    //   } catch (error) {
-    //     res.status(404).json({
-    //       status: "error",
-    //       message: "User not found",
-    //     });
-    //   }
-    // };
-    const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    const signIn = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
-        try {
-            const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.login)(email, password, dbUserRepository, authService);
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            });
-            res.json({
-                status: "success",
-                message: "user verified",
-                user: userDetails,
-                accessToken
-            });
-        }
-        catch (error) {
-            res.status(404).json({
-                status: "error",
-                message: error.message,
-            });
-        }
-    });
-    const loginOrSignUpUsingGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.login)(email, password, dbUserRepository, authService);
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+        res.json({
+            status: "success",
+            message: "user verified",
+            user: userDetails,
+            accessToken
+        });
+    }));
+    const loginOrSignUpUsingGoogle = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
-        try {
-            const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.handleGoogleLoginOrSignup)(user, dbUserRepository, authService);
-            console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken, accessToken);
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "none",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            });
-            // Remove the password from userDetails
-            const _a = userDetails._doc, { password } = _a, userDetailsWithoutPassword = __rest(_a, ["password"]);
-            console.log("Returning user details: ", userDetailsWithoutPassword);
-            res.json({
-                status: "success",
-                message: "User verified",
-                user: userDetailsWithoutPassword,
-                accessToken,
-            });
+        const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.handleGoogleLoginOrSignup)(user, dbUserRepository, authService);
+        console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken, accessToken);
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        const _a = userDetails._doc, { password } = _a, userDetailsWithoutPassword = __rest(_a, ["password"]);
+        console.log("Returning user details: ", userDetailsWithoutPassword);
+        res.json({
+            status: "success",
+            message: "User verified",
+            user: userDetailsWithoutPassword,
+            accessToken,
+        });
+    }));
+    const refreshAccessToken = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const cookies = req.cookies;
+        const accessToken = yield (0, userAuthApplication_1.accessTokenRefresh)(cookies, dbUserRepository, authService);
+        res.json({ accessToken });
+    }));
+    const logoutUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const cookies = req.cookies;
+        if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {
+            res.sendStatus(204);
+            return;
         }
-        catch (error) {
-            console.error("Error logging in or signing up with Google:", error);
-            res.status(500).json({
-                status: "error",
-                message: "Failed to log in or sign up using Google",
-            });
-        }
-    });
-    const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const cookies = req.cookies;
-            const accessToken = yield (0, userAuthApplication_1.accessTokenRefresh)(cookies, dbUserRepository, authService);
-            res.json({ accessToken });
-        }
-        catch (error) {
-            res.status(404).json({
-                status: "error",
-                message: "Failed to refresh access token",
-            });
-        }
-    });
-    const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId } = req.body;
-            const cookies = req.cookies;
-            if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refreshToken)) {
-                res.sendStatus(204);
-            }
-            yield (0, userAuthApplication_1.handleLogoutUser)(userId, dbUserRepository);
-            res.clearCookie("refreshToken", {
-                httpOnly: true,
-                sameSite: "none",
-            });
-            res.json({
-                status: "success",
-                message: "Cookie Cleared"
-            });
-        }
-        catch (error) {
-            res.json({
-                status: "fail",
-                message: "Cookie Not Cleared"
-            });
-        }
-    });
+        yield (0, userAuthApplication_1.handleLogoutUser)(userId, dbUserRepository);
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            sameSite: "none",
+        });
+        res.json({
+            status: "success",
+            message: "Cookie Cleared"
+        });
+    }));
     return {
         registerUser,
         usernameAvailability,
         sendOtp,
         verifyOtpForEmailVerification,
         emailAvailability,
-        // signInUser,
         signIn,
         refreshAccessToken,
         logoutUser,

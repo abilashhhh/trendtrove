@@ -122,55 +122,8 @@ export const handleResendOtp = async (
     console.error("Error in handleResendOtp: ", error);
     throw new ErrorInApplication("Error in handleResendOtp", 401);
   }
-};
+}; 
 
-// // User Login
-// export const userLogin = async (
-//   email: string,
-//   password: string,
-//   dbUserRepository: ReturnType<UserDBInterface>,
-//   authService: ReturnType<AuthServiceInterface>
-// ) => {
-//   const user = await dbUserRepository.getUserByEmail(email);
-//   if (!user) {
-//     throw new ErrorInApplication("Invalid email or password!", 401);
-//   }
-//   if (user.isAdmin) {
-//     throw new ErrorInApplication("Admins cant login!", 401);
-//   }
-//   if (user.isBlocked) {
-//     throw new ErrorInApplication("Your account has been blocked!", 401);
-//   }
-
-//   const isPasswordCorrect = await authService.comparePassword(password, user?.password?.toString() || "");
-//   if (!isPasswordCorrect) {
-//     throw new ErrorInApplication("Invalid email or password!", 401);
-//   }
-
-//   const userDetails = {
-//     _id: user?._id.toString(),
-//     name: user?.name,
-//     username: user?.username,
-//     email: user?.email,
-//     phone: user?.phone,
-//     coverPhoto: user?.coverPhoto,
-//     dp: user?.dp,
-//     bio: user?.bio,
-//     gender: user?.gender,
-//     address: user?.address,
-//     followers: user?.followers,
-//     following: user?.following,
-//     isVerifiedAccount: user?.isVerifiedAccount,
-//     isGoogleSignedIn: user?.isGoogleSignedIn,
-//     isBlocked: user?.isBlocked,
-//   };
-
-//   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
-//   const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
-//   await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); // setting the expiry to 7 days
-
-//   return { userDetails, refreshToken, accessToken };
-// };
 
 export const login = async (
   email: string,
@@ -191,24 +144,39 @@ export const login = async (
     throw new ErrorInApplication("Invalid email or password!", 401);
   }
 
+  
+
   const userDetails = {
     _id: user?._id.toString(),
     name: user?.name,
     username: user?.username,
     email: user?.email,
     phone: user?.phone,
-    coverPhoto: user?.coverPhoto,
+    address: user?.address,
+    password: user?.password,
     dp: user?.dp,
+    coverPhoto: user?.coverPhoto,
     bio: user?.bio,
     gender: user?.gender,
-    address: user?.address,
-    followers: user?.followers,
-    following: user?.following,
+    isBlocked: user?.isBlocked,
+    isPrivate: user?.isPrivate,
     isVerifiedAccount: user?.isVerifiedAccount,
     isGoogleSignedIn: user?.isGoogleSignedIn,
-    isBlocked: user?.isBlocked,
+    isPremium: user?.isPremium,
     isAdmin: user?.isAdmin,
+    isSuspended: user?.isSuspended,
+    posts: user?.posts,
+    requestsForMe: user?.requestsForMe,
+    requestedByMe: user?.requestedByMe,
+    followers: user?.followers,
+    following: user?.following,
+    savedPosts: user?.savedPosts,
+    notifications: user?.notifications,
+    blockedUsers: user?.blockedUsers,
+    createdAt: user?.createdAt,
+    updatedAt: user?.updatedAt,
   };
+  
 
   const role = user.isAdmin ? "admin" : "user";
   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role });
@@ -285,19 +253,19 @@ export const handleGoogleLoginOrSignup = async (
     refreshToken = result.refreshToken;
     accessToken = result.accessToken;
 
-    console.log("Existing user in app usecases: userDetails:", userDetails);
-    console.log("Existing user in app usecases: refreshToken:", refreshToken);
-    console.log("Existing user in app usecases: accessToken:", accessToken);
+    // console.log("Existing user in app usecases: userDetails:", userDetails);
+    // console.log("Existing user in app usecases: refreshToken:", refreshToken);
+    // console.log("Existing user in app usecases: accessToken:", accessToken);
 
   } else {
     const result = await userRegisterUsingGoogle(user, dbUserRepository, authService);
     userDetails = { ...result.userDetails, password: undefined }; 
     refreshToken = result.refreshToken;
-    accessToken = result.accessToken;
+    // accessToken = result.accessToken;
 
-    console.log("New user in app usecases: userDetails:", userDetails);
-    console.log("New user in app usecases: refreshToken:", refreshToken);
-    console.log("New user in app usecases: accessToken:", accessToken);
+    // console.log("New user in app usecases: userDetails:", userDetails);
+    // console.log("New user in app usecases: refreshToken:", refreshToken);
+    // console.log("New user in app usecases: accessToken:", accessToken);
   }
 
   return {

@@ -32,6 +32,7 @@ const followSchema = new mongoose_1.Schema({
         required: true,
     },
     username: { type: String },
+    dp: { type: String },
     followedAt: { type: Date, default: Date.now },
 }, { _id: false });
 const userSchema = new mongoose_1.Schema({

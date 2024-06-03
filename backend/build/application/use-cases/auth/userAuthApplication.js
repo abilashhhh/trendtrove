@@ -102,49 +102,6 @@ const handleResendOtp = (email, text, dbOtpRepository, mailSenderService) => __a
     }
 });
 exports.handleResendOtp = handleResendOtp;
-// // User Login
-// export const userLogin = async (
-//   email: string,
-//   password: string,
-//   dbUserRepository: ReturnType<UserDBInterface>,
-//   authService: ReturnType<AuthServiceInterface>
-// ) => {
-//   const user = await dbUserRepository.getUserByEmail(email);
-//   if (!user) {
-//     throw new ErrorInApplication("Invalid email or password!", 401);
-//   }
-//   if (user.isAdmin) {
-//     throw new ErrorInApplication("Admins cant login!", 401);
-//   }
-//   if (user.isBlocked) {
-//     throw new ErrorInApplication("Your account has been blocked!", 401);
-//   }
-//   const isPasswordCorrect = await authService.comparePassword(password, user?.password?.toString() || "");
-//   if (!isPasswordCorrect) {
-//     throw new ErrorInApplication("Invalid email or password!", 401);
-//   }
-//   const userDetails = {
-//     _id: user?._id.toString(),
-//     name: user?.name,
-//     username: user?.username,
-//     email: user?.email,
-//     phone: user?.phone,
-//     coverPhoto: user?.coverPhoto,
-//     dp: user?.dp,
-//     bio: user?.bio,
-//     gender: user?.gender,
-//     address: user?.address,
-//     followers: user?.followers,
-//     following: user?.following,
-//     isVerifiedAccount: user?.isVerifiedAccount,
-//     isGoogleSignedIn: user?.isGoogleSignedIn,
-//     isBlocked: user?.isBlocked,
-//   };
-//   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
-//   const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
-//   await dbUserRepository.addRefreshTokenAndExpiry(email, refreshToken); // setting the expiry to 7 days
-//   return { userDetails, refreshToken, accessToken };
-// };
 const login = (email, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const user = yield dbUserRepository.getUserByEmail(email);
@@ -164,17 +121,29 @@ const login = (email, password, dbUserRepository, authService) => __awaiter(void
         username: user === null || user === void 0 ? void 0 : user.username,
         email: user === null || user === void 0 ? void 0 : user.email,
         phone: user === null || user === void 0 ? void 0 : user.phone,
-        coverPhoto: user === null || user === void 0 ? void 0 : user.coverPhoto,
+        address: user === null || user === void 0 ? void 0 : user.address,
+        password: user === null || user === void 0 ? void 0 : user.password,
         dp: user === null || user === void 0 ? void 0 : user.dp,
+        coverPhoto: user === null || user === void 0 ? void 0 : user.coverPhoto,
         bio: user === null || user === void 0 ? void 0 : user.bio,
         gender: user === null || user === void 0 ? void 0 : user.gender,
-        address: user === null || user === void 0 ? void 0 : user.address,
-        followers: user === null || user === void 0 ? void 0 : user.followers,
-        following: user === null || user === void 0 ? void 0 : user.following,
+        isBlocked: user === null || user === void 0 ? void 0 : user.isBlocked,
+        isPrivate: user === null || user === void 0 ? void 0 : user.isPrivate,
         isVerifiedAccount: user === null || user === void 0 ? void 0 : user.isVerifiedAccount,
         isGoogleSignedIn: user === null || user === void 0 ? void 0 : user.isGoogleSignedIn,
-        isBlocked: user === null || user === void 0 ? void 0 : user.isBlocked,
+        isPremium: user === null || user === void 0 ? void 0 : user.isPremium,
         isAdmin: user === null || user === void 0 ? void 0 : user.isAdmin,
+        isSuspended: user === null || user === void 0 ? void 0 : user.isSuspended,
+        posts: user === null || user === void 0 ? void 0 : user.posts,
+        requestsForMe: user === null || user === void 0 ? void 0 : user.requestsForMe,
+        requestedByMe: user === null || user === void 0 ? void 0 : user.requestedByMe,
+        followers: user === null || user === void 0 ? void 0 : user.followers,
+        following: user === null || user === void 0 ? void 0 : user.following,
+        savedPosts: user === null || user === void 0 ? void 0 : user.savedPosts,
+        notifications: user === null || user === void 0 ? void 0 : user.notifications,
+        blockedUsers: user === null || user === void 0 ? void 0 : user.blockedUsers,
+        createdAt: user === null || user === void 0 ? void 0 : user.createdAt,
+        updatedAt: user === null || user === void 0 ? void 0 : user.updatedAt,
     };
     const role = user.isAdmin ? "admin" : "user";
     const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role });
@@ -229,18 +198,18 @@ const handleGoogleLoginOrSignup = (user, dbUserRepository, authService) => __awa
         userDetails = Object.assign(Object.assign({}, result.userDetails), { password: undefined });
         refreshToken = result.refreshToken;
         accessToken = result.accessToken;
-        console.log("Existing user in app usecases: userDetails:", userDetails);
-        console.log("Existing user in app usecases: refreshToken:", refreshToken);
-        console.log("Existing user in app usecases: accessToken:", accessToken);
+        // console.log("Existing user in app usecases: userDetails:", userDetails);
+        // console.log("Existing user in app usecases: refreshToken:", refreshToken);
+        // console.log("Existing user in app usecases: accessToken:", accessToken);
     }
     else {
         const result = yield (0, exports.userRegisterUsingGoogle)(user, dbUserRepository, authService);
         userDetails = Object.assign(Object.assign({}, result.userDetails), { password: undefined });
         refreshToken = result.refreshToken;
-        accessToken = result.accessToken;
-        console.log("New user in app usecases: userDetails:", userDetails);
-        console.log("New user in app usecases: refreshToken:", refreshToken);
-        console.log("New user in app usecases: accessToken:", accessToken);
+        // accessToken = result.accessToken;
+        // console.log("New user in app usecases: userDetails:", userDetails);
+        // console.log("New user in app usecases: refreshToken:", refreshToken);
+        // console.log("New user in app usecases: accessToken:", accessToken);
     }
     return {
         userDetails,

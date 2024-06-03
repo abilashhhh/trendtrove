@@ -63,19 +63,23 @@ const OTPPage: React.FC = () => {
     const otpValue = otp.otp;
     try {
       const result = await verifyOtp(email, otpValue);
-      console.log("result:", result);
+      console.log("result:", result); 
       if (result.status === "success") {
         toast.success("Account created successfully!");
         toast.success("Redirecting to login page...");
-        // Get the user data from localStorage
+    
         const userData = JSON.parse(localStorage.getItem("signupData") || "{}");
-
-        console.log("userdata from localstrorage: ", userData)
+    
+        console.log("userdata from localstrorage: ", userData);
+    
         await signUpUser(userData as SignUpUserInterface);
+    
+        localStorage.removeItem("signupData");
+    
         setTimeout(() => {
           navigate("/signin");
         }, 3000);
-      } else if (result.data.status === "failed") {
+      } else if (result.data && result.data.status === "failed") {
         toast.error("Incorrect OTP. Try Again");
       } else {
         toast.error("Failed to create account.");
