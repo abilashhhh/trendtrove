@@ -17,11 +17,11 @@ const postRouter = () => {
     const controller = (0, postController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, postDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
     router.post("/addpost", authMiddleware_1.default, controller.addPost);
     router.post("/updatepost", authMiddleware_1.default, controller.updatepost);
-    router.get("/getpostforuser/:id", authMiddleware_1.default, controller.getpostforuser);
+    router.get("/getpostforuser", authMiddleware_1.default, controller.getpostforuser);
     router.get("/getpostforuserusername/:username", authMiddleware_1.default, controller.getpostforuserusername);
     router.get("/getpostlengthofuser/:username", authMiddleware_1.default, controller.getpostlengthofuser);
-    router.get("/getpostofcurrentuser/:id", authMiddleware_1.default, controller.getpostofcurrentuser);
-    router.get("/getsavedpostofcurrentuser/:id", authMiddleware_1.default, controller.getsavedpostofcurrentuser);
+    router.get("/getpostofcurrentuser", authMiddleware_1.default, controller.getpostofcurrentuser);
+    router.get("/getsavedpostofcurrentuser", authMiddleware_1.default, controller.getsavedpostofcurrentuser);
     router.get("/getparticularpost/:id", authMiddleware_1.default, controller.getparticularpostofcurrentuser);
     router.post("/reportpost", authMiddleware_1.default, controller.reportPost);
     router.post("/savepost", authMiddleware_1.default, controller.savePost);

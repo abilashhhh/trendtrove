@@ -28,7 +28,7 @@ const FriendsMiddlePage: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const allUsers = await getAllUsers(currentUser._id);
+        const allUsers = await getAllUsers();
         setUsers(allUsers.user);
 
         const savedActiveUser = localStorage.getItem("activeUser");

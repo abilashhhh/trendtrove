@@ -74,8 +74,8 @@ const postController = (
   });
 
   const getpostforuser = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const getPosts = await handleGetPostsForUser(id, dbPostRepository);
+    const { userId }: { userId: string } = req.body;
+    const getPosts = await handleGetPostsForUser(userId, dbPostRepository);
     res.status(201).json({
       status: "success",
       message: "Posts fetched for user",
@@ -115,8 +115,8 @@ const postController = (
 
   const getpostofcurrentuser = asyncHandler(
     async (req: Request, res: Response) => {
-      const { id } = req.params;
-      const getPosts = await handleGetPostsOfCurrentUser(id, dbPostRepository);
+      const { userId }: { userId: string } = req.body;
+      const getPosts = await handleGetPostsOfCurrentUser(userId, dbPostRepository);
       res.status(201).json({
         status: "success",
         message: "Posts fetched for current user",
@@ -127,9 +127,9 @@ const postController = (
 
   const getsavedpostofcurrentuser = asyncHandler(
     async (req: Request, res: Response) => {
-      const { id } = req.params;
+      const { userId }: { userId: string } = req.body;
       const getPosts = await handleGetSavedPostsOfCurrentUser(
-        id,
+        userId,
         dbPostRepository
       );
       res.status(201).json({

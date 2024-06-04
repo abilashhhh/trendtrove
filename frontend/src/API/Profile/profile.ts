@@ -32,12 +32,12 @@ const handleAxiosError = (error: any) => {
 };
 
 export const getUserInfo = async (
-  userId: string
+ 
 ): Promise<GetUserInfoResponse> => {
   try {
     // console.log("Userid: ", userId);
     const response = await axiosUserInstance.get<GetUserInfoResponse>(
-      `${END_POINTS.GET_USER_INFO}/${userId}`
+    END_POINTS.GET_USER_INFO
     );
     // console.log("response :", response);
     return response.data;
@@ -47,18 +47,7 @@ export const getUserInfo = async (
   }
 };
 
-export const getUserInfo2 = async (): Promise<GetUserInfoResponse> => {
-  try {
-    const response = await axiosUserInstance.get<GetUserInfoResponse>(
-      END_POINTS.GET_USER_INFO2
-    );
-    // console.log("response :", response);
-    return response.data;
-  } catch (error) {
-    handleAxiosError(error);
-    throw error;
-  }
-};
+ 
 
 export const editProfile = async (
   userInfo: UserInfo

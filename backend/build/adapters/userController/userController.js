@@ -18,8 +18,8 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
     const getAllUsers = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id } = req.params;
-        const user = yield (0, profileAuthApplication_1.handleGetAllUsers)(id, dbUserRepository);
+        const { userId } = req.body;
+        const user = yield (0, profileAuthApplication_1.handleGetAllUsers)(userId, dbUserRepository);
         res.json({
             status: "success",
             message: "All users info fetched",

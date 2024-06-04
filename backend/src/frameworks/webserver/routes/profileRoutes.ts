@@ -17,8 +17,7 @@ const profileRouter = () => {
     authServiceInterface
   );
 
-  router.get("/getuserinfo/:id" ,authMiddleware , controller.getUserInfo);
-  router.get("/getuserinfo2" ,authMiddleware , controller.getUserInfo2);
+  router.get("/getuserinfo" ,authMiddleware , controller.getUserInfo);
   router.patch("/editprofile" ,authMiddleware , controller.editProfile);
   router.patch("/changepassword" , authMiddleware ,controller.changePassword);
   router.delete("/deleteaccount/:id/:password" ,authMiddleware ,controller.deleteAccount);

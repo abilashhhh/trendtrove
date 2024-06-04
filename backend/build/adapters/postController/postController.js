@@ -37,8 +37,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         });
     }));
     const getpostforuser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id } = req.params;
-        const getPosts = yield (0, postAuthApplications_1.handleGetPostsForUser)(id, dbPostRepository);
+        const { userId } = req.body;
+        const getPosts = yield (0, postAuthApplications_1.handleGetPostsForUser)(userId, dbPostRepository);
         res.status(201).json({
             status: "success",
             message: "Posts fetched for user",
@@ -64,8 +64,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         });
     }));
     const getpostofcurrentuser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id } = req.params;
-        const getPosts = yield (0, postAuthApplications_1.handleGetPostsOfCurrentUser)(id, dbPostRepository);
+        const { userId } = req.body;
+        const getPosts = yield (0, postAuthApplications_1.handleGetPostsOfCurrentUser)(userId, dbPostRepository);
         res.status(201).json({
             status: "success",
             message: "Posts fetched for current user",
@@ -73,8 +73,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         });
     }));
     const getsavedpostofcurrentuser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id } = req.params;
-        const getPosts = yield (0, postAuthApplications_1.handleGetSavedPostsOfCurrentUser)(id, dbPostRepository);
+        const { userId } = req.body;
+        const getPosts = yield (0, postAuthApplications_1.handleGetSavedPostsOfCurrentUser)(userId, dbPostRepository);
         res.status(201).json({
             status: "success",
             message: "Posts fetched for current user",

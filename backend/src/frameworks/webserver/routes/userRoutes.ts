@@ -16,7 +16,7 @@ const userRouter = () => {
     authServiceInterface
   );
 
-  router.get("/getallusers/:id" ,authMiddleware, controller.getAllUsers);
+  router.get("/getallusers" ,authMiddleware, controller.getAllUsers);
   router.get("/getuserprofile/:username" ,authMiddleware, controller.getuserprofile);
   router.post("/followuser" , authMiddleware, controller.followUserRequest);
   router.post("/unfollowuser" , authMiddleware,controller.unfollowUserRequest);

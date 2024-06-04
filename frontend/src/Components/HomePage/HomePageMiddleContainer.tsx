@@ -65,7 +65,7 @@ const MiddleContainer: React.FC = () => {
   const fetchUserPosts = async (id: string | undefined) => {
     try {
       if (id) {
-        const response = await fetchAllPostsForUser(id);
+        const response = await fetchAllPostsForUser();
         if (response && response.data) {
           setPosts(response.data);
         } else {

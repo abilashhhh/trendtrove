@@ -26,18 +26,9 @@ const profileController = (
     userDBRepositoryImplementation()
   );
   const authService = authServiceInterface(authServiceImplementation());
+ 
 
   const getUserInfo = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const user = await handleUserInfo(id, dbUserRepository);
-    res.json({
-      status: "success",
-      message: "User info fetched",
-      user,
-    });
-  });
-
-  const getUserInfo2 = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
     console.log("Get user info2 ran : ", userId);
     const user = await handleUserInfo(userId, dbUserRepository);
@@ -121,7 +112,6 @@ const profileController = (
 
   return {
     getUserInfo,
-    getUserInfo2,
     editProfile,
     changePassword,
     deleteAccount,

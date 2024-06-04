@@ -13,7 +13,6 @@ const END_POINTS = {
   FORGOT_PASSWORD_CHANGE: 'api/auth/forgotpasswordchange',
   
   GET_USER_INFO: "/api/profile/getuserinfo",
-  GET_USER_INFO2: "/api/profile/getuserinfo2",
   EDIT_PROFILE: "/api/profile/editprofile",
   UPLOAD_PROFILE_PHOTO: "/api/profile/dp",
   CHANGE_PASSWORD: "/api/profile/changepassword",
@@ -23,7 +22,7 @@ const END_POINTS = {
   UPLOAD_COVER: 'api/profile/uploadcover',
   UPLOAD_DP: 'api/profile/uploaddp',
 
-  GET_ALL_USERS : '/api/user/getallusers/:userId',
+  GET_ALL_USERS : '/api/user/getallusers',
   GET_USER_PROFILE : '/api/user/getuserprofile/:username',
   FOLLOW_REQUEST: 'api/user/followuser',
   UNFOLLOW_REQUEST: 'api/user/unfollowuser',

@@ -71,12 +71,10 @@ export const updatePost = async (
   }
 };
 
-export const getAllPostsForUser = async (
-  id: string
-): Promise<GetAllPostsForUser> => {
+export const getAllPostsForUser = async (): Promise<GetAllPostsForUser> => {
   try {
     const response = await axiosUserInstance.get<GetAllPostsForUser>(
-      `${END_POINTS.GET_POSTS_FOR_USER}/${id}`
+      `${END_POINTS.GET_POSTS_FOR_USER}`
     );
     // console.log("respose: ", response.data?.data);
     return response.data;
@@ -102,11 +100,11 @@ export const fetchAllPostsForUserUsingUsername = async (
 };
 
 export const fetchPostsOfTheCurrentUser = async (
-  id: string
+ 
 ): Promise<GetAllPostsOfCurrentUser> => {
   try {
     const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
-      `${END_POINTS.GET_POSTS_OF_CURRENT_USER}/${id}`
+      END_POINTS.GET_POSTS_OF_CURRENT_USER
     );
     // console.log("fetchPostsOfTheCurrentUser respose: ", response.data?.data);
     return response.data?.data;
@@ -116,12 +114,10 @@ export const fetchPostsOfTheCurrentUser = async (
   }
 };
 
-export const fetchSavedPostsOfTheCurrentUser = async (
-  id: string // should be the user id
-): Promise<GetAllPostsOfCurrentUser> => {
+export const fetchSavedPostsOfTheCurrentUser = async (): Promise<GetAllPostsOfCurrentUser> => {
   try {
     const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
-      `${END_POINTS.GET_SAVED_POSTS_OF_CURRENT_USER}/${id}`
+      END_POINTS.GET_SAVED_POSTS_OF_CURRENT_USER
     );
     // console.log("fetchSavedPostsOfTheCurrentUser respose: ",response.data?.data);
     return response.data?.data;

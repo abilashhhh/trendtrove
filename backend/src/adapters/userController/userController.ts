@@ -29,8 +29,8 @@ const userController = (
   const authService = authServiceInterface(authServiceImplementation());
 
   const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const user = await handleGetAllUsers(id, dbUserRepository);
+    const { userId }: { userId: string } = req.body;
+    const user = await handleGetAllUsers(userId, dbUserRepository);
     res.json({
       status: "success",
       message: "All users info fetched",

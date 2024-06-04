@@ -13,8 +13,7 @@ const profileController_1 = __importDefault(require("../../../adapters/profileCo
 const profileRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, profileController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
-    router.get("/getuserinfo/:id", authMiddleware_1.default, controller.getUserInfo);
-    router.get("/getuserinfo2", authMiddleware_1.default, controller.getUserInfo2);
+    router.get("/getuserinfo", authMiddleware_1.default, controller.getUserInfo);
     router.patch("/editprofile", authMiddleware_1.default, controller.editProfile);
     router.patch("/changepassword", authMiddleware_1.default, controller.changePassword);
     router.delete("/deleteaccount/:id/:password", authMiddleware_1.default, controller.deleteAccount);

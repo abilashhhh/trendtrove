@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers } from "../API/User/user";
 import { StoreType } from '../Redux/Store/reduxStore';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 interface ModalProps {
   isOpen: boolean;
@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const { status, message, user } = await getAllUsers(userId);
+        const { status, message, user } = await getAllUsers();
         if (status === "success") {
           setUsers(user);
         } else {

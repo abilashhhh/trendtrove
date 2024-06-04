@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../../Redux/Store/reduxStore";
-import { getAllUsers } from "../../../API/User/user";
 import { useNavigate } from "react-router-dom";
 
 const Followers = () => {

@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import store from "../Redux/Store/reduxStore";
-import { getUserInfo2 } from "../API/Profile/profile";
+import { getUserInfo } from "../API/Profile/profile";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../Redux/UserAuthSlice/authSlice";
 
@@ -22,7 +22,7 @@ const TokenCheckMiddleware = ({
       navigate("/home");
     } else {
       const fetchUser = async () => {
-        const { user } = await getUserInfo2();
+        const { user } = await getUserInfo();
         console.log(
           "User from the fetch user in token checker middleware : ",
           user

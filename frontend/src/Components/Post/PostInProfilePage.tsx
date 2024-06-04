@@ -108,14 +108,12 @@ const PostInProfilePage = () => {
   useEffect(() => {
     if (currentUser?._id) {
       const fetchData = async () => {
-        const data = await fetchPostsOfTheCurrentUser(currentUser._id);
+        const data = await fetchPostsOfTheCurrentUser();
         console.log("data : ", data);
         if (data) {
           setPosts(data);
         }
-        const savedPostData = await fetchSavedPostsOfTheCurrentUser(
-          currentUser._id
-        );
+        const savedPostData = await fetchSavedPostsOfTheCurrentUser();
         console.log("savedPostData : ", savedPostData);
         if (data) {
           setSavedPosts(savedPostData);
