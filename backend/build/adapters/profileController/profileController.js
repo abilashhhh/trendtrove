@@ -1,4 +1,14 @@
 "use strict";
+// import { Request, Response } from "express";
+// import ErrorInApplication from "../../utils/ErrorInApplication";
+// import { AuthService } from "../../frameworks/services/authenticationService";
+// import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
+// import {
+//   UserDBInterface,
+// } from "../../application/repositories/userDBRepository";
+// import {
+//   UserRepositoryMongoDB,
+// } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,132 +18,82 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const profileAuthApplication_1 = require("../../application/use-cases/profile/profileAuthApplication");
 const profileController = (userDBRepositoryImplementation, userDBRepositoryInterface, authServiceImplementation, authServiceInterface) => {
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
-    //////////////////////////////////////////////////
-    const getUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { id } = req.params;
-            const user = yield (0, profileAuthApplication_1.handleUserInfo)(id, dbUserRepository);
-            console.log(user);
-            res.json({
-                status: "success",
-                message: "user info fetched",
-                user,
-            });
-        }
-        catch (err) {
-            console.error("Error fetching user info:", err);
-            res.status(401).json({
-                status: "error",
-                message: "Failed to fetch user info",
-            });
-        }
-    });
-    //////////////////////////////////////////////////
-    const editProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const profileInfo = req.body;
-            console.log("req.body; : ", profileInfo);
-            const userData = yield (0, profileAuthApplication_1.handleEditProfile)(profileInfo, dbUserRepository);
-            console.log(userData);
-            res.json({
-                status: "success",
-                message: "user edited successfully",
-                userData,
-            });
-        }
-        catch (err) {
-            console.error("Error editing user:", err);
-            res.status(401).json({
-                status: "error",
-                message: "Failed to edit user",
-            });
-        }
-    });
-    const changePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { _id, currentPassword, newPassword } = req.body;
-            // Handle the password change
-            const userData = yield (0, profileAuthApplication_1.handlePasswordChange)(_id, currentPassword, newPassword, dbUserRepository, authService);
-            console.log(userData);
-            res.json({
-                status: "success",
-                message: "Password changed successfully",
-                userData,
-            });
-        }
-        catch (err) {
-            console.error("Error changing password:", err);
-            res.status(500).json({
-                status: "error",
-                message: "Failed to change password",
-            });
-        }
-    });
-    const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { id, password } = req.params;
-            console.log("req params in deleteAccount acc: ", req.params);
-            const result = yield (0, profileAuthApplication_1.handleDeleteAccount)(id, password, dbUserRepository, authService);
-            res.json({
-                status: "success",
-                message: "Account deleted successfully",
-                result
-            });
-        }
-        catch (err) {
-            console.error("Error deleting account:", err);
-            res.status(500).json({
-                status: "error",
-                message: err.message || "Failed to delete account",
-            });
-        }
-    });
-    const suspendAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { id, password } = req.params;
-            console.log("req params in suspend acc: ", req.params);
-            const result = yield (0, profileAuthApplication_1.handleSuspendAccount)(id, password, dbUserRepository, authService);
-            res.json({
-                status: "success",
-                message: "Account suspended successfully",
-                result
-            });
-        }
-        catch (err) {
-            console.error("Error suspending account:", err);
-            res.status(500).json({
-                status: "error",
-                message: err.message || "Failed to suspend your account",
-            });
-        }
-    });
-    const privateAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { id, password } = req.params;
-            console.log("req params in private acc: ", req.params);
-            const result = yield (0, profileAuthApplication_1.handlePrivateAccount)(id, password, dbUserRepository, authService);
-            res.json({
-                status: "success",
-                message: "Account set to private account successfully",
-                result
-            });
-        }
-        catch (err) {
-            console.error("Error setting to private account:", err);
-            res.status(500).json({
-                status: "error",
-                message: err.message || "Failed to set to private account",
-            });
-        }
-    });
-    //////////////////////////////////////////////////
+    const getUserInfo = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const user = yield (0, profileAuthApplication_1.handleUserInfo)(id, dbUserRepository);
+        res.json({
+            status: "success",
+            message: "User info fetched",
+            user,
+        });
+    }));
+    const getUserInfo2 = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        console.log("Get user info2 ran : ", userId);
+        const user = yield (0, profileAuthApplication_1.handleUserInfo)(userId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: "User info fetched",
+            user,
+        });
+    }));
+    const editProfile = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const profileInfo = req.body;
+        const userData = yield (0, profileAuthApplication_1.handleEditProfile)(profileInfo, dbUserRepository);
+        res.json({
+            status: "success",
+            message: "User edited successfully",
+            userData,
+        });
+    }));
+    const changePassword = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { _id, currentPassword, newPassword } = req.body;
+        const userData = yield (0, profileAuthApplication_1.handlePasswordChange)(_id, currentPassword, newPassword, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "Password changed successfully",
+            userData,
+        });
+    }));
+    const deleteAccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id, password } = req.params;
+        const result = yield (0, profileAuthApplication_1.handleDeleteAccount)(id, password, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "Account deleted successfully",
+            result
+        });
+    }));
+    const suspendAccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id, password } = req.params;
+        const result = yield (0, profileAuthApplication_1.handleSuspendAccount)(id, password, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "Account suspended successfully",
+            result
+        });
+    }));
+    const privateAccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id, password } = req.params;
+        const result = yield (0, profileAuthApplication_1.handlePrivateAccount)(id, password, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "Account set to private successfully",
+            result
+        });
+    }));
     return {
         getUserInfo,
+        getUserInfo2,
         editProfile,
         changePassword,
         deleteAccount,

@@ -13,6 +13,7 @@ const END_POINTS = {
   FORGOT_PASSWORD_CHANGE: 'api/auth/forgotpasswordchange',
   
   GET_USER_INFO: "/api/profile/getuserinfo",
+  GET_USER_INFO2: "/api/profile/getuserinfo2",
   EDIT_PROFILE: "/api/profile/editprofile",
   UPLOAD_PROFILE_PHOTO: "/api/profile/dp",
   CHANGE_PASSWORD: "/api/profile/changepassword",

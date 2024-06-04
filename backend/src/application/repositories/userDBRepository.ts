@@ -21,12 +21,13 @@ export const userDBRepository = (
   const logoutUser = async (userId: string) =>
     await repository.logoutUser(userId);
 
-  const addRefreshTokenAndExpiry = async (
-    email: string,
-    refreshToken: string
-  ) => {
-    await repository.addRefreshTokenAndExpiry(email, refreshToken);
-  };
+const addRefreshTokenAndExpiry = async (
+  email: string,
+  refreshToken: string,
+    
+) =>  {
+  await repository.addRefreshTokenAndExpiry(email, refreshToken);
+};
 
   const changeIsAccountVerified = async (email: string) =>
     await repository.changeIsAccountVerified(email);

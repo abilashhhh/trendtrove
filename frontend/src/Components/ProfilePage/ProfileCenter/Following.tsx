@@ -30,11 +30,11 @@ const Following = () => {
             className="flex items-center justify-between p-2 mb-2 bg-gray-100 dark:bg-gray-800 rounded-md shadow-sm hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-200"
           >
             <div className="flex items-center">
-              {/* <img
+              <img
                 src={following.dp} 
-                alt={follower.username}
+                alt={following.username}
                 className="w-10 h-10 rounded-full mr-4"
-              /> */}
+              />
               <div>
                 <h1 className="text-base font-semibold cursor-pointer" onClick={() => navigate(`/profiles/${following.username}`)}>{following.username}</h1>
                 <p className="text-sm text-gray-400">Since {formatDate(following.followedAt)}</p>

@@ -16,12 +16,12 @@ export const userRepositoryMongoDB = () => {
 
   const addUser = async (user: UserInterface | GoogleUserInterface) => {
     try {
-      // console.log("Add user tried to run, data : ", user);
+      // // console.log("Add user tried to run, data : ", user);
 
       const newUser = new User(user);
       return await newUser.save();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error adding user!");
     }
   };
@@ -31,10 +31,10 @@ export const userRepositoryMongoDB = () => {
   const getUserByEmail = async (email: string) => {
     try {
       const user = await User.findOne({ email });
-      console.log("User from getUserByEmail : ", user)
+      // console.log("User from getUserByEmail : ", user)
       return user;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error getting user by email!");
     }
   };
@@ -46,7 +46,7 @@ export const userRepositoryMongoDB = () => {
       const user = await User.findById(userId);
       return user;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error getting user by userId!");
     }
   };
@@ -55,11 +55,11 @@ export const userRepositoryMongoDB = () => {
 
   const getUserByUsername = async (username: string) => {
     try {
-      // console.log("repo ;", username);
+      // // console.log("repo ;", username);
       const user = await User.findOne({ username });
       return user;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error getting user by username!");
     }
   };
@@ -86,6 +86,9 @@ export const userRepositoryMongoDB = () => {
     refreshToken: string
   ) => {
     try {
+      console.log("addRefreshTokenAndExpiry  email: ", email);
+      console.log("addRefreshTokenAndExpiry  refreshToken: ", refreshToken);
+
       const refreshTokenExpiresAt = new Date(
         Date.now() + 7 * 24 * 60 * 60 * 1000
       );
@@ -96,8 +99,8 @@ export const userRepositoryMongoDB = () => {
       );
       return user;
     } catch (error) {
-      console.log(error);
-      throw new Error("Error adding refresh token and expiry!");
+      // console.log(error);
+      throw new Error("Error updating user refresh token and expiry!");
     }
   };
 
@@ -109,7 +112,7 @@ export const userRepositoryMongoDB = () => {
       });
       return user;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error updating profile!");
     }
   };
@@ -215,7 +218,7 @@ export const userRepositoryMongoDB = () => {
         },
         "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts coverPhoto"
       ).exec();
-      console.log(users);
+      // console.log(users);
       return users;
     } catch (error) {
       console.error("Error getting all users", error);
@@ -231,7 +234,7 @@ export const userRepositoryMongoDB = () => {
         },
         "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn "
       ).exec();
-      console.log(users);
+      // console.log(users);
       return users;
     } catch (error) {
       console.error("Error getting all users", error);
@@ -241,9 +244,9 @@ export const userRepositoryMongoDB = () => {
   const getAllReportsForAdmin = async () => {
     try {
       const reports = await ReportPostModel.find().exec();
-  
+
       const detailedReports = await Promise.all(
-        reports.map(async (report) => {
+        reports.map(async report => {
           const post = await Post.findById(report.postId).exec();
           return {
             ...report.toObject(),
@@ -251,14 +254,14 @@ export const userRepositoryMongoDB = () => {
           };
         })
       );
-  
+
       return detailedReports;
     } catch (error) {
       console.error("Error getting all reports", error);
       throw new Error("Error getting all reports");
     }
   };
-  
+
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne(
@@ -271,7 +274,7 @@ export const userRepositoryMongoDB = () => {
       );
       return true;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error changing isAccountVerified field");
     }
   };
@@ -288,7 +291,7 @@ export const userRepositoryMongoDB = () => {
       );
       return true;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error changing isAccountVerified field");
     }
   };
@@ -365,7 +368,7 @@ export const userRepositoryMongoDB = () => {
       await currentUser.save();
       await targetUser.save();
 
-      console.log("Unfollow successful");
+      // console.log("Unfollow successful");
       return { message: "You have unfollowed this user" };
     } catch (error) {
       console.error("Error in unfollowUser", error);
@@ -395,7 +398,7 @@ export const userRepositoryMongoDB = () => {
       await currentUser.save();
       await requesterUser.save();
 
-      console.log("Unfollow successful");
+      // console.log("Unfollow successful");
       return { message: "You have cancelled the friend request sent" };
     } catch (error) {
       console.error("Error in cancelSendFriendRequest", error);
@@ -425,7 +428,7 @@ export const userRepositoryMongoDB = () => {
       currentUser.followers.push({
         userId: requesterUserId,
         username: requesterUser.username,
-        dp: requesterUser.dp
+        dp: requesterUser.dp,
       });
       requesterUser.following.push({
         userId: currentUserId,
@@ -436,7 +439,7 @@ export const userRepositoryMongoDB = () => {
       await currentUser.save();
       await requesterUser.save();
 
-      console.log("Follow request accepted");
+      // console.log("Follow request accepted");
       return { message: "Follow request accepted" };
     } catch (error) {
       console.error("Error in acceptFriendRequest", error);
@@ -467,7 +470,7 @@ export const userRepositoryMongoDB = () => {
       await currentUser.save();
       await requesterUser.save();
 
-      console.log("Follow request rejected");
+      // console.log("Follow request rejected");
       return { message: "Follow request rejected" };
     } catch (error) {
       console.error("Error in rejectFriendRequest", error);
@@ -489,16 +492,14 @@ export const userRepositoryMongoDB = () => {
         }
       );
 
-      console.log(`Cleared data for  users.`);
+      // console.log(`Cleared data for  users.`);
     } catch (error) {
       console.error("Error clearing data:", error);
     }
   };
 
   // clearAll();
-  
 
-  
   ////////////////////////////////////////////////
 
   return {
@@ -525,7 +526,6 @@ export const userRepositoryMongoDB = () => {
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
-  
   };
 };
 //////////////////////////////////////////////////////////

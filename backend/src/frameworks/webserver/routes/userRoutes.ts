@@ -16,13 +16,13 @@ const userRouter = () => {
     authServiceInterface
   );
 
-  router.get("/getallusers/:id" , controller.getAllUsers);
-  router.get("/getuserprofile/:username" , controller.getuserprofile);
-  router.post("/followuser" , controller.followUserRequest);
-  router.post("/unfollowuser" , controller.unfollowUserRequest);
-  router.post("/cancelrequest" , controller.cancelfollowUserRequest);
-  router.post("/acceptrequest" , controller.acceptfollowUserRequest);
-  router.post("/rejectrequest" , controller.rejectfollowUserRequest);
+  router.get("/getallusers/:id" ,authMiddleware, controller.getAllUsers);
+  router.get("/getuserprofile/:username" ,authMiddleware, controller.getuserprofile);
+  router.post("/followuser" , authMiddleware, controller.followUserRequest);
+  router.post("/unfollowuser" , authMiddleware,controller.unfollowUserRequest);
+  router.post("/cancelrequest" ,authMiddleware, controller.cancelfollowUserRequest);
+  router.post("/acceptrequest" ,authMiddleware,controller.acceptfollowUserRequest);
+  router.post("/rejectrequest" , authMiddleware,controller.rejectfollowUserRequest);
 
   return router;
 };

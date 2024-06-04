@@ -10,18 +10,7 @@ import {
 } from "../../Types/admin";
 import axios, { AxiosError } from "axios";
 
-// import { GetRestOfUsersResponse } from "../../Types/userProfile";
-
-// export const adminLogin = async (
-//   payload: AdminLoginInterface
-// ): Promise<AdminLoginResponse> => {
-//   const response = await axiosAdminRefreshInstance.post<AdminLoginResponse>(
-//     END_POINTS.ADMIN_LOGIN,
-//     payload
-//   );
-//   return response.data;
-// };
-
+ 
 export const refreshAdminAccessToken = async (): Promise<{
   accessToken: string;
 }> => {
@@ -34,13 +23,24 @@ export const refreshAdminAccessToken = async (): Promise<{
  
 
 
-export const logoutAdmin = async (accessToken: string) => {
-  await axiosAdminInstance.post(END_POINTS.ADMIN_LOGOUT, null, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-};
+// export const logoutAdmin = async (accessToken: string) => {
+//   await axiosAdminInstance.post(END_POINTS.ADMIN_LOGOUT, null, {
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//   });
+// };
+
+
+export const logoutAdmin = async (): Promise<{ status: string, message: string }> => {
+  console.log("Called admin logout : ")
+  const response = await axiosAdminInstance.delete<{ status: string, message: string }>(
+    END_POINTS.ADMIN_LOGOUT
+  );
+  console.log("admin logout - response daa: ", response.data)
+  return response.data;
+}
+
 
  
 export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {

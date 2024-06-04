@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middlewares/authMiddleware";
+import adminMiddleware from "../middlewares/adminMiddleware";
 import { authServiceInterface } from "../../../application/services/authenticationServiceInterface";
 import { authService } from "../../services/authenticationService";
 import { userRepositoryMongoDB } from "../../database/mongodb/respositories/userRepositoryDatabase";
@@ -21,13 +21,13 @@ const adminRouter = () => {
   );
 
   // router.post("/signin" , controller.signin);
-  router.post("/logout", controller.logout);
-  router.get("/getusersforadmin", controller.getAllUsersForAdmin);
-  router.get("/getallpostreportsandposts", controller.getallpostreports);
-  router.patch("/blockuser/:id" ,controller.blockAccount);
-  router.patch("/unblockuser/:id" ,controller.unblockAccount);
-  router.patch("/blockpost/:postId" ,controller.blockPost);
-  router.patch("/unblockpost/:postId" ,controller.unblockPost);
+  router.delete("/logout", adminMiddleware ,controller.logout);
+  router.get("/getusersforadmin",adminMiddleware, controller.getAllUsersForAdmin);
+  router.get("/getallpostreportsandposts",adminMiddleware, controller.getallpostreports);
+  router.patch("/blockuser/:id" ,adminMiddleware,controller.blockAccount);
+  router.patch("/unblockuser/:id" ,adminMiddleware,controller.unblockAccount);
+  router.patch("/blockpost/:postId" ,adminMiddleware,controller.blockPost);
+  router.patch("/unblockpost/:postId" ,adminMiddleware,controller.unblockPost);
 
  
  

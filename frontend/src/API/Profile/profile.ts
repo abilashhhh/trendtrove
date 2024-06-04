@@ -47,6 +47,19 @@ export const getUserInfo = async (
   }
 };
 
+export const getUserInfo2 = async (): Promise<GetUserInfoResponse> => {
+  try {
+    const response = await axiosUserInstance.get<GetUserInfoResponse>(
+      END_POINTS.GET_USER_INFO2
+    );
+    console.log("response :", response);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const editProfile = async (
   userInfo: UserInfo
 ): Promise<EditProfileResponse> => {

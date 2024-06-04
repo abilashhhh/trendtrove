@@ -27,7 +27,7 @@ const authService = () => {
     };
     const generateAccessToken = (payload) => {
         const accessToken = jsonwebtoken_1.default.sign(payload, config_1.default.JWT_ACCESS_CODE, {
-            expiresIn: "59m",
+            expiresIn: "15m",
         });
         return accessToken;
     };
@@ -39,10 +39,12 @@ const authService = () => {
     };
     const verifyAccessToken = (token) => {
         const payload = jsonwebtoken_1.default.verify(token, config_1.default.JWT_ACCESS_CODE);
+        console.log("verifyAccessToken: payload : ", payload);
         return payload;
     };
     const verifyRefreshToken = (token) => {
         const payload = jsonwebtoken_1.default.verify(token, config_1.default.JWT_REFRESH_CODE);
+        console.log("verifyRefreshToken: payload : ", payload);
         return payload;
     };
     return {

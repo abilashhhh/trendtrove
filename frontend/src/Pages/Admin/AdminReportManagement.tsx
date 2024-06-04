@@ -8,6 +8,7 @@ import AdminLeftSidebar from "../../Components/AdminPage/AdminLeftSidebar";
 import AdminHeader from "../../Components/AdminPage/AdminHeader";
 import { useNavigate } from "react-router-dom";
 import AdminReportManagementComponent from "../../Components/AdminPage/AdminReportManagementComponent";
+import { logoutAdmin } from "../../API/Admin/admin";
 
 function AdminReportManagement() {
   const navigate = useNavigate();
@@ -23,15 +24,25 @@ function AdminReportManagement() {
     setLeftSidebarOpen(!isLeftSidebarOpen);
   };
 
+  // const handleLogout = async () => {
+  //   try {
+  //     toast.error("Logging Out");
+  //     setTimeout(() => {
+  //       dispatch(adminLogout());
+  //     }, 3000);
+  //   } catch (error) {
+  //     console.error("Logout failed", error);
+  //     toast.error("Log out failed");
+  //   }
+  // };
+
   const handleLogout = async () => {
-    try {
+    const response = await logoutAdmin();
+    if (response.status === "success") {
       toast.error("Logging Out");
       setTimeout(() => {
         dispatch(adminLogout());
       }, 3000);
-    } catch (error) {
-      console.error("Logout failed", error);
-      toast.error("Log out failed");
     }
   };
 

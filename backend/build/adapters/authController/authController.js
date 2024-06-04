@@ -1,15 +1,4 @@
 "use strict";
-// import { Request, Response } from "express";
-// import ErrorInApplication from "../../utils/ErrorInApplication";
-// import { AuthService } from "../../frameworks/services/authenticationService";
-// import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
-// import { UserDBInterface } from "../../application/repositories/userDBRepository";
-// import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-// import { OtpDbInterface } from "../../application/repositories/OTPDBRepository";
-// import { OtpRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/otpRepositoryDatabase";
-// import { MailSenderService } from "../../frameworks/services/mailSendService";
-// import { MailSenderServiceInterface } from "../../application/services/mailServiceInterface";
-// import { UserInterface } from "../../types/userInterface";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -143,23 +132,28 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     const signIn = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.login)(email, password, dbUserRepository, authService);
-        res.cookie('refreshToken', refreshToken, {
+        res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.json({
             status: "success",
             message: "user verified",
             user: userDetails,
-            accessToken
+            accessToken,
         });
     }));
     const loginOrSignUpUsingGoogle = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const user = req.body;
         const { userDetails, refreshToken, accessToken } = yield (0, userAuthApplication_1.handleGoogleLoginOrSignup)(user, dbUserRepository, authService);
-        console.log("UserDetails in loginOrSignUpUsingGoogle from adapterd: ", userDetails, refreshToken, accessToken);
+        // console.log(
+        //   "UserDetails in loginOrSignUpUsingGoogle from adapterd: ",
+        //   userDetails,
+        //   refreshToken,
+        //   accessToken
+        // );
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
@@ -167,7 +161,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         const _a = userDetails._doc, { password } = _a, userDetailsWithoutPassword = __rest(_a, ["password"]);
-        console.log("Returning user details: ", userDetailsWithoutPassword);
+        // console.log("Returning user details: ", userDetailsWithoutPassword);
         res.json({
             status: "success",
             message: "User verified",
@@ -177,6 +171,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     }));
     const refreshAccessToken = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const cookies = req.cookies;
+        console.log("Consoling cookies from the refreshaccesstoken : ", cookies);
         const accessToken = yield (0, userAuthApplication_1.accessTokenRefresh)(cookies, dbUserRepository, authService);
         res.json({ accessToken });
     }));
@@ -194,7 +189,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         });
         res.json({
             status: "success",
-            message: "Cookie Cleared"
+            message: "Cookie Cleared",
         });
     }));
     return {
@@ -208,7 +203,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
         logoutUser,
         loginOrSignUpUsingGoogle,
         forgotPassword,
-        forgotpasswordchange
+        forgotpasswordchange,
     };
 };
 exports.default = authController;

@@ -18,6 +18,7 @@ const connectToMongoDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(config_1.default.MONGODB);
         console.log("Connected to MongoDB");
+        console.log("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
     catch (err) {
         console.error("Error connecting to MongoDB:", err);

@@ -28,7 +28,7 @@ const postRepositoryMongoDB = () => {
             return yield newPost.save();
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error adding new post!");
         }
     });
@@ -38,7 +38,7 @@ const postRepositoryMongoDB = () => {
             return updatedPost;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error updating post!");
         }
     });
@@ -51,22 +51,22 @@ const postRepositoryMongoDB = () => {
             const followingOfRequestedUser = yield userModel_1.default.findById(id, {
                 following: 1,
             }).exec();
-            // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
+            // // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
             if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
                 throw new Error("User not following anyone");
             }
             const followingUsersId = followingOfRequestedUser.following.map(follow => follow.userId);
-            // console.log("followingUsersId Id s : ", followingUsersId)
+            // // console.log("followingUsersId Id s : ", followingUsersId)
             const userIdsToFetch = [...followingUsersId, id];
-            console.log("User ids to fetch posts for:", userIdsToFetch);
+            // console.log("User ids to fetch posts for:", userIdsToFetch);
             const gettingPosts = yield postModel_1.default.find({
                 userId: { $in: userIdsToFetch },
             }).sort({ createdAt: -1 });
-            console.log("Getting posts beefore returning:", gettingPosts);
+            // console.log("Getting posts beefore returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error getting all posts for user!");
         }
     });
@@ -80,11 +80,11 @@ const postRepositoryMongoDB = () => {
             const gettingPosts = yield postModel_1.default.find({
                 userId: currentuserId,
             }).sort({ createdAt: -1 });
-            console.log("Getting posts before returning:", gettingPosts);
+            // console.log("Getting posts before returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error getting all posts for user!");
         }
     });
@@ -98,7 +98,7 @@ const postRepositoryMongoDB = () => {
             return postCount;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error getting length of posts for user!");
         }
     });
@@ -114,7 +114,7 @@ const postRepositoryMongoDB = () => {
             const gettingPosts = yield postModel_1.default.find({ userId: id }).sort({
                 createdAt: -1,
             });
-            console.log("Getting posts before returning:", gettingPosts);
+            // console.log("Getting posts before returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
@@ -138,7 +138,7 @@ const postRepositoryMongoDB = () => {
             const savedPosts = yield postModel_1.default.find({ _id: { $in: savedPostIds } }).sort({
                 createdAt: -1,
             });
-            console.log("savedposts: ", savedPosts);
+            // console.log("savedposts: ", savedPosts);
             return savedPosts;
         }
         catch (error) {
@@ -152,7 +152,7 @@ const postRepositoryMongoDB = () => {
                 throw new Error("User ID is required");
             }
             const gettingPosts = yield postModel_1.default.findById(id);
-            console.log("Getting posts before returning:", gettingPosts);
+            // console.log("Getting posts before returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
@@ -166,47 +166,47 @@ const postRepositoryMongoDB = () => {
             return yield newPeport.save();
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error reporting new post!");
         }
     });
     const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("Data in postRepository, userId, postId: ", userId, postId);
+            // console.log("Data in postRepository, userId, postId: ", userId, postId);
             const user = yield userModel_1.default.findById(userId);
             if (!user)
                 throw new Error("User not found");
             if (!user.savedPosts.includes(postId)) {
                 user.savedPosts.push(postId);
                 yield user.save();
-                console.log("Post saved successfully");
+                // console.log("Post saved successfully");
             }
             else {
-                console.log("Post already saved");
+                // console.log("Post already saved");
             }
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error saving post!");
         }
     });
     const removeSavePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("Data in postRepository, userId, postId: ", userId, postId);
+            // console.log("Data in postRepository, userId, postId: ", userId, postId);
             const user = yield userModel_1.default.findById(userId);
             if (!user)
                 throw new Error("User not found");
             if (user.savedPosts.includes(postId)) {
                 user.savedPosts.pull(postId);
                 yield user.save();
-                console.log("Post removed successfully from saved posts");
+                // console.log("Post removed successfully from saved posts");
             }
             else {
-                console.log("Post not present in saved posts");
+                // console.log("Post not present in saved posts");
             }
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error removing saved post!");
         }
     });
@@ -215,7 +215,7 @@ const postRepositoryMongoDB = () => {
             yield dislikePostModel_1.default.findOneAndDelete({ userId, postId });
             const like = new likePostModel_1.default({ userId, postId });
             yield like.save();
-            console.log("Post liked successfully!");
+            // console.log("Post liked successfully!");
         }
         catch (error) {
             console.error(error);
@@ -227,7 +227,7 @@ const postRepositoryMongoDB = () => {
             yield likePostModel_1.default.findOneAndDelete({ userId, postId });
             const dislike = new dislikePostModel_1.default({ userId, postId });
             yield dislike.save();
-            console.log("Post disliked successfully!");
+            // console.log("Post disliked successfully!");
         }
         catch (error) {
             console.error(error);
@@ -237,7 +237,7 @@ const postRepositoryMongoDB = () => {
     const getLikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const likedPosts = yield likePostModel_1.default.find({ userId });
-            console.log("Liked posts:", likedPosts);
+            // console.log("Liked posts:", likedPosts);
             return likedPosts;
         }
         catch (error) {
@@ -248,7 +248,7 @@ const postRepositoryMongoDB = () => {
     const getDislikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const dislikedPosts = yield dislikePostModel_1.default.find({ userId });
-            console.log("Disliked posts:", dislikedPosts);
+            // console.log("Disliked posts:", dislikedPosts);
             return dislikedPosts;
         }
         catch (error) {
@@ -267,7 +267,7 @@ const postRepositoryMongoDB = () => {
                 likedUsers: likes.map(like => like.userId.username),
                 dislikedUsers: dislikes.map(dislike => dislike.userId.username),
             };
-            console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo);
+            // console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo);
             return data;
         }
         catch (error) {
@@ -281,7 +281,7 @@ const postRepositoryMongoDB = () => {
             if (!deletedPost) {
                 throw new Error("Post not found");
             }
-            console.log("Post deleted successfully:", deletedPost);
+            // console.log("Post deleted successfully:", deletedPost);
             return { status: "success", message: "post deleted" };
         }
         catch (error) {

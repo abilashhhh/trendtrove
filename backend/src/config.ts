@@ -11,7 +11,8 @@ const configurationKeys = {
   // CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
   MAIL_USERNAME: process.env.MAIL_USERNAME as string,
   MAIL_PASSWORD: process.env.MAIL_PASSWORD as string,
- 
+CLIENT_URL: process.env.CLIENT_URL as string,
+  
 };
 
 export default configurationKeys;

@@ -8,7 +8,7 @@ import { otpRepositoryMongoDB } from "../../database/mongodb/respositories/otpRe
 import { otpDbRepository } from "../../../application/repositories/OTPDBRepository";
 import { mailSenderService } from "../../services/mailSendService";
 import { mailSenderServiceInterface } from "../../../application/services/mailServiceInterface";
-import authMiddleware from "../middlewares/authMiddleware"; // add auth middleware
+import authMiddleware from "../middlewares/authMiddleware";
 const authRouter = () => {
   const router = express();
 
@@ -24,18 +24,16 @@ const authRouter = () => {
   );
 
   router.post("/signup", controller.registerUser);
-  // router.post("/signin", controller.signInUser);
   router.post("/signin", controller.signIn);
   router.post("/googlesigninup", controller.loginOrSignUpUsingGoogle);
   router.get("/usernameavailablity/:username", controller.usernameAvailability);
   router.get("/emailavailability/:email", controller.emailAvailability);
-  router.post("/generateotp", controller.sendOtp);  
+  router.post("/generateotp", controller.sendOtp);
   router.post("/verifyotp", controller.verifyOtpForEmailVerification);
-  router.get('/refresh', controller.refreshAccessToken);
-  router.delete('/logout', authMiddleware, controller.logoutUser)
-  router.post('/forgotpassword' , controller.forgotPassword) 
-  router.post('/forgotpasswordchange' , controller.forgotpasswordchange) 
-
+  router.get("/refreshtoken", controller.refreshAccessToken);
+  router.delete("/logout", authMiddleware, controller.logoutUser);
+  router.post("/forgotpassword", controller.forgotPassword);
+  router.post("/forgotpasswordchange", controller.forgotpasswordchange);
 
   return router;
 };

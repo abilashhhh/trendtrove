@@ -20,7 +20,7 @@ export const postRepositoryMongoDB = () => {
       const newPost = new Post(postData);
       return await newPost.save();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error adding new post!");
     }
   };
@@ -34,7 +34,7 @@ export const postRepositoryMongoDB = () => {
       );
       return updatedPost;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error updating post!");
     }
   };
@@ -49,7 +49,7 @@ export const postRepositoryMongoDB = () => {
       const followingOfRequestedUser = await User.findById(id, {
         following: 1,
       }).exec();
-      // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
+      // // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
       if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
         throw new Error("User not following anyone");
       }
@@ -57,19 +57,19 @@ export const postRepositoryMongoDB = () => {
       const followingUsersId = followingOfRequestedUser.following.map(
         follow => follow.userId
       );
-      // console.log("followingUsersId Id s : ", followingUsersId)
+      // // console.log("followingUsersId Id s : ", followingUsersId)
 
       const userIdsToFetch = [...followingUsersId, id];
-      console.log("User ids to fetch posts for:", userIdsToFetch);
+      // console.log("User ids to fetch posts for:", userIdsToFetch);
 
       const gettingPosts = await Post.find({
         userId: { $in: userIdsToFetch },
       }).sort({ createdAt: -1 });
-      console.log("Getting posts beefore returning:", gettingPosts);
+      // console.log("Getting posts beefore returning:", gettingPosts);
 
       return gettingPosts;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error getting all posts for user!");
     }
   };
@@ -87,11 +87,11 @@ export const postRepositoryMongoDB = () => {
         userId:currentuserId ,
       }).sort({ createdAt: -1 });
   
-      console.log("Getting posts before returning:", gettingPosts);
+      // console.log("Getting posts before returning:", gettingPosts);
   
       return gettingPosts;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error getting all posts for user!");
     }
   };
@@ -107,7 +107,7 @@ export const postRepositoryMongoDB = () => {
       const postCount = await Post.countDocuments({ userId: user._id });
       return postCount;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error getting length of posts for user!");
     }
   };
@@ -127,7 +127,7 @@ export const postRepositoryMongoDB = () => {
       const gettingPosts = await Post.find({ userId: id }).sort({
         createdAt: -1,
       });
-      console.log("Getting posts before returning:", gettingPosts);
+      // console.log("Getting posts before returning:", gettingPosts);
       return gettingPosts;
     } catch (error: any) {
       console.error(error.message);
@@ -154,7 +154,7 @@ export const postRepositoryMongoDB = () => {
       const savedPosts = await Post.find({ _id: { $in: savedPostIds } }).sort({
         createdAt: -1,
       });
-      console.log("savedposts: ", savedPosts);
+      // console.log("savedposts: ", savedPosts);
       return savedPosts;
     } catch (error: any) {
       console.error(error.message);
@@ -168,7 +168,7 @@ export const postRepositoryMongoDB = () => {
         throw new Error("User ID is required");
       }
       const gettingPosts = await Post.findById(id);
-      console.log("Getting posts before returning:", gettingPosts);
+      // console.log("Getting posts before returning:", gettingPosts);
       return gettingPosts;
     } catch (error: any) {
       console.error(error.message);
@@ -181,14 +181,14 @@ export const postRepositoryMongoDB = () => {
       const newPeport = new ReportPostModel(data);
       return await newPeport.save();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error reporting new post!");
     }
   };
 
   const savePostsForUser = async (userId: string, postId: string) => {
     try {
-      console.log("Data in postRepository, userId, postId: ", userId, postId);
+      // console.log("Data in postRepository, userId, postId: ", userId, postId);
 
       const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
@@ -196,18 +196,18 @@ export const postRepositoryMongoDB = () => {
       if (!user.savedPosts.includes(postId)) {
         user.savedPosts.push(postId);
         await user.save();
-        console.log("Post saved successfully");
+        // console.log("Post saved successfully");
       } else {
-        console.log("Post already saved");
+        // console.log("Post already saved");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error saving post!");
     }
   };
   const removeSavePostsForUser = async (userId: string, postId: string) => {
     try {
-      console.log("Data in postRepository, userId, postId: ", userId, postId);
+      // console.log("Data in postRepository, userId, postId: ", userId, postId);
   
       const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
@@ -215,12 +215,12 @@ export const postRepositoryMongoDB = () => {
       if (user.savedPosts.includes(postId)) {
         user.savedPosts.pull(postId); 
         await user.save();
-        console.log("Post removed successfully from saved posts");
+        // console.log("Post removed successfully from saved posts");
       } else {
-        console.log("Post not present in saved posts");
+        // console.log("Post not present in saved posts");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("Error removing saved post!");
     }
   };
@@ -232,7 +232,7 @@ export const postRepositoryMongoDB = () => {
       const like = new Like({ userId, postId });
       await like.save();
 
-      console.log("Post liked successfully!");
+      // console.log("Post liked successfully!");
     } catch (error) {
       console.error(error);
       throw new Error("Error liking post!");
@@ -246,7 +246,7 @@ export const postRepositoryMongoDB = () => {
       const dislike = new Dislike({ userId, postId });
       await dislike.save();
 
-      console.log("Post disliked successfully!");
+      // console.log("Post disliked successfully!");
     } catch (error) {
       console.error(error);
       throw new Error("Error disliking post!");
@@ -256,7 +256,7 @@ export const postRepositoryMongoDB = () => {
   const getLikedPosts = async (userId: string) => {
     try {
       const likedPosts = await Like.find({ userId });
-      console.log("Liked posts:", likedPosts);
+      // console.log("Liked posts:", likedPosts);
       return likedPosts;
     } catch (error) {
       console.error("Error fetching liked posts:", error);
@@ -267,7 +267,7 @@ export const postRepositoryMongoDB = () => {
   const getDislikedPosts = async (userId: string) => {
     try {
       const dislikedPosts = await Dislike.find({ userId });
-      console.log("Disliked posts:", dislikedPosts);
+      // console.log("Disliked posts:", dislikedPosts);
       return dislikedPosts;
     } catch (error) {
       console.error("Error fetching disliked posts:", error);
@@ -289,7 +289,7 @@ export const postRepositoryMongoDB = () => {
         likedUsers: likes.map(like => like.userId.username),
         dislikedUsers: dislikes.map(dislike => dislike.userId.username),
       };
-      console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo);
+      // console.log("data on getlikesdislikesInfo : ", getlikesdislikesInfo);
       return data;
     } catch (error) {
       console.error("Error fetching disliked posts:", error);
@@ -303,7 +303,7 @@ export const postRepositoryMongoDB = () => {
       if (!deletedPost) {
         throw new Error("Post not found");
       }
-      console.log("Post deleted successfully:", deletedPost);
+      // console.log("Post deleted successfully:", deletedPost);
       return { status: "success", message: "post deleted" };
     } catch (error) {
       console.error("Error deleting post:", error);

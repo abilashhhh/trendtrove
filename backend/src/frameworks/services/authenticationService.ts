@@ -15,7 +15,7 @@ export const authService = () => {
 
   const generateAccessToken = (payload: { userId: string; role: string }) => {
     const accessToken = jwt.sign(payload, configurationKeys.JWT_ACCESS_CODE, {
-      expiresIn: "59m",
+      expiresIn: "15m",
     });
     return accessToken;
   };
@@ -32,6 +32,7 @@ export const authService = () => {
       token,
       configurationKeys.JWT_ACCESS_CODE
     ) as { userId: string; role: string };
+    console.log("verifyAccessToken: payload : ", payload)
     return payload;
   };
 
@@ -40,6 +41,8 @@ export const authService = () => {
       token,
       configurationKeys.JWT_REFRESH_CODE
     ) as { userId: string; role: string };
+    console.log("verifyRefreshToken: payload : ", payload)
+
     return payload;
   };
 

@@ -10,7 +10,7 @@ export const handleUserInfo = async (
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-    console.log("handleUserInfo ran in profile usecase");
+    // console.log("handleUserInfo ran in profile usecase");
     const userData = await dbUserRepository.getUserById(userId);
     if (!userData) {
       throw new Error("User not found!");
@@ -39,7 +39,7 @@ export const handleUserInfo = async (
     };
     return user;
   } catch (err) {
-    console.log("error : ", err);
+    // console.log("error : ", err);
     throw new ErrorInApplication("User not found!", 401);
   }
 };
@@ -49,17 +49,17 @@ export const handleEditProfile = async (
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-    console.log("profileInfo...............=-==========", profileInfo);
+    // console.log("profileInfo...............=-==========", profileInfo);
     if (profileInfo.email) {
       const userData = await dbUserRepository.getUserByEmail(profileInfo.email);
       if (userData) {
-        console.log("User exists...");
+        // console.log("User exists...");
         const user = await dbUserRepository.updateProfile(profileInfo);
-        console.log("user: ", user);
+        // console.log("user: ", user);
       }
     }
   } catch (err) {
-    console.log("Error:", err);
+    // console.log("Error:", err);
     throw new ErrorInApplication("User not found!", 401);
   }
 };
@@ -140,7 +140,7 @@ export const handleSuspendAccount = async (
   authService: ReturnType<AuthServiceInterface>
 ) => {
   try {
-    console.log("Userdetails in handleSUspend: ", userId, password)
+    // console.log("Userdetails in handleSUspend: ", userId, password)
     const userExists = await dbUserRepository.getUserById(userId);
     if (!userExists) {
       throw new Error("User not found");
@@ -172,12 +172,12 @@ export const handlePrivateAccount = async (
   authService: ReturnType<AuthServiceInterface>
 ) => {
   try {
-    console.log("Userdetails in handlePrivateAccount: ", userId, password)
+    // console.log("Userdetails in handlePrivateAccount: ", userId, password)
     const userExists = await dbUserRepository.getUserById(userId);
     if (!userExists) {
       throw new Error("User not found");
     }
-    console.log("userExists in handlePrivateAccount: ", userExists)
+    // console.log("userExists in handlePrivateAccount: ", userExists)
 
     // Validate the current password
     const isPasswordValid = await authService.comparePassword(

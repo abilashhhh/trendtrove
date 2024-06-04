@@ -9,7 +9,7 @@ export const handleCreatePost = async (
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-    console.log("Post data in handleCreatePost:", postData);
+    // // console.log("Post data in handleCreatePost:", postData);
 
     if (!postData.userId) {
       throw new ErrorInApplication("User ID is required to create a post", 400);
@@ -25,9 +25,9 @@ export const handleCreatePost = async (
       dp: userData?.dp,
     };
 
-    console.log("User exists....");
+    // // console.log("User exists....");
     const newPost = await dbPostRepository.addNewPost(newPostData);
-    console.log("New post data:", newPost);
+    // // console.log("New post data:", newPost);
     return newPost;
   } catch (error) {
     console.error("Error in handleCreatePost:", error);
@@ -44,7 +44,7 @@ export const handleupdatepost = async (
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-    console.log("Post data in handleupdatepost:", postData);
+    // console.log("Post data in handleupdatepost:", postData);
 
     if (!postData.userId) {
       throw new ErrorInApplication("User ID is required to update a post", 400);
@@ -55,9 +55,9 @@ export const handleupdatepost = async (
     }
   
 
-    console.log("User exists....");
+    // console.log("User exists....");
     const newPost = await dbPostRepository.updatePost(postData);
-    console.log("updated post data:", newPost);
+    // console.log("updated post data:", newPost);
     return newPost;
   } catch (error) {
     console.error("Error in updatePost:", error);
@@ -73,16 +73,16 @@ export const handleGetPostsForUser = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetPostsForUser reached");
+    // console.log("handleGetPostsForUser reached");
     if (!id) {
       throw new ErrorInApplication("User ID is required to get all posts", 400);
     }
     const allPostsForUser = await dbPostRepository.getAllPostsForUser(id);
     const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
-    console.log("Filtered posts from handleGetPostsForUser :", filteredPosts);
+    // console.log("Filtered posts from handleGetPostsForUser :", filteredPosts);
     return filteredPosts;
   } catch (error) {
-    console.log("Error in handleGetPostsForUser");
+    // console.log("Error in handleGetPostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -95,16 +95,16 @@ export const handleGetPostsForUserUsername = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetPostsForUserUsername reached");
+    // console.log("handleGetPostsForUserUsername reached");
     if (!username) {
       throw new ErrorInApplication("username is required to get all posts", 400);
     }
     const allPostsForUser = await dbPostRepository.getAllPostsForUserUsername(username);
     const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
-    console.log("Filtered posts from handleGetPostsForUserUsername :", filteredPosts);
+    // console.log("Filtered posts from handleGetPostsForUserUsername :", filteredPosts);
     return filteredPosts;
   } catch (error) {
-    console.log("Error in handleGetPostsForUserUsername");
+    // console.log("Error in handleGetPostsForUserUsername");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -118,15 +118,15 @@ export const handleGetLengthForUser = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetLengthForUser reached");
+    // console.log("handleGetLengthForUser reached");
     if (!username) {
       throw new ErrorInApplication("User ID is required to get all posts", 400);
     }
     const length  = await dbPostRepository.lengthofPostsForUser(username);
-    console.log("All posts from handleGetPostsForuser :", length);
+    // console.log("All posts from handleGetPostsForuser :", length);
     return length;
   } catch (error) {
-    console.log("Error in handleGetLengthForUser");
+    // console.log("Error in handleGetLengthForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -139,15 +139,15 @@ export const handleGetPostsOfCurrentUser = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetPostsOfCurrentUser reached");
+    // console.log("handleGetPostsOfCurrentUser reached");
     if (!id) {
       throw new ErrorInApplication("ID is required to get all posts", 400);
     }
     const allPostsForUser  = await dbPostRepository.getAllPostsForCurrentUser(id);
-    console.log("All posts from handleGetPostsOfCurrentUser :", allPostsForUser);
+    // console.log("All posts from handleGetPostsOfCurrentUser :", allPostsForUser);
     return allPostsForUser;
   } catch (error) {
-    console.log("Error in handleGetPostsOfCurrentUser");
+    // console.log("Error in handleGetPostsOfCurrentUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -160,15 +160,15 @@ export const handleGetSavedPostsOfCurrentUser = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetSavedPostsOfCurrentUser reached");
+    // console.log("handleGetSavedPostsOfCurrentUser reached");
     if (!id) {
       throw new ErrorInApplication("ID is required to get all posts", 400);
     }
     const allPostsForUser  = await dbPostRepository.getAllSavedPostsForCurrentUser(id);
-    console.log("All posts from handleGetSavedPostsOfCurrentUser :", allPostsForUser);
+    // console.log("All posts from handleGetSavedPostsOfCurrentUser :", allPostsForUser);
     return allPostsForUser;
   } catch (error) {
-    console.log("Error in handleGetSavedPostsOfCurrentUser");
+    // console.log("Error in handleGetSavedPostsOfCurrentUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -181,15 +181,15 @@ export const handleGetParticularPost = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetParticularPost reached");
+    // console.log("handleGetParticularPost reached");
     if (!id) {
       throw new ErrorInApplication(" ID is required to get all posts", 400);
     }
     const allPostsForUser  = await dbPostRepository.getParticularPostsForCurrentUser(id);
-    console.log("All posts from handleGetParticularPost :", allPostsForUser);
+    // console.log("All posts from handleGetParticularPost :", allPostsForUser);
     return allPostsForUser;
   } catch (error) {
-    console.log("Error in handleGetParticularPost");
+    // console.log("Error in handleGetParticularPost");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -203,15 +203,15 @@ export const handleReportPosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleReportPosts reached");
+    // console.log("handleReportPosts reached");
     if (!data.postId) {
       throw new ErrorInApplication("Post ID is required to report post", 400);
     }
     const reportPostsForUser  = await dbPostRepository.reportPostsForUser(data);
-    console.log("All posts from reportPostsForUser :", reportPostsForUser);
+    // console.log("All posts from reportPostsForUser :", reportPostsForUser);
     return reportPostsForUser;
   } catch (error) {
-    console.log("Error in handleGetPostsForUser");
+    // console.log("Error in handleGetPostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -226,15 +226,15 @@ export const handleSavePosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleSavePosts reached");
+    // console.log("handleSavePosts reached");
     if (!postId) {
       throw new ErrorInApplication("Post ID and user id is required to save post", 400);
     }
     const savePostsForUser  = await dbPostRepository.savePostsForUser(userId, postId);
-    console.log("All posts from savePostsForUser :", savePostsForUser);
+    // console.log("All posts from savePostsForUser :", savePostsForUser);
     return savePostsForUser;
   } catch (error) {
-    console.log("Error in savePostsForUser");
+    // console.log("Error in savePostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -249,15 +249,15 @@ export const handleRemoveSavePosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleRemoveSavePosts reached");
+    // console.log("handleRemoveSavePosts reached");
     if (!postId) {
       throw new ErrorInApplication("Post ID and user id is required to save post", 400);
     }
     const removeSavePostsForUser  = await dbPostRepository.removeSavePostsForUser(userId, postId);
-    console.log("All posts from removeSavePostsForUser :", removeSavePostsForUser);
+    // console.log("All posts from removeSavePostsForUser :", removeSavePostsForUser);
     return removeSavePostsForUser;
   } catch (error) {
-    console.log("Error in removeSavePostsForUser");
+    // console.log("Error in removeSavePostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -271,15 +271,15 @@ export const handleLikePosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleSavePosts reached");
+    // console.log("handleSavePosts reached");
     if (!postId) {
       throw new ErrorInApplication("Post ID and user id is required to like post", 400);
     }
     const handleLikePostsForUser  = await dbPostRepository.likePostsForUser(userId, postId);
-    console.log("All posts from handleLikePostsForUser :", handleLikePostsForUser);
+    // console.log("All posts from handleLikePostsForUser :", handleLikePostsForUser);
     return handleLikePostsForUser;
   } catch (error) {
-    console.log("Error in handleLikePosts");
+    // console.log("Error in handleLikePosts");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -293,15 +293,15 @@ export const handleDislikePosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleDislikePosts reached");
+    // console.log("handleDislikePosts reached");
     if (!postId) {
       throw new ErrorInApplication("Post ID and user id is required to dislike post", 400);
     }
     const handleDislikePostsForUser  = await dbPostRepository.dislikePostsForUser(userId, postId);
-    console.log("All posts from handleDislikePostsForUser :", handleDislikePostsForUser);
+    // console.log("All posts from handleDislikePostsForUser :", handleDislikePostsForUser);
     return handleDislikePostsForUser;
   } catch (error) {
-    console.log("Error in handleDislikePostsForUser");
+    // console.log("Error in handleDislikePostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -314,13 +314,13 @@ export const handleGetLikedPosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetLikedPosts reached");
+    // console.log("handleGetLikedPosts reached");
    
     const handleGetLikedPosts  = await dbPostRepository.getLikedPosts(userId);
-    console.log("All posts from handleGetLikedPosts :", handleGetLikedPosts);
+    // console.log("All posts from handleGetLikedPosts :", handleGetLikedPosts);
     return handleGetLikedPosts;
   } catch (error) {
-    console.log("Error in handleGetLikedPosts");
+    // console.log("Error in handleGetLikedPosts");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -333,13 +333,13 @@ export const handleGetDislikedPosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetDislikedPosts reached");
+    // console.log("handleGetDislikedPosts reached");
    
     const handleGetDislikedPosts  = await dbPostRepository.getDislikedPosts(userId);
-    console.log("All posts from handleGetDislikedPosts :", handleGetDislikedPosts);
+    // console.log("All posts from handleGetDislikedPosts :", handleGetDislikedPosts);
     return handleGetDislikedPosts;
   } catch (error) {
-    console.log("Error in handleGetDislikedPosts");
+    // console.log("Error in handleGetDislikedPosts");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -352,13 +352,13 @@ export const handleGetlikesdislikesinfo = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetlikesdislikesinfo reached");
+    // console.log("handleGetlikesdislikesinfo reached");
    
     const handleGetlikesdislikesinfo  = await dbPostRepository.getlikesdislikesInfo(postId);
-    console.log("All posts from handleGetlikesdislikesinfo :", handleGetlikesdislikesinfo);
+    // console.log("All posts from handleGetlikesdislikesinfo :", handleGetlikesdislikesinfo);
     return handleGetlikesdislikesinfo;
   } catch (error) {
-    console.log("Error in handleGetlikesdislikesinfo");
+    // console.log("Error in handleGetlikesdislikesinfo");
     if (error instanceof ErrorInApplication) {
       throw error;
     }
@@ -371,13 +371,13 @@ export const handleDeltePosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleDeltePosts reached");
+    // console.log("handleDeltePosts reached");
    
     const handleDeltePostsForUser  = await dbPostRepository.deltePostForUser(postId);
-    console.log("All posts from handleDeltePostsForUser :", handleGetlikesdislikesinfo);
+    // console.log("All posts from handleDeltePostsForUser :", handleGetlikesdislikesinfo);
     return handleDeltePostsForUser;
   } catch (error) {
-    console.log("Error in handleDeltePostsForUser");
+    // console.log("Error in handleDeltePostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }

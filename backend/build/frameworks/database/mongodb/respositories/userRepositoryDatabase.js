@@ -21,12 +21,12 @@ const userRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
     const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            // console.log("Add user tried to run, data : ", user);
+            // // console.log("Add user tried to run, data : ", user);
             const newUser = new userModel_1.default(user);
             return yield newUser.save();
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error adding user!");
         }
     });
@@ -34,11 +34,11 @@ const userRepositoryMongoDB = () => {
     const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const user = yield userModel_1.default.findOne({ email });
-            console.log("User from getUserByEmail : ", user);
+            // console.log("User from getUserByEmail : ", user)
             return user;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error getting user by email!");
         }
     });
@@ -49,19 +49,19 @@ const userRepositoryMongoDB = () => {
             return user;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error getting user by userId!");
         }
     });
     //////////////////////////////////////////////////////////
     const getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            // console.log("repo ;", username);
+            // // console.log("repo ;", username);
             const user = yield userModel_1.default.findOne({ username });
             return user;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error getting user by username!");
         }
     });
@@ -79,13 +79,15 @@ const userRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
     const addRefreshTokenAndExpiry = (email, refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            console.log("addRefreshTokenAndExpiry  email: ", email);
+            console.log("addRefreshTokenAndExpiry  refreshToken: ", refreshToken);
             const refreshTokenExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
             const user = yield userModel_1.default.findOneAndUpdate({ email }, { refreshToken, refreshTokenExpiresAt }, { new: true });
             return user;
         }
         catch (error) {
-            console.log(error);
-            throw new Error("Error adding refresh token and expiry!");
+            // console.log(error);
+            throw new Error("Error updating user refresh token and expiry!");
         }
     });
     //////////////////////////////////////////////////////////
@@ -97,7 +99,7 @@ const userRepositoryMongoDB = () => {
             return user;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error updating profile!");
         }
     });
@@ -172,7 +174,7 @@ const userRepositoryMongoDB = () => {
                 isBlocked: { $ne: true },
                 isSuspended: { $ne: true },
             }, "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts coverPhoto").exec();
-            console.log(users);
+            // console.log(users);
             return users;
         }
         catch (error) {
@@ -185,7 +187,7 @@ const userRepositoryMongoDB = () => {
             const users = yield userModel_1.default.find({
                 isAdmin: { $ne: true },
             }, "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn ").exec();
-            console.log(users);
+            // console.log(users);
             return users;
         }
         catch (error) {
@@ -217,7 +219,7 @@ const userRepositoryMongoDB = () => {
             return true;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error changing isAccountVerified field");
         }
     });
@@ -231,7 +233,7 @@ const userRepositoryMongoDB = () => {
             return true;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error("Error changing isAccountVerified field");
         }
     });
@@ -290,7 +292,7 @@ const userRepositoryMongoDB = () => {
             targetUser.followers = targetUser.followers.filter(user => !user.userId.equals(currentUserId));
             yield currentUser.save();
             yield targetUser.save();
-            console.log("Unfollow successful");
+            // console.log("Unfollow successful");
             return { message: "You have unfollowed this user" };
         }
         catch (error) {
@@ -309,7 +311,7 @@ const userRepositoryMongoDB = () => {
             requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
             yield currentUser.save();
             yield requesterUser.save();
-            console.log("Unfollow successful");
+            // console.log("Unfollow successful");
             return { message: "You have cancelled the friend request sent" };
         }
         catch (error) {
@@ -329,7 +331,7 @@ const userRepositoryMongoDB = () => {
             currentUser.followers.push({
                 userId: requesterUserId,
                 username: requesterUser.username,
-                dp: requesterUser.dp
+                dp: requesterUser.dp,
             });
             requesterUser.following.push({
                 userId: currentUserId,
@@ -338,7 +340,7 @@ const userRepositoryMongoDB = () => {
             });
             yield currentUser.save();
             yield requesterUser.save();
-            console.log("Follow request accepted");
+            // console.log("Follow request accepted");
             return { message: "Follow request accepted" };
         }
         catch (error) {
@@ -357,7 +359,7 @@ const userRepositoryMongoDB = () => {
             requesterUser.requestedByMe = requesterUser.requestedByMe.filter(user => !user.userId.equals(currentUserId));
             yield currentUser.save();
             yield requesterUser.save();
-            console.log("Follow request rejected");
+            // console.log("Follow request rejected");
             return { message: "Follow request rejected" };
         }
         catch (error) {
@@ -375,7 +377,7 @@ const userRepositoryMongoDB = () => {
                     following: [],
                 },
             });
-            console.log(`Cleared data for  users.`);
+            // console.log(`Cleared data for  users.`);
         }
         catch (error) {
             console.error("Error clearing data:", error);

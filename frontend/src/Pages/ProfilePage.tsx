@@ -81,17 +81,6 @@ function ProfilePage() {
     }
   };
 
-  useEffect(()=> {
-    if(userDetails.isBlocked){
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
-      console.log("handle logout runned");
-      toast.error("Logging Out. Please contact admin for detail");
-      setTimeout(() => {
-        dispatch(logout());
-      }, 3000);
-    }
-  } )
 
   useEffect(() => {
     const fetchUserInfo = async () => {

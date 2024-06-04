@@ -1,4 +1,16 @@
 "use strict";
+// import { Request, Response } from "express";
+// import ErrorInApplication from "../../utils/ErrorInApplication";
+// import { AuthService } from "../../frameworks/services/authenticationService";
+// import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
+// import {
+//   UserDBInterface,
+//   userDBRepository,
+// } from "../../application/repositories/userDBRepository";
+// import {
+//   UserRepositoryMongoDB,
+//   userRepositoryMongoDB,
+// } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,139 +20,78 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const profileAuthApplication_1 = require("../../application/use-cases/profile/profileAuthApplication");
 const userController = (userDBRepositoryImplementation, userDBRepositoryInterface, authServiceImplementation, authServiceInterface) => {
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
-    //////////////////////////////////////////////////
-    const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { id } = req.params;
-            const user = yield (0, profileAuthApplication_1.handleGetAllUsers)(id, dbUserRepository);
-            console.log(user);
-            res.json({
-                status: "success",
-                message: "All users info fetched",
-                user,
-            });
-        }
-        catch (err) {
-            console.error("Error fetching all users info:", err);
-            res.status(401).json({
-                status: "error",
-                message: "Failed to fetch all users info",
-            });
-        }
-    });
-    const getuserprofile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { username } = req.params;
-            const user = yield (0, profileAuthApplication_1.handleUserbyUsername)(username, dbUserRepository);
-            console.log(user);
-            res.json({
-                status: "success",
-                message: "User info fetched",
-                user,
-            });
-        }
-        catch (err) {
-            console.error("Error fetching users info:", err);
-            res.status(401).json({
-                status: "error",
-                message: "Failed to fetch users info",
-            });
-        }
-    });
-    const followUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId, targetUserId } = req.body;
-            const result = yield (0, profileAuthApplication_1.handleFollowUserRequest)(userId, targetUserId, dbUserRepository);
-            res.json({
-                status: "success",
-                message: result.message,
-                user: result.user,
-            });
-        }
-        catch (err) {
-            res.status(401).json({
-                status: "error",
-                message: "Unable to send follow request, please try again",
-            });
-        }
-    });
-    const unfollowUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId, targetUserId } = req.body;
-            console.log("unfolow user: ", req.body);
-            const result = yield (0, profileAuthApplication_1.handleUnFollowUserRequest)(userId, targetUserId, dbUserRepository);
-            res.json({
-                status: "success",
-                message: result.message,
-                user: result.user,
-            });
-        }
-        catch (err) {
-            res.status(401).json({
-                status: "error",
-                message: "Unable to unfollow user, please try again",
-            });
-        }
-    });
-    const cancelfollowUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId, targetUserId } = req.body;
-            console.log("cancelfollowUserRequest user: ", req.body);
-            const result = yield (0, profileAuthApplication_1.handleCancelFollowUserRequest)(userId, targetUserId, dbUserRepository);
-            res.json({
-                status: "success",
-                message: result.message,
-                user: result.user,
-            });
-        }
-        catch (err) {
-            res.status(401).json({
-                status: "error",
-                message: "Unable to cancel follow request, please try again",
-            });
-        }
-    });
-    const acceptfollowUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId, targetUserId } = req.body;
-            console.log("acceptfollowUserRequest user: ", req.body);
-            const result = yield (0, profileAuthApplication_1.handleAcceptFollowUserRequest)(userId, targetUserId, dbUserRepository);
-            res.json({
-                status: "success",
-                message: result.message,
-                user: result.user,
-            });
-        }
-        catch (err) {
-            res.status(401).json({
-                status: "error",
-                message: "Unable to accept follow request, please try again",
-            });
-        }
-    });
-    const rejectfollowUserRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId, targetUserId } = req.body;
-            console.log("rejectfollowUserRequest user: ", req.body);
-            const result = yield handleRejectFollowUserRequest(userId, targetUserId, dbUserRepository);
-            res.json({
-                status: "success",
-                message: result.message,
-                user: result.user,
-            });
-        }
-        catch (err) {
-            res.status(401).json({
-                status: "error",
-                message: "Unable to  reject request, please try again",
-            });
-        }
-    });
+    const getAllUsers = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const user = yield (0, profileAuthApplication_1.handleGetAllUsers)(id, dbUserRepository);
+        res.json({
+            status: "success",
+            message: "All users info fetched",
+            user,
+        });
+    }));
+    const getuserprofile = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = req.params;
+        const user = yield (0, profileAuthApplication_1.handleUserbyUsername)(username, dbUserRepository);
+        res.json({
+            status: "success",
+            message: "User info fetched",
+            user,
+        });
+    }));
+    const followUserRequest = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, targetUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleFollowUserRequest)(userId, targetUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
+    const unfollowUserRequest = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, targetUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleUnFollowUserRequest)(userId, targetUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
+    const cancelfollowUserRequest = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, targetUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleCancelFollowUserRequest)(userId, targetUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
+    const acceptfollowUserRequest = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, targetUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleAcceptFollowUserRequest)(userId, targetUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
+    const rejectfollowUserRequest = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, targetUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleRejectFollowUserRequest)(userId, targetUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
     return {
         getAllUsers,
         getuserprofile,
@@ -148,7 +99,7 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         cancelfollowUserRequest,
         acceptfollowUserRequest,
         unfollowUserRequest,
-        rejectfollowUserRequest
+        rejectfollowUserRequest,
     };
 };
 exports.default = userController;
