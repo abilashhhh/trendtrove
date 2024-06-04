@@ -41,7 +41,9 @@ const SignupPage: React.FC = () => {
     confirmPassword: "",
   });
 
-  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
+    null
+  );
   const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,17 +148,28 @@ const SignupPage: React.FC = () => {
       Object.values(validationErrors).some(error => error !== "") ||
       formData.password !== formData.confirmPassword;
 
-    if (!hasErrors && (formData.name && formData.username && formData.email && formData.password && formData.confirmPassword) !== ""   ) {
+    if (
+      !hasErrors &&
+      (formData.name &&
+        formData.username &&
+        formData.email &&
+        formData.password &&
+        formData.confirmPassword) !== ""
+    ) {
       try {
         // Check if email is available
         if (emailAvailable === false) {
-          toast.error("Email address is already registered. Please try logging in.");
+          toast.error(
+            "Email address is already registered. Please try logging in."
+          );
           return;
         }
 
         // Check if username is available
         if (usernameAvailable === false) {
-          toast.error("Username is not available. Please choose a different one.");
+          toast.error(
+            "Username is not available. Please choose a different one."
+          );
           return;
         }
 
@@ -202,7 +215,7 @@ const SignupPage: React.FC = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4"  noValidate>
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
               <label
                 htmlFor="name"

@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
@@ -12,7 +12,6 @@ import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRight
 import LoadingSpinner from "../Components/LoadingSpinner";
 import SettingsMiddlePage from "../Components/Settings/SettingsMiddlePage";
 import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
-
 
 function SettingsPage() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -40,15 +39,13 @@ function SettingsPage() {
       toast.error("Log out failed");
     }
   };
-  
-  
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500);  
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -61,7 +58,6 @@ function SettingsPage() {
       <ToastContainer />
 
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
-        
         <Header toggleLeftSidebar={toggleLeftSidebar} />
 
         {/* <SmallViewRightSidebar isDarkMode={isDarkMode} /> */}
@@ -73,13 +69,12 @@ function SettingsPage() {
             isDarkMode={isDarkMode}
             handleLogout={handleLogout}
           />
-          
-          < SettingsMiddlePage  />
+
+          <SettingsMiddlePage />
 
           <RightSidebar />
         </div>
         <BottomNavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
-
       </div>
     </>
   );
