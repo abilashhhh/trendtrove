@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, users }) => {
   if (!isOpen) return null;
+
+  const navigate = useNavigate();
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -21,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, users }) => {
           {users.length > 0 ? (
             <ul>
               {users.map(user => (
-                <li key={user._id} className="flex items-center py-2 border-b border-gray-300">
+                <li key={user._id} onClick={() => navigate(`/profiles/${user.username}`)} className="flex items-center cursor-pointer py-2 border-b border-gray-300">
                   <img src={user.dp} alt={user.username} className="w-8 h-8 rounded-full mr-2" />
                   <span>{user.username}</span>
                 </li>

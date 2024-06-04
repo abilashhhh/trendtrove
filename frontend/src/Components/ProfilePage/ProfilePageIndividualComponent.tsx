@@ -81,8 +81,27 @@ const ProfilePageIndividualComponent: React.FC = () => {
   const [hasPendingRequest, setHasPendingRequest] = useState<boolean>(false);
   const [isMutualFollower, setIsMutualFollower] = useState<boolean>(false);
   const [followDate, setFollowDate] = useState<string | undefined>("");
-  // const [showFollowersModal, setShowFollowersModal] = useState(false); 
-  // const [showFollowingModal, setShowFollowingModal] = useState(false);
+
+
+  const [showFollowersModal, setShowFollowersModal] = useState(false); 
+  const [showFollowingModal, setShowFollowingModal] = useState(false);
+  
+  const handleOpenFollowersModal = () => {
+    setShowFollowersModal(true);
+  };
+
+  const handleCloseFollowersModal = () => {
+    setShowFollowersModal(false);
+  };
+
+  const handleOpenFollowingModal = () => {
+    setShowFollowingModal(true);
+  };
+
+  const handleCloseFollowingModal = () => {
+    setShowFollowingModal(false);
+  };
+
   const [postCount, setPostCount] = useState(0);
   const [posts, setPosts] = useState<any[]>([]);
   const [showOptions, setShowOptions] = useState<string | null>(null);
@@ -99,6 +118,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
     };
   }>({});
 
+  
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -482,7 +502,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
                     className="mr-2 text-gray-600"
                   />
                   <span
-                    // onClick={handleOpenFollowersModal}
+                    onClick={handleOpenFollowersModal}
                     className="text-gray-800 dark:text-gray-200 cursor-pointer">
                     {userDetails.followers.length} Followers
                   </span>
@@ -493,7 +513,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
                     className="mr-2 text-gray-600"
                   />
                   <span
-                    // onClick={handleOpenFollowingModal}
+                    onClick={handleOpenFollowingModal}
                     className="text-gray-800 dark:text-gray-200 cursor-pointer">
                     {userDetails.following?.length || 0} Following
                   </span>
@@ -786,7 +806,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
           )}
         </div>
 
-        {/* <Modal
+        <Modal
           isOpen={showFollowersModal}
           onClose={handleCloseFollowersModal}
           title="Followers"
@@ -797,7 +817,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
           onClose={handleCloseFollowingModal}
           title="Following"
           users={userDetails.following}
-        /> */}
+        /> 
       </div>
     </main>
   );
