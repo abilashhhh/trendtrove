@@ -2,7 +2,8 @@ import React, { useCallback, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { UserInfo } from "../../Types/userProfile";
 import { Post } from "../../Types/Post";
-import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+// import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle, FaPlus, FaTrash } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
 import { uploadPost } from "../../API/Post/post";
@@ -35,29 +36,75 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     mentions: [],
   });
 
+  // const [mentionStatuses, setMentionStatuses] = useState<
+  //   { username: string; available: boolean | null }[]
+  // >(
+  //   Array(5).fill({ username: "", available: null })
+  // );
+
+
+  // const [hashtags, setHashtags] = useState<string[]>(["", "" , "" ,"" , ""]);
+
+  // const handleHashtagChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   index: number
+  // ) => {
+  //   const { value } = e.target;
+  //   const updatedHashtags = [...hashtags];
+  //   updatedHashtags[index] = value;
+  //   setHashtags(updatedHashtags);
+  //   setPostData((prevState) => ({
+  //     ...prevState,
+  //     hashtags: updatedHashtags,
+  //   }));
+  // };
+
+  // const navigate = useNavigate();
+  // const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  // const debouncedCheckUsernameAvailability = useCallback(
+  //   debounce(async (index: number, username: string) => {
+  //     if (!username) {
+  //       setMentionStatuses((prevState) =>
+  //         prevState.map((mention, idx) =>
+  //           idx === index ? { ...mention, available: null } : mention
+  //         )
+  //       );
+  //       return;
+  //     }
+  //     try {
+  //       const response = await usernameAvailability(username);
+  //       setMentionStatuses((prevState) =>
+  //         prevState.map((mention, idx) =>
+  //           idx === index ? { ...mention, available: response.available } : mention
+  //         )
+  //       );
+  //     } catch (error) {
+  //       console.error("Error checking username availability:", error);
+  //     }
+  //   }, 500),
+  //   []
+  // );  
+
+  // const handleMentionChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   index: number
+  // ) => {
+  //   const { value } = e.target;
+  //   setMentionStatuses((prevState) =>
+  //     prevState.map((mention, idx) =>
+  //       idx === index ? { ...mention, username: value } : mention
+  //     )
+  //   );
+  //   debouncedCheckUsernameAvailability(index, value);
+  // };
+
+
   const [mentionStatuses, setMentionStatuses] = useState<
     { username: string; available: boolean | null }[]
-  >(
-    Array(5).fill({ username: "", available: null })
-  );
-
+  >([]);
 
   const [hashtags, setHashtags] = useState<string[]>([]);
-
-  const handleHashtagChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    const { value } = e.target;
-    const updatedHashtags = [...hashtags];
-    updatedHashtags[index] = value;
-    setHashtags(updatedHashtags);
-    setPostData((prevState) => ({
-      ...prevState,
-      hashtags: updatedHashtags,
-    }));
-  };
-
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -97,6 +144,51 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     );
     debouncedCheckUsernameAvailability(index, value);
   };
+
+
+  const handleAddHashtag = () => {
+    setHashtags([...hashtags, ""]);
+  };
+
+  const handleRemoveHashtag = (index: number) => {
+    const updatedHashtags = [...hashtags];
+    updatedHashtags.splice(index, 1);
+    setHashtags(updatedHashtags);
+    setPostData((prevState) => ({
+      ...prevState,
+      hashtags: updatedHashtags,
+    }));
+  };
+
+  const handleHashtagChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const { value } = e.target;
+    const updatedHashtags = [...hashtags];
+    updatedHashtags[index] = value;
+    setHashtags(updatedHashtags);
+    setPostData((prevState) => ({
+      ...prevState,
+      hashtags: updatedHashtags,
+    }));
+  };
+
+  const handleAddMention = () => {
+    setMentionStatuses([...mentionStatuses, { username: "", available: null }]);
+  };
+
+  const handleRemoveMention = (index: number) => {
+    const updatedMentions = [...mentionStatuses];
+    updatedMentions.splice(index, 1);
+    setMentionStatuses(updatedMentions);
+    setPostData((prevState) => ({
+      ...prevState,
+      mentions: updatedMentions.map(mention => mention.username),
+    }));
+  };
+
+
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -373,7 +465,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
 
         <div className="lg:flex mt-2 justify-evenly items-center gap-2 rounded-lg">
 
-          <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
+          {/* <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
             <span>Add mentions (Up to 5):</span>
 
             {mentionStatuses.map((mention, index) => (
@@ -401,18 +493,68 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <span>Add hashtags (Up to 5):</span>
             {hashtags.map((hashtag, index) => (
               <div key={index} className="flex gap-2 items-center">
-               #   <input
+                #{" "}
+                <input
                   type="text"
                   name={`hashtag${index + 1}`}
-                  value ={hashtag}
-                  onChange={(e) => handleHashtagChange(e, index)}
+                  value={hashtag}
+                  onChange={e => handleHashtagChange(e, index)}
                   className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
                 />
               </div>
             ))}
-        </div>
+          </div> */}
         
           
+        <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800 min-h-full">
+            <h3 className="underline">Hashtags</h3>
+            {hashtags.map((hashtag, index) => (
+              <div key={index} className="flex gap-2">
+                <input
+                  type="text"
+                  value={hashtag}
+                  onChange={(e) => handleHashtagChange(e, index)}
+                  placeholder="Add a hashtag"
+                  className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
+                />
+                <button onClick={() => handleRemoveHashtag(index)}>
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
+            <button onClick={handleAddHashtag}>
+        
+              < div className="flex items-center gap-2 ">          <FaPlus /> Add Hashtag</div>
+            </button>
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800 h-full">
+            <h3 className="underline">Mentions</h3>
+            {mentionStatuses.map((mention, index) => (
+              <div key={index} className="flex gap-2 items-center ">
+                <input
+                  type="text"
+                  value={mention.username}
+                  onChange={(e) => handleMentionChange(e, index)}
+                  placeholder="Add a mention"
+                  className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
+                />
+                {mention.available !== null && (
+                  mention.available ? (
+                    <FaCheckCircle className="text-green-500" />
+                  ) : (
+                    <FaTimesCircle className="text-red-500" />
+                  )
+                )}
+                <button onClick={() => handleRemoveMention(index)}>
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
+            <button onClick={handleAddMention}>
+          < div className="flex items-center gap-2 ">    <FaPlus /> Add Mention</div>
+            </button>
+          </div>
+
         </div>
         <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 mt-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
             <span>Add location:</span>

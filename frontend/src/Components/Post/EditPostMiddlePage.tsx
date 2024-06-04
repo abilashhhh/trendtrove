@@ -423,6 +423,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                 <input
                   type="text"
                   name={`hashtag${index + 1}`}
+                  value={hashtag}
                   onChange={e => handleHashtagChange(e, index)}
                   className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
                 />

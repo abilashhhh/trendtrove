@@ -399,7 +399,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       <button
         type="button"
         onClick={() => navigate(`/profiles/${userDetails.username}`)}
-        className="bg-blue-500 hover:bg-blue-700 ml-5 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        className="bg-blue-500 hover:bg-blue-700 ml-5 text-white font-bold py-2 px-4 mb-5 rounded focus:outline-none focus:shadow-outline">
         View Full Profile
       </button>
 
