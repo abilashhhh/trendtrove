@@ -9,6 +9,7 @@ import {
   GetDislikedPostsResponse,
   GetLikedPostsResponse,
   GetLikesDislikesInfoResponse,
+  GetOnePost,
   LikePostResponse,
   Post,
   PostResponse,
@@ -92,6 +93,21 @@ export const fetchAllPostsForUserUsingUsername = async (
       `${END_POINTS.GET_POSTS_FOR_USER_USERNAME}/${username}`
     );
     // console.log("respose: ", response.data?.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+export const getPostUsingPostId = async (
+  postid: string
+): Promise<GetOnePost> => {
+  try {
+    console.log("postid: ", postid);
+    const response = await axiosUserInstance.get<GetAllPostsForUser>(
+      `${END_POINTS.GET_POSTS_USING_POST_ID}/${postid}`
+    );
+    console.log("respose: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

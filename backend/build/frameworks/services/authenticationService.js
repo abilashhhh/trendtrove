@@ -27,7 +27,7 @@ const authService = () => {
     };
     const generateAccessToken = (payload) => {
         const accessToken = jsonwebtoken_1.default.sign(payload, config_1.default.JWT_ACCESS_CODE, {
-            expiresIn: "15m",
+            expiresIn: "55m",
         });
         return accessToken;
     };

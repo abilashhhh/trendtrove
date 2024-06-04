@@ -34,6 +34,7 @@ const END_POINTS = {
   UPDATE_POST :'api/post/updatepost',
   GET_POSTS_FOR_USER:'api/post/getpostforuser',
   GET_POSTS_FOR_USER_USERNAME:'api/post/getpostforuserusername',
+  GET_POSTS_USING_POST_ID:'api/post/getpostusingpostId',
   GET_POSTS_LENGTH_OF_USER:'api/post/getpostlengthofuser',
   GET_POSTS_OF_CURRENT_USER:'api/post/getpostofcurrentuser',
   GET_SAVED_POSTS_OF_CURRENT_USER:'api/post/getsavedpostofcurrentuser',

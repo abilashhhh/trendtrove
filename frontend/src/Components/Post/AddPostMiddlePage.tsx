@@ -42,13 +42,22 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   );
 
 
-  
-  const [hashtags, setHashtags] = useState<string[]>(["", "", "", "", ""]);
-  const handleHashtagChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newHashtags = [...hashtags];
-    newHashtags[index] = e.target.value;
-    setHashtags(newHashtags);
+  const [hashtags, setHashtags] = useState<string[]>([]);
+
+  const handleHashtagChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const { value } = e.target;
+    const updatedHashtags = [...hashtags];
+    updatedHashtags[index] = value;
+    setHashtags(updatedHashtags);
+    setPostData((prevState) => ({
+      ...prevState,
+      hashtags: updatedHashtags,
+    }));
   };
+
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -74,7 +83,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
       }
     }, 500),
     []
-  );
+  );  
 
   const handleMentionChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -372,7 +381,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                 <input
                   type="text"
                   name={`mention${index + 1}`}
-                  value={mention.username}
+                  value={mention.username[index+1 ]}
                   onChange={(e) => handleMentionChange(e, index)}
                   className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
                 />

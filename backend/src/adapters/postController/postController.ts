@@ -152,6 +152,18 @@ const postController = (
     }
   );
 
+  const getPostUsingPostId = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { postId } = req.params;
+      const getPosts = await handleGetParticularPost(postId, dbPostRepository);
+      res.status(201).json({
+        status: "success",
+        message: "Post fetched for current user",
+        postData: getPosts,
+      });
+    }
+  );
+
   const reportPost = asyncHandler(async (req: Request, res: Response) => {
     const data: ReportPost = req.body;
     const reportPost = await handleReportPosts(data, dbPostRepository);
@@ -251,6 +263,7 @@ const postController = (
     getpostofcurrentuser,
     getsavedpostofcurrentuser,
     getparticularpostofcurrentuser,
+    getPostUsingPostId,
     reportPost,
     savePost,
     removesavePost,

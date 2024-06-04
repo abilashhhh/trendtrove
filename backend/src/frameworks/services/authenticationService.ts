@@ -15,7 +15,7 @@ export const authService = () => {
 
   const generateAccessToken = (payload: { userId: string; role: string }) => {
     const accessToken = jwt.sign(payload, configurationKeys.JWT_ACCESS_CODE, {
-      expiresIn: "15m",
+      expiresIn: "55m",
     });
     return accessToken;
   };

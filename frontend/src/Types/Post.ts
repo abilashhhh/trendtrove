@@ -41,6 +41,11 @@ export interface GetAllPostsForUser {
   message: string;
   postData :Post
 }
+export interface GetOnePost {
+  status: string;
+  message: string;
+  postData :Post
+}
 
 export interface GetAllPostsOfCurrentUser {
   status: string;

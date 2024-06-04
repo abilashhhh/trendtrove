@@ -90,6 +90,15 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getPosts,
         });
     }));
+    const getPostUsingPostId = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { postId } = req.params;
+        const getPosts = yield (0, postAuthApplications_1.handleGetParticularPost)(postId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Post fetched for current user",
+            postData: getPosts,
+        });
+    }));
     const reportPost = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const data = req.body;
         const reportPost = yield (0, postAuthApplications_1.handleReportPosts)(data, dbPostRepository);
@@ -164,6 +173,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getpostofcurrentuser,
         getsavedpostofcurrentuser,
         getparticularpostofcurrentuser,
+        getPostUsingPostId,
         reportPost,
         savePost,
         removesavePost,

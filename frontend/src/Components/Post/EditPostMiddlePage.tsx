@@ -1,11 +1,16 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { UserInfo } from "../../Types/userProfile";
 import { Post } from "../../Types/Post";
-import { FaTextHeight, FaUpload, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import {
+  FaTextHeight,
+  FaUpload,
+  FaCheckCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
-import { updatePost } from "../../API/Post/post";
+import { getPostUsingPostId, updatePost } from "../../API/Post/post";
 import { useNavigate, useParams } from "react-router-dom";
 import debounce from "../../utils/debouncer";
 import { usernameAvailability } from "../../API/Auth/auth";
@@ -36,16 +41,27 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     mentions: [],
   });
 
+  useEffect(() => {
+    const handleGetPost = async () => {
+      const postDetails = await getPostUsingPostId(postId);
+      setPostData(postDetails.postData);
+    };
+    handleGetPost();
+  }, []);
+
+  console.log("Post postId ", postId);
+  console.log("userDetails ", userDetails);
+  console.log("Post details ", postData);
+
   const [mentionStatuses, setMentionStatuses] = useState<
     { username: string; available: boolean | null }[]
-  >(
-    Array(5).fill({ username: "", available: null })
-  );
+  >(Array(5).fill({ username: "", available: null }));
 
-
-  
   const [hashtags, setHashtags] = useState<string[]>(["", "", "", "", ""]);
-  const handleHashtagChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleHashtagChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const newHashtags = [...hashtags];
     newHashtags[index] = e.target.value;
     setHashtags(newHashtags);
@@ -56,7 +72,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const debouncedCheckUsernameAvailability = useCallback(
     debounce(async (index: number, username: string) => {
       if (!username) {
-        setMentionStatuses((prevState) =>
+        setMentionStatuses(prevState =>
           prevState.map((mention, idx) =>
             idx === index ? { ...mention, available: null } : mention
           )
@@ -65,9 +81,11 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
       }
       try {
         const response = await usernameAvailability(username);
-        setMentionStatuses((prevState) =>
+        setMentionStatuses(prevState =>
           prevState.map((mention, idx) =>
-            idx === index ? { ...mention, available: response.available } : mention
+            idx === index
+              ? { ...mention, available: response.available }
+              : mention
           )
         );
       } catch (error) {
@@ -82,7 +100,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     index: number
   ) => {
     const { value } = e.target;
-    setMentionStatuses((prevState) =>
+    setMentionStatuses(prevState =>
       prevState.map((mention, idx) =>
         idx === index ? { ...mention, username: value } : mention
       )
@@ -93,14 +111,19 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      if (postData.images!.length + postData.videos!.length + files.length > 5) {
-        toast.error("You can only upload up to a total of 5 images and videos.");
+      if (
+        postData.images!.length + postData.videos!.length + files.length >
+        5
+      ) {
+        toast.error(
+          "You can only upload up to a total of 5 images and videos."
+        );
         return;
       }
       setIsUploading(true);
       try {
         const urls = await Promise.all(
-          files.map(async (file) => {
+          files.map(async file => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             return new Promise<string>((resolve, reject) => {
@@ -109,7 +132,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                   const imgData = reader.result as string;
                   const response = await upload(
                     imgData,
-                    (err) => toast.error(err),
+                    err => toast.error(err),
                     "postimage",
                     "image"
                   );
@@ -125,7 +148,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             });
           })
         );
-        setPostData((prevState) => ({
+        setPostData(prevState => ({
           ...prevState,
           images: [...(prevState.images || []), ...urls],
         }));
@@ -142,14 +165,19 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const handleAddVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      if (postData.images!.length + postData.videos!.length + files.length > 5) {
-        toast.error("You can only upload up to a total of 5 images and videos.");
+      if (
+        postData.images!.length + postData.videos!.length + files.length >
+        5
+      ) {
+        toast.error(
+          "You can only upload up to a total of 5 images and videos."
+        );
         return;
       }
       setIsUploading(true);
       try {
         const urls = await Promise.all(
-          files.map(async (file) => {
+          files.map(async file => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             return new Promise<string>((resolve, reject) => {
@@ -158,7 +186,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                   const videoData = reader.result as string;
                   const response = await upload(
                     videoData,
-                    (err) => toast.error(err),
+                    err => toast.error(err),
                     "postVideo",
                     "video"
                   );
@@ -174,7 +202,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             });
           })
         );
-        setPostData((prevState) => ({
+        setPostData(prevState => ({
           ...prevState,
           videos: [...(prevState.videos || []), ...urls],
         }));
@@ -190,7 +218,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setPostData((prevState) => ({
+    setPostData(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -198,15 +226,15 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
 
   const handleSubmit = async () => {
     const validMentions = mentionStatuses
-      .filter((mention) => mention.available === false)
-      .map((mention) => mention.username);
-  
+      .filter(mention => mention.available === false)
+      .map(mention => mention.username);
+
     const dataToSubmit = {
       ...postData,
       mentions: validMentions,
-      postId: postId
+      postId: postId,
     };
-  
+
     if (
       postData.images.length > 0 ||
       postData.videos.length > 0 ||
@@ -257,8 +285,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <div>
               <label
                 htmlFor="addText"
-                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600 mr-5 dark:text-gray-300 p-6 rounded-lg cursor-pointer"
-              >
+                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 text-gray-600 mr-5 dark:text-gray-300 p-6 rounded-lg cursor-pointer">
                 <FaTextHeight className="text-4xl" />
                 <span className="font-extrabold mt-2">Add</span>
                 <span className="font-extrabold">text</span>
@@ -268,6 +295,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
               <textarea
                 name="captions"
                 id="captions"
+                value={postData.captions}
                 placeholder="Add texts here..."
                 className="bg-slate-300 dark:bg-gray-700 text-black dark:text-white w-full h-40 p-3 no-scrollbar rounded-lg"
                 onChange={handleInputChange}
@@ -281,8 +309,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <div>
               <label
                 htmlFor="addImage"
-                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
-              >
+                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer">
                 <FaUpload className="text-4xl" />
                 <span className="font-extrabold mt-2">Upload</span>
                 <span className="font-extrabold">Image</span>
@@ -290,6 +317,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
               <input
                 type="file"
                 name="addImage"
+                
                 onChange={handleAddImage}
                 id="addImage"
                 className="hidden"
@@ -325,8 +353,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <div>
               <label
                 htmlFor="addVideo"
-                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer"
-              >
+                className="flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-900 mr-5 text-gray-600 dark:text-gray-300 p-4 rounded-lg cursor-pointer">
                 <FaUpload className="text-4xl" />
                 <span className="font-extrabold mt-2">Upload</span>
                 <span className="font-extrabold">Video</span>
@@ -373,8 +400,7 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
                 <input
                   type="text"
                   name={`mention${index + 1}`}
-                  value={mention.username}
-                  onChange={(e) => handleMentionChange(e, index)}
+                  onChange={e => handleMentionChange(e, index)}
                   className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
                 />
                 {mention.available !== null && (
@@ -393,32 +419,31 @@ const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             <span>Add hashtags (Up to 5):</span>
             {hashtags.map((hashtag, index) => (
               <div key={index} className="flex gap-2 items-center">
-               #   <input
+                #{" "}
+                <input
                   type="text"
                   name={`hashtag${index + 1}`}
-                  value ={hashtag}
-                  onChange={(e) => handleHashtagChange(e, index)}
+                  onChange={e => handleHashtagChange(e, index)}
                   className="bg-slate-300 p-2 rounded-lg dark:bg-slate-700"
                 />
               </div>
             ))}
-        </div>
-        
-          
+          </div>
+
         </div>
         <div className="flex-1 flex flex-col items-center justify-center gap-2 font-extrabold p-2 mt-2 rounded-lg text-center cursor-pointer bg-slate-200 dark:bg-slate-800">
-            <span>Add location:</span>
-            <textarea
-              name="location"
-              placeholder="Add your location here.."
-              className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-20 p-3 no-scrollbar rounded-lg"
-              onChange={handleInputChange}
-            />
-          </div>
+          <span>Add location:</span>
+          <textarea
+            name="location"
+            value={postData?.location}
+            placeholder="Add your location here.."
+            className="bg-slate-200 dark:bg-slate-800 text-black dark:text-white w-full h-20 p-3 no-scrollbar rounded-lg"
+            onChange={handleInputChange}
+          />
+        </div>
         <button
           onClick={handleSubmit}
-          className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5"
-        >
+          className="bg-red-600 font-extrabold rounded-lg mt-2 p-4 w-1/5">
           UPDATE POST
         </button>
       </div>
