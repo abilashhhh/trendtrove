@@ -35,7 +35,7 @@ const authServiceInterface = (service) => {
         generateAccessToken,
         generateRefreshToken,
         verifyAccessToken,
-        verifyRefreshToken
+        verifyRefreshToken,
     };
 };
 exports.authServiceInterface = authServiceInterface;

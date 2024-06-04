@@ -31,7 +31,7 @@ export const authServiceInterface = (service: AuthServiceReturn) => {
     generateAccessToken,
     generateRefreshToken,
     verifyAccessToken,
-    verifyRefreshToken
+    verifyRefreshToken,
   };
 };
 

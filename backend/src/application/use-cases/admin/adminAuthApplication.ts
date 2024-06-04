@@ -1,15 +1,12 @@
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
- 
- 
-  
 
 export const handleGetAllUsersForAdmin = async (
-  dbUserRepository: ReturnType<UserDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-// console.log("handleyeallusers called")
+    // console.log("handleyeallusers called")
     const user = await dbUserRepository.getAllUsersForAdmin();
     return user;
   } catch (err) {
@@ -18,12 +15,11 @@ export const handleGetAllUsersForAdmin = async (
   }
 };
 
-
 export const handkeGetallpostreports = async (
-  dbUserRepository: ReturnType<UserDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-// console.log("handkeGetallpostreports called")
+    // console.log("handkeGetallpostreports called")
     const reports = await dbUserRepository.getAllReportsForAdmin();
     return reports;
   } catch (err) {
@@ -32,13 +28,9 @@ export const handkeGetallpostreports = async (
   }
 };
 
-
-
-
-
 export const handleBlockAccount = async (
   userId: string,
-  dbUserRepository: ReturnType<UserDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
     // console.log("Userdetails in handle block: ", userId)
@@ -46,7 +38,7 @@ export const handleBlockAccount = async (
     if (!userExists) {
       throw new Error("User not found");
     }
- 
+
     // Update user's password in the database
     const user = await dbUserRepository.blockAccount(userId);
 
@@ -57,10 +49,9 @@ export const handleBlockAccount = async (
   }
 };
 
-
 export const handleUnBlockAccount = async (
   userId: string,
-  dbUserRepository: ReturnType<UserDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
     // console.log("Userdetails in handle unblock: ", userId)
@@ -68,7 +59,7 @@ export const handleUnBlockAccount = async (
     if (!userExists) {
       throw new Error("User not found");
     }
- 
+
     // Update user's password in the database
     const user = await dbUserRepository.unblockAccount(userId);
 
@@ -79,14 +70,13 @@ export const handleUnBlockAccount = async (
   }
 };
 
-
 export const handleBlockPost = async (
   postId: string,
-  dbPostRepository: ReturnType<PostDBInterface>,
+  dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("Post details in handle block: ", postId);
-     
+
     const post = await dbPostRepository.blockPost(postId);
 
     return post;
@@ -98,11 +88,11 @@ export const handleBlockPost = async (
 
 export const handleUnblockPost = async (
   postId: string,
-  dbPostRepository: ReturnType<PostDBInterface>,
+  dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("Post details in handle unblock: ", postId);
-    
+
     const post = await dbPostRepository.unblockPost(postId);
 
     return post;

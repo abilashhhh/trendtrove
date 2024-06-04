@@ -14,7 +14,7 @@ export const mailSenderService = () => {
               
                 `
       );
-      console.log("Sent to :" , mailResponse?.accepted[0])
+      console.log("Sent to :", mailResponse?.accepted[0]);
     } catch (err) {
       console.log("Error in sending verification email: ", err);
       throw err;
@@ -35,8 +35,7 @@ export const mailSenderService = () => {
                
                 `
       );
-      console.log("Sent to :" , mailResponse?.accepted[0])
-
+      console.log("Sent to :", mailResponse?.accepted[0]);
     } catch (err) {
       console.log("Error in sending verification email: ", err);
       throw err;

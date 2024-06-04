@@ -15,7 +15,7 @@ const app = (0, express_1.default)();
 (0, express_2.default)(app);
 (0, routes_1.default)(app);
 app.use(errorHandlingMiddleware_1.default);
-app.all('*', (req, res, next) => {
+app.all("*", (req, res, next) => {
     next(new ErrorInApplication_1.default("Request not found", 404));
 });
 (0, server_1.default)(app);

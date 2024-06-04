@@ -20,7 +20,6 @@ const adminRouter = () => {
     authServiceInterface
   );
 
-  // router.post("/signin" , controller.signin);
   router.delete("/logout", adminMiddleware ,controller.logout);
   router.get("/getusersforadmin",adminMiddleware, controller.getAllUsersForAdmin);
   router.get("/getallpostreportsandposts",adminMiddleware, controller.getallpostreports);

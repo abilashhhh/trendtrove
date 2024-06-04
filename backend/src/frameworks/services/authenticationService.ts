@@ -32,7 +32,7 @@ export const authService = () => {
       token,
       configurationKeys.JWT_ACCESS_CODE
     ) as { userId: string; role: string };
-    console.log("verifyAccessToken: payload : ", payload)
+    console.log("verifyAccessToken: payload : ", payload);
     return payload;
   };
 
@@ -41,7 +41,7 @@ export const authService = () => {
       token,
       configurationKeys.JWT_REFRESH_CODE
     ) as { userId: string; role: string };
-    console.log("verifyRefreshToken: payload : ", payload)
+    console.log("verifyRefreshToken: payload : ", payload);
 
     return payload;
   };

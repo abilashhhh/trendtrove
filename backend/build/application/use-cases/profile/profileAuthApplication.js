@@ -41,7 +41,7 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             isBlocked: userData.isBlocked,
             isPrivate: userData.isPrivate,
             createdAt: userData.createdAt,
-            updatedAt: userData.updatedAt
+            updatedAt: userData.updatedAt,
         };
         return user;
     }
@@ -190,7 +190,7 @@ const handleFollowUserRequest = (userId, targetUserId, dbUserRepository) => __aw
         let newResult = yield dbUserRepository.followUser(userId, targetUserId);
         return {
             message: newResult.message,
-            user: targetUser
+            user: targetUser,
         };
     }
     catch (err) {
@@ -209,7 +209,7 @@ const handleUnFollowUserRequest = (userId, targetUserId, dbUserRepository) => __
         let newResult = yield dbUserRepository.unfollowUser(userId, targetUserId);
         return {
             message: newResult.message,
-            user: targetUser
+            user: targetUser,
         };
     }
     catch (err) {
@@ -228,7 +228,7 @@ const handleCancelFollowUserRequest = (userId, targetUserId, dbUserRepository) =
         let newResult = yield dbUserRepository.cancelSendFriendRequest(userId, targetUserId);
         return {
             message: newResult.message,
-            user: targetUser
+            user: targetUser,
         };
     }
     catch (err) {
@@ -247,7 +247,7 @@ const handleAcceptFollowUserRequest = (userId, targetUserId, dbUserRepository) =
         let newResult = yield dbUserRepository.acceptFriendRequest(userId, targetUserId);
         return {
             message: newResult.message,
-            user: targetUser
+            user: targetUser,
         };
     }
     catch (err) {
@@ -266,7 +266,7 @@ const handleRejectFollowUserRequest = (userId, targetUserId, dbUserRepository) =
         let newResult = yield dbUserRepository.rejectFriendRequest(userId, targetUserId);
         return {
             message: newResult.message,
-            user: targetUser
+            user: targetUser,
         };
     }
     catch (err) {

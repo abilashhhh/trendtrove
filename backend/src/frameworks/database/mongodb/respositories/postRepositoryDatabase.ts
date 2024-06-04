@@ -73,29 +73,27 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting all posts for user!");
     }
   };
-  const getAllPostsForUserUsername = async (username :string) => {
+  const getAllPostsForUserUsername = async (username: string) => {
     try {
       const requesterUser = await User.findOne({ username: username });
       if (!requesterUser) {
         throw new Error("User not found");
       }
-  
+
       const currentuserId = requesterUser._id;
-  
-       
+
       const gettingPosts = await Post.find({
-        userId:currentuserId ,
+        userId: currentuserId,
       }).sort({ createdAt: -1 });
-  
+
       // console.log("Getting posts before returning:", gettingPosts);
-  
+
       return gettingPosts;
     } catch (error) {
       // console.log(error);
       throw new Error("Error getting all posts for user!");
     }
   };
-  
 
   const lengthofPostsForUser = async (username: string) => {
     try {
@@ -103,7 +101,7 @@ export const postRepositoryMongoDB = () => {
       if (!user) {
         throw new Error("User not found");
       }
-  
+
       const postCount = await Post.countDocuments({ userId: user._id });
       return postCount;
     } catch (error) {
@@ -111,7 +109,6 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting length of posts for user!");
     }
   };
-  
 
   const getAllPostsForCurrentUser = async (id: string) => {
     try {
@@ -208,12 +205,12 @@ export const postRepositoryMongoDB = () => {
   const removeSavePostsForUser = async (userId: string, postId: string) => {
     try {
       // console.log("Data in postRepository, userId, postId: ", userId, postId);
-  
+
       const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
-  
+
       if (user.savedPosts.includes(postId)) {
-        user.savedPosts.pull(postId); 
+        user.savedPosts.pull(postId);
         await user.save();
         // console.log("Post removed successfully from saved posts");
       } else {
@@ -224,7 +221,7 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error removing saved post!");
     }
   };
-  
+
   const likePostsForUser = async (userId: string, postId: string) => {
     try {
       await Dislike.findOneAndDelete({ userId, postId });
@@ -311,10 +308,10 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  const getPostById = async (postId: string)  => {
+  const getPostById = async (postId: string) => {
     return await Post.findById(postId);
   };
-  
+
   const blockPost = async (postId: string) => {
     const post = await Post.findByIdAndUpdate(
       postId,

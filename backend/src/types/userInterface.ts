@@ -27,8 +27,8 @@ export interface GoogleUserInterface {
   email: string;
   phone?: number;
   password?: string;
-  dp?:string
-  isGoogleSignedIn?:boolean
+  dp?: string;
+  isGoogleSignedIn?: boolean;
   coverPhoto?: string;
   bio?: string;
   gender?: string;

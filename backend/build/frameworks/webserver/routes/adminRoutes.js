@@ -15,7 +15,6 @@ const postRepositoryDatabase_1 = require("../../database/mongodb/respositories/p
 const adminRouter = () => {
     const router = (0, express_1.default)();
     const controller = (0, adminController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, postDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface);
-    // router.post("/signin" , controller.signin);
     router.delete("/logout", adminMiddleware_1.default, controller.logout);
     router.get("/getusersforadmin", adminMiddleware_1.default, controller.getAllUsersForAdmin);
     router.get("/getallpostreportsandposts", adminMiddleware_1.default, controller.getallpostreports);

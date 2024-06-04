@@ -1,13 +1,4 @@
 "use strict";
-// import { Request, Response } from "express";
-// import { AuthService } from "../../frameworks/services/authenticationService";
-// import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
-// import { UserDBInterface } from "../../application/repositories/userDBRepository";
-// import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-// import { PostDataInterface, ReportPost } from "../../types/postsInterface";
-// import { handleCreatePost, handleDeltePosts, handleDislikePosts, handleGetDislikedPosts, handleGetLengthForUser, handleGetLikedPosts, handleGetParticularPost, handleGetPostsForUser, handleGetPostsForUserUsername, handleGetPostsOfCurrentUser, handleGetSavedPostsOfCurrentUser, handleGetlikesdislikesinfo, handleLikePosts, handleRemoveSavePosts, handleReportPosts, handleSavePosts, handleupdatepost } from "../../application/use-cases/post/postAuthApplications";
-// import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
-// import { PostDBInterface } from "../../application/repositories/postDBRepository";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -181,7 +172,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getlikedposts,
         getdislikedposts,
         getlikesdislikesinfo,
-        deletepost
+        deletepost,
     };
 };
 exports.default = postController;

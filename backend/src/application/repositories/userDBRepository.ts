@@ -21,13 +21,12 @@ export const userDBRepository = (
   const logoutUser = async (userId: string) =>
     await repository.logoutUser(userId);
 
-const addRefreshTokenAndExpiry = async (
-  email: string,
-  refreshToken: string,
-    
-) =>  {
-  await repository.addRefreshTokenAndExpiry(email, refreshToken);
-};
+  const addRefreshTokenAndExpiry = async (
+    email: string,
+    refreshToken: string
+  ) => {
+    await repository.addRefreshTokenAndExpiry(email, refreshToken);
+  };
 
   const changeIsAccountVerified = async (email: string) =>
     await repository.changeIsAccountVerified(email);
@@ -71,17 +70,17 @@ const addRefreshTokenAndExpiry = async (
   const unfollowUser = async (userId: string, targetUserId: string) =>
     await repository.unfollowUser(userId, targetUserId);
 
-  const cancelSendFriendRequest = async (userId: string, targetUserId: string) => 
-    await repository.cancelSendFriendRequest(userId, targetUserId);
+  const cancelSendFriendRequest = async (
+    userId: string,
+    targetUserId: string
+  ) => await repository.cancelSendFriendRequest(userId, targetUserId);
 
   const acceptFriendRequest = async (userId: string, targetUserId: string) =>
     await repository.acceptFriendRequest(userId, targetUserId);
 
   const rejectFriendRequest = async (userId: string, targetUserId: string) =>
     await repository.rejectFriendRequest(userId, targetUserId);
- 
 
- 
   return {
     addUser,
     getUserByEmail,
@@ -106,8 +105,6 @@ const addRefreshTokenAndExpiry = async (
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
- 
-
   };
 };
 

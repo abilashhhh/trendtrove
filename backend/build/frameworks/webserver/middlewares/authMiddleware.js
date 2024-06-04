@@ -29,7 +29,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             });
             if (user && req.path !== "/logout") {
                 res.status(401).json({
-                    success: 'error',
+                    success: "error",
                     message: "User is blocked",
                 });
             }

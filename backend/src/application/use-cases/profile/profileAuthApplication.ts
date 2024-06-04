@@ -30,12 +30,12 @@ export const handleUserInfo = async (
       following: userData.following,
       isVerifiedAccount: userData.isVerifiedAccount,
       notifications: userData.notifications,
-      savedPosts:  userData.savedPosts,
+      savedPosts: userData.savedPosts,
       isGoogleSignedIn: userData.isGoogleSignedIn,
       isBlocked: userData.isBlocked,
       isPrivate: userData.isPrivate,
-      createdAt: userData.createdAt,   
-      updatedAt: userData.updatedAt     
+      createdAt: userData.createdAt,
+      updatedAt: userData.updatedAt,
     };
     return user;
   } catch (err) {
@@ -187,7 +187,6 @@ export const handlePrivateAccount = async (
     if (!isPasswordValid) {
       throw new ErrorInApplication("Invalid current password", 401);
     }
-    
 
     // Update user's password in the database
     const user = await dbUserRepository.privateAccount(userId);
@@ -199,10 +198,9 @@ export const handlePrivateAccount = async (
   }
 };
 
-
 export const handleGetAllUsers = async (
-  id:string ,
-  dbUserRepository: ReturnType<UserDBInterface>,
+  id: string,
+  dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
     const user = await dbUserRepository.getAllUsers(id);
@@ -214,11 +212,10 @@ export const handleGetAllUsers = async (
 };
 
 export const handleUserbyUsername = async (
-  username:string ,
-  dbUserRepository: ReturnType<UserDBInterface>,
+  username: string,
+  dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-
     const user = await dbUserRepository.getUserByUsername(username);
 
     return user;
@@ -227,7 +224,6 @@ export const handleUserbyUsername = async (
     throw new ErrorInApplication("Failed to get all users data", 401);
   }
 };
-
 
 export const handleFollowUserRequest = async (
   userId: string,
@@ -241,19 +237,16 @@ export const handleFollowUserRequest = async (
     if (!mainUser || !targetUser) {
       throw new ErrorInApplication("User doesn't exist", 401);
     }
-    let newResult =  await dbUserRepository.followUser(userId, targetUserId);
+    let newResult = await dbUserRepository.followUser(userId, targetUserId);
     return {
       message: newResult.message,
-      user: targetUser
+      user: targetUser,
     };
- 
-    
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to handle follow request", 401);
   }
 };
-
 
 export const handleUnFollowUserRequest = async (
   userId: string,
@@ -267,19 +260,17 @@ export const handleUnFollowUserRequest = async (
     if (!mainUser || !targetUser) {
       throw new ErrorInApplication("User doesn't exist", 401);
     }
- 
-      let newResult =  await dbUserRepository.unfollowUser(userId, targetUserId);
-      return {
-        message: newResult.message,
-        user: targetUser
-      };
-    
+
+    let newResult = await dbUserRepository.unfollowUser(userId, targetUserId);
+    return {
+      message: newResult.message,
+      user: targetUser,
+    };
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to handle unfollow request", 401);
   }
 };
-
 
 export const handleCancelFollowUserRequest = async (
   userId: string,
@@ -294,12 +285,14 @@ export const handleCancelFollowUserRequest = async (
       throw new ErrorInApplication("User doesn't exist", 401);
     }
 
-     let newResult = await dbUserRepository.cancelSendFriendRequest(userId, targetUserId);
-      return {
-        message: newResult.message,
-        user: targetUser
-      };
-    
+    let newResult = await dbUserRepository.cancelSendFriendRequest(
+      userId,
+      targetUserId
+    );
+    return {
+      message: newResult.message,
+      user: targetUser,
+    };
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to unsend friend request", 401);
@@ -319,18 +312,19 @@ export const handleAcceptFollowUserRequest = async (
       throw new ErrorInApplication("User doesn't exist", 401);
     }
 
-     let newResult = await dbUserRepository.acceptFriendRequest(userId, targetUserId);
-      return {
-        message: newResult.message,
-        user: targetUser
-      };
-    
+    let newResult = await dbUserRepository.acceptFriendRequest(
+      userId,
+      targetUserId
+    );
+    return {
+      message: newResult.message,
+      user: targetUser,
+    };
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to unsend friend request", 401);
   }
 };
-
 
 export const handleRejectFollowUserRequest = async (
   userId: string,
@@ -345,16 +339,16 @@ export const handleRejectFollowUserRequest = async (
       throw new ErrorInApplication("User doesn't exist", 401);
     }
 
-     let newResult = await dbUserRepository.rejectFriendRequest(userId, targetUserId);
-      return {
-        message: newResult.message,
-        user: targetUser
-      };
-    
+    let newResult = await dbUserRepository.rejectFriendRequest(
+      userId,
+      targetUserId
+    );
+    return {
+      message: newResult.message,
+      user: targetUser,
+    };
   } catch (err) {
     console.error("Error: ", err);
     throw new ErrorInApplication("Failed to reject friend request", 401);
   }
 };
-
- 

@@ -12,10 +12,10 @@ const postSchema = new mongoose_1.Schema({
     images: [{ type: String }],
     videos: [{ type: String }],
     hashtags: [{ type: String }],
-    // mentions: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    // likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    // shares: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    // comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    mentions: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
+    likes: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
+    shares: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
+    comments: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Comment" }],
 }, {
     timestamps: true,
 });

@@ -57,7 +57,7 @@ const postDBRepository = (repository) => {
         getLikedPosts,
         getDislikedPosts,
         getlikesdislikesInfo,
-        deltePostForUser
+        deltePostForUser,
     };
 };
 exports.postDBRepository = postDBRepository;

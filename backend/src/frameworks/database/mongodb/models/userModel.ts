@@ -55,7 +55,7 @@ const userSchema = new Schema(
     blockedUsers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
-);  
+);
 
 const User = model("User", userSchema);
 

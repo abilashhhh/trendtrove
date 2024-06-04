@@ -1,5 +1,5 @@
-export interface OtpInterface{
-    email: string;
-    otp: string;
-    createdAt: Date;
+export interface OtpInterface {
+  email: string;
+  otp: string;
+  createdAt: Date;
 }
