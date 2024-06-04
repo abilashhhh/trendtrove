@@ -10,63 +10,6 @@ import {
 } from "../../Types/admin";
 import axios, { AxiosError } from "axios";
 
- 
-export const refreshAdminAccessToken = async (): Promise<{
-  accessToken: string;
-}> => {
-  const response = await axiosAdminRefreshInstance.get<{ accessToken: string }>(
-    END_POINTS.REFRESH_ADMIN_TOKEN,
-    { withCredentials: true }
-  );
-  return response.data;
-};
- 
-
-
-// export const logoutAdmin = async (accessToken: string) => {
-//   await axiosAdminInstance.post(END_POINTS.ADMIN_LOGOUT, null, {
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-// };
-
-
-export const logoutAdmin = async (): Promise<{ status: string, message: string }> => {
-  console.log("Called admin logout : ")
-  const response = await axiosAdminInstance.delete<{ status: string, message: string }>(
-    END_POINTS.ADMIN_LOGOUT
-  );
-  console.log("admin logout - response daa: ", response.data)
-  return response.data;
-}
-
-
- 
-export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {
-  try {
-    console.log("called getallusersadmin")
-    const response = await axiosAdminInstance.get<GetUsersResponse>(END_POINTS.GET_USERS);
-    return response.data;
-  } catch (error) {
-    handleAxiosError(error);
-    throw error;
-  }
-};
- 
- 
-export const fetchAllPostReportsAndPosts = async (): Promise<GetPostReportsResponse> => {
-  try {
-    console.log("called fetchAllPostReports")
-    const response = await axiosAdminInstance.get<GetPostReportsResponse>(END_POINTS.GET_POST_REPORTS);
-    return response.data;
-  } catch (error) {
-    handleAxiosError(error);
-    throw error;
-  }
-};
- 
- 
 const handleAxiosError = (error: any) => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
@@ -86,19 +29,64 @@ const handleAxiosError = (error: any) => {
   }
 };
 
+export const refreshAdminAccessToken = async (): Promise<{
+  accessToken: string;
+}> => {
+  const response = await axiosAdminRefreshInstance.get<{ accessToken: string }>(
+    END_POINTS.REFRESH_ADMIN_TOKEN,
+    { withCredentials: true }
+  );
+  return response.data;
+};
 
+export const logoutAdmin = async (): Promise<{
+  status: string;
+  message: string;
+}> => {
+  // console.log("Called admin logout : ");
+  const response = await axiosAdminInstance.delete<{
+    status: string;
+    message: string;
+  }>(END_POINTS.ADMIN_LOGOUT);
+  // console.log("admin logout - response daa: ", response.data);
+  return response.data;
+};
 
-export const blockUser = async (
-  userId: string,
-  
-): Promise<BlockUserResponse> => {
+export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {
   try {
-    console.log(userId, "from blockuser acc");
+    // console.log("called getallusersadmin");
+    const response = await axiosAdminInstance.get<GetUsersResponse>(
+      END_POINTS.GET_USERS
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const fetchAllPostReportsAndPosts =
+  async (): Promise<GetPostReportsResponse> => {
+    try {
+      // console.log("called fetchAllPostReports");
+      const response = await axiosAdminInstance.get<GetPostReportsResponse>(
+        END_POINTS.GET_POST_REPORTS
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  };
+
+export const blockUser = async (userId: string): Promise<BlockUserResponse> => {
+  try {
+    // console.log(userId, "from blockuser acc");
 
     const response = await axiosAdminInstance.patch<BlockUserResponse>(
       `${END_POINTS.BLOCK_USER.replace(":userId", userId)}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -106,17 +94,16 @@ export const blockUser = async (
   }
 };
 
-
 export const unblockUser = async (
-  userId: string,
+  userId: string
 ): Promise<BlockUserResponse> => {
   try {
-    console.log(userId,  "from unblockuser acc");
+    // console.log(userId, "from unblockuser acc");
 
     const response = await axiosAdminInstance.patch<BlockUserResponse>(
       `${END_POINTS.UNBLOCK_USER.replace(":userId", userId)}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -124,15 +111,14 @@ export const unblockUser = async (
   }
 };
 
-
 export const blockPost = async (postId: string): Promise<BlockPostResponse> => {
   try {
-    console.log(postId, "from blockPost");
+    // console.log(postId, "from blockPost");
 
     const response = await axiosAdminInstance.patch<BlockPostResponse>(
       `${END_POINTS.BLOCK_POST.replace(":postId", postId)}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -140,14 +126,16 @@ export const blockPost = async (postId: string): Promise<BlockPostResponse> => {
   }
 };
 
-export const unblockPost = async (postId: string): Promise<BlockPostResponse> => {
+export const unblockPost = async (
+  postId: string
+): Promise<BlockPostResponse> => {
   try {
-    console.log(postId, "from unblockPost");
+    // console.log(postId, "from unblockPost");
 
     const response = await axiosAdminInstance.patch<BlockPostResponse>(
       `${END_POINTS.UNBLOCK_POST.replace(":postId", postId)}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

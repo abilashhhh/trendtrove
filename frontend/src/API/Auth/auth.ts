@@ -59,12 +59,12 @@ export const verifyMailForForgotPass = async (
   text: string
 ): Promise<forgotPassword> => {
   try {
-    console.log("email, string :", email, text);
+  //  console.log("email, string :", email, text);
     const response = await axios.post<SignupUserResponse>(
       END_POINTS.FORGOT_PASSWORD,
       { email, text }
     );
-    console.log("response.data; ", response.data);
+  //  console.log("response.data; ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -77,12 +77,12 @@ export const forgotPasswordChangePass = async (
   password: string
 ): Promise<forgotPassword> => {
   try {
-    console.log("email, string :", email, password);
+  //  console.log("email, string :", email, password);
     const response = await axios.post<SignupUserResponse>(
       END_POINTS.FORGOT_PASSWORD_CHANGE,
       { email, password }
     );
-    console.log("response.data; ", response.data);
+  //  console.log("response.data; ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -165,18 +165,12 @@ export const loginUsingGoogle = async (
   payload: GoogleLoginInterface
 ): Promise<GoogleLoginResponse> => {
   try {
-    console.log(
-      "payload from loginUsingGoogle, data passed to backend ,",
-      payload
-    );
+  //  console.log( "payload from loginUsingGoogle, data passed to backend ,",payload);
     const response = await axiosRefreshInstance.post<GoogleLoginResponse>(
       END_POINTS.GOOGLE_LOGIN_SIGNUP_USER,
       payload
     );
-    console.log(
-      "loginUsing Google api auth , response data from the backend ",
-      response.data
-    );
+  //  console.log( "loginUsing Google api auth , response data from the backend ",response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -208,15 +202,13 @@ export const refreshAccessToken = async (): Promise<{
         withCredentials: true,
       }
     );
-    console.log("-------------------------------------------------------")
-    console.log("Refresh access token : ,response.data : ", response.data)
-    console.log("-------------------------------------------------------")
+  //  console.log("-------------------------------------------------------");
+  //  console.log("Refresh access token : ,response.data : ", response.data);
+  //  console.log("-------------------------------------------------------");
     return response.data;
   } catch (error) {
     handleAxiosError(error);
     throw error;
   }
 };
-
-
-// refreshAccessToken()   
+ 

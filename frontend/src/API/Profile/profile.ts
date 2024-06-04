@@ -35,11 +35,11 @@ export const getUserInfo = async (
   userId: string
 ): Promise<GetUserInfoResponse> => {
   try {
-    console.log("Userid: ", userId);
+    // console.log("Userid: ", userId);
     const response = await axiosUserInstance.get<GetUserInfoResponse>(
       `${END_POINTS.GET_USER_INFO}/${userId}`
     );
-    console.log("response :", response);
+    // console.log("response :", response);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -52,7 +52,7 @@ export const getUserInfo2 = async (): Promise<GetUserInfoResponse> => {
     const response = await axiosUserInstance.get<GetUserInfoResponse>(
       END_POINTS.GET_USER_INFO2
     );
-    console.log("response :", response);
+    // console.log("response :", response);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -64,12 +64,12 @@ export const editProfile = async (
   userInfo: UserInfo
 ): Promise<EditProfileResponse> => {
   try {
-    console.log("edit profile api, userInfo:", userInfo);
+    // console.log("edit profile api, userInfo:", userInfo);
     const response = await axiosUserInstance.patch<EditProfileResponse>(
       END_POINTS.EDIT_PROFILE,
       userInfo
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -81,12 +81,12 @@ export const changePassword = async (
   payload: ChangePasswordInterface
 ): Promise<ChangePasswordResponse> => {
   try {
-    console.log("changePassword, userInfo:", payload);
+    // console.log("changePassword, userInfo:", payload);
     const response = await axiosUserInstance.patch<ChangePasswordResponse>(
       END_POINTS.CHANGE_PASSWORD,
       payload
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -99,14 +99,14 @@ export const deleteAccount = async (
   password: string
 ): Promise<DeleteAccountResponse> => {
   try {
-    console.log(userId, password, "from deklete acc");
+    // console.log(userId, password, "from deklete acc");
     const response = await axiosUserInstance.delete<DeleteAccountResponse>(
       `${END_POINTS.DELETE_ACCOUNT.replace(":userId", userId).replace(
         ":password",
         password
       )}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -119,7 +119,7 @@ export const suspendAccount = async (
   password: string
 ): Promise<SuspendAccountResponse> => {
   try {
-    console.log(userId, password, "from susp acc");
+    // console.log(userId, password, "from susp acc");
 
     const response = await axiosUserInstance.patch<SuspendAccountResponse>(
       `${END_POINTS.SUSPEND_ACCOUNT.replace(":userId", userId).replace(
@@ -127,7 +127,7 @@ export const suspendAccount = async (
         password
       )}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -140,7 +140,7 @@ export const privateAccount = async (
   password: string
 ): Promise<SuspendAccountResponse> => {
   try {
-    console.log(userId, password, "from private acc");
+    // console.log(userId, password, "from private acc");
 
     const response = await axiosUserInstance.patch<SuspendAccountResponse>(
       `${END_POINTS.PRIVATE_ACCOUNT.replace(":userId", userId).replace(
@@ -148,11 +148,10 @@ export const privateAccount = async (
         password
       )}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
     throw error;
   }
 };
- 

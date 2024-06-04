@@ -15,21 +15,21 @@ export const axiosAdminRefreshInstance = axios.create({
 });
 
 axiosAdminInstance.interceptors.request.use(
-  (config) => {
+  config => {
     const { accessToken } = store.getState().admin;
     if (accessToken) {
       config.headers.authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
 
 axiosAdminInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
     if (
       error.response &&

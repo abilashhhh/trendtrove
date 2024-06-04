@@ -41,12 +41,12 @@ export const uploadPost = async (
   payload: Partial<Post>
 ): Promise<PostResponse> => {
   try {
-    console.log("Upload post function, payload: ", payload);
+    // console.log("Upload post function, payload: ", payload);
     const response = await axiosUserInstance.post<PostResponse>(
       END_POINTS.ADD_POST,
       payload
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -58,12 +58,12 @@ export const updatePost = async (
   payload: Partial<Post>
 ): Promise<PostResponse> => {
   try {
-    console.log("Update post function, payload: ", payload);
+    // console.log("Update post function, payload: ", payload);
     const response = await axiosUserInstance.post<PostResponse>(
       END_POINTS.UPDATE_POST,
       payload
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -78,7 +78,7 @@ export const getAllPostsForUser = async (
     const response = await axiosUserInstance.get<GetAllPostsForUser>(
       `${END_POINTS.GET_POSTS_FOR_USER}/${id}`
     );
-    console.log("respose: ", response.data?.data);
+    // console.log("respose: ", response.data?.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -93,7 +93,7 @@ export const fetchAllPostsForUserUsingUsername = async (
     const response = await axiosUserInstance.get<GetAllPostsForUser>(
       `${END_POINTS.GET_POSTS_FOR_USER_USERNAME}/${username}`
     );
-    console.log("respose: ", response.data?.data);
+    // console.log("respose: ", response.data?.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -108,7 +108,7 @@ export const fetchPostsOfTheCurrentUser = async (
     const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
       `${END_POINTS.GET_POSTS_OF_CURRENT_USER}/${id}`
     );
-    console.log("fetchPostsOfTheCurrentUser respose: ", response.data?.data);
+    // console.log("fetchPostsOfTheCurrentUser respose: ", response.data?.data);
     return response.data?.data;
   } catch (error) {
     handleAxiosError(error);
@@ -123,7 +123,7 @@ export const fetchSavedPostsOfTheCurrentUser = async (
     const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
       `${END_POINTS.GET_SAVED_POSTS_OF_CURRENT_USER}/${id}`
     );
-    console.log("fetchSavedPostsOfTheCurrentUser respose: ", response.data?.data);
+    // console.log("fetchSavedPostsOfTheCurrentUser respose: ",response.data?.data);
     return response.data?.data;
   } catch (error) {
     handleAxiosError(error);
@@ -138,7 +138,7 @@ export const getThePostDataOfParticularPost = async (
     const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
       `${END_POINTS.GET_PARTICULAR_POSTS_OF_CURRENT_USER}/${id}`
     );
-    console.log("getThePostDataOfParticularPost respose: ", response.data);
+    // console.log("getThePostDataOfParticularPost respose: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -153,7 +153,7 @@ export const getPostsLengthOfTheUser = async (
     const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
       `${END_POINTS.GET_POSTS_LENGTH_OF_USER}/${username}`
     );
-    console.log("getPostsLengthOfTheUser respose: ", response.data);
+    // console.log("getPostsLengthOfTheUser respose: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -165,12 +165,12 @@ export const reportPost = async (
   data: ReportPostData
 ): Promise<ReportPostResponse> => {
   try {
-    console.log("Report post api, data: ", data);
+    // console.log("Report post api, data: ", data);
     const response = await axiosUserInstance.post<ReportPostResponse>(
       `${END_POINTS.REPORT_POST}`,
       data
     );
-    console.log("response: ", response.data);
+    // console.log("response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -183,8 +183,8 @@ export const savePost = async (
   postId: string
 ): Promise<SavePostResponse> => {
   try {
-    console.log("savePost post api, userId: ", userId);
-    console.log("savePost post api, postId: ", postId);
+    // console.log("savePost post api, userId: ", userId);
+    // console.log("savePost post api, postId: ", postId);
     const response = await axiosUserInstance.post<SavePostResponse>(
       `${END_POINTS.SAVE_POST}`,
       {
@@ -192,7 +192,7 @@ export const savePost = async (
         postId,
       }
     );
-    console.log("response: ", response.data);
+    // console.log("response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -206,8 +206,8 @@ export const removeSavedPostForUser = async (
   postId: string
 ): Promise<SavePostResponse> => {
   try {
-    console.log("removeSavedPostForUser post api, userId: ", userId);
-    console.log("saveremoveSavedPostForUserPost post api, postId: ", postId);
+    // console.log("removeSavedPostForUser post api, userId: ", userId);
+    // console.log("saveremoveSavedPostForUserPost post api, postId: ", postId);
     const response = await axiosUserInstance.post<SavePostResponse>(
       `${END_POINTS.REMOVE_SAVE_POST}`,
       {
@@ -215,7 +215,7 @@ export const removeSavedPostForUser = async (
         postId,
       }
     );
-    console.log("response: ", response.data);
+    // console.log("response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -223,17 +223,15 @@ export const removeSavedPostForUser = async (
   }
 };
 
-
-
 export const deletePostForUser = async (
   postId: string
 ): Promise<DeletePostResponse> => {
   try {
-    console.log("deletePostForUser post API, postId:", postId);
+    // console.log("deletePostForUser post API, postId:", postId);
     const response = await axiosUserInstance.delete<DeletePostResponse>(
       `${END_POINTS.DELETE_POST.replace(":postId", postId)}`
     );
-    console.log("response:", response.data);
+    // console.log("response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -246,8 +244,8 @@ export const likePost = async (
   postId: string
 ): Promise<LikePostResponse> => {
   try {
-    console.log("likePost post api, userId: ", userId);
-    console.log("likePost post api, postId: ", postId);
+    // console.log("likePost post api, userId: ", userId);
+    // console.log("likePost post api, postId: ", postId);
     const response = await axiosUserInstance.post<LikePostResponse>(
       `${END_POINTS.LIKE_POST}`,
       {
@@ -255,7 +253,7 @@ export const likePost = async (
         postId,
       }
     );
-    console.log(" likePost response: ", response.data);
+    // console.log(" likePost response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -268,8 +266,8 @@ export const dislikePost = async (
   postId: string
 ): Promise<DislikePostResponse> => {
   try {
-    console.log("dislikePost post api, userId: ", userId);
-    console.log("dislikePost post api, postId: ", postId);
+    // console.log("dislikePost post api, userId: ", userId);
+    // console.log("dislikePost post api, postId: ", postId);
     const response = await axiosUserInstance.post<DislikePostResponse>(
       `${END_POINTS.DISLIKE_POST}`,
       {
@@ -277,7 +275,7 @@ export const dislikePost = async (
         postId,
       }
     );
-    console.log(" dislikePost response: ", response.data);
+    // console.log(" dislikePost response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -287,12 +285,12 @@ export const dislikePost = async (
 
 export const getLikedPosts = async (userId: string) => {
   try {
-    console.log("getLikedPosts , userid: ", userId);
+    // console.log("getLikedPosts , userid: ", userId);
 
     const response = await axiosUserInstance.get<GetLikedPostsResponse>(
       `${END_POINTS.GET_LIKED_POSTS.replace(":userId", userId)}`
     );
-    console.log("getLikedPosts response:", response.data);
+    // console.log("getLikedPosts response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -302,11 +300,11 @@ export const getLikedPosts = async (userId: string) => {
 
 export const getDislikedPosts = async (userId: string) => {
   try {
-    console.log("getDislikedPosts , userid: ", userId);
+    // console.log("getDislikedPosts , userid: ", userId);
     const response = await axiosUserInstance.get<GetDislikedPostsResponse>(
       `${END_POINTS.GET_DISLIKED_POSTS.replace(":userId", userId)}`
     );
-    console.log("getDislikedPosts response:", response.data);
+    // console.log("getDislikedPosts response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -316,11 +314,11 @@ export const getDislikedPosts = async (userId: string) => {
 
 export const getPostLikesAndDislikesInfo = async (postId: string) => {
   try {
-    console.log("getDislikedPosts , postId: ", postId);
+    // console.log("getDislikedPosts , postId: ", postId);
     const response = await axiosUserInstance.get<GetLikesDislikesInfoResponse>(
       `${END_POINTS.GET_LIKES_DISLIKES_INFO.replace(":postId", postId)}`
     );
-    console.log("getPostLikesAndDislikesInfo response:", response.data);
+    // console.log("getPostLikesAndDislikesInfo response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

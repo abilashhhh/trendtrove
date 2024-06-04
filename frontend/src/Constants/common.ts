@@ -1,9 +1,9 @@
 import { ToastOptions } from "react-toastify";
 
 const CONSTANTS = {
-  // API_BASE_URL: "http://localhost:3000",
   API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
-  ERROR_NOTFOUND: "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381003/socioverse%20stock/404_nvavnv.svg"
+  ERROR_NOTFOUND:
+    "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381003/socioverse%20stock/404_nvavnv.svg",
 };
 
 export default CONSTANTS;
@@ -18,5 +18,3 @@ export const TOAST: ToastOptions = {
   progress: undefined,
   theme: "light",
 };
-
- 

@@ -24,7 +24,7 @@ axiosUserInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
@@ -51,7 +51,7 @@ axiosUserInstance.interceptors.response.use(
           }, 2000);
         }
         const { accessToken } = await refreshAccessToken();
-        store.dispatch(setCredentials({accessToken,user: null,}));
+        store.dispatch(setCredentials({ accessToken, user: null }));
         originalRequest.headers.authorization = `Bearer ${accessToken}`;
         return axiosUserInstance(originalRequest);
       } catch (error) {

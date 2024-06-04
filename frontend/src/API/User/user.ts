@@ -33,12 +33,12 @@ export const getAllUsers = async (
   userId: string
 ): Promise<GetRestOfUsersResponse> => {
   try {
-    console.log(userId, "from susp acc");
+    // console.log(userId, "from susp acc");
 
     const response = await axiosUserInstance.get<GetRestOfUsersResponse>(
       `${END_POINTS.GET_ALL_USERS.replace(":userId", userId)}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -50,12 +50,12 @@ export const getUserProfile = async (
   username: string
 ): Promise<UserInfo> => {
   try {
-    console.log(username, "from  acc");
+    // console.log(username, "from  acc");
 
     const response = await axiosUserInstance.get<UserInfo>(
       `${END_POINTS.GET_USER_PROFILE.replace(":username", username)}`
     );
-    console.log(response.data?.user);
+    // console.log(response.data?.user);
     return response.data?.user;
   } catch (error) {
     handleAxiosError(error);
@@ -68,8 +68,8 @@ export const sendFollowRequest = async (
   targetUserId: string
 ): Promise<FriendRequestSentResponse> => {
   try {
-    console.log("Current users id: ", userId);
-    console.log("Target users id: ", targetUserId);
+    // console.log("Current users id: ", userId);
+    // console.log("Target users id: ", targetUserId);
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
       `${END_POINTS.FOLLOW_REQUEST}`,
       { userId, targetUserId }
@@ -86,8 +86,8 @@ export const sendUnfollowRequest = async (
   targetUserId: string
 ): Promise<FriendRequestSentResponse> => {
   try {
-    console.log("Current users id: ", userId);
-    console.log("Target users id: ", targetUserId);
+    // console.log("Current users id: ", userId);
+    // console.log("Target users id: ", targetUserId);
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
       `${END_POINTS.UNFOLLOW_REQUEST}`,
       { userId, targetUserId }
@@ -104,8 +104,8 @@ export const sendCancelFollowRequest = async (
   targetUserId: string
 ): Promise<FriendRequestSentResponse> => {
   try {
-    console.log("Current users id: ", userId);
-    console.log("Target users id: ", targetUserId);
+    // console.log("Current users id: ", userId);
+    // console.log("Target users id: ", targetUserId);
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
       `${END_POINTS.CANCEL_FOLLOW_REQ_FOR_PVT_ACC}`,
       { userId, targetUserId }
@@ -122,8 +122,8 @@ export const sendAcceptFollowRequest = async (
   targetUserId: string
 ): Promise<FriendRequestSentResponse> => {
   try {
-    console.log("Current users id: ", userId);
-    console.log("Target users id: ", targetUserId);
+    // console.log("Current users id: ", userId);
+    // console.log("Target users id: ", targetUserId);
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
       `${END_POINTS.ACCEPT_FOLLOW_REQ_FOR_PVT_ACC}`,
       { userId, targetUserId }
@@ -140,8 +140,8 @@ export const sendRejectFollowRequest = async (
   targetUserId: string
 ): Promise<FriendRequestSentResponse> => {
   try {
-    console.log("Current users id: ", userId);
-    console.log("Target users id: ", targetUserId);
+    // console.log("Current users id: ", userId);
+    // console.log("Target users id: ", targetUserId);
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
       `${END_POINTS.REJECT_FOLLOW_REQ_FOR_PVT_ACC}`,
       { userId, targetUserId }
