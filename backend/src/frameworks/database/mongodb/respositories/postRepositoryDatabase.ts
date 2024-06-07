@@ -18,27 +18,20 @@ export const postRepositoryMongoDB = () => {
   const addNewPost = async (postData: PostDataInterface) => {
     try {
       const newPost = new Post(postData);
-      return await newPost.save();
+      const newPostData = await newPost.save();
+      // console.log("newPostData: ",newPostData)
+
+      await taggedDataFromPosts(newPostData?.mentions , newPostData?._id)
+
+      return newPostData
     } catch (error) {
       // console.log(error);
       throw new Error("Error adding new post!");
     }
   };
-  const taggedDataFromPosts = async (usernames: string[], postId: string) => {
-    try {
-      const updatePromises = usernames.map(username =>
-        User.findOneAndUpdate(
-          { username: username }, 
-          { $push: { taggedPosts: postId } },
-          { new: true }
-        )
-      );
-  
-      await Promise.all(updatePromises);
-    } catch (error) {
-      throw new Error("Error updating post - adding tags!");
-    }
-  };
+
+
+
   
   const updatePost = async (postData: PostDataInterface) => {
     try {
@@ -53,6 +46,26 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error updating post!");
     }
   };
+
+  const taggedDataFromPosts = async (usernames: string[], postId: string) => {
+    try {
+      console.log("Usrenamse : ", usernames)
+      console.log("postId : ", postId)
+      const updatePromises = usernames.map(username =>
+        User.findOneAndUpdate(
+          { username: username },
+          { $push: { taggedPosts: { $each: [postId], $position: 0 } } },
+          { new: true, upsert: true }
+        )
+      );
+  
+      await Promise.all(updatePromises);
+    } catch (error) {
+      console.error(error);  
+      throw new Error("Error updating post - adding tags!");
+    }
+  };
+  
 
   const getAllPostsForUser = async (id: string) => {
     try {
@@ -173,33 +186,34 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting saved posts of current user!");
     }
   };
+
   const getAllTaggedPostsForCurrentUser = async (userId: string) => {
     try {
       if (!userId) {
         throw new Error("User ID is required");
       }
-
+  
       const user = await User.findById(userId);
       if (!user) {
         throw new Error("User not found");
       }
-
+      // console.log("user: ", user  )
+  
       const taggedPostIds = user.taggedPosts;
-
-      if (!taggedPostIds || taggedPostIds.length === 0) {
-        return [];
-      }
+      // console.log("taggedPostIds:", taggedPostIds);
+    
       const taggedPosts = await Post.find({ _id: { $in: taggedPostIds } }).sort({
         createdAt: -1,
       });
-      // console.log("taggedPosts: ", taggedPosts);
+      // console.log("taggedPosts:", taggedPosts);
+  
       return taggedPosts;
     } catch (error: any) {
       console.error(error.message);
       throw new Error("Error getting tagged posts of current user!");
     }
   };
-
+  
   const getParticularPostsForCurrentUser = async (id: string) => {
     try {
       if (!id) {
@@ -271,7 +285,7 @@ export const postRepositoryMongoDB = () => {
       const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
 
-      if (user.taggedPosts.includes(postId)) {
+      if (user.savedPosts.includes(postId)) {
         user.taggedPosts.pull(postId);
         await user.save();
         // console.log("Post removed successfully from saved posts");
@@ -280,7 +294,7 @@ export const postRepositoryMongoDB = () => {
       }
     } catch (error) {
       // console.log(error);
-      throw new Error("Error removing tagged post!");
+      throw new Error("Error removing tags from post!");
     }
   };
 
@@ -386,7 +400,6 @@ export const postRepositoryMongoDB = () => {
     return post;
   };
 
-  // blockPost("66573ce27fb722f5923b31de")
 
   const unblockPost = async (postId: string) => {
     const post = await Post.findByIdAndUpdate(
@@ -401,6 +414,20 @@ export const postRepositoryMongoDB = () => {
   };
   ////////////////////////////////////////////////
 
+  const removeAllTaggedPostsForAllUsers = async () => {
+    try {
+      // Update all users and set their taggedPosts array to an empty array
+      await User.updateMany({}, { $set: { taggedPosts: [] } });
+      
+      console.log("All tagged posts removed for all users.");
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error("Error removing tagged posts for all users!");
+    }
+  };
+  
+  // removeAllTaggedPostsForAllUsers()
+  
   return {
     addNewPost,
     taggedDataFromPosts,

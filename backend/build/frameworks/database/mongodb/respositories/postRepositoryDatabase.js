@@ -25,20 +25,14 @@ const postRepositoryMongoDB = () => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const newPost = new postModel_1.default(postData);
-            return yield newPost.save();
+            const newPostData = yield newPost.save();
+            // console.log("newPostData: ",newPostData)
+            yield taggedDataFromPosts(newPostData === null || newPostData === void 0 ? void 0 : newPostData.mentions, newPostData === null || newPostData === void 0 ? void 0 : newPostData._id);
+            return newPostData;
         }
         catch (error) {
             // console.log(error);
             throw new Error("Error adding new post!");
-        }
-    });
-    const taggedDataFromPosts = (usernames, postId) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const updatePromises = usernames.map(username => userModel_1.default.findOneAndUpdate({ username: username }, { $push: { taggedPosts: postId } }, { new: true }));
-            yield Promise.all(updatePromises);
-        }
-        catch (error) {
-            throw new Error("Error updating post - adding tags!");
         }
     });
     const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,6 +43,18 @@ const postRepositoryMongoDB = () => {
         catch (error) {
             // console.log(error);
             throw new Error("Error updating post!");
+        }
+    });
+    const taggedDataFromPosts = (usernames, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            console.log("Usrenamse : ", usernames);
+            console.log("postId : ", postId);
+            const updatePromises = usernames.map(username => userModel_1.default.findOneAndUpdate({ username: username }, { $push: { taggedPosts: { $each: [postId], $position: 0 } } }, { new: true, upsert: true }));
+            yield Promise.all(updatePromises);
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error("Error updating post - adding tags!");
         }
     });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -164,14 +170,13 @@ const postRepositoryMongoDB = () => {
             if (!user) {
                 throw new Error("User not found");
             }
+            // console.log("user: ", user  )
             const taggedPostIds = user.taggedPosts;
-            if (!taggedPostIds || taggedPostIds.length === 0) {
-                return [];
-            }
+            // console.log("taggedPostIds:", taggedPostIds);
             const taggedPosts = yield postModel_1.default.find({ _id: { $in: taggedPostIds } }).sort({
                 createdAt: -1,
             });
-            // console.log("taggedPosts: ", taggedPosts);
+            // console.log("taggedPosts:", taggedPosts);
             return taggedPosts;
         }
         catch (error) {
@@ -249,7 +254,7 @@ const postRepositoryMongoDB = () => {
             const user = yield userModel_1.default.findById(userId);
             if (!user)
                 throw new Error("User not found");
-            if (user.taggedPosts.includes(postId)) {
+            if (user.savedPosts.includes(postId)) {
                 user.taggedPosts.pull(postId);
                 yield user.save();
                 // console.log("Post removed successfully from saved posts");
@@ -260,7 +265,7 @@ const postRepositoryMongoDB = () => {
         }
         catch (error) {
             // console.log(error);
-            throw new Error("Error removing tagged post!");
+            throw new Error("Error removing tags from post!");
         }
     });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -352,7 +357,6 @@ const postRepositoryMongoDB = () => {
         }
         return post;
     });
-    // blockPost("66573ce27fb722f5923b31de")
     const unblockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
         const post = yield postModel_1.default.findByIdAndUpdate(postId, { isBlocked: false }, { new: true });
         if (!post) {
@@ -361,6 +365,18 @@ const postRepositoryMongoDB = () => {
         return post;
     });
     ////////////////////////////////////////////////
+    const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            // Update all users and set their taggedPosts array to an empty array
+            yield userModel_1.default.updateMany({}, { $set: { taggedPosts: [] } });
+            console.log("All tagged posts removed for all users.");
+        }
+        catch (error) {
+            console.error(error.message);
+            throw new Error("Error removing tagged posts for all users!");
+        }
+    });
+    // removeAllTaggedPostsForAllUsers()
     return {
         addNewPost,
         taggedDataFromPosts,

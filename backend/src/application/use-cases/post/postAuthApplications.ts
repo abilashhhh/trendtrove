@@ -9,7 +9,7 @@ export const handleCreatePost = async (
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-    console.log("Post data in handleCreatePost:", postData);
+    // console.log("Post data in handleCreatePost :", postData);
 
 
     if (!postData.userId) {
@@ -26,11 +26,10 @@ export const handleCreatePost = async (
       dp: userData?.dp,
     };
 
-     await dbPostRepository.taggedDataFromPosts(postData.mentions , postData.postId)
-
+    
     // // console.log("User exists....");
     const newPost = await dbPostRepository.addNewPost(newPostData);
-    // // console.log("New post data:", newPost);
+    // await dbPostRepository.taggedDataFromPosts(postData.mentions , newPost._id)
     return newPost;
   } catch (error) {
     console.error("Error in handleCreatePost:", error);
