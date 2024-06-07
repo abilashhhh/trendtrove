@@ -112,7 +112,7 @@ const PostInProfilePage = () => {
         }
         const savedPostData = await fetchSavedPostsOfTheCurrentUser();
         console.log("savedPostData : ", savedPostData);
-        if (data) {
+        if (savedPostData) {
           setSavedPosts(savedPostData);
         }
         fetchUserLikesAndDislikes(currentUser._id);
