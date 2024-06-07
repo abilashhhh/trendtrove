@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheckCircle,
-  faTimesCircle,
-  faUser,
-  faInfoCircle,
-  faLock,
-  faImage,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faLock, faImage } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import {
   cancelFollowRequest,
@@ -17,7 +10,7 @@ import {
   rejectFollowRequests,
 } from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getPostsLengthOfTheUser } from "../../API/Post/post";
 
 interface UserInfo {
@@ -56,7 +49,10 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   currentUser,
 }) => {
   const navigate = useNavigate();
-  console.log("User details reeceived in ProfileSectionFriendsPage : ", userDetails)
+  console.log(
+    "User details reeceived in ProfileSectionFriendsPage : ",
+    userDetails
+  );
 
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [hasRequested, setHasRequested] = useState<boolean>(false);
@@ -402,8 +398,6 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         className="bg-blue-500 hover:bg-blue-700 ml-5 text-white font-bold py-2 px-4 mb-5 rounded focus:outline-none focus:shadow-outline">
         View Full Profile
       </button>
-
-
 
       <Modal
         isOpen={showFollowersModal}

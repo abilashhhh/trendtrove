@@ -1,4 +1,4 @@
-//  
+//
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../Types/signInUser";
 
@@ -17,7 +17,7 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: { 
+  reducers: {
     setCredentials: (
       state,
       action: PayloadAction<{

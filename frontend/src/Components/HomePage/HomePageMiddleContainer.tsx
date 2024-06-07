@@ -25,9 +25,15 @@ import {
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
+import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 
 const MiddleContainer: React.FC = () => {
   const navigate = useNavigate();
+
+
+  const [showModal, setShowModal] = useState(false);
+  const [showingData , setShowingData] = useState('')
+  const [modalHashtags, setModalHashtags] = useState<string[]>([]);
 
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [posts, setPosts] = useState<any[]>([]);
@@ -379,10 +385,22 @@ const MiddleContainer: React.FC = () => {
                 <div className="flex gap-5 text-center items-center justify-center">
                   <div className="flex gap-2 mt-4 cursor-pointer">
                     <div title="Hashtags">
-                      <FaHashtag className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6" />
+                      <FaHashtag
+                        className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                        onClick={() => {
+                          setShowModal(true);
+                          setModalHashtags(post.hashtags);
+                          setShowingData("Hashtags")
+                        }}
+                      />
                     </div>
                     <div title="Mentions">
-                      <FaUser className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6" />
+                      <FaUser className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"  onClick={() => {
+                          setShowModal(true);
+                          setModalHashtags(post.mentions);
+                          setShowingData("Mentions")
+
+                        }}/>
                     </div>
                   </div>
                   <div className="flex gap-2 mt-2 cursor-pointer">
@@ -410,6 +428,13 @@ const MiddleContainer: React.FC = () => {
           <p>No posts available</p>
         )}
       </div>
+
+      <MentionsHashtagsModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title={showingData}
+        data={modalHashtags}
+      />
     </main>
   );
 };
