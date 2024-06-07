@@ -199,13 +199,26 @@ const userRepositoryMongoDB = () => {
         try {
             const reports = yield reportPostModel_1.default.find().exec();
             const detailedReports = yield Promise.all(reports.map((report) => __awaiter(void 0, void 0, void 0, function* () {
-                const post = yield postModel_1.default.findById(report.postId).exec();
-                return Object.assign(Object.assign({}, report.toObject()), { postDetails: post });
+                try {
+                    const post = yield postModel_1.default.findById(report.postId).exec();
+                    if (post) {
+                        return Object.assign(Object.assign({}, report.toObject()), { postDetails: post });
+                    }
+                    else {
+                        // If post doesn't exist, return null or handle it as needed
+                        return null;
+                    }
+                }
+                catch (error) {
+                    console.error("Error getting post details for report:", error);
+                    throw new Error("Error getting post details for report");
+                }
             })));
-            return detailedReports;
+            const validReports = detailedReports.filter(report => report !== null);
+            return validReports;
         }
         catch (error) {
-            console.error("Error getting all reports", error);
+            console.error("Error getting all reports:", error);
             throw new Error("Error getting all reports");
         }
     });

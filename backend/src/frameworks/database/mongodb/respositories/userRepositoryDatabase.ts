@@ -241,27 +241,40 @@ export const userRepositoryMongoDB = () => {
       throw new Error("Error getting all users");
     }
   };
+
   const getAllReportsForAdmin = async () => {
     try {
       const reports = await ReportPostModel.find().exec();
-
+  
       const detailedReports = await Promise.all(
         reports.map(async report => {
-          const post = await Post.findById(report.postId).exec();
-          return {
-            ...report.toObject(),
-            postDetails: post,
-          };
+          try {
+            const post = await Post.findById(report.postId).exec();
+            if (post) {
+              return {
+                ...report.toObject(),
+                postDetails: post,
+              };
+            } else {
+              // If post doesn't exist, return null or handle it as needed
+              return null;
+            }
+          } catch (error) {
+            console.error("Error getting post details for report:", error);
+            throw new Error("Error getting post details for report");
+          }
         })
       );
-
-      return detailedReports;
+  
+      const validReports = detailedReports.filter(report => report !== null);
+  
+      return validReports;
     } catch (error) {
-      console.error("Error getting all reports", error);
+      console.error("Error getting all reports:", error);
       throw new Error("Error getting all reports");
     }
   };
-
+  
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne(
