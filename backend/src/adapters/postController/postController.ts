@@ -17,9 +17,11 @@ import {
   handleGetPostsForUserUsername,
   handleGetPostsOfCurrentUser,
   handleGetSavedPostsOfCurrentUser,
+  handleGetTaggedPostsOfCurrentUser,
   handleGetlikesdislikesinfo,
   handleLikePosts,
   handleRemoveSavePosts,
+  handleRemoveTaggedPosts,
   handleReportPosts,
   handleSavePosts,
   handleupdatepost,
@@ -140,6 +142,21 @@ const postController = (
     }
   );
 
+  const gettaggedpostofcurrentuser = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { userId }: { userId: string } = req.body;
+      const getPosts = await handleGetTaggedPostsOfCurrentUser(
+        userId,
+        dbPostRepository
+      );
+      res.status(201).json({
+        status: "success",
+        message: "Posts fetched for current user",
+        data: getPosts,
+      });
+    }
+  );
+
   const getparticularpostofcurrentuser = asyncHandler(
     async (req: Request, res: Response) => {
       const { id } = req.params;
@@ -195,6 +212,19 @@ const postController = (
       status: "success",
       message: "Post removed from saved successfully",
       data: removesavePost,
+    });
+  });
+  const removetaggedpost = asyncHandler(async (req: Request, res: Response) => {
+    const { userId, postId } = req.body;
+    const removeTaggedPost = await handleRemoveTaggedPosts(
+      userId,
+      postId,
+      dbPostRepository
+    );
+    res.status(201).json({
+      status: "success",
+      message: "Post removed from tags successfully",
+      data: removeTaggedPost,
     });
   });
 
@@ -262,11 +292,13 @@ const postController = (
     getpostlengthofuser,
     getpostofcurrentuser,
     getsavedpostofcurrentuser,
+    gettaggedpostofcurrentuser,
     getparticularpostofcurrentuser,
     getPostUsingPostId,
     reportPost,
     savePost,
     removesavePost,
+    removetaggedpost,
     likePost,
     dislikePost,
     getlikedposts,

@@ -27,11 +27,13 @@ const postRouter = () => {
   router.get("/getpostlengthofuser/:username", authMiddleware, controller.getpostlengthofuser);
   router.get("/getpostofcurrentuser", authMiddleware, controller.getpostofcurrentuser);
   router.get("/getsavedpostofcurrentuser", authMiddleware, controller.getsavedpostofcurrentuser);
+  router.get("/gettaggedpostofcurrentuser", authMiddleware, controller.gettaggedpostofcurrentuser);
   router.get("/getparticularpost/:id", authMiddleware, controller.getparticularpostofcurrentuser);
   router.get("/getpostusingpostId/:postId", authMiddleware, controller.getPostUsingPostId);
   router.post("/reportpost", authMiddleware, controller.reportPost);
   router.post("/savepost", authMiddleware, controller.savePost);
   router.post("/removesavepost", authMiddleware, controller.removesavePost);
+  router.post("/removetaggedpost", authMiddleware, controller.removetaggedpost);
   router.post("/likepost", authMiddleware, controller.likePost);
   router.post("/dislikepost", authMiddleware, controller.dislikePost);
   router.get("/getlikedposts/:userId", authMiddleware, controller.getlikedposts);

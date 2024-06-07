@@ -155,6 +155,30 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error getting saved posts of current user!");
         }
     });
+    const getAllTaggedPostsForCurrentUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (!userId) {
+                throw new Error("User ID is required");
+            }
+            const user = yield userModel_1.default.findById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const taggedPostIds = user.taggedPosts;
+            if (!taggedPostIds || taggedPostIds.length === 0) {
+                return [];
+            }
+            const taggedPosts = yield postModel_1.default.find({ _id: { $in: taggedPostIds } }).sort({
+                createdAt: -1,
+            });
+            // console.log("taggedPosts: ", taggedPosts);
+            return taggedPosts;
+        }
+        catch (error) {
+            console.error(error.message);
+            throw new Error("Error getting tagged posts of current user!");
+        }
+    });
     const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (!id) {
@@ -217,6 +241,26 @@ const postRepositoryMongoDB = () => {
         catch (error) {
             // console.log(error);
             throw new Error("Error removing saved post!");
+        }
+    });
+    const removeTaggedPostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            // console.log("Data in postRepository, userId, postId: ", userId, postId);
+            const user = yield userModel_1.default.findById(userId);
+            if (!user)
+                throw new Error("User not found");
+            if (user.taggedPosts.includes(postId)) {
+                user.taggedPosts.pull(postId);
+                yield user.save();
+                // console.log("Post removed successfully from saved posts");
+            }
+            else {
+                // console.log("Post not present in saved posts");
+            }
+        }
+        catch (error) {
+            // console.log(error);
+            throw new Error("Error removing tagged post!");
         }
     });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -327,10 +371,12 @@ const postRepositoryMongoDB = () => {
         lengthofPostsForUser,
         getAllPostsForCurrentUser,
         getAllSavedPostsForCurrentUser,
+        getAllTaggedPostsForCurrentUser,
         getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
         removeSavePostsForUser,
+        removeTaggedPostsForUser,
         likePostsForUser,
         dislikePostsForUser,
         getLikedPosts,

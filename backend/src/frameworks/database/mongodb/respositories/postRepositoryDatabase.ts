@@ -173,6 +173,32 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting saved posts of current user!");
     }
   };
+  const getAllTaggedPostsForCurrentUser = async (userId: string) => {
+    try {
+      if (!userId) {
+        throw new Error("User ID is required");
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const taggedPostIds = user.taggedPosts;
+
+      if (!taggedPostIds || taggedPostIds.length === 0) {
+        return [];
+      }
+      const taggedPosts = await Post.find({ _id: { $in: taggedPostIds } }).sort({
+        createdAt: -1,
+      });
+      // console.log("taggedPosts: ", taggedPosts);
+      return taggedPosts;
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error("Error getting tagged posts of current user!");
+    }
+  };
 
   const getParticularPostsForCurrentUser = async (id: string) => {
     try {
@@ -217,6 +243,7 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error saving post!");
     }
   };
+
   const removeSavePostsForUser = async (userId: string, postId: string) => {
     try {
       // console.log("Data in postRepository, userId, postId: ", userId, postId);
@@ -234,6 +261,26 @@ export const postRepositoryMongoDB = () => {
     } catch (error) {
       // console.log(error);
       throw new Error("Error removing saved post!");
+    }
+  };
+
+  const removeTaggedPostsForUser = async (userId: string, postId: string) => {
+    try {
+      // console.log("Data in postRepository, userId, postId: ", userId, postId);
+
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+
+      if (user.taggedPosts.includes(postId)) {
+        user.taggedPosts.pull(postId);
+        await user.save();
+        // console.log("Post removed successfully from saved posts");
+      } else {
+        // console.log("Post not present in saved posts");
+      }
+    } catch (error) {
+      // console.log(error);
+      throw new Error("Error removing tagged post!");
     }
   };
 
@@ -364,10 +411,12 @@ export const postRepositoryMongoDB = () => {
     lengthofPostsForUser,
     getAllPostsForCurrentUser,
     getAllSavedPostsForCurrentUser,
+    getAllTaggedPostsForCurrentUser,
     getParticularPostsForCurrentUser,
     reportPostsForUser,
     savePostsForUser,
     removeSavePostsForUser,
+    removeTaggedPostsForUser,
     likePostsForUser,
     dislikePostsForUser,
     getLikedPosts,

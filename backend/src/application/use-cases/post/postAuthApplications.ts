@@ -165,6 +165,32 @@ export const handleGetPostsOfCurrentUser = async (
     );
   }
 };
+ 
+
+export const handleGetTaggedPostsOfCurrentUser = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleGetSavedPostsOfCurrentUser reached");
+    if (!id) {
+      throw new ErrorInApplication("ID is required to get all posts", 400);
+    }
+    const allPostsForUser =
+      await dbPostRepository.getAllTaggedPostsForCurrentUser(id);
+    // console.log("All posts from handleGetSavedPostsOfCurrentUser :", allPostsForUser);
+    return allPostsForUser;
+  } catch (error) {
+    // console.log("Error in handleGetSavedPostsOfCurrentUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to get all  saved posts of current user",
+      500
+    );
+  }
+};
 
 export const handleGetSavedPostsOfCurrentUser = async (
   id: string,
@@ -284,6 +310,32 @@ export const handleRemoveSavePosts = async (
     return removeSavePostsForUser;
   } catch (error) {
     // console.log("Error in removeSavePostsForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to remove saved post", 500);
+  }
+};
+
+export const handleRemoveTaggedPosts = async (
+  userId: string,
+  postId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleRemoveSavePosts reached");
+    if (!postId) {
+      throw new ErrorInApplication(
+        "Post ID and user id is required to save post",
+        400
+      );
+    }
+    const removeTaggedPostsForUser =
+      await dbPostRepository.removeTaggedPostsForUser(userId, postId);
+    
+    return removeTaggedPostsForUser;
+  } catch (error) {
+    // console.log("Error in removeTaggedPostsForUser");
     if (error instanceof ErrorInApplication) {
       throw error;
     }

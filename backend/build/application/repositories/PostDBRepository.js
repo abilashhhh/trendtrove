@@ -28,10 +28,12 @@ const postDBRepository = (repository) => {
     const lengthofPostsForUser = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.lengthofPostsForUser(username); });
     const getAllPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForCurrentUser(id); });
     const getAllSavedPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllSavedPostsForCurrentUser(id); });
+    const getAllTaggedPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllTaggedPostsForCurrentUser(id); });
     const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getParticularPostsForCurrentUser(id); });
     const reportPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(id); });
     const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.savePostsForUser(userId, postId); });
     const removeSavePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.removeSavePostsForUser(userId, postId); });
+    const removeTaggedPostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.removeTaggedPostsForUser(userId, postId); });
     const likePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.likePostsForUser(userId, postId); });
     const dislikePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.dislikePostsForUser(userId, postId); });
     const getLikedPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getLikedPosts(userId); });
@@ -52,10 +54,12 @@ const postDBRepository = (repository) => {
         lengthofPostsForUser,
         getAllPostsForCurrentUser,
         getAllSavedPostsForCurrentUser,
+        getAllTaggedPostsForCurrentUser,
         getParticularPostsForCurrentUser,
         reportPostsForUser,
         savePostsForUser,
         removeSavePostsForUser,
+        removeTaggedPostsForUser,
         likePostsForUser,
         dislikePostsForUser,
         getLikedPosts,

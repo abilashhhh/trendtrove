@@ -143,6 +143,19 @@ export const fetchSavedPostsOfTheCurrentUser = async (): Promise<GetAllPostsOfCu
   }
 };
 
+export const fetchTaggedPostsOfTheCurrentUser = async (): Promise<GetAllPostsOfCurrentUser> => {
+  try {
+    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+      END_POINTS.GET_TAGGED_POSTS_OF_CURRENT_USER
+    );
+    // console.log("fetchTaggedPostsOfTheCurrentUser respose: ",response.data?.data);
+    return response.data?.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const getThePostDataOfParticularPost = async (
   id: string
 ): Promise<GetAllPostsOfCurrentUser> => {
@@ -212,7 +225,6 @@ export const savePost = async (
   }
 };
 
-// correct this
 export const removeSavedPostForUser = async (
   userId: string,
   postId: string
@@ -223,7 +235,28 @@ export const removeSavedPostForUser = async (
     const response = await axiosUserInstance.post<SavePostResponse>(
       `${END_POINTS.REMOVE_SAVE_POST}`,
       {
-        userId,
+        postId,
+      }
+    );
+    // console.log("response: ", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+// correct this
+export const removeTaggedPostForUser = async (
+  userId: string,
+  postId: string
+): Promise<SavePostResponse> => {
+  try {
+    // console.log("removeSavedPostForUser post api, userId: ", userId);
+    // console.log("saveremoveSavedPostForUserPost post api, postId: ", postId);
+    const response = await axiosUserInstance.post<SavePostResponse>(
+      `${END_POINTS.REMOVE_TAGGED_POST}`,
+      {
         postId,
       }
     );

@@ -81,6 +81,15 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getPosts,
         });
     }));
+    const gettaggedpostofcurrentuser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const getPosts = yield (0, postAuthApplications_1.handleGetTaggedPostsOfCurrentUser)(userId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Posts fetched for current user",
+            data: getPosts,
+        });
+    }));
     const getparticularpostofcurrentuser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const getPosts = yield (0, postAuthApplications_1.handleGetParticularPost)(id, dbPostRepository);
@@ -124,6 +133,15 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             status: "success",
             message: "Post removed from saved successfully",
             data: removesavePost,
+        });
+    }));
+    const removetaggedpost = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, postId } = req.body;
+        const removeTaggedPost = yield (0, postAuthApplications_1.handleRemoveTaggedPosts)(userId, postId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Post removed from tags successfully",
+            data: removeTaggedPost,
         });
     }));
     const likePost = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -172,11 +190,13 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getpostlengthofuser,
         getpostofcurrentuser,
         getsavedpostofcurrentuser,
+        gettaggedpostofcurrentuser,
         getparticularpostofcurrentuser,
         getPostUsingPostId,
         reportPost,
         savePost,
         removesavePost,
+        removetaggedpost,
         likePost,
         dislikePost,
         getlikedposts,

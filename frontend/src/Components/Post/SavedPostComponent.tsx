@@ -17,6 +17,7 @@ import {
   deletePostForUser,
   fetchSavedPostsOfTheCurrentUser,
   removeSavedPostForUser,
+  fetchTaggedPostsOfTheCurrentUser,
 } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -30,14 +31,10 @@ import { useNavigate } from "react-router-dom";
 import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
-import TaggedPostComponent from "./TaggedPostComponent";
-import SavedPostComponent from "./SavedPostComponent";
 
-const PostInProfilePage = () => {
-  const [activeSection, setActiveSection] = useState("MY POSTS");
+const SavedPostComponent = () => {
   const navigate = useNavigate();
 
-  const sections = ["MY POSTS", "SAVED POSTS", "TAGGED POSTS"];
   const [posts, setPosts] = useState<any[]>([]);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
@@ -112,10 +109,10 @@ const PostInProfilePage = () => {
         if (data) {
           setPosts(data);
         }
-        const savedPostData = await fetchSavedPostsOfTheCurrentUser();
-        console.log("savedPostData : ", savedPostData);
-        if (savedPostData) {
-          setSavedPosts(savedPostData);
+        const savedPostsData = await fetchSavedPostsOfTheCurrentUser();
+        console.log("SavedPostComponent : ", SavedPostComponent);
+        if (savedPostsData) {
+          setSavedPosts(savedPostsData);
         }
         fetchUserLikesAndDislikes(currentUser._id);
       };
@@ -197,51 +194,38 @@ const PostInProfilePage = () => {
     dotsClass: "slick-dots slick-thumb flex justify-center",
   };
 
-  const handleDeletePost = async (postId: string) => {
+ 
+
+  const handleUnsavePost = async (postId: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You will not be able to recover this post!",
+      text: "This post will be removed from the saved list!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, remove it!",
     }).then(async result => {
       if (result.isConfirmed) {
-        console.log("Deleting post, postId:", postId);
-        await deletePostForUser(postId);
+        console.log("removing post, postId:", postId);
+        await removeSavedPostForUser(currentUser._id , postId);
 
-        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+        Swal.fire(
+          "Removed!",
+          "Your post has been removed from saved list.",
+          "success"
+        );
         window.location.reload();
       }
     });
   };
 
- 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between px-8 py-2 mt-2 rounded-lg shadow-lg gap-4">
-        <ToastContainer />
-
-        {sections.map(section => (
-          <button
-            key={section}
-            className={`p-3 rounded-lg border-2 font-bold ${
-              activeSection === section
-                ? "bg-blue-500 text-white border-blue-500"
-                : "bg-slate-300 text-black dark:text-white dark:bg-slate-900 border-red-500"
-            }`}
-            onClick={() => setActiveSection(section)}>
-            {section}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-4 p-2 bg-white text-black dark:text-white dark:bg-slate-700 rounded-lg shadow-lg">
-        {activeSection === "MY POSTS" && (
+ 
           <div className="rounded-lg bg-gray-100  lg:grid lg:grid-cols-4 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar  justify-center">
-            {posts.length > 0 ? (
-              posts.map(post => (
+            {savedPosts.length > 0 ? (
+              savedPosts.map(post => (
                 <div
                   key={post._id}
                   className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
@@ -278,16 +262,11 @@ const PostInProfilePage = () => {
                         <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
                       </button>
                       {showOptions === post._id && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 cursor-pointer rounded-lg shadow-lg z-10">
                           <p
-                            onClick={() => navigate(`/editpost/${post._id}`)}
+                            onClick={() => handleUnsavePost(post._id)}
                             className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            Edit Post
-                          </p>
-                          <p
-                            onClick={() => handleDeletePost(post._id)}
-                            className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-                            Delete Post
+                            Unsave Post
                           </p>
                         </div>
                       )}
@@ -397,7 +376,6 @@ const PostInProfilePage = () => {
                         <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                       </button>
                     </div>
-
                     <div  >
                       <div className="gap-2  flex mt-4 items-center text-xs cursor-pointer">
                         <div className="flex gap-2  cursor-pointer">
@@ -463,17 +441,7 @@ const PostInProfilePage = () => {
               <p>No posts available</p>
             )}
           </div>
-        )}
-
-        {activeSection === "SAVED POSTS" && (
-           <SavedPostComponent />
-        )}
-
-        {activeSection === "TAGGED POSTS" && (
-         <TaggedPostComponent />
-        )}
-      </div>
-
+       
       <MentionsHashtagsModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -491,4 +459,4 @@ const PostInProfilePage = () => {
   );
 };
 
-export default PostInProfilePage;
+export default SavedPostComponent
