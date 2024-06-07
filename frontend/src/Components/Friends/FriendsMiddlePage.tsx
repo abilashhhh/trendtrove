@@ -71,13 +71,13 @@
             <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full ">
               <div className="flex flex-col md:flex-row gap-2 h-full">
                 <div className="w-full md:w-1/5 rounded-lg flex flex-col text-black dark:text-white text-xl">
-                  <div className="p-2 rounded-lg bg-gray-800 flex items-center">
-                    <FaSearch className="w-8 h-8 bg-gray-800 p-2 rounded-lg" />
+                  <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 flex items-center">
+                    <FaSearch className="w-8 h-8  bg-gray-200 dark:bg-gray-800 p-2 rounded-lg" />
                     <input
                       type="text"
                       onChange={e => setSearchedUsers(e.target.value)}
                       placeholder="Search here.."
-                    className="bg-gray-800 text-white w-full p-2 rounded-lg mr-2 focus:outline-none "
+                    className=" bg-gray-200 dark:bg-gray-800 text-white w-full p-2 rounded-lg mr-2 focus:outline-none "
                     />
                   </div>
                   <div className="overflow-y-auto no-scrollbar text-black dark:text-white text-xl p-2 space-y-4 ">
