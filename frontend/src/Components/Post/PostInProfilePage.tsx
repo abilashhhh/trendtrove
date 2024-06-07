@@ -4,7 +4,6 @@ import { StoreType } from "../../Redux/Store/reduxStore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Slider from "react-slick";
-import LikesDislikesModale from "../../utils/LikesDislikesModale";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Swal from "sweetalert2";
@@ -50,18 +49,6 @@ const PostInProfilePage = () => {
       dislikedUsers: string[];
     };
   }>({});
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState([]);
-
-  const handleModal = (users: any) => {
-    setModalContent(users);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
 
   const fetchUserLikesAndDislikes = async (userId: string | undefined) => {
     try {
@@ -434,7 +421,6 @@ const PostInProfilePage = () => {
                           {likesDislikesData[post._id]?.likesdislikesinfo
                             ?.dislikesCount || 0}
                         </div>
-                        {/* <LikesDislikesModale show={showModal} handleClose={handleCloseModal} users={modalContent} /> */}
                       </div>
                     </div>
                   </div>
@@ -613,7 +599,6 @@ const PostInProfilePage = () => {
                           {likesDislikesData[post._id]?.likesdislikesinfo
                             ?.dislikesCount || 0}
                         </div>
-                        {/* <LikesDislikesModale show={showModal} handleClose={handleCloseModal} users={modalContent} /> */}
                       </div>
                     </div>
                   </div>

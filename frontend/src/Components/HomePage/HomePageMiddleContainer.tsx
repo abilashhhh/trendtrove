@@ -26,14 +26,18 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
+import LikesDislikesModal from "../../utils/LikesDislikesModal";
 
 const MiddleContainer: React.FC = () => {
   const navigate = useNavigate();
 
-
   const [showModal, setShowModal] = useState(false);
-  const [showingData , setShowingData] = useState('')
+  const [showingData, setShowingData] = useState("");
   const [modalHashtags, setModalHashtags] = useState<string[]>([]);
+
+  const [showLikesDislikesModal, setShowLikesDislikesModal] = useState(false);
+  const [showingDataLikesDislikes, setShowingDataLikesDislikes] = useState("");
+  const [modalLikesDislikes, setModalLikesDislikes] = useState<string[]>([]);
 
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [posts, setPosts] = useState<any[]>([]);
@@ -390,21 +394,34 @@ const MiddleContainer: React.FC = () => {
                         onClick={() => {
                           setShowModal(true);
                           setModalHashtags(post.hashtags);
-                          setShowingData("Hashtags")
+                          setShowingData("Hashtags");
                         }}
                       />
                     </div>
                     <div title="Mentions">
-                      <FaUser className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"  onClick={() => {
+                      <FaUser
+                        className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                        onClick={() => {
                           setShowModal(true);
                           setModalHashtags(post.mentions);
-                          setShowingData("Mentions")
-
-                        }}/>
+                          setShowingData("Mentions");
+                        }}
+                      />
                     </div>
                   </div>
+
                   <div className="flex gap-2 mt-2 cursor-pointer">
-                    <p className="text-xs mt-2" title="Likes count">
+                    <p
+                      className="text-xs mt-2"
+                      title="Likes count"
+                      onClick={() => {
+                        setShowLikesDislikesModal(true);
+                        setModalLikesDislikes(
+                          likesDislikesData[post._id].likesdislikesinfo
+                            ?.likedUsers
+                        );
+                        setShowingDataLikesDislikes("Liked Users");
+                      }}>
                       Likes:{" "}
                       {(likesDislikesData[post._id] &&
                         likesDislikesData[post._id].likesdislikesinfo
@@ -412,8 +429,18 @@ const MiddleContainer: React.FC = () => {
                         0}
                     </p>
                     <p className="text-xs mt-2">|</p>
-                    <p className="text-xs mt-2 " title="Dislikes count">
-                      Disikes:{" "}
+                    <p
+                      className="text-xs mt-2"
+                      title="Dislikes count"
+                      onClick={() => {
+                        setShowLikesDislikesModal(true);
+                        setModalLikesDislikes(
+                          likesDislikesData[post._id].likesdislikesinfo
+                            ?.dislikedUsers
+                        );
+                        setShowingDataLikesDislikes("Disliked Users");
+                      }}>
+                      Dislikes:{" "}
                       {(likesDislikesData[post._id] &&
                         likesDislikesData[post._id].likesdislikesinfo
                           ?.dislikesCount) ||
@@ -434,6 +461,13 @@ const MiddleContainer: React.FC = () => {
         onClose={() => setShowModal(false)}
         title={showingData}
         data={modalHashtags}
+      />
+
+      <LikesDislikesModal
+        isOpen={showLikesDislikesModal}
+        onClose={() => setShowLikesDislikesModal(false)}
+        title={showingDataLikesDislikes}
+        data={modalLikesDislikes}
       />
     </main>
   );
