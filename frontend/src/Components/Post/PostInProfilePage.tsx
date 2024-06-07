@@ -27,7 +27,7 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
+import { FaCheckCircle, FaCross, FaHashtag, FaMapMarkedAlt, FaTimesCircle, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
 import TaggedPostComponent from "./TaggedPostComponent";
@@ -271,7 +271,12 @@ const PostInProfilePage = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="relative">
+                    <div className="relative flex">
+
+<>{post.isBlocked && <div  title="Post is blocked by admin">
+  <  FaTimesCircle className="text-red-500" /> 
+</div> }</>
+
                       <button
                         className="focus:outline-none mr-2"
                         onClick={() => toggleOptions(post._id)}>
