@@ -24,7 +24,22 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error adding new post!");
     }
   };
-
+  const taggedDataFromPosts = async (usernames: string[], postId: string) => {
+    try {
+      const updatePromises = usernames.map(username =>
+        User.findOneAndUpdate(
+          { username: username }, 
+          { $push: { taggedPosts: postId } },
+          { new: true }
+        )
+      );
+  
+      await Promise.all(updatePromises);
+    } catch (error) {
+      throw new Error("Error updating post - adding tags!");
+    }
+  };
+  
   const updatePost = async (postData: PostDataInterface) => {
     try {
       const updatedPost = await Post.findByIdAndUpdate(
@@ -341,6 +356,7 @@ export const postRepositoryMongoDB = () => {
 
   return {
     addNewPost,
+    taggedDataFromPosts,
     getPostById,
     updatePost,
     getAllPostsForUser,

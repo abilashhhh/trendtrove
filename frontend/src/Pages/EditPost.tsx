@@ -46,6 +46,7 @@ function EditPost() {
     followers: [],
     following: [],
     savedPosts: [],
+    taggedPosts: [],
     notifications: [],
     blockedUsers: [],
     createdAt: undefined,

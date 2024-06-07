@@ -8,6 +8,10 @@ export const postDBRepository = (
     await repository.addNewPost(postData);
   };
 
+  const taggedDataFromPosts = async (usernames: string[] , postId : string) => {
+    await repository.taggedDataFromPosts(usernames , postId);
+  };
+
   const getPostById = async (postId: string) => {
     return await repository.getPostById(postId);
   };
@@ -69,6 +73,7 @@ export const postDBRepository = (
 
   return {
     addNewPost,
+    taggedDataFromPosts,
     updatePost,
     getPostById,
     blockPost,

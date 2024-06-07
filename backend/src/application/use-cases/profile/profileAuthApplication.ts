@@ -31,6 +31,7 @@ export const handleUserInfo = async (
       isVerifiedAccount: userData.isVerifiedAccount,
       notifications: userData.notifications,
       savedPosts: userData.savedPosts,
+    taggedPosts: userData?.taggedPosts,
       isGoogleSignedIn: userData.isGoogleSignedIn,
       isBlocked: userData.isBlocked,
       isPrivate: userData.isPrivate,

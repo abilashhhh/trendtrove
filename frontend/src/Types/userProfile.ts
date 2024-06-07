@@ -30,6 +30,7 @@ export interface UserInfo {
   followers?: any[];
   following?: any[];
   savedPosts?: any[];
+  taggedPosts?: any[];
   notifications?: any[];
   blockedUsers?: any[];
   createdAt?: Date;

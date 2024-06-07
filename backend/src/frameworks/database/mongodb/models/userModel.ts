@@ -51,6 +51,7 @@ const userSchema = new Schema(
     followers: [followSchema],
     following: [followSchema],
     savedPosts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
+    taggedPosts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
     notifications: [{ type: mongoose.Types.ObjectId, ref: "Message" }],
     blockedUsers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   },

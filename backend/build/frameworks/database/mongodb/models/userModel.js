@@ -68,6 +68,7 @@ const userSchema = new mongoose_1.Schema({
     followers: [followSchema],
     following: [followSchema],
     savedPosts: [{ type: mongoose_1.default.Types.ObjectId, ref: "Post" }],
+    taggedPosts: [{ type: mongoose_1.default.Types.ObjectId, ref: "Post" }],
     notifications: [{ type: mongoose_1.default.Types.ObjectId, ref: "Message" }],
     blockedUsers: [{ type: mongoose_1.default.Types.ObjectId, ref: "User" }],
 }, { timestamps: true });

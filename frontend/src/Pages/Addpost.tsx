@@ -46,6 +46,7 @@ function AddPost() {
     followers: [],
     following: [],
     savedPosts: [],
+    taggedPosts: [],
     notifications: [],
     blockedUsers: [],
     createdAt: undefined,

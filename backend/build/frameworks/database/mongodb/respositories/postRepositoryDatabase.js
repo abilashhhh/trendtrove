@@ -32,6 +32,15 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error adding new post!");
         }
     });
+    const taggedDataFromPosts = (usernames, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const updatePromises = usernames.map(username => userModel_1.default.findOneAndUpdate({ username: username }, { $push: { taggedPosts: postId } }, { new: true }));
+            yield Promise.all(updatePromises);
+        }
+        catch (error) {
+            throw new Error("Error updating post - adding tags!");
+        }
+    });
     const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const updatedPost = yield postModel_1.default.findByIdAndUpdate(postData.postId, postData, { new: true });
@@ -310,6 +319,7 @@ const postRepositoryMongoDB = () => {
     ////////////////////////////////////////////////
     return {
         addNewPost,
+        taggedDataFromPosts,
         getPostById,
         updatePost,
         getAllPostsForUser,

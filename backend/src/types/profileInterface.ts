@@ -20,6 +20,7 @@ export interface ProfileInterface {
   followers?: string[];
   following?: string[];
   savedPosts?: string[];
+  taggedPosts?: string[];
   isVerifiedAccount?: boolean;
   isGoogleSignedIn?: boolean;
   isBlocked?: boolean;

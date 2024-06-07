@@ -16,7 +16,7 @@ exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGe
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // // console.log("Post data in handleCreatePost:", postData);
+        console.log("Post data in handleCreatePost:", postData);
         if (!postData.userId) {
             throw new ErrorInApplication_1.default("User ID is required to create a post", 400);
         }
@@ -25,6 +25,7 @@ const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awa
             throw new ErrorInApplication_1.default("User not found", 404);
         }
         const newPostData = Object.assign(Object.assign({}, postData), { username: userData === null || userData === void 0 ? void 0 : userData.username, dp: userData === null || userData === void 0 ? void 0 : userData.dp });
+        yield dbPostRepository.taggedDataFromPosts(postData.mentions, postData.postId);
         // // console.log("User exists....");
         const newPost = yield dbPostRepository.addNewPost(newPostData);
         // // console.log("New post data:", newPost);
@@ -48,6 +49,7 @@ const handleupdatepost = (postData, dbPostRepository, dbUserRepository) => __awa
         if (!postData.postId) {
             throw new ErrorInApplication_1.default("post ID is required to update a post", 400);
         }
+        yield dbPostRepository.taggedDataFromPosts(postData.mentions, postData.postId);
         // console.log("User exists....");
         const newPost = yield dbPostRepository.updatePost(postData);
         // console.log("updated post data:", newPost);

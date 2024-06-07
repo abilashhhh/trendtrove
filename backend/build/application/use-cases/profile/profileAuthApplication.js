@@ -37,6 +37,7 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             isVerifiedAccount: userData.isVerifiedAccount,
             notifications: userData.notifications,
             savedPosts: userData.savedPosts,
+            taggedPosts: userData === null || userData === void 0 ? void 0 : userData.taggedPosts,
             isGoogleSignedIn: userData.isGoogleSignedIn,
             isBlocked: userData.isBlocked,
             isPrivate: userData.isPrivate,

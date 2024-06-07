@@ -9,7 +9,8 @@ export const handleCreatePost = async (
   dbUserRepository: ReturnType<UserDBInterface>
 ) => {
   try {
-    // // console.log("Post data in handleCreatePost:", postData);
+    console.log("Post data in handleCreatePost:", postData);
+
 
     if (!postData.userId) {
       throw new ErrorInApplication("User ID is required to create a post", 400);
@@ -24,6 +25,8 @@ export const handleCreatePost = async (
       username: userData?.username,
       dp: userData?.dp,
     };
+
+     await dbPostRepository.taggedDataFromPosts(postData.mentions , postData.postId)
 
     // // console.log("User exists....");
     const newPost = await dbPostRepository.addNewPost(newPostData);
@@ -53,7 +56,7 @@ export const handleupdatepost = async (
     if (!postData.postId) {
       throw new ErrorInApplication("post ID is required to update a post", 400);
     }
-
+    await dbPostRepository.taggedDataFromPosts(postData.mentions , postData.postId)
     // console.log("User exists....");
     const newPost = await dbPostRepository.updatePost(postData);
     // console.log("updated post data:", newPost);

@@ -48,6 +48,7 @@ function ProfilePage() {
     followers: [],
     following: [],
     savedPosts: [],
+    taggedPosts: [],
     notifications: [],
     blockedUsers: [],
     createdAt: undefined,

@@ -14,6 +14,9 @@ const postDBRepository = (repository) => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewPost(postData);
     });
+    const taggedDataFromPosts = (usernames, postId) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.taggedDataFromPosts(usernames, postId);
+    });
     const getPostById = (postId) => __awaiter(void 0, void 0, void 0, function* () {
         return yield repository.getPostById(postId);
     });
@@ -39,6 +42,7 @@ const postDBRepository = (repository) => {
     const unblockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unblockPost(postId); });
     return {
         addNewPost,
+        taggedDataFromPosts,
         updatePost,
         getPostById,
         blockPost,
