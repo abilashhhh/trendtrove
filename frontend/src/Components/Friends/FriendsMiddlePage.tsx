@@ -61,10 +61,12 @@ const FriendsMiddlePage: React.FC = () => {
     <>
       <ToastContainer />
       <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
-        <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
+        <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full ">
+          
           <div className="flex flex-col md:flex-row gap-2 h-full">
-            <div className="w-full sm:w-3/6 md:w-1/6 lg:w-2/6 rounded-lg flex flex-col text-black dark:text-white text-xl p-2 space-y-4">
-              <div className="rounded-lg p-0.5 flex gap-1 h-12 min-w-full">
+            
+            <div className="w-full sm:w-3/6 md:w-1/6 lg:w-2/6 rounded-lg flex flex-col overflow-y-auto no-scrollbar  text-black dark:text-white text-xl p-2 space-y-4">
+              <div className="rounded-lg p-0.5 flex gap-1 h-12 min-w-full  ">
                 <input
                   type="text"
                   onChange={e => e.target.value}
@@ -74,10 +76,10 @@ const FriendsMiddlePage: React.FC = () => {
 
                 <FaSearch className=" sm:w-/6 md:w-2/6 lg:w-1/6 h-full w-10 bg-gray-800 lg:p-3 sm:p-2 rounded-lg p-1" />
               </div>
-
-              {users.length > 0 ? (
+<  div className="w-full rounded-lg flex flex-col overflow-y-auto no-scrollbar  text-black dark:text-white text-xl p-2 space-y-4 ">
+{users.length > 0 ? (
                 users.map(user => (
-                  <div key={user._id}>
+                  <div key={user._id} >
                     <button
                       onClick={() => setActiveSection(user.username)}
                       className={`w-full rounded-lg p-4 transition duration-300 ease-in-out shadow-md flex items-center space-x-4 ${
@@ -114,6 +116,8 @@ const FriendsMiddlePage: React.FC = () => {
                   No users found
                 </p>
               )}
+</div>
+             
             </div>
             <div className="w-full md:w-5/6 overflow-auto no-scrollbar rounded-lg flex flex-col text-black dark:text-white text-xl">
               {activeSection ? (

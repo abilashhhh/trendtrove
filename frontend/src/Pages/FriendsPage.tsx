@@ -9,9 +9,6 @@ import Header from "../Components/HomePage/HomePageHeaderComponent";
 import LeftSidebar from "../Components/HomePage/HomePageLeftSidebar";
 
 import BottomNavBar from "../Components/HomePage/HomePageLeftSidebarMobileView";
-
-import RightSidebar from "../Components/HomePage/HomePageRightSidebar";
-import SmallViewRightSidebar from "../Components/HomePage/HomePageSmallViewRightSidebar";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import FriendsMiddlePage from "../Components/Friends/FriendsMiddlePage";
 

@@ -614,7 +614,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
             userDetails.followers.some(
               follower => follower.userId === currentUser._id
             )) ? (
-              <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar   lg:grid lg:grid-cols-2    ">
+              <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar   lg:grid lg:grid-cols-3   ">
               {posts.length > 0 ? (
                 posts.map(post => (
                   <div
