@@ -27,7 +27,9 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { FaMapMarkedAlt } from "react-icons/fa";
+import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
+import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
+import LikesDislikesModal from "../../utils/LikesDislikesModal";
 
 const PostInProfilePage = () => {
   const [activeSection, setActiveSection] = useState("MY POSTS");
@@ -49,6 +51,14 @@ const PostInProfilePage = () => {
       dislikedUsers: string[];
     };
   }>({});
+
+  const [showModal, setShowModal] = useState(false);
+  const [showingData, setShowingData] = useState("");
+  const [modalHashtags, setModalHashtags] = useState<string[]>([]);
+
+  const [showLikesDislikesModal, setShowLikesDislikesModal] = useState(false);
+  const [showingDataLikesDislikes, setShowingDataLikesDislikes] = useState("");
+  const [modalLikesDislikes, setModalLikesDislikes] = useState<string[]>([]);
 
   const fetchUserLikesAndDislikes = async (userId: string | undefined) => {
     try {
@@ -375,7 +385,7 @@ const PostInProfilePage = () => {
                   ) : (
                     <p></p>
                   )}
-                  <p className="mt-2">{post.captions}</p>
+                  <p className="mt-4">{post.captions}</p>
                   <div className="flex justify-between">
                     <div className="flex gap-2 items-center mt-4">
                       <button
@@ -408,18 +418,62 @@ const PostInProfilePage = () => {
                         <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                       </button>
                     </div>
-                    <div>
-                      <div className="gap-2 flex mt-4 text-xs">
-                        <div>
-                          Likes:{" "}
-                          {likesDislikesData[post._id]?.likesdislikesinfo
-                            ?.likesCount || 0}
+
+                    <div  >
+                      <div className="gap-2  flex mt-4 items-center text-xs cursor-pointer">
+                        <div className="flex gap-2  cursor-pointer">
+                          <div title="Hashtags">
+                            <FaHashtag
+                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                              onClick={() => {
+                                setShowModal(true);
+                                setModalHashtags(post.hashtags);
+                                setShowingData("Hashtags");
+                              }}
+                            />
+                          </div>
+                          <div title="Mentions">
+                            <FaUser
+                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                              onClick={() => {
+                                setShowModal(true);
+                                setModalHashtags(post.mentions);
+                                setShowingData("Mentions");
+                              }}
+                            />
+                          </div>
                         </div>
 
-                        <div>
-                          Dislikes:{" "}
-                          {likesDislikesData[post._id]?.likesdislikesinfo
-                            ?.dislikesCount || 0}
+                        <div className="flex flex-col">
+                          <div
+                            title="Likes count"
+                            onClick={() => {
+                              setShowLikesDislikesModal(true);
+                              setModalLikesDislikes(
+                                likesDislikesData[post._id].likesdislikesinfo
+                                  ?.likedUsers
+                              );
+                              setShowingDataLikesDislikes("Liked Users");
+                            }}>
+                            Likes:{" "}
+                            {likesDislikesData[post._id]?.likesdislikesinfo
+                              ?.likesCount || 0}
+                          </div>
+
+                          <div
+                            title="Dislikes count"
+                            onClick={() => {
+                              setShowLikesDislikesModal(true);
+                              setModalLikesDislikes(
+                                likesDislikesData[post._id].likesdislikesinfo
+                                  ?.dislikedUsers
+                              );
+                              setShowingDataLikesDislikes("Disliked Users");
+                            }}>
+                            Dislikes:{" "}
+                            {likesDislikesData[post._id]?.likesdislikesinfo
+                              ?.dislikesCount || 0}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -553,7 +607,7 @@ const PostInProfilePage = () => {
                   ) : (
                     <p></p>
                   )}
-                  <p className="mt-2">{post.captions}</p>
+                  <p className="mt-4">{post.captions}</p>
                   <div className="flex justify-between">
                     <div className="flex gap-2 items-center mt-4">
                       <button
@@ -586,18 +640,61 @@ const PostInProfilePage = () => {
                         <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                       </button>
                     </div>
-                    <div>
-                      <div className="gap-2 flex mt-4 text-xs">
-                        <div>
-                          Likes:{" "}
-                          {likesDislikesData[post._id]?.likesdislikesinfo
-                            ?.likesCount || 0}
+                    <div  >
+                      <div className="gap-2  flex mt-4 items-center text-xs cursor-pointer">
+                        <div className="flex gap-2  cursor-pointer">
+                          <div title="Hashtags">
+                            <FaHashtag
+                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                              onClick={() => {
+                                setShowModal(true);
+                                setModalHashtags(post.hashtags);
+                                setShowingData("Hashtags");
+                              }}
+                            />
+                          </div>
+                          <div title="Mentions">
+                            <FaUser
+                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                              onClick={() => {
+                                setShowModal(true);
+                                setModalHashtags(post.mentions);
+                                setShowingData("Mentions");
+                              }}
+                            />
+                          </div>
                         </div>
 
-                        <div>
-                          Dislikes:{" "}
-                          {likesDislikesData[post._id]?.likesdislikesinfo
-                            ?.dislikesCount || 0}
+                        <div className="flex flex-col">
+                          <div
+                            title="Likes count"
+                            onClick={() => {
+                              setShowLikesDislikesModal(true);
+                              setModalLikesDislikes(
+                                likesDislikesData[post._id].likesdislikesinfo
+                                  ?.likedUsers
+                              );
+                              setShowingDataLikesDislikes("Liked Users");
+                            }}>
+                            Likes:{" "}
+                            {likesDislikesData[post._id]?.likesdislikesinfo
+                              ?.likesCount || 0}
+                          </div>
+
+                          <div
+                            title="Dislikes count"
+                            onClick={() => {
+                              setShowLikesDislikesModal(true);
+                              setModalLikesDislikes(
+                                likesDislikesData[post._id].likesdislikesinfo
+                                  ?.dislikedUsers
+                              );
+                              setShowingDataLikesDislikes("Disliked Users");
+                            }}>
+                            Dislikes:{" "}
+                            {likesDislikesData[post._id]?.likesdislikesinfo
+                              ?.dislikesCount || 0}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -614,6 +711,20 @@ const PostInProfilePage = () => {
           <div>Tagged posts content here</div>
         )}
       </div>
+
+      <MentionsHashtagsModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title={showingData}
+        data={modalHashtags}
+      />
+
+      <LikesDislikesModal
+        isOpen={showLikesDislikesModal}
+        onClose={() => setShowLikesDislikesModal(false)}
+        title={showingDataLikesDislikes}
+        data={modalLikesDislikes}
+      />
     </>
   );
 };
