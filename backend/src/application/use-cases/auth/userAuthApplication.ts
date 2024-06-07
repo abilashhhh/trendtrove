@@ -544,9 +544,9 @@ export const accessTokenRefresh = async (
 
   const user = await dbUserRepository.getUserById(userId);
 
-  console.log("user: ", user);
-  console.log("user?.refreshToken: ", user?.refreshToken);
-  console.log("user?.refreshTokenExpiresAt: ", user?.refreshTokenExpiresAt);
+  // console.log("user: ", user);
+  // console.log("user?.refreshToken: ", user?.refreshToken);
+  // console.log("user?.refreshTokenExpiresAt: ", user?.refreshTokenExpiresAt);
 
   if (!user?.refreshToken || !user?.refreshTokenExpiresAt) {
     throw new ErrorInApplication("Invalid token 3", 401);

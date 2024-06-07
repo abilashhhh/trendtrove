@@ -23,7 +23,7 @@ interface AddPostProps {
   userDetails: UserInfo;
 }
 
-const formatDate = (date: string | undefined) => {
+const formatDate = (date: any) => {
   if (!date) return "N/A";
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -301,9 +301,9 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   };
 
   return (
-    <main className="flex-1 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white ">
+    <main className="flex-1 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white ">
       <ToastContainer />
-      <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
+      <div className="p-2 lg:p-58 rounded-lg bg-gray-100 dark:bg-gray-900 h-full  overflow-auto ">
         <div className="flex flex-row md:flex-row items-center md:items-start bg-slate-200 dark:bg-gray-800 rounded-lg p-2">
           <div className="flex-shrink-0">
             <img
@@ -318,7 +318,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
               {userDetails.username}
             </h2>
             <p className="text-sm md:text-base text-gray-500">
-              {userDetails.email}
+              {formatDate(Date.now() )}
             </p>
           </div>
         </div>
@@ -395,69 +395,78 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-start gap-3 mb-4 mt-4">
-          <h2 className="text-xl font-semibold mb-2 flex items-center">
-            <FaHashtag className="mr-2" />
-            Hashtags
-          </h2>
-          <button
-            className="flex items-center justify-center bg-blue-500 text-white px-2 py-1 rounded-lg"
-            onClick={handleAddHashtag}>
-            <FaPlus className="mr-1" /> Add Hashtag
-          </button>
-        </div>
-        {hashtags.map((hashtag, index) => (
-          <div key={index} className="flex items-center mb-2">
-            <input
-              type="text"
-              value={hashtag}
-              onChange={e => handleHashtagChange(e, index)}
-              className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
-              placeholder="#Hashtag"
-            />
-            <button
-              className="ml-2 text-white bg-red-500 rounded-full p-1"
-              onClick={() => handleRemoveHashtag(index)}>
-              <FaTrash />
-            </button>
+
+        <div className="s:flex-col lg:flex lg:flex-row gap-5 justify-evenly">
+          <div>
+            <div className="flex items-center justify-start gap-3 mb-4 mt-4">
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                <FaHashtag className="mr-2" />
+                Hashtags
+              </h2>
+              <button
+                className="flex items-center justify-center bg-blue-500 text-white px-2 py-1 rounded-lg"
+                onClick={handleAddHashtag}>
+                <FaPlus className="mr-1" /> Add Hashtag
+              </button>
+            </div>
+            {hashtags.map((hashtag, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={hashtag}
+                  onChange={e => handleHashtagChange(e, index)}
+                  className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+                  placeholder="#Hashtag"
+                />
+                <button
+                  className="ml-2 text-white bg-red-500 rounded-full p-1"
+                  onClick={() => handleRemoveHashtag(index)}>
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-        <div className="flex items-center justify-start gap-3  mb-4 mt-4">
-          <h2 className="text-xl font-semibold mb-2 flex items-center">
-            @ Mention Users
-          </h2>
-          <button
-            className="flex items-center justify-center bg-blue-500 text-white px-2 py-1 rounded-lg"
-            onClick={handleAddMention}>
-            <FaPlus className="mr-1" /> Add Mention
-          </button>
-        </div>
-        {mentionStatuses.map((mention, index) => (
-          <div key={index} className="flex items-center mb-2">
-            <input
-              type="text"
-              value={mention.username}
-              onChange={e => handleMentionChange(e, index)}
-              className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
-              placeholder="@username"
-            />
-            {mention.available !== null && (
-              <span className="ml-2">
-                {mention.available ? (
-                  <FaTimesCircle className="text-red-500" />
-                ) : (
-                  <FaCheckCircle className="text-green-500" />
+
+          <div>
+            <div className="flex items-center justify-start gap-3  mb-4 mt-4">
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                @ Mention Users
+              </h2>
+              <button
+                className="flex items-center justify-center bg-blue-500 text-white px-2 py-1 rounded-lg"
+                onClick={handleAddMention}>
+                <FaPlus className="mr-1" /> Add Mention
+              </button>
+            </div>
+            {mentionStatuses.map((mention, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={mention.username}
+                  onChange={e => handleMentionChange(e, index)}
+                  className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+                  placeholder="@username"
+                />
+                {mention.available !== null && (
+                  <span className="ml-2">
+                    {mention.available ? (
+                      <FaTimesCircle className="text-red-500" />
+                    ) : (
+                      <FaCheckCircle className="text-green-500" />
+                    )}
+                  </span>
                 )}
-              </span>
-            )}
-            <button
-              className="ml-2 text-white bg-red-500 rounded-full p-1"
-              onClick={() => handleRemoveMention(index)}>
-              <FaTrash />
-            </button>
+                <button
+                  className="ml-2 text-white bg-red-500 rounded-full p-1"
+                  onClick={() => handleRemoveMention(index)}>
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-        <div className="flex-1 flex flex-col gap-2 font-extrabold p-2 mt-2 rounded-lg  cursor-pointer  ">
+        </div>
+
+        <div className="flex-1 flex flex-col gap-2 font-extrabold  mt-2 rounded-lg  cursor-pointer  ">
           <span>Add location:</span>
           <input
             name="location"

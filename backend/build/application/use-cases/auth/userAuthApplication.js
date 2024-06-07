@@ -465,9 +465,9 @@ const accessTokenRefresh = (cookies, dbUserRepository, authService) => __awaiter
         throw new ErrorInApplication_1.default("Invalid token 2", 401);
     }
     const user = yield dbUserRepository.getUserById(userId);
-    console.log("user: ", user);
-    console.log("user?.refreshToken: ", user === null || user === void 0 ? void 0 : user.refreshToken);
-    console.log("user?.refreshTokenExpiresAt: ", user === null || user === void 0 ? void 0 : user.refreshTokenExpiresAt);
+    // console.log("user: ", user);
+    // console.log("user?.refreshToken: ", user?.refreshToken);
+    // console.log("user?.refreshTokenExpiresAt: ", user?.refreshTokenExpiresAt);
     if (!(user === null || user === void 0 ? void 0 : user.refreshToken) || !(user === null || user === void 0 ? void 0 : user.refreshTokenExpiresAt)) {
         throw new ErrorInApplication_1.default("Invalid token 3", 401);
     }

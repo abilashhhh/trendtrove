@@ -171,7 +171,7 @@ const authController = (authServiceImplementation, authServiceInterface, userDBR
     }));
     const refreshAccessToken = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const cookies = req.cookies;
-        console.log("Consoling cookies from the refreshaccesstoken : ", cookies);
+        // console.log("Consoling cookies from the refreshaccesstoken : ", cookies);
         const accessToken = yield (0, userAuthApplication_1.accessTokenRefresh)(cookies, dbUserRepository, authService);
         res.json({ accessToken });
     }));

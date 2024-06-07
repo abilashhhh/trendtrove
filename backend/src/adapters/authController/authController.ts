@@ -220,7 +220,7 @@ const authController = (
   const refreshAccessToken = asyncHandler(
     async (req: Request, res: Response) => {
       const cookies: any = req.cookies;
-      console.log("Consoling cookies from the refreshaccesstoken : ", cookies);
+      // console.log("Consoling cookies from the refreshaccesstoken : ", cookies);
       const accessToken = await accessTokenRefresh(
         cookies,
         dbUserRepository,

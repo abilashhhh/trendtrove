@@ -3,25 +3,27 @@ import { ToastContainer, toast } from "react-toastify";
 import { UserInfo } from "../../Types/userProfile";
 import { Post } from "../../Types/Post";
 import {
+  FaTextHeight,
   FaUpload,
   FaCheckCircle,
   FaTimesCircle,
+  FaPlus,
   FaTrash,
-  FaTextHeight,
+  FaHashtag,
 } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
-import { getPostUsingPostId, updatePost } from "../../API/Post/post";
+import { getPostUsingPostId, updatePost} from "../../API/Post/post";
 import { useNavigate, useParams } from "react-router-dom";
 import debounce from "../../utils/debouncer";
 import { usernameAvailability } from "../../API/Auth/auth";
 import "react-toastify/dist/ReactToastify.css";
 
-interface EditPostProps {
+interface AddPostProps {
   userDetails: UserInfo;
 }
 
-const formatDate = (date: string | undefined) => {
+const formatDate = (date: any) => {
   if (!date) return "N/A";
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -31,12 +33,14 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
+const EditPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   const { postId } = useParams<{ postId: string }>();
+
   const [postData, setPostData] = useState<Partial<Post>>({
     userId: userDetails._id,
     isArchived: false,
     captions: "",
+    location: "",
     images: [],
     videos: [],
     hashtags: [],
@@ -48,6 +52,9 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
   >([]);
 
   const [hashtags, setHashtags] = useState<string[]>([]);
+
+  const navigate = useNavigate();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useEffect(() => {
     const handleGetPost = async () => {
@@ -63,9 +70,7 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
     };
     handleGetPost();
   }, []);
-
-  const navigate = useNavigate();
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+ 
 
   const debouncedCheckUsernameAvailability = useCallback(
     debounce(async (index: number, username: string) => {
@@ -106,28 +111,45 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
     debouncedCheckUsernameAvailability(index, value);
   };
 
+  const handleAddHashtag = () => {
+    setHashtags([...hashtags, ""]);
+  };
+
+  const handleRemoveHashtag = (index: number) => {
+    const updatedHashtags = [...hashtags];
+    updatedHashtags.splice(index, 1);
+    setHashtags(updatedHashtags);
+    setPostData(prevState => ({
+      ...prevState,
+      hashtags: updatedHashtags,
+    }));
+  };
+
   const handleHashtagChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
-    const newHashtags = [...hashtags];
-    newHashtags[index] = e.target.value;
-    setHashtags(newHashtags);
-  };
-
-  const handleRemoveImage = (index: number) => {
-    const updatedImages = postData.images!.filter((_, i) => i !== index);
+    const { value } = e.target;
+    const updatedHashtags = [...hashtags];
+    updatedHashtags[index] = value;
+    setHashtags(updatedHashtags);
     setPostData(prevState => ({
       ...prevState,
-      images: updatedImages,
+      hashtags: updatedHashtags,
     }));
   };
 
-  const handleRemoveVideo = (index: number) => {
-    const updatedVideos = postData.videos!.filter((_, i) => i !== index);
+  const handleAddMention = () => {
+    setMentionStatuses([...mentionStatuses, { username: "", available: null }]);
+  };
+
+  const handleRemoveMention = (index: number) => {
+    const updatedMentions = [...mentionStatuses];
+    updatedMentions.splice(index, 1);
+    setMentionStatuses(updatedMentions);
     setPostData(prevState => ({
       ...prevState,
-      videos: updatedVideos,
+      mentions: updatedMentions.map(mention => mention.username),
     }));
   };
 
@@ -185,6 +207,14 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
     }
   };
 
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = postData.images!.filter((_, i) => i !== index);
+    setPostData(prevState => ({
+      ...prevState,
+      images: updatedImages,
+    }));
+  };
+
   const handleAddVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
@@ -239,6 +269,14 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
     }
   };
 
+  const handleRemoveVideo = (index: number) => {
+    const updatedVideos = postData.videos!.filter((_, i) => i !== index);
+    setPostData(prevState => ({
+      ...prevState,
+      videos: updatedVideos,
+    }));
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setPostData(prevState => ({
@@ -252,12 +290,13 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
       .filter(mention => mention.available === false)
       .map(mention => mention.username);
 
-    const dataToSubmit = {
-      ...postData,
-      mentions: validMentions,
-      hashtags: hashtags.filter(hashtag => hashtag.trim() !== ""),
-      postId: postId,
-    };
+  
+      const dataToSubmit = {
+        ...postData,
+        mentions: validMentions,
+        hashtags: hashtags.filter(hashtag => hashtag.trim() !== ""),
+        postId: postId,
+      };
 
     if (
       postData.images.length > 0 ||
@@ -283,10 +322,11 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
     }
   };
 
+
   return (
-    <main className="flex-1 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
+    <main className="flex-1 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white ">
       <ToastContainer />
-      <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
+      <div className="p-2 lg:p-58 rounded-lg bg-gray-100 dark:bg-gray-900 h-full  overflow-auto ">
         <div className="flex flex-row md:flex-row items-center md:items-start bg-slate-200 dark:bg-gray-800 rounded-lg p-2">
           <div className="flex-shrink-0">
             <img
@@ -301,172 +341,180 @@ const EditPostMiddlePage: React.FC<EditPostProps> = ({ userDetails }) => {
               {userDetails.username}
             </h2>
             <p className="text-sm md:text-base text-gray-500">
-              {userDetails.email}
+              {formatDate(Date.now() )}
             </p>
           </div>
         </div>
-        <div className="h-full">
-          <div className="w-full mx-auto mt-5">
-            <h1 className="text-xl text-gray-800 dark:text-gray-200 font-bold mb-4 text-center">
-              Edit Post
-            </h1>
-            <div className="bg-slate-300 dark:bg-gray-800 shadow-md rounded-lg p-6">
-              <textarea
-                className="w-full h-40 p-2 mb-4 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white border-2 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500"
-                placeholder="Write a caption..."
-                name="captions"
-                value={postData.captions}
-                onChange={handleInputChange}></textarea>
-              <div className="flex items-center justify-center mb-4">
-                <label className="text-gray-600 dark:text-gray-300 cursor-pointer hover:underline">
-                  <FaUpload className="inline-block mr-2" />
-                  Add Images
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    multiple
-                    onChange={handleAddImage}
-                  />
-                </label>
-              </div>
-              <div className="flex items-center justify-center mb-4">
-                <label className="text-gray-600 dark:text-gray-300 cursor-pointer hover:underline">
-                  <FaUpload className="inline-block mr-2" />
-                  Add Videos
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="video/*"
-                    multiple
-                    onChange={handleAddVideo}
-                  />
-                </label>
-              </div>
-              <div className="flex flex-wrap justify-center items-center">
-                {isUploading && (
-                  <Oval
-                    height={50}
-                    width={50}
-                    color="#4fa94d"
-                    secondaryColor="#4fa94d"
-                    strokeWidth={2}
-                    strokeWidthSecondary={2}
-                  />
-                )}
-                {postData.images.map((image, index) => (
-                  <div key={index} className="relative m-2">
-                    <img
-                      src={image}
-                      alt={`Uploaded ${index}`}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    <button
-                      className="absolute top-0 right-0 m-1 text-white bg-red-500 rounded-full p-1"
-                      onClick={() => handleRemoveImage(index)} // Call handleRemoveImage function on click
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                ))}
-                {postData.videos.map((video, index) => (
-                  <div key={index} className="relative m-2">
-                    <video
-                      controls
-                      className="w-24 h-24 object-cover rounded-lg">
-                      <source src={video} type="video/mp4" />
-                    </video>
-                    <button
-                      className="absolute top-0 right-0 m-1 text-white bg-red-500 rounded-full p-1"
-                      onClick={() => handleRemoveVideo(index)} // Call handleRemoveVideo function on click
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                <h2 className="text-lg text-gray-800 dark:text-gray-200 font-bold mb-2">
-                  Mentions
-                </h2>
-                {mentionStatuses.map((mention, index) => (
-                  <div key={index} className="relative mb-4">
-                    <input
-                      type="text"
-                      value={mention.username}
-                      onChange={e => handleMentionChange(e, index)}
-                      className={`w-full p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white border-2 ${
-                        mention.available === false
-                          ? "border-green-500"
-                          : mention.available === true
-                          ? "border-red-500"
-                          : "border-gray-300 dark:border-gray-600"
-                      } focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500`}
-                      placeholder={`Mention ${index + 1}`}
-                    />
-                    {mention.available === false && (
-                      <FaCheckCircle className="absolute right-2 top-1/2 transform -translate-y-1/2 text-green-500" />
-                    )}
-                    {mention.available === true && (
-                      <FaTimesCircle className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-500" />
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setMentionStatuses([
-                      ...mentionStatuses,
-                      { username: "", available: null },
-                    ])
-                  }
-                  className="text-blue-500 hover:underline">
-                  + Add another mention
-                </button>
-              </div>
-              <div className="mt-4">
-                <h2 className="text-lg text-gray-800 dark:text-gray-200 font-bold mb-2">
-                  Hashtags
-                </h2>
-                {hashtags.map((hashtag, index) => (
-                  <div key={index} className="relative mb-4">
-                    <input
-                      type="text"
-                      value={hashtag}
-                      onChange={e => handleHashtagChange(e, index)}
-                      className="w-full p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white border-2 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500"
-                      placeholder={`Hashtag ${index + 1}`}
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setHashtags([...hashtags, ""])}
-                  className="text-blue-500 hover:underline">
-                  + Add another hashtag
-                </button>
-              </div>
 
-              <div className="flex-1 flex flex-col gap-2 font-extrabold p-2 mt-2 rounded-lg  cursor-pointer  ">
-                <span>Add location:</span>
+        <h2 className="text-xl font-semibold mb-2 mt-5  flex items-center">
+          <FaTextHeight className="mr-2" />
+          Add a Caption
+        </h2>
+        <textarea
+          className="w-full p-2 mb-4 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white resize-none"
+          name="captions"
+          rows={4}
+          placeholder="Add your caption here..."
+          value={postData.captions}
+          onChange={handleInputChange}
+        />
+        <div className="flex items-center justify-start gap-8 mb-4">
+          <div
+            className="flex items-center 
+          ">
+            <FaUpload className="mr-2 text-blue-500" />
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                multiple
+                onChange={handleAddImage}
+              />
+              <span className="text-blue-500">Upload Images</span>
+            </label>
+          </div>
+          <div className="flex items-center">
+            <FaUpload className="mr-2 text-blue-500" />
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept="video/*"
+                className="hidden"
+                multiple
+                onChange={handleAddVideo}
+              />
+              <span className="text-blue-500">Upload Videos</span>
+            </label>
+          </div>
+        </div>
+        <div className="flex flex-wrap">
+          {postData.images!.map((url, index) => (
+            <div key={index} className="relative m-2">
+              <img
+                src={url}
+                alt={`uploaded-${index}`}
+                className="w-32 h-32 object-cover rounded-lg"
+              />
+              <button
+                className="absolute top-0 right-0 m-1 text-white bg-red-500 rounded-full p-1"
+                onClick={() => handleRemoveImage(index)}>
+                <FaTrash />
+              </button>
+            </div>
+          ))}
+          {postData.videos!.map((url, index) => (
+            <div key={index} className="relative m-2">
+              <video
+                src={url}
+                className="w-32 h-32 object-cover rounded-lg"
+                controls
+              />
+              <button
+                className="absolute top-0 right-0 m-1 text-white bg-red-500 rounded-full p-1"
+                onClick={() => handleRemoveVideo(index)}>
+                <FaTrash />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="s:flex-col lg:flex lg:flex-row gap-5 justify-evenly">
+          <div>
+            <div className="flex items-center justify-start gap-3 mb-4 mt-4">
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                <FaHashtag className="mr-2" />
+                Hashtags
+              </h2>
+              <button
+                className="flex items-center justify-center bg-blue-500 text-white px-2 py-1 rounded-lg"
+                onClick={handleAddHashtag}>
+                <FaPlus className="mr-1" /> Add Hashtag
+              </button>
+            </div>
+            {hashtags.map((hashtag, index) => (
+              <div key={index} className="flex items-center mb-2">
                 <input
-                  name="location"
-                  value={postData?.location}
-                  placeholder="Add your location here.."
-                  className="bg-slate-200 dark:bg-gray-900 text-black dark:text-white w-full h-20 p-3 no-scrollbar rounded-lg"
-                  onChange={handleInputChange}
+                  type="text"
+                  value={hashtag}
+                  onChange={e => handleHashtagChange(e, index)}
+                  className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+                  placeholder="#Hashtag"
                 />
+                <button
+                  className="ml-2 text-white bg-red-500 rounded-full p-1"
+                  onClick={() => handleRemoveHashtag(index)}>
+                  <FaTrash />
+                </button>
               </div>
-              <div className="flex justify-center mt-6">
+            ))}
+          </div>
+
+          <div>
+            <div className="flex items-center justify-start gap-3  mb-4 mt-4">
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                @ Mention Users
+              </h2>
+              <button
+                className="flex items-center justify-center bg-blue-500 text-white px-2 py-1 rounded-lg"
+                onClick={handleAddMention}>
+                <FaPlus className="mr-1" /> Add Mention
+              </button>
+            </div>
+            {mentionStatuses.map((mention, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={mention.username}
+                  onChange={e => handleMentionChange(e, index)}
+                  className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+                  placeholder="@username"
+                />
+                {mention.available !== null && (
+                  <span className="ml-2">
+                    {mention.available ? (
+                      <FaTimesCircle className="text-red-500" />
+                    ) : (
+                      <FaCheckCircle className="text-green-500" />
+                    )}
+                  </span>
+                )}
+                <button
+                  className="ml-2 text-white bg-red-500 rounded-full p-1"
+                  onClick={() => handleRemoveMention(index)}>
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex-1 flex flex-col gap-2 font-extrabold  mt-2 rounded-lg  cursor-pointer  ">
+          <span>Add location:</span>
+          <input
+            name="location"
+            value={postData?.location}
+            placeholder="Add your location here.."
+            className="bg-slate-200 dark:bg-gray-800 text-black dark:text-white w-full h-20 p-3 no-scrollbar rounded-lg"
+            onChange={handleInputChange}
+          />
+        </div>
+        {/* <button
+          className="flex items-center justify-center bg-green-600 text-white px-4 py-2 rounded-lg  mt-4"
+          onClick={handleSubmit}>
+          {isUploading ? (
+            <Oval height={24} width={24} color="white" secondaryColor="white" />
+          ) : (
+            "Update Post"
+          )}
+        </button> */}
+        <div className="flex justify-center mt-6">
                 <button
                   onClick={handleSubmit}
                   className="px-6 py-2 rounded-lg bg-blue-500 text-white font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
                   Update Post
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );
