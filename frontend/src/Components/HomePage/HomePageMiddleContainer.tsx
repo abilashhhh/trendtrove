@@ -24,7 +24,7 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { FaMapMarkedAlt } from "react-icons/fa";
+import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 
 const MiddleContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -173,7 +173,6 @@ const MiddleContainer: React.FC = () => {
 
     fetchLikesDislikesData(postId);
   };
- 
 
   const toggleOptions = (postId: string) => {
     if (showOptions === postId) {
@@ -201,9 +200,9 @@ const MiddleContainer: React.FC = () => {
       <ToastContainer />
 
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2  sm:p-2 md:pr-11 md:pl-11 lg:pl-96  lg:pr-96    ">
-      {/* <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2  sm:p-2 md:pr-11 md:pl-11 lg:pl-96  lg:pr-96    "> */}
+        {/* <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2  sm:p-2 md:pr-11 md:pl-11 lg:pl-96  lg:pr-96    "> */}
         {posts.length > 0 ? (
-          posts.map(post => ( 
+          posts.map(post => (
             <div
               key={post._id}
               className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
@@ -340,9 +339,15 @@ const MiddleContainer: React.FC = () => {
                     }`}
                     onClick={() => handleLike(post._id)}>
                     {likedPosts[post._id] ? (
-                      <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
+                      <AiFillLike
+                        title="Like Post"
+                        className="text-xl md:text-2xl lg:text-3xl"
+                      />
                     ) : (
-                      <AiOutlineLike className="text-xl md:text-2xl lg:text-3xl" />
+                      <AiOutlineLike
+                        title="Like Post"
+                        className="text-xl md:text-2xl lg:text-3xl"
+                      />
                     )}
                   </button>
                   <button
@@ -353,31 +358,50 @@ const MiddleContainer: React.FC = () => {
                     }`}
                     onClick={() => handleDislike(post._id)}>
                     {dislikedPosts[post._id] ? (
-                      <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
+                      <AiFillDislike
+                        title="Disike Post"
+                        className="text-xl md:text-2xl lg:text-3xl"
+                      />
                     ) : (
-                      <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
+                      <AiOutlineDislike
+                        title="Disike Post"
+                        className="text-xl md:text-2xl lg:text-3xl"
+                      />
                     )}
                   </button>
                   <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
-                    <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
+                    <AiOutlineComment
+                      title="Add a comment"
+                      className="text-xl md:text-2xl lg:text-3xl"
+                    />
                   </button>
                 </div>
-                <div className="flex gap-2 mt-4 cursor-pointer">
-                  <p className="text-xs mt-2">
-                    Likes:{" "}
-                    {(likesDislikesData[post._id] &&
-                      likesDislikesData[post._id].likesdislikesinfo
-                        ?.likesCount) ||
-                      0}
-                  </p>
-                  <p className="text-xs mt-2">|</p>
-                  <p className="text-xs mt-2">
-                    Disikes:{" "}
-                    {(likesDislikesData[post._id] &&
-                      likesDislikesData[post._id].likesdislikesinfo
-                        ?.dislikesCount) ||
-                      0}
-                  </p>
+                <div className="flex gap-5 text-center items-center justify-center">
+                  <div className="flex gap-2 mt-4 cursor-pointer">
+                    <div title="Hashtags">
+                      <FaHashtag className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6" />
+                    </div>
+                    <div title="Mentions">
+                      <FaUser className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6" />
+                    </div>
+                  </div>
+                  <div className="flex gap-2 mt-2 cursor-pointer">
+                    <p className="text-xs mt-2" title="Likes count">
+                      Likes:{" "}
+                      {(likesDislikesData[post._id] &&
+                        likesDislikesData[post._id].likesdislikesinfo
+                          ?.likesCount) ||
+                        0}
+                    </p>
+                    <p className="text-xs mt-2">|</p>
+                    <p className="text-xs mt-2 " title="Dislikes count">
+                      Disikes:{" "}
+                      {(likesDislikesData[post._id] &&
+                        likesDislikesData[post._id].likesdislikesinfo
+                          ?.dislikesCount) ||
+                        0}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
