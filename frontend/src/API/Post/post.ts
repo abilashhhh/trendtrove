@@ -190,7 +190,7 @@ export const reportPost = async (
   data: ReportPostData
 ): Promise<ReportPostResponse> => {
   try {
-    // console.log("Report post api, data: ", data);
+    console.log("Report post api, data: ", data);
     const response = await axiosUserInstance.post<ReportPostResponse>(
       `${END_POINTS.REPORT_POST}`,
       data

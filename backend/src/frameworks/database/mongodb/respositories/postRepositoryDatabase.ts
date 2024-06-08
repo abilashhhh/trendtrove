@@ -1,6 +1,6 @@
 import {
   PostDataInterface,
-  ReportPost,
+  ReportPostInterface,
 } from "../../../../types/postsInterface";
 
 import Post from "../models/postModel";
@@ -228,7 +228,7 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  const reportPostsForUser = async (data: ReportPost) => {
+  const reportPostsForUser = async (data: ReportPostInterface) => {
     try {
       const newPeport = new ReportPost(data);
       return await newPeport.save();

@@ -200,12 +200,13 @@ const handleGetParticularPost = (id, dbPostRepository) => __awaiter(void 0, void
 exports.handleGetParticularPost = handleGetParticularPost;
 const handleReportPosts = (data, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // console.log("handleReportPosts reached");
+        console.log("handleReportPosts reached");
         if (!data.postId) {
             throw new ErrorInApplication_1.default("Post ID is required to report post", 400);
         }
+        console.log("report post data: ", data);
         const reportPostsForUser = yield dbPostRepository.reportPostsForUser(data);
-        // console.log("All posts from reportPostsForUser :", reportPostsForUser);
+        console.log("All posts from reportPostsForUser :", reportPostsForUser);
         return reportPostsForUser;
     }
     catch (error) {
@@ -213,7 +214,7 @@ const handleReportPosts = (data, dbPostRepository) => __awaiter(void 0, void 0, 
         if (error instanceof ErrorInApplication_1.default) {
             throw error;
         }
-        throw new ErrorInApplication_1.default("Failed to get all posts", 500);
+        throw new ErrorInApplication_1.default("Failed to report post", 500);
     }
 });
 exports.handleReportPosts = handleReportPosts;

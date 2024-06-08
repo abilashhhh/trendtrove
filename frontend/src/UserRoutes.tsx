@@ -17,6 +17,7 @@ import Addpost from "./Pages/Addpost";
 import ProfilePageIndividual from "./Pages/ProfilePageIndividual";
 import ReportPost from "./Components/Post/ReportPost";
 import EditPost from "./Pages/EditPost";
+import CommentsPage from "./Components/Comments/CommentsPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -40,6 +41,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/addpost" element={<Addpost />} />
         <Route path="/editpost/:postId" element={<EditPost />} />
         <Route path="/reportpost/:postId" element={<ReportPost />} />
+        <Route path="/comment/:postId" element={<CommentsPage />} />
       </Route>
 
       <Route path="/error" element={<ErrorPage />} />

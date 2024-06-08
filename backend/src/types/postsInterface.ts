@@ -20,7 +20,7 @@ export interface PostDataInterface {
   updatedAt: Date;
 }
 
-export interface ReportPost {
+export interface ReportPostInterface {
   postId: string;
   reason: string;
   comments: string;
