@@ -6,6 +6,7 @@ import useUserDetails from "../Hooks/useUserDetails";
 
 function ProfilePage() {
   const userDetails = useUserDetails();
+  
   if (!userDetails.username) {
     return <LoadingSpinner />;
   }

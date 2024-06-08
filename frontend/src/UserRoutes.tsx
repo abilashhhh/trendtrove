@@ -34,12 +34,12 @@ const UserRoutes: React.FC = () => {
         <Route path="/home" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/editprofile" element={<EditProfilePage />} />
+        <Route path="/profiles/:username" element={<ProfilePageIndividual />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/addpost" element={<Addpost />} />
-        <Route path="/profiles/:username" element={<ProfilePageIndividual />} />
-        <Route path="/reportpost/:postId" element={<ReportPost />} />
         <Route path="/editpost/:postId" element={<EditPost />} />
+        <Route path="/reportpost/:postId" element={<ReportPost />} />
       </Route>
 
       <Route path="/error" element={<ErrorPage />} />

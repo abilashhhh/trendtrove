@@ -6,9 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./HomePage/HomePageHeaderComponent";
 import LeftSidebar from "./HomePage/HomePageLeftSidebar";
-import MainContent from "./HomePage/HomePageMiddleContainer";
-import RightSidebar from "./HomePage/HomePageRightSidebar";
-import SmallViewRightSidebar from "./HomePage/HomePageSmallViewRightSidebar";
 import BottomNavBar from "./HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "./LoadingSpinner";
 

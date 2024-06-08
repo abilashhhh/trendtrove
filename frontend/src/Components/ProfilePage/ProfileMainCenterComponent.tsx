@@ -8,27 +8,24 @@ interface ProfileMainCenterComponentProps {
   userDetails: UserInfo;
 }
 
-const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({ userDetails }) => {
+const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({
+  userDetails,
+}) => {
   return (
-   
-        <main className="flex-1 p-2 overflow-auto bg-slate-800 dark:bg-gray-700 text-black dark:text-white flex">
- 
-        <div className="flex-1 w-full overflow-y-auto no-scrollbar">
+    <main className="flex-1 p-2 overflow-auto bg-slate-800 dark:bg-gray-700 text-black dark:text-white flex">
+      <div className="flex-1 w-full overflow-y-auto no-scrollbar">
         <Profile userDetails={userDetails} />
-        
       </div>
 
-      <div className=" md:flex flex-col gap-2 overflow-y-auto">
-        <div className="no-scrollbar overflow-y-auto">
-          <Followers userDetails={userDetails} />
+      <div className="md:flex flex-col gap-2 overflow-hidden">
+        <div className="no-scrollbar overflow-y-auto flex-1">
+          <Followers />
         </div>
-        
-        <div className="overflow-y-auto no-scrollbar">
-          <Following userDetails={userDetails} />
-        </div>
- 
-      </div>
 
+        <div className="no-scrollbar overflow-y-auto flex-1">
+          <Following />
+        </div>
+      </div>
     </main>
   );
 };
