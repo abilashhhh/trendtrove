@@ -13,5 +13,5 @@ const reportSchema = new Schema(
   }
 );
 
-const ReportPostModel = model("ReportPostModel", reportSchema);
-export default ReportPostModel;
+const ReportPost = model("ReportPost", reportSchema);
+export default ReportPost;

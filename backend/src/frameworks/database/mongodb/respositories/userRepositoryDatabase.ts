@@ -5,7 +5,7 @@ import {
   UserInterface,
 } from "../../../../types/userInterface";
 import Post from "../models/postModel";
-import ReportPostModel from "../models/reportPostModel";
+import ReportPost from "../models/reportPostModel";
 
 import User from "../models/userModel";
 
@@ -244,7 +244,7 @@ export const userRepositoryMongoDB = () => {
 
   const getAllReportsForAdmin = async () => {
     try {
-      const reports = await ReportPostModel.find().exec();
+      const reports = await ReportPost.find().exec();
   
       const detailedReports = await Promise.all(
         reports.map(async report => {

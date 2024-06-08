@@ -10,5 +10,5 @@ const reportSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
-const ReportPostModel = (0, mongoose_1.model)("ReportPostModel", reportSchema);
-exports.default = ReportPostModel;
+const ReportPost = (0, mongoose_1.model)("ReportPost", reportSchema);
+exports.default = ReportPost;

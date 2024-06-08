@@ -4,7 +4,7 @@ import {
 } from "../../../../types/postsInterface";
 
 import Post from "../models/postModel";
-import ReportPostModel from "../models/reportPostModel";
+import ReportPost from "../models/reportPostModel";
 import User from "../models/userModel";
 import Like from "../models/likePostModel";
 import Dislike from "../models/dislikePostModel";
@@ -230,7 +230,7 @@ export const postRepositoryMongoDB = () => {
 
   const reportPostsForUser = async (data: ReportPost) => {
     try {
-      const newPeport = new ReportPostModel(data);
+      const newPeport = new ReportPost(data);
       return await newPeport.save();
     } catch (error) {
       // console.log(error);

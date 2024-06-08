@@ -1,18 +1,40 @@
-import mongoose, { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
-const commentSchema = new Schema(
-  {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    post: { type: Schema.Types.ObjectId, ref: "Post", required: true },
-    content: { type: String, required: true },
-    likes: [{ type: Schema.Types.ObjectId, ref: "Like" }], //should give comment id for this to the like model
-    replies: [{ type: Schema.Types.ObjectId, ref: "Dislike" }],
-  },
-  {
-    timestamps: true,
-  }
-);
+interface CommentInterface extends Document {
+  postId: string;
+  userId: string;
+  comment: string;
+  replies: string[];
+  report: string[];
+  likes: string[];
+  isBlock: boolean;
+}
 
-const Comment = model("Comment", commentSchema);
+interface ReplyCommentInterface extends Document {
+  postId: string;
+  userId: string;
+  reply: string;
+  report: string[];
+  likes: string[];
+  isBlock: boolean;
+}
 
+const replyCommentSchema = new Schema<ReplyCommentInterface>({
+  postId: { type: String, required: true },
+  userId: { type: String, required: true },
+  reply: { type: String, required: true },
+  isBlock: { type: Boolean, default: false },
+  likes: [{ type: String }],
+}, { timestamps: true });
+
+const commentSchema = new Schema<CommentInterface>({
+  postId: { type: String, required: true },
+  userId: { type: String, required: true },
+  comment: { type: String, required: true },
+  replies: [replyCommentSchema],
+  likes: [{ type: String }],
+  isBlock: { type: Boolean, default: false },
+}, { timestamps: true });
+
+const Comment = model<CommentInterface>("Comment", commentSchema);
 export default Comment;
