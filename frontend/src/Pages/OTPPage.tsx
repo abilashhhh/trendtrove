@@ -4,7 +4,7 @@ import TrendTroveLogo from "../Components/Logo/TrendTroveLogo";
 import { generateOtp, signUpUser, verifyOtp } from "../API/Auth/auth";
 import { SignUpUserInterface } from "../Types/signUpUser";
 import { ToastContainer, toast } from "react-toastify";
- 
+
 const OTPPage: React.FC = () => {
   const navigate = useNavigate();
 
@@ -50,32 +50,29 @@ const OTPPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
- 
-    
+
     if (countdown === 0) {
       toast.error("OTP has expired. Please request a new OTP.");
       return;
     }
-  
-   
-    
+
     const email = JSON.parse(localStorage.getItem("signupData") || "{}").email;
     const otpValue = otp.otp;
     try {
       const result = await verifyOtp(email, otpValue);
-      console.log("result:", result); 
+      console.log("result:", result);
       if (result.status === "success") {
         toast.success("Account created successfully!");
         toast.success("Redirecting to login page...");
-    
+
         const userData = JSON.parse(localStorage.getItem("signupData") || "{}");
-    
+
         console.log("userdata from localstrorage: ", userData);
-    
+
         await signUpUser(userData as SignUpUserInterface);
-    
+
         localStorage.removeItem("signupData");
-    
+
         setTimeout(() => {
           navigate("/signin");
         }, 3000);
@@ -89,7 +86,6 @@ const OTPPage: React.FC = () => {
       toast.error("Failed to verify OTP.");
     }
   };
-  
 
   return (
     <div className="min-h-screen  flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -102,11 +98,11 @@ const OTPPage: React.FC = () => {
               OTP VERIFICATION
             </h5>
             <p className="mt-2 text-sm text-gray-600">
-            Already have an account ?{" "}
+              Already have an account ?{" "}
               <Link
                 to="/signin"
                 className="font-medium text-blue-400 hover:text-blue-600">
-              Login
+                Login
               </Link>
             </p>
           </div>
@@ -157,7 +153,6 @@ const OTPPage: React.FC = () => {
                 Verify OTP
               </button>
             </div>
-
           </form>
           {countdown > 0 && (
             <p className="text-gray-500 mt-4">
