@@ -70,7 +70,7 @@
           <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
             <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full ">
               <div className="flex flex-col md:flex-row gap-2 h-full">
-                <div className="w-full md:w-1/5 rounded-lg flex flex-col text-black dark:text-white text-xl">
+                <div className="w-full md:w-2/6  lg:w-1/6 rounded-lg flex flex-col text-black dark:text-white text-xl">
                   <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 flex items-center">
                     <FaSearch className="w-8 h-8  bg-gray-200 dark:bg-gray-800 p-2 rounded-lg" />
                     <input
@@ -123,7 +123,7 @@
                     )}
                   </div>
                 </div>
-                <div className="w-full md:w-4/5 overflow-auto no-scrollbar  rounded-lg flex flex-col text-black dark:text-white text-xl">
+                <div className="w-full md:w-4/6  lg:w-5/6 overflow-auto no-scrollbar  rounded-lg flex flex-col text-black dark:text-white text-xl">
                   {activeSection ? (
                     <div className="w-full overflow-auto no-scrollbar">
                       <ProfileSectionFriendsPage
