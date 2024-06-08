@@ -41,7 +41,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/addpost" element={<Addpost />} />
         <Route path="/editpost/:postId" element={<EditPost />} />
         <Route path="/reportpost/:postId" element={<ReportPost />} />
-        <Route path="/comment/:postId" element={<CommentsPage />} />
+        <Route path="/post/:postId" element={<CommentsPage />} />
       </Route>
 
       <Route path="/error" element={<ErrorPage />} />

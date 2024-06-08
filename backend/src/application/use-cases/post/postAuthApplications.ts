@@ -246,13 +246,13 @@ export const handleReportPosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleReportPosts reached");
+    // console.log("handleReportPosts reached");
     if (!data.postId) {
       throw new ErrorInApplication("Post ID is required to report post", 400);
     }
-    console.log("report post data: ", data)
+    // console.log("report post data: ", data)
     const reportPostsForUser = await dbPostRepository.reportPostsForUser(data);
-    console.log("All posts from reportPostsForUser :", reportPostsForUser);
+    // console.log("All posts from reportPostsForUser :", reportPostsForUser);
     return reportPostsForUser;
   } catch (error) {
     // console.log("Error in handleGetPostsForUser");

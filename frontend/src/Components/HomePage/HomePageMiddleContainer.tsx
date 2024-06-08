@@ -210,7 +210,6 @@ const MiddleContainer: React.FC = () => {
       <ToastContainer />
 
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2 sm:pl-4 sm:pr-4 md:pl-12 md:pr-12 lg:pl-36 lg:pr-36 xl:pl-64 xl:pr-64 2xl:pl-96 2xl:pr-96">
- 
         {posts.length > 0 ? (
           posts.map(post => (
             <div
@@ -268,37 +267,10 @@ const MiddleContainer: React.FC = () => {
                 </div>
               </div>
 
-              {post.images.length > 0 && post.videos.length > 0 ? (
-                <Slider {...settings}>
-                  {post.images.map((image: string, index: number) => (
-                    <div key={index}>
-                      <img
-                        src={image}
-                        alt={`Post image ${index}`}
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  ))}
-                  {post.videos.map((video: string, index: number) => (
-                    <div key={index}>
-                      <video
-                        src={video}
-                        controls
-                        autoPlay
-                        muted
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  ))}
-                </Slider>
-              ) : post.images.length > 0 ? (
-                post.images.length === 1 ? (
-                  <img
-                    src={post.images[0]}
-                    alt={`Post image`}
-                    className="w-full h-auto"
-                  />
-                ) : (
+              <div
+                onDoubleClick={() => navigate(`/post/${post._id}`)}
+                className="p-6">
+                {post.images.length > 0 && post.videos.length > 0 ? (
                   <Slider {...settings}>
                     {post.images.map((image: string, index: number) => (
                       <div key={index}>
@@ -309,19 +281,6 @@ const MiddleContainer: React.FC = () => {
                         />
                       </div>
                     ))}
-                  </Slider>
-                )
-              ) : post.videos.length > 0 ? (
-                post.videos.length === 1 ? (
-                  <video
-                    src={post.videos[0]}
-                    controls
-                    autoPlay
-                    muted
-                    className="w-full h-auto"
-                  />
-                ) : (
-                  <Slider {...settings}>
                     {post.videos.map((video: string, index: number) => (
                       <div key={index}>
                         <video
@@ -334,11 +293,57 @@ const MiddleContainer: React.FC = () => {
                       </div>
                     ))}
                   </Slider>
-                )
-              ) : (
-                <p></p>
-              )}
-              <p className="mt-2 h">{post.captions}</p>
+                ) : post.images.length > 0 ? (
+                  post.images.length === 1 ? (
+                    <img
+                      src={post.images[0]}
+                      alt={`Post image`}
+                      className="w-full h-auto"
+                    />
+                  ) : (
+                    <Slider {...settings}>
+                      {post.images.map((image: string, index: number) => (
+                        <div key={index}>
+                          <img
+                            src={image}
+                            alt={`Post image ${index}`}
+                            className="w-full h-auto"
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  )
+                ) : post.videos.length > 0 ? (
+                  post.videos.length === 1 ? (
+                    <video
+                      src={post.videos[0]}
+                      controls
+                      autoPlay
+                      muted
+                      className="w-full h-auto"
+                    />
+                  ) : (
+                    <Slider {...settings}>
+                      {post.videos.map((video: string, index: number) => (
+                        <div key={index}>
+                          <video
+                            src={video}
+                            controls
+                            autoPlay
+                            muted
+                            className="w-full h-auto"
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  )
+                ) : (
+                  <p></p>
+                )}
+                 <p className="mt-2 h">{post.captions}</p>
+              </div>
+
+             
               <div className="flex justify-between">
                 <div className="flex gap-2 items-center mt-4">
                   <button
@@ -383,6 +388,7 @@ const MiddleContainer: React.FC = () => {
                     <AiOutlineComment
                       title="Add a comment"
                       className="text-xl md:text-2xl lg:text-3xl"
+                      onClick={() => navigate(`/post/${post._id}`)}
                     />
                   </button>
                 </div>
