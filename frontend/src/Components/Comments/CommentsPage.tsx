@@ -226,162 +226,191 @@ const CommentsPage: React.FC = () => {
   return (
     <Layout>
       <ToastContainer />
-      <main className="p-4 bg-gray-800 w-full dark:bg-gray-700 text-white">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-            <div className="flex items-center mb-4">
-              <img
-                src={post.dp}
-                alt=""
-                className="rounded-full h-10 w-10 mr-4 cursor-pointer"
-                onClick={() => navigate(`/profiles/${post.username}`)}
-              />
-              <div>
-                <p
-                  className="font-bold cursor-pointer"
-                  onClick={() => navigate(`/profiles/${post.username}`)}>
-                  {post.username}
-                </p>
-                {post.location && (
-                  <p className="text-xs flex items-center text-gray-500 dark:text-gray-400 font-light">
-                    <FaMapMarkedAlt className="mr-1" /> {post.location}
-                  </p>
-                )}
-                <p className="text-xs font-light text-gray-500 dark:text-gray-400">
-                  {new Date(post.createdAt).toLocaleString()}
-                </p>
-              </div>
-              <div className="ml-auto">
-                <button
-                  className="focus:outline-none"
-                  onClick={() => toggleOptions(post._id)}>
-                  <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
-                </button>
-                {showOptions === post._id && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                    <p
-                      className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => navigate(`/profiles/${post.username}`)}>
-                      View Profile
-                    </p>
-                    <p
-                      className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => navigate(`/reportPost/${postId}`)}>
-                      Report Post
-                    </p>
-                    <p
-                      className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => handleSavePost(postId)}>
-                      Save Post
-                    </p>
+      <main className=" bg-gray-800 w-full dark:bg-gray-700 text-white">
+        <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700 text-white">
+          <div className="flex flex-col lg:flex-row w-full h-full">
+            <div className="lg:w-7/10">
+              <div className="max-w-4xl mx-auto rounded-lg p-2">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 mb-6">
+                  <div className="flex items-center mb-4">
+                    <img
+                      src={post.dp}
+                      alt=""
+                      className="rounded-full h-10 w-10 mr-4 cursor-pointer"
+                      onClick={() => navigate(`/profiles/${post.username}`)}
+                    />
+                    <div>
+                      <p
+                        className="font-bold cursor-pointer"
+                        onClick={() => navigate(`/profiles/${post.username}`)}
+                      >
+                        {post.username}
+                      </p>
+                      {post.location && (
+                        <p className="text-xs flex items-center text-gray-500 dark:text-gray-400 font-light">
+                          <FaMapMarkedAlt className="mr-1" /> {post.location}
+                        </p>
+                      )}
+                      <p className="text-xs font-light text-gray-500 dark:text-gray-400">
+                        {new Date(post.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="ml-auto">
+                      <button
+                        className="focus:outline-none"
+                        onClick={() => toggleOptions(post._id)}
+                      >
+                        <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
+                      </button>
+                      {showOptions === post._id && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                          <p
+                            className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => navigate(`/profiles/${post.username}`)}
+                          >
+                            View Profile
+                          </p>
+                          <p
+                            className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => navigate(`/reportPost/${postId}`)}
+                          >
+                            Report Post
+                          </p>
+                          <p
+                            className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => handleSavePost(postId)}
+                          >
+                            Save Post
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
+                  <PostsDisplayCommon post={post} />
+                  <div className="flex justify-between">
+                    <div className="flex gap-2 items-center mt-4">
+                      <button
+                        className={`flex items-center space-x-2 hover:text-blue-600 ${
+                          likedPosts[post._id]
+                            ? "text-blue-600"
+                            : "text-gray-600 dark:text-gray-400"
+                        }`}
+                        onClick={() => handleLike(post._id)}
+                      >
+                        {likedPosts[post._id] ? (
+                          <AiFillLike
+                            title="Like Post"
+                            className="text-xl md:text-2xl lg:text-3xl"
+                          />
+                        ) : (
+                          <AiOutlineLike
+                            title="Like Post"
+                            className="text-xl md:text-2xl lg:text-3xl"
+                          />
+                        )}
+                      </button>
+                      <button
+                        className={`flex items-center space-x-2 hover:text-red-600 ${
+                          dislikedPosts[post._id]
+                            ? "text-red-600"
+                            : "text-gray-600 dark:text-gray-400"
+                        }`}
+                        onClick={() => handleDislike(post._id)}
+                      >
+                        {dislikedPosts[post._id] ? (
+                          <AiFillDislike
+                            title="Dislike Post"
+                            className="text-xl md:text-2xl lg:text-3xl"
+                          />
+                        ) : (
+                          <AiOutlineDislike
+                            title="Dislike Post"
+                            className="text-xl md:text-2xl lg:text-3xl"
+                          />
+                        )}
+                      </button>
+                      <button
+                        className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600"
+                        onClick={() => navigate(`/post/${post._id}`)}
+                      >
+                        <AiOutlineComment
+                          title="Add a comment"
+                          className="text-xl md:text-2xl lg:text-3xl"
+                        />
+                      </button>
+                    </div>
+                    <div className="flex gap-5 text-center items-center justify-center">
+                      <div className="flex gap-2 mt-4 cursor-pointer">
+                        <div title="Hashtags">
+                          <FaHashtag
+                            className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                            onClick={() => {
+                              setShowModal(true);
+                              setModalHashtags(post.hashtags);
+                              setShowingData("Hashtags");
+                            }}
+                          />
+                        </div>
+                        <div title="Mentions">
+                          <FaUser
+                            className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                            onClick={() => {
+                              setShowModal(true);
+                              setModalHashtags(post.mentions);
+                              setShowingData("Mentions");
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2 mt-2 cursor-pointer">
+                        <p
+                          className="text-xs mt-2"
+                          title="Likes count"
+                          onClick={() => {
+                            setShowLikesDislikesModal(true);
+                            setModalLikesDislikes(
+                              likesDislikesData[post._id].likesdislikesinfo
+                              ?.likedUsers
+                          );
+                            
+                            setShowingDataLikesDislikes("Liked Users");
+                          }}
+                        >
+                          Likes:  {(likesDislikesData[post._id] &&
+                        likesDislikesData[post._id].likesdislikesinfo
+                          ?.likesCount) ||
+                        0}
+                        </p>
+                        <p className="text-xs mt-2">|</p>
+                        <p
+                          className="text-xs mt-2"
+                          title="Dislikes count"
+                          onClick={() => {
+                            setShowLikesDislikesModal(true);
+                            setModalLikesDislikes(
+                              likesDislikesData[post._id].likesdislikesinfo
+                              ?.dislikedUsers
+                          );
+                            setShowingDataLikesDislikes("Disliked Users");
+                          }}
+                        >
+                          Dislikes: {(likesDislikesData[post._id] &&
+                        likesDislikesData[post._id].likesdislikesinfo
+                          ?.dislikesCount) ||
+                        0}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <PostsDisplayCommon post={post} />
-            <div className="flex justify-between">
-              <div className="flex gap-2 items-center mt-4">
-                <button
-                  className={`flex items-center space-x-2 hover:text-blue-600 ${
-                    likedPosts[post._id]
-                      ? "text-blue-600"
-                      : "text-gray-600 dark:text-gray-400"
-                  }`}
-                  onClick={() => handleLike(post._id)}>
-                  {likedPosts[post._id] ? (
-                    <AiFillLike
-                      title="Like Post"
-                      className="text-xl md:text-2xl lg:text-3xl"
-                    />
-                  ) : (
-                    <AiOutlineLike
-                      title="Like Post"
-                      className="text-xl md:text-2xl lg:text-3xl"
-                    />
-                  )}
-                </button>
-                <button
-                  className={`flex items-center space-x-2 hover:text-red-600 ${
-                    dislikedPosts[post._id]
-                      ? "text-red-600"
-                      : "text-gray-600 dark:text-gray-400"
-                  }`}
-                  onClick={() => handleDislike(post._id)}>
-                  {dislikedPosts[post._id] ? (
-                    <AiFillDislike
-                      title="Dislike Post"
-                      className="text-xl md:text-2xl lg:text-3xl"
-                    />
-                  ) : (
-                    <AiOutlineDislike
-                      title="Dislike Post"
-                      className="text-xl md:text-2xl lg:text-3xl"
-                    />
-                  )}
-                </button>
-                <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
-                  <AiOutlineComment
-                    title="Add a comment"
-                    className="text-xl md:text-2xl lg:text-3xl"
-                    onClick={() => navigate(`/post/${post._id}`)}
-                  />
-                </button>
-              </div>
-              <div className="flex gap-5 text-center items-center justify-center">
-                <div className="flex gap-2 mt-4 cursor-pointer">
-                  <div title="Hashtags">
-                    <FaHashtag
-                      className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
-                      onClick={() => {
-                        setShowModal(true);
-                        setModalHashtags(post.hashtags);
-                        setShowingData("Hashtags");
-                      }}
-                    />
-                  </div>
-                  <div title="Mentions">
-                    <FaUser
-                      className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
-                      onClick={() => {
-                        setShowModal(true);
-                        setModalHashtags(post.mentions);
-                        setShowingData("Mentions");
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-2 mt-2 cursor-pointer">
-                  <p
-                    className="text-xs mt-2"
-                    title="Likes count"
-                    onClick={() => {
-                      setShowLikesDislikesModal(true);
-                      setModalLikesDislikes(
-                        likesDislikesData[post._id]?.likedUsers || []
-                      );
-                      setShowingDataLikesDislikes("Liked Users");
-                    }}>
-                    Likes: {likesDislikesData[post._id]?.likesCount || 0}
-                  </p>
-                  <p className="text-xs mt-2">|</p>
-                  <p
-                    className="text-xs mt-2"
-                    title="Dislikes count"
-                    onClick={() => {
-                      setShowLikesDislikesModal(true);
-                      setModalLikesDislikes(
-                        likesDislikesData[post._id]?.dislikedUsers || []
-                      );
-                      setShowingDataLikesDislikes("Disliked Users");
-                    }}>
-                    Dislikes: {likesDislikesData[post._id]?.dislikesCount || 0}
-                  </p>
-                </div>
-              </div>
+            <div className="bg-gray-600 lg:w-3/10 p-2 m-2 rounded-lg dark:bg-gray-800 lg:w-full">
+              <h2 className="text-xl font-semibold mb-4">Comments</h2>
             </div>
           </div>
         </div>
-
+  
         <MentionsHashtagsModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
@@ -397,6 +426,6 @@ const CommentsPage: React.FC = () => {
       </main>
     </Layout>
   );
-};
-
-export default CommentsPage;
+  };
+  
+  export default CommentsPage;
