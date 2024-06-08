@@ -191,18 +191,7 @@ const MiddleContainer: React.FC = () => {
     }
   };
 
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    customPaging: () => (
-      <div className="w-5 h-0.5 rounded-lg mt-2 bg-gray-500 dark:bg-gray-500"></div>
-    ),
-    dotsClass: "slick-dots slick-thumb flex justify-center",
-  };
+ 
 
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700   text-white items-center justify-center">
