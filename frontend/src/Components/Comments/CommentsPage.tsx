@@ -228,11 +228,12 @@ const CommentsPage: React.FC = () => {
       <ToastContainer />
       <main className=" bg-gray-800 w-full dark:bg-gray-700 text-white">
         <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700 text-white">
-          <div className="flex flex-col lg:flex-row w-full h-full">
-            <div className="lg:w-7/10">
-              <div className="max-w-4xl mx-auto rounded-lg p-2">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 mb-6">
-                  <div className="flex items-center mb-4">
+          <div className="flex flex-col lg:flex-row w-full h-full ">
+            <div className="  p-2 m-2 flex justify-center align-middle items-center">
+            <div className="lg:w-7/10   ">
+              <div className="max-w-xl  h-full  rounded-lg m-2">
+                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 mb-6">
+                  <div className="flex items-center  mb-4 ">
                     <img
                       src={post.dp}
                       alt=""
@@ -287,7 +288,7 @@ const CommentsPage: React.FC = () => {
                     </div>
                   </div>
                   <PostsDisplayCommon post={post} />
-                  <div className="flex justify-between">
+                  <div className="flex justify-between ">
                     <div className="flex gap-2 items-center mt-4">
                       <button
                         className={`flex items-center space-x-2 hover:text-blue-600 ${
@@ -404,6 +405,7 @@ const CommentsPage: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
             <div className="bg-gray-600 lg:w-3/10 p-2 m-2 rounded-lg dark:bg-gray-800 lg:w-full">
               <h2 className="text-xl font-semibold mb-4">Comments</h2>
