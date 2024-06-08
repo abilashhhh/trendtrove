@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
     <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2">
       <div className="bg-gray-200 dark:bg-gray-900 text-black dark:text-white p-4 flex justify-between items-center rounded-lg">
         <div className="flex gap-3">
-          <div className="space-x-4 md:hidden flex">
+          <div className="space-x-4 lg:hidden flex">
             <button onClick={toggleLeftSidebar}>☰</button>
           </div>
           <h1 className="text-2xl flex items-center">

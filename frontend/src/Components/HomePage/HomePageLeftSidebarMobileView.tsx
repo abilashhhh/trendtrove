@@ -8,9 +8,9 @@ const BottomNavBar = ({ toggleDarkMode, isDarkMode }) => {
 
   return (
     <>
-      <div className="block md:hidden" style={{ height: navHeight }} />
+      <div className="block lg:hidden" style={{ height: navHeight }} />
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-gray-800 dark:bg-gray-900  shadow-lg  flex justify-between md:hidden"
+        className="fixed bottom-0 left-0 right-0 bg-gray-800 dark:bg-gray-900  shadow-lg  flex justify-between lg:hidden"
         style={{ height: navHeight }}
       >
         <button onClick={() => navigate("/home")} className="text-white p-2 flex flex-col items-center">

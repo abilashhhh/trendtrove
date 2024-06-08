@@ -32,7 +32,7 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
   };
 
   return (
-    <aside className={`bg-gray-800 dark:bg-gray-700 pt-2 pl-2 pb-2 ${isCollapsed ? "w-16" : "w-64"} ${isLeftSidebarOpen ? "block" : "hidden"} md:block transition-all duration-300`}>
+    <aside className={`bg-gray-800 dark:bg-gray-700 pt-2 pl-2 pb-2 ${isCollapsed ? "w-16" : "w-64"} ${isLeftSidebarOpen ? "block" : "hidden"} lg:block transition-all duration-300`}>
       <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar flex flex-col items-center">
         <button onClick={toggleCollapse} className="mb-2  p-2 bg-gray-800 text-white rounded-full">
           {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
