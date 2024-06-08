@@ -55,9 +55,9 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   );
 
   const [isFollower, setIsFollower] = useState<boolean>(false);
-  const [amIFollowing, setIamFollowing] = useState<boolean>(false);
-  const [iHaveRequested, setiHaveRequested] = useState<boolean>(false);
-  const [iShouldAcceptRequestHere, setiShouldAcceptRequestHere] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [hasRequested, setHasRequested] = useState<boolean>(false);
+  const [hasPendingRequest, setHasPendingRequest] = useState<boolean>(false);
   const [isMutualFollower, setIsMutualFollower] = useState<boolean>(false);
   const [followDate, setFollowDate] = useState<string | undefined>("");
 
@@ -81,21 +81,19 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
   };
 
   useEffect(() => {
-    const follower = currentUser.followers.find(
-      f => f.userId === userDetails._id
+    const youAreFollowingHim = userDetails.followers.find(
+      f => f.userId === currentUser._id
     );
-    console.log("Followers: ", follower)
 
-    const iAmfollowing = currentUser.following?.find(
-      f => f.userId === userDetails._id
+    const heIsFollowingYou = userDetails?.following?.find(
+      f => f.userId === currentUser._id
     );
-    console.log("iAmfollowing: ", iAmfollowing)
 
-    const iHaveRequested = userDetails.requestedByMe?.find(
+    const request = userDetails.requestedByMe?.find(
       r => r.userId === currentUser._id
     );
 
-    const iShouldAcceptRequest = userDetails.requestsForMe?.find(
+    const pendingRequest = userDetails.requestsForMe?.find(
       r => r.userId === currentUser._id
     );
 
@@ -103,14 +101,14 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       currentUser.followers.find(f => f.userId === userDetails._id) &&
       userDetails.followers?.find(r => r.userId === currentUser._id);
 
-    setIsFollower(!!follower);
-    setIamFollowing(!!iAmfollowing);
-    setiHaveRequested(!!iHaveRequested);
-    setiShouldAcceptRequestHere(!!iShouldAcceptRequest);
+    setIsFollower(!!youAreFollowingHim);
+    setIsFollowing(!!heIsFollowingYou);
+    setHasRequested(!!request);
+    setHasPendingRequest(!!pendingRequest);
     setIsMutualFollower(!!mutualFollower);
 
-    if (follower) {
-      setFollowDate(follower.followedAt);
+    if (youAreFollowingHim) {
+      setFollowDate(youAreFollowingHim.followedAt);
     }
   }, [userDetails, currentUser]);
 
@@ -125,7 +123,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
     );
     if (res) {
       if (userDetails.isPrivate) {
-        setiHaveRequested(true);
+        setHasRequested(true);
       } else {
         setIsFollower(true);
       }
@@ -178,9 +176,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           targetUserId,
           targetUserUserName
         );
-        console.log("Cancel foillow req , res :" , res)
         if (res) {
-          setiHaveRequested(false);
+          setHasRequested(false);
         }
       }
     });
@@ -195,10 +192,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
       targetUserId,
       targetUserUserName
     );
-    console.log("handleAcceptUserRequest req , res :" , res)
-
     if (res) {
-      setiShouldAcceptRequestHere(false);
+      setHasPendingRequest(false);
       setIsMutualFollower(true);
     }
   };
@@ -222,10 +217,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           targetUserId,
           targetUserUserName
         );
-    console.log("handleRejectUserRequest req , res :" , res)
-
         if (res) {
-          setiShouldAcceptRequestHere(false);
+          setHasPendingRequest(false);
         }
       }
     });
@@ -322,14 +315,14 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
             <div className="mt-4">
               {isMutualFollower && (
                 <p className="text-green-500">
-                  Following each other since {formatDate(followDate)}
+                  Following each other since  {formatDate(followDate)}
                 </p>
               )}
               {isFollower && !isMutualFollower && (
-                <p className="text-green-500">Following you</p>
-              )}
-              {amIFollowing &&   !isMutualFollower && (
                 <p className="text-green-500">You are following</p>
+              )}
+              {isFollowing && !isMutualFollower && (
+                <p className="text-green-500">Following you</p>
               )}
             </div>
           </div>
@@ -337,7 +330,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
         <div className="mt-6 flex space-x-4">
           {userDetails.isPrivate ? (
             <>
-              {!isFollower && !iHaveRequested && !iShouldAcceptRequestHere && (
+              {!isFollower && !hasRequested && !hasPendingRequest && (
                 <button
                   onClick={() =>
                     handleFollowUser(userDetails._id, userDetails.username)
@@ -346,7 +339,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                   Send Follow Request
                 </button>
               )}
-              {iHaveRequested && (
+              {hasRequested && (
                 <button
                   onClick={() =>
                     handleOnCancelRequest(userDetails._id, userDetails.username)
@@ -355,7 +348,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                   Cancel Request
                 </button>
               )}
-              {iShouldAcceptRequestHere && (
+              {hasPendingRequest && (
                 <>
                   <button
                     onClick={() =>
