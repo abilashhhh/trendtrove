@@ -254,7 +254,7 @@ const postRepositoryMongoDB = () => {
             const user = yield userModel_1.default.findById(userId);
             if (!user)
                 throw new Error("User not found");
-            if (user.savedPosts.includes(postId)) {
+            if (user.taggedPosts.includes(postId)) {
                 user.taggedPosts.pull(postId);
                 yield user.save();
                 // console.log("Post removed successfully from saved posts");

@@ -257,6 +257,7 @@ export const removeTaggedPostForUser = async (
     const response = await axiosUserInstance.post<SavePostResponse>(
       `${END_POINTS.REMOVE_TAGGED_POST}`,
       {
+        userId,
         postId,
       }
     );

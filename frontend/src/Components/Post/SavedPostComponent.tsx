@@ -176,19 +176,7 @@ const SavedPostComponent = () => {
     }
   };
 
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    customPaging: () => (
-      <div className="w-5 h-0.5 rounded-lg mt-2 bg-gray-500 dark:bg-gray-500"></div>
-    ),
-    dotsClass: "slick-dots slick-thumb flex justify-center",
-  };
-
+ 
   const handleUnsavePost = async (postId: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -358,7 +346,7 @@ const SavedPostComponent = () => {
             </div>
           ))
         ) : (
-          <p>No posts available</p>
+          <p className="p-5 font-medium size-5">No posts available</p>
         )}
       </div>
 

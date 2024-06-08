@@ -124,6 +124,7 @@ const TaggedPostComponent = () => {
     }
   };
 
+ 
   useEffect(() => {
     if (posts.length > 0) {
       posts.forEach(post => fetchLikesDislikesData(post._id));
@@ -200,7 +201,7 @@ const TaggedPostComponent = () => {
       confirmButtonText: "Yes, remove it!",
     }).then(async result => {
       if (result.isConfirmed) {
-        // console.log("removing post, postId:", postId);
+        console.log("removing post, postId:", postId);
         await removeTaggedPostForUser(currentUser._id, postId);
 
         Swal.fire(
@@ -359,7 +360,8 @@ const TaggedPostComponent = () => {
             </div>
           ))
         ) : (
-          <p>No posts available</p>
+          <p className="p-5 font-medium size-5">No posts available</p>
+
         )}
       </div>
 

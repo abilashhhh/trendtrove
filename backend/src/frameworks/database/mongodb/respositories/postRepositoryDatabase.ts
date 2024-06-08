@@ -285,7 +285,7 @@ export const postRepositoryMongoDB = () => {
       const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
 
-      if (user.savedPosts.includes(postId)) {
+      if (user.taggedPosts.includes(postId)) {
         user.taggedPosts.pull(postId);
         await user.save();
         // console.log("Post removed successfully from saved posts");
