@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { sendAcceptFollowRequest, sendCancelFollowRequest, sendFollowRequest, sendUnfollowRequest } from "../API/User/user";
+import { sendAcceptFollowRequest, sendCancelFollowRequest, sendFollowRequest, sendRejectFollowRequest, sendUnfollowRequest } from "../API/User/user";
 
 export const followUser = async (
   currentUser: string,
@@ -131,7 +131,7 @@ export const rejectFollowRequests = async (
       );
       console.log("rejectResult: ", rejectResult);
       if (rejectResult.status === "success") {
-        toast.success(`Successfully accepted friend request for ${targetUserUserName}`);
+        toast.success(`Successfully rejected friend request for ${targetUserUserName}`);
         return true
   
       } else {
@@ -139,7 +139,7 @@ export const rejectFollowRequests = async (
         return false
       }
     } catch (error) {
-      toast.error("Failed to reject friend request");
+      toast.error("Failed to reject friend request"); 
     }
   };
   

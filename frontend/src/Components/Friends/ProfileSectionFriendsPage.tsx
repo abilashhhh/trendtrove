@@ -98,8 +98,8 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
     );
 
     const mutualFollower =
-      currentUser.followers.find(f => f.userId === userDetails._id) &&
-      userDetails.followers?.find(r => r.userId === currentUser._id);
+    userDetails.followers?.find(f => f.userId === currentUser._id) &&
+      userDetails.following?.find(r => r.userId === currentUser._id);
 
     setIsFollower(!!youAreFollowingHim);
     setIsFollowing(!!heIsFollowingYou);
@@ -313,18 +313,16 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
               </div>
             </div>
             <div className="mt-4">
-              {isMutualFollower && (
-                <p className="text-green-500">
-                  Following each other since  {formatDate(followDate)}
-                </p>
-              )}
-              {isFollower && !isMutualFollower && (
-                <p className="text-green-500">You are following</p>
-              )}
-              {isFollowing && !isMutualFollower && (
-                <p className="text-green-500">Following you</p>
-              )}
-            </div>
+  {isMutualFollower ? (
+    <p className="text-green-500">
+      Following each other since {formatDate(followDate)}
+    </p>
+  ) : isFollower ? (
+    <p className="text-green-500">You are following</p>
+  ) : isFollowing ? (
+    <p className="text-green-500">Following you</p>
+  ) : ""}
+</div>
           </div>
         </div>
         <div className="mt-6 flex space-x-4">
