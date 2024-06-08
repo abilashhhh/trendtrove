@@ -70,22 +70,23 @@ const ProfilePageIndividualComponent: React.FC = () => {
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   let navigate = useNavigate();
 
-  if(username === currentUser?.username){
-    navigate('/profile')
+  if (username === currentUser?.username) {
+    navigate("/profile");
   }
 
   const [userDetails, setUserDetails] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const [isFollower, setIsFollower] = useState<boolean>(false);
-  const [hasRequested, setHasRequested] = useState<boolean>(false);
-  const [hasPendingRequest, setHasPendingRequest] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [iRequestedHim, setRequestsIMade] = useState<boolean>(false);
+  const [heRequestedMe, setHeRequestedMe] = useState<boolean>(false);
   const [isMutualFollower, setIsMutualFollower] = useState<boolean>(false);
   const [followDate, setFollowDate] = useState<string | undefined>("");
 
-
-  const [showFollowersModal, setShowFollowersModal] = useState(false); 
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
-  
+
   const handleOpenFollowersModal = () => {
     setShowFollowersModal(true);
   };
@@ -118,7 +119,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
     };
   }>({});
 
-  
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -134,30 +134,148 @@ const ProfilePageIndividualComponent: React.FC = () => {
   }, [username]);
 
   useEffect(() => {
-    if (userDetails) {
-      const follower = userDetails.followers.find(
-        f => f.userId === currentUser._id
-      );
-      const request = userDetails.requestedByMe?.find(
-        r => r.userId === currentUser._id
-      );
-      const pendingRequest = userDetails.requestsForMe?.find(
-        r => r.userId === currentUser._id
-      );
-      const mutualFollower =
-        currentUser.followers.find(f => f.userId === userDetails._id) &&
-        userDetails.followers.find(r => r.userId === currentUser._id);
+    const youAreFollowingHim = userDetails?.followers.find(
+      f => f.userId === currentUser?._id
+    );
 
-      setIsFollower(!!follower);
-      setHasRequested(!!request);
-      setHasPendingRequest(!!pendingRequest);
-      setIsMutualFollower(!!mutualFollower);
+    const heIsFollowingYou = userDetails?.following?.find(
+      f => f.userId === currentUser?._id
+    );
 
-      if (follower) {
-        setFollowDate(follower.followedAt);
-      }
+    const requestedByMe = userDetails?.requestsForMe?.find(
+      r => r.userId === currentUser?._id
+    );
+
+    const requestsForMe = userDetails?.requestedByMe?.find(
+      r => r.userId === currentUser?._id
+    );
+
+    const mutualFollower =
+      userDetails?.followers?.find(f => f.userId === currentUser?._id) &&
+      userDetails?.following?.find(r => r.userId === currentUser?._id);
+
+    setIsFollower(!!youAreFollowingHim);
+    setIsFollowing(!!heIsFollowingYou);
+    setRequestsIMade(!!requestedByMe);
+    setHeRequestedMe(!!requestsForMe);
+    setIsMutualFollower(!!mutualFollower);
+
+    if (youAreFollowingHim) {
+      setFollowDate(youAreFollowingHim.followedAt);
     }
   }, [userDetails, currentUser]);
+
+  const handleFollowUser = async (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    const res = await followUser(
+      currentUser._id,
+      targetUserId,
+      targetUserUserName
+    );
+    if (res) {
+      if (userDetails.isPrivate) {
+        setRequestsIMade(true);
+      } else {
+        setIsFollower(true);
+      }
+    }
+  };
+
+  const handleOnUnfollowUser = async (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to unfollow ${targetUserUserName}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Unfollow",
+    }).then(async result => {
+      if (result.isConfirmed) {
+        const res = await unfollowUser(
+          currentUser._id,
+          targetUserId,
+          targetUserUserName
+        );
+        if (res) {
+          setIsFollower(false);
+          setIsMutualFollower(false);
+        }
+      }
+    });
+  };
+
+  const handleOnCancelRequest = async (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to cancel the follow request to ${targetUserUserName}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Cancel Request",
+    }).then(async result => {
+      if (result.isConfirmed) {
+        const res = await cancelFollowRequest(
+          currentUser._id,
+          targetUserId,
+          targetUserUserName
+        );
+        if (res) {
+          setRequestsIMade(false);
+        }
+      }
+    });
+  };
+
+  const handleAcceptUserRequest = async (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    const res = await acceptFollowRequests(
+      currentUser._id,
+      targetUserId,
+      targetUserUserName
+    );
+    if (res) {
+      setHeRequestedMe(false);
+      setIsMutualFollower(true);
+    }
+  };
+
+  const handleRejectUserRequest = async (
+    targetUserId: string,
+    targetUserUserName: string
+  ) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to reject the follow request from ${targetUserUserName}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Reject Request",
+    }).then(async result => {
+      if (result.isConfirmed) {
+        const res = await rejectFollowRequests(
+          currentUser._id,
+          targetUserId,
+          targetUserUserName
+        );
+        if (res) {
+          setHeRequestedMe(false);
+        }
+      }
+    });
+  };
 
   useEffect(() => {
     const fetchPostCount = async () => {
@@ -252,126 +370,37 @@ const ProfilePageIndividualComponent: React.FC = () => {
     }
   };
 
-  const handleFollowUser = async (
-    targetUserId: string,
-    targetUserUserName: string
-  ) => {
-    const res = await followUser(
-      currentUser._id,
-      targetUserId,
-      targetUserUserName
+  useEffect(() => {
+    const youAreFollowingHim = userDetails?.followers.find(
+      f => f.userId === currentUser?._id
     );
-    if (res) {
-      if (userDetails?.isPrivate) {
-        setHasRequested(true);
-      } else {
-        setIsFollower(true);
-      }
-    }
-  };
 
-  const handleOnUnfollowUser = async (
-    targetUserId: string,
-    targetUserUserName: string
-  ) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You are about to unfollow ${targetUserUserName}.`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Unfollow",
-    }).then(async result => {
-      if (result.isConfirmed) {
-        const res = await unfollowUser(
-          currentUser._id,
-          targetUserId,
-          targetUserUserName
-        );
-        if (res) {
-          setIsFollower(false);
-          setIsMutualFollower(false);
-        }
-      }
-    });
-  };
-
-  const handleOnCancelRequest = async (
-    targetUserId: string,
-    targetUserUserName: string
-  ) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You are about to cancel the follow request to ${targetUserUserName}.`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Cancel Request",
-    }).then(async result => {
-      if (result.isConfirmed) {
-        const res = await cancelFollowRequest(
-          currentUser._id,
-          targetUserId,
-          targetUserUserName
-        );
-        if (res) {
-          setHasRequested(false);
-        }
-      }
-    });
-  };
-
-  const handleAcceptUserRequest = async (
-    targetUserId: string,
-    targetUserUserName: string
-  ) => {
-    const res = await acceptFollowRequests(
-      currentUser._id,
-      targetUserId,
-      targetUserUserName
+    const heIsFollowingYou = userDetails?.following?.find(
+      f => f.userId === currentUser?._id
     );
-    if (res) {
-      setHasPendingRequest(false);
-      setIsMutualFollower(true);
-    }
-  };
 
-  const handleRejectUserRequest = async (
-    targetUserId: string,
-    targetUserUserName: string
-  ) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You are about to reject the follow request from ${targetUserUserName}.`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Reject Request",
-    }).then(async result => {
-      if (result.isConfirmed) {
-        const res = await rejectFollowRequests(
-          currentUser._id,
-          targetUserId,
-          targetUserUserName
-        );
-        if (res) {
-          setHasPendingRequest(false);
-        }
-      }
-    });
-  };
+    const requestedByMe = userDetails?.requestsForMe?.find(
+      r => r.userId === currentUser?._id
+    );
 
-  const handleSavePost = async (postId: string) => {
-    const response = await savePost(currentUser?._id, postId);
-    if (response.status === "success") {
-      toast.success("Post saved successfully");
-    } else {
-      toast.error("Error saving post");
+    const requestsForMe = userDetails?.requestedByMe?.find(
+      r => r.userId === currentUser?._id
+    );
+
+    const mutualFollower =
+      userDetails?.followers?.find(f => f.userId === currentUser?._id) &&
+      userDetails?.following?.find(r => r.userId === currentUser?._id);
+
+    setIsFollower(!!youAreFollowingHim);
+    setIsFollowing(!!heIsFollowingYou);
+    setRequestsIMade(!!requestedByMe);
+    setHeRequestedMe(!!requestsForMe);
+    setIsMutualFollower(!!mutualFollower);
+
+    if (youAreFollowingHim) {
+      setFollowDate(youAreFollowingHim.followedAt);
     }
-  };
+  }, [userDetails, currentUser]);
 
   const handleLike = async (postId: string) => {
     const result = await likePost(currentUser._id, postId);
@@ -441,8 +470,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
       </main>
     );
   }
-
- 
 
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto no-scrollbar bg-gray-800 dark:bg-gray-700 text-white">
@@ -520,16 +547,16 @@ const ProfilePageIndividualComponent: React.FC = () => {
                 </div>
               </div>
               <div className="mt-4">
-                {isMutualFollower && (
+                {isMutualFollower ? (
                   <p className="text-green-500">
                     Following each other since {formatDate(followDate)}
                   </p>
-                )}
-                {isFollower && !isMutualFollower && (
+                ) : isFollower ? (
                   <p className="text-green-500">You are following</p>
-                )}
-                {!isFollower && isMutualFollower && (
+                ) : isFollowing ? (
                   <p className="text-green-500">Following you</p>
+                ) : (
+                  ""
                 )}
               </div>
             </div>
@@ -537,7 +564,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
           <div className="mt-6 flex space-x-4">
             {userDetails.isPrivate ? (
               <>
-                {!isFollower && !hasRequested && !hasPendingRequest && (
+                {!isFollower && !iRequestedHim && (
                   <button
                     onClick={() =>
                       handleFollowUser(userDetails._id, userDetails.username)
@@ -546,7 +573,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
                     Send Follow Request
                   </button>
                 )}
-                {hasRequested && (
+                {!isFollower && iRequestedHim && (
                   <button
                     onClick={() =>
                       handleOnCancelRequest(
@@ -558,7 +585,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
                     Cancel Request
                   </button>
                 )}
-                {hasPendingRequest && (
+                {heRequestedMe && !iRequestedHim && (
                   <>
                     <button
                       onClick={() =>
@@ -614,7 +641,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
             userDetails.followers.some(
               follower => follower.userId === currentUser._id
             )) ? (
-              <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar   lg:grid lg:grid-cols-3   ">
+            <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar   lg:grid lg:grid-cols-3   ">
               {posts.length > 0 ? (
                 posts.map(post => (
                   <div
@@ -631,7 +658,9 @@ const ProfilePageIndividualComponent: React.FC = () => {
                         <div>
                           <p
                             className="font-bold"
-                            onClick={() => navigate(`/profiles/${post.username}`)}>
+                            onClick={() =>
+                              navigate(`/profiles/${post.username}`)
+                            }>
                             {post.username}
                           </p>
                           {post.location && (
@@ -653,12 +682,16 @@ const ProfilePageIndividualComponent: React.FC = () => {
                         {showOptions === post._id && (
                           <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                             <p
-                              onClick={() => navigate(`/profiles/${post.username}`)}
+                              onClick={() =>
+                                navigate(`/profiles/${post.username}`)
+                              }
                               className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                               View Profile
                             </p>
                             <p
-                              onClick={() => navigate(`/reportPost/${post._id}`)}
+                              onClick={() =>
+                                navigate(`/reportPost/${post._id}`)
+                              }
                               className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                               Report Post
                             </p>
@@ -671,7 +704,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
                         )}
                       </div>
                     </div>
-      
+
                     {post.images.length > 0 && post.videos.length > 0 ? (
                       <Slider {...settings}>
                         {post.images.map((image: string, index: number) => (
@@ -801,7 +834,8 @@ const ProfilePageIndividualComponent: React.FC = () => {
             </div>
           ) : (
             <div className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg">
-              Can't view profile, please send friend request to view full profile
+              Can't view profile, please send friend request to view full
+              profile
             </div>
           )}
         </div>
@@ -817,7 +851,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
           onClose={handleCloseFollowingModal}
           title="Following"
           users={userDetails.following}
-        /> 
+        />
       </div>
     </main>
   );
