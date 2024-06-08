@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 interface Post {
   _id: string;
@@ -28,10 +28,10 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
     ),
     dotsClass: "slick-dots slick-thumb flex justify-center",
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-    <div className="p-6"  onDoubleClick={() => navigate(`/post/${post._id}`)}>
+    <div className="p-6" onDoubleClick={() => navigate(`/post/${post._id}`)}>
       {post.images.length > 0 && post.videos.length > 0 ? (
         <Slider {...settings}>
           {post.images.map((image: string, index: number) => (
@@ -44,13 +44,13 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
             </div>
           ))}
           {post.videos.map((video: string, index: number) => (
-            <div key={index}>
+            <div key={index} >
               <video
                 src={video}
                 controls
                 autoPlay
-                muted
-                className="w-full h-auto"
+                muted 
+                className="w-full h-auto items-center align-middle"
               />
             </div>
           ))}
@@ -82,7 +82,7 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
             controls
             autoPlay
             muted
-            className="w-full h-auto"
+            className="w-full h-auto items-center align-middle"
           />
         ) : (
           <Slider {...settings}>
@@ -93,7 +93,7 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
                   controls
                   autoPlay
                   muted
-                  className="w-full h-auto"
+                  className="w-full h-auto items-center align-middle"
                 />
               </div>
             ))}

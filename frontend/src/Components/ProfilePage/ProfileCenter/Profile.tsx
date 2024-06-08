@@ -31,9 +31,6 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
- 
-
-
 const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
   const navigate = useNavigate();
   const handleEdit = () => {
@@ -42,16 +39,15 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
 
   const [postCount, setPostCount] = useState(0);
 
-
   const fetchPostCount = async () => {
     try {
       let username;
-      console.log("userDetails.username : ", userDetails.username)
-      if(userDetails && userDetails.username){
-         username = userDetails.username
+      console.log("userDetails.username : ", userDetails.username);
+      if (userDetails && userDetails.username) {
+        username = userDetails.username;
       }
       const count = await getPostsLengthOfTheUser(username);
-      console.log(count.data)
+      console.log(count.data);
       setPostCount(count.data);
     } catch (error) {
       console.error("Error fetching post count:", error);
@@ -60,7 +56,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
 
   useEffect(() => {
     fetchPostCount();
-  }, );
+  });
 
   return (
     <main className="flex-1  bg-slate-800 min-h-screen w-full p-3 rounded-lg dark:bg-slate-900 text-white">
@@ -77,12 +73,12 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
 
             {/* Profile Picture */}
             <div className="bg-cover bg-center h-72 w-full">
-        <img
-          src={userDetails?.coverPhoto || "/"}
-          alt={`${userDetails.username}'s profile`}
-          className="w-full h-full object-cover "
-        />
-      </div>
+              <img
+                src={userDetails?.coverPhoto || "/"}
+                alt={`${userDetails.username}'s profile`}
+                className="w-full h-full object-cover "
+              />
+            </div>
             <div className="flex items-center justify-center mb-4">
               <img
                 src={userDetails.dp}
@@ -231,8 +227,8 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                 Posts
               </h2>
               <p className="text-lg font-bold text-gray-800 dark:text-white">
-                {postCount && postCount || "0"}
-               </p>
+                {(postCount && postCount) || "0"}
+              </p>
             </div>
 
             <div className="text-center md:w-1/3">
@@ -254,21 +250,9 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
             </div>
           </div>
 
-
-
-<div>
-  <PostInProfilePage />
-</div>
-
-
-
-
-
-
-
-
-
- 
+          <div>
+            <PostInProfilePage />
+          </div>
         </div>
       </div>
     </main>

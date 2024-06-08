@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
-import PostsDisplayCommon from "../PostsDisplayCommon";
+import PostsDisplayCommon from "../Post/PostsDisplayCommon";
 
 const MiddleContainer: React.FC = () => {
   const navigate = useNavigate();

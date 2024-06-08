@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
- 
 import Swal from "sweetalert2";
 import {
   dislikePost,
@@ -12,10 +10,8 @@ import {
   getDislikedPosts,
   getPostLikesAndDislikesInfo,
   fetchPostsOfTheCurrentUser,
-  deletePostForUser,
   fetchSavedPostsOfTheCurrentUser,
   removeSavedPostForUser,
-  fetchTaggedPostsOfTheCurrentUser,
 } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -29,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
-import PostsDisplayCommon from "../PostsDisplayCommon";
+import PostsDisplayCommon from "./PostsDisplayCommon";
 
 const SavedPostComponent = () => {
   const navigate = useNavigate();
@@ -66,8 +62,8 @@ const SavedPostComponent = () => {
           getDislikedPosts(userId),
         ]);
 
-        console.log("Liked posts:", likedResponse);
-        console.log("Disliked posts:", dislikedResponse);
+        // console.log("Liked posts:", likedResponse);
+        // console.log("Disliked posts:", dislikedResponse);
 
         if (likedResponse) {
           const likedPostsData = likedResponse.likedPosts.reduce(
@@ -96,7 +92,7 @@ const SavedPostComponent = () => {
         }
       }
     } catch (error) {
-      console.log("Error fetching liked and disliked posts:", error);
+      // console.log("Error fetching liked and disliked posts:", error);
     }
   };
 
@@ -104,12 +100,12 @@ const SavedPostComponent = () => {
     if (currentUser?._id) {
       const fetchData = async () => {
         const data = await fetchPostsOfTheCurrentUser();
-        console.log("data : ", data);
+        // console.log("data : ", data);
         if (data) {
           setPosts(data);
         }
         const savedPostsData = await fetchSavedPostsOfTheCurrentUser();
-        console.log("SavedPostComponent : ", SavedPostComponent);
+        // console.log("SavedPostComponent : ", SavedPostComponent);
         if (savedPostsData) {
           setSavedPosts(savedPostsData);
         }
@@ -124,7 +120,7 @@ const SavedPostComponent = () => {
       const data = await getPostLikesAndDislikesInfo(postId);
       setLikesDislikesData(prev => ({ ...prev, [postId]: data }));
     } catch (error) {
-      console.error("Error fetching likes and dislikes data:", error);
+      // console.error("Error fetching likes and dislikes data:", error);
     }
   };
 
@@ -136,7 +132,7 @@ const SavedPostComponent = () => {
 
   const handleLike = async (postId: string) => {
     const result = await likePost(currentUser._id, postId);
-    console.log("Result of handleLike: ", result);
+    // console.log("Result of handleLike: ", result);
 
     setLikedPosts(prev => ({
       ...prev,
@@ -154,7 +150,7 @@ const SavedPostComponent = () => {
 
   const handleDislike = async (postId: string) => {
     const result = await dislikePost(currentUser._id, postId);
-    console.log("Result of handleDislike: ", result);
+    // console.log("Result of handleDislike: ", result);
 
     setDislikedPosts(prev => ({
       ...prev,
@@ -193,8 +189,6 @@ const SavedPostComponent = () => {
     dotsClass: "slick-dots slick-thumb flex justify-center",
   };
 
- 
-
   const handleUnsavePost = async (postId: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -206,8 +200,8 @@ const SavedPostComponent = () => {
       confirmButtonText: "Yes, remove it!",
     }).then(async result => {
       if (result.isConfirmed) {
-        console.log("removing post, postId:", postId);
-        await removeSavedPostForUser(currentUser._id , postId);
+        // console.log("removing post, postId:", postId);
+        await removeSavedPostForUser(currentUser._id, postId);
 
         Swal.fire(
           "Removed!",
@@ -221,156 +215,153 @@ const SavedPostComponent = () => {
 
   return (
     <>
- 
-          <div className="rounded-lg bg-gray-100  lg:grid lg:grid-cols-4 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar  justify-center">
-            {savedPosts.length > 0 ? (
-              savedPosts.map(post => (
-                <div
-                  key={post._id}
-                  className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center gap-2 cursor-pointer">
-                      <img
-                        src={post.dp}
-                        alt=""
-                        className="rounded-full h-10 w-10"
-                        onClick={() => navigate(`/profiles/${post.username}`)}
-                      />
-                      <div>
-                        <p
-                          className="font-bold"
-                          onClick={() =>
-                            navigate(`/profiles/${post.username}`)
-                          }>
-                          {post.username}
-                        </p>
-                        {post.location && (
-                          <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight">
-                            <FaMapMarkedAlt /> {post.location}
-                          </p>
-                        )}
-                        <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
-                          {new Date(post.createdAt).toLocaleString()}
-                        </p>
+<div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
+        {savedPosts.length > 0 ? (
+          savedPosts.map(post => (
+            <div
+              key={post._id}
+              className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
+              <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center gap-2 cursor-pointer">
+                  <img
+                    src={post.dp}
+                    alt=""
+                    className="rounded-full h-10 w-10"
+                    onClick={() => navigate(`/profiles/${post.username}`)}
+                  />
+                  <div>
+                    <p
+                      className="font-bold"
+                      onClick={() => navigate(`/profiles/${post.username}`)}>
+                      {post.username}
+                    </p>
+                    {post.location && (
+                      <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight">
+                        <FaMapMarkedAlt /> {post.location}
+                      </p>
+                    )}
+                    <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
+                      {new Date(post.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+                <div className="relative">
+                  <button
+                    className="focus:outline-none mr-2"
+                    onClick={() => toggleOptions(post._id)}>
+                    <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
+                  </button>
+                  {showOptions === post._id && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 cursor-pointer rounded-lg shadow-lg z-10">
+                      <p
+                        onClick={() => handleUnsavePost(post._id)}
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Unsave Post
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <PostsDisplayCommon post={post} />
+
+              <div className="flex justify-between">
+                <div className="flex gap-2 items-center mt-4">
+                  <button
+                    className={`flex items-center space-x-2 hover:text-blue-600 ${
+                      likedPosts[post._id]
+                        ? "text-blue-600"
+                        : "text-gray-600 dark:text-gray-400"
+                    }`}
+                    onClick={() => handleLike(post._id)}>
+                    {likedPosts[post._id] ? (
+                      <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
+                    ) : (
+                      <AiOutlineLike className="text-xl md:text-2xl lg:text-3xl" />
+                    )}
+                  </button>
+                  <button
+                    className={`flex items-center space-x-2 hover:text-red-600 ${
+                      dislikedPosts[post._id]
+                        ? "text-red-600"
+                        : "text-gray-600 dark:text-gray-400"
+                    }`}
+                    onClick={() => handleDislike(post._id)}>
+                    {dislikedPosts[post._id] ? (
+                      <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
+                    ) : (
+                      <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
+                    )}
+                  </button>
+                  <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
+                    <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
+                  </button>
+                </div>
+                <div>
+                  <div className="gap-2  flex mt-4 items-center text-xs cursor-pointer">
+                    <div className="flex gap-2  cursor-pointer">
+                      <div title="Hashtags">
+                        <FaHashtag
+                          className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                          onClick={() => {
+                            setShowModal(true);
+                            setModalHashtags(post.hashtags);
+                            setShowingData("Hashtags");
+                          }}
+                        />
+                      </div>
+                      <div title="Mentions">
+                        <FaUser
+                          className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                          onClick={() => {
+                            setShowModal(true);
+                            setModalHashtags(post.mentions);
+                            setShowingData("Mentions");
+                          }}
+                        />
                       </div>
                     </div>
-                    <div className="relative">
-                      <button
-                        className="focus:outline-none mr-2"
-                        onClick={() => toggleOptions(post._id)}>
-                        <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
-                      </button>
-                      {showOptions === post._id && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 cursor-pointer rounded-lg shadow-lg z-10">
-                          <p
-                            onClick={() => handleUnsavePost(post._id)}
-                            className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            Unsave Post
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <PostsDisplayCommon post={post} />
 
-                  <div className="flex justify-between">
-                    <div className="flex gap-2 items-center mt-4">
-                      <button
-                        className={`flex items-center space-x-2 hover:text-blue-600 ${
-                          likedPosts[post._id]
-                            ? "text-blue-600"
-                            : "text-gray-600 dark:text-gray-400"
-                        }`}
-                        onClick={() => handleLike(post._id)}>
-                        {likedPosts[post._id] ? (
-                          <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
-                        ) : (
-                          <AiOutlineLike className="text-xl md:text-2xl lg:text-3xl" />
-                        )}
-                      </button>
-                      <button
-                        className={`flex items-center space-x-2 hover:text-red-600 ${
-                          dislikedPosts[post._id]
-                            ? "text-red-600"
-                            : "text-gray-600 dark:text-gray-400"
-                        }`}
-                        onClick={() => handleDislike(post._id)}>
-                        {dislikedPosts[post._id] ? (
-                          <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
-                        ) : (
-                          <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
-                        )}
-                      </button>
-                      <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
-                        <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
-                      </button>
-                    </div>
-                    <div  >
-                      <div className="gap-2  flex mt-4 items-center text-xs cursor-pointer">
-                        <div className="flex gap-2  cursor-pointer">
-                          <div title="Hashtags">
-                            <FaHashtag
-                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
-                              onClick={() => {
-                                setShowModal(true);
-                                setModalHashtags(post.hashtags);
-                                setShowingData("Hashtags");
-                              }}
-                            />
-                          </div>
-                          <div title="Mentions">
-                            <FaUser
-                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
-                              onClick={() => {
-                                setShowModal(true);
-                                setModalHashtags(post.mentions);
-                                setShowingData("Mentions");
-                              }}
-                            />
-                          </div>
-                        </div>
+                    <div className="flex flex-col">
+                      <div
+                        title="Likes count"
+                        onClick={() => {
+                          setShowLikesDislikesModal(true);
+                          setModalLikesDislikes(
+                            likesDislikesData[post._id].likesdislikesinfo
+                              ?.likedUsers
+                          );
+                          setShowingDataLikesDislikes("Liked Users");
+                        }}>
+                        Likes:{" "}
+                        {likesDislikesData[post._id]?.likesdislikesinfo
+                          ?.likesCount || 0}
+                      </div>
 
-                        <div className="flex flex-col">
-                          <div
-                            title="Likes count"
-                            onClick={() => {
-                              setShowLikesDislikesModal(true);
-                              setModalLikesDislikes(
-                                likesDislikesData[post._id].likesdislikesinfo
-                                  ?.likedUsers
-                              );
-                              setShowingDataLikesDislikes("Liked Users");
-                            }}>
-                            Likes:{" "}
-                            {likesDislikesData[post._id]?.likesdislikesinfo
-                              ?.likesCount || 0}
-                          </div>
-
-                          <div
-                            title="Dislikes count"
-                            onClick={() => {
-                              setShowLikesDislikesModal(true);
-                              setModalLikesDislikes(
-                                likesDislikesData[post._id].likesdislikesinfo
-                                  ?.dislikedUsers
-                              );
-                              setShowingDataLikesDislikes("Disliked Users");
-                            }}>
-                            Dislikes:{" "}
-                            {likesDislikesData[post._id]?.likesdislikesinfo
-                              ?.dislikesCount || 0}
-                          </div>
-                        </div>
+                      <div
+                        title="Dislikes count"
+                        onClick={() => {
+                          setShowLikesDislikesModal(true);
+                          setModalLikesDislikes(
+                            likesDislikesData[post._id].likesdislikesinfo
+                              ?.dislikedUsers
+                          );
+                          setShowingDataLikesDislikes("Disliked Users");
+                        }}>
+                        Dislikes:{" "}
+                        {likesDislikesData[post._id]?.likesdislikesinfo
+                          ?.dislikesCount || 0}
                       </div>
                     </div>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p>No posts available</p>
-            )}
-          </div>
-       
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No posts available</p>
+        )}
+      </div>
+
       <MentionsHashtagsModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -388,4 +379,4 @@ const SavedPostComponent = () => {
   );
 };
 
-export default SavedPostComponent
+export default SavedPostComponent;

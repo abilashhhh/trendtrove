@@ -312,7 +312,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                 </span>
               </div>
             </div>
-            <div className="mt-4">
+            <div className="mt-4 flex items-center align-middle justify-center">
               {isMutualFollower ? (
                 <p className="text-green-500">
                   Following each other since {formatDate(followDate)}
@@ -327,7 +327,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
             </div>
           </div>
         </div>
-        <div className="mt-6 flex space-x-4">
+        <div className="mt-6 flex space-x-4 items-center align-middle justify-center">
           {userDetails.isPrivate ? (
             <>
               {!isFollower && !iRequestedHim && (
@@ -395,15 +395,14 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
               Unfollow
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => navigate(`/profiles/${userDetails.username}`)}
+            className="bg-blue-500 hover:bg-blue-700 ml-5 text-white font-bold py-2 px-4   rounded focus:outline-none focus:shadow-outline ">
+            View Full Profile
+          </button>
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={() => navigate(`/profiles/${userDetails.username}`)}
-        className="bg-blue-500 hover:bg-blue-700 ml-5 text-white font-bold py-2 px-4 mb-5 rounded focus:outline-none focus:shadow-outline">
-        View Full Profile
-      </button>
 
       <Modal
         isOpen={showFollowersModal}

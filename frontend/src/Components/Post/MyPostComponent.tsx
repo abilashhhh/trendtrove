@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import "react-toastify/dist/ReactToastify.css";
+
 import Swal from "sweetalert2";
 import {
   dislikePost,
@@ -10,8 +11,7 @@ import {
   getDislikedPosts,
   getPostLikesAndDislikesInfo,
   fetchPostsOfTheCurrentUser,
-  removeTaggedPostForUser,
-  fetchTaggedPostsOfTheCurrentUser,
+  deletePostForUser,
 } from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -22,16 +22,20 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
+import {
+  FaHashtag,
+  FaMapMarkedAlt,
+  FaTimesCircle,
+  FaUser,
+} from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
 import PostsDisplayCommon from "./PostsDisplayCommon";
 
-const TaggedPostComponent = () => {
+const MyPostComponent = () => {
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState<any[]>([]);
-  const [taggedPosts, setTaggedPosts] = useState<any[]>([]);
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
   const [dislikedPosts, setDislikedPosts] = useState<{
@@ -104,11 +108,7 @@ const TaggedPostComponent = () => {
         if (data) {
           setPosts(data);
         }
-        const taggedPostData = await fetchTaggedPostsOfTheCurrentUser();
-        // console.log("taggedPostData : ", taggedPostData);
-        if (taggedPostData) {
-          setTaggedPosts(taggedPostData);
-        }
+
         fetchUserLikesAndDislikes(currentUser._id);
       };
       fetchData();
@@ -120,15 +120,9 @@ const TaggedPostComponent = () => {
       const data = await getPostLikesAndDislikesInfo(postId);
       setLikesDislikesData(prev => ({ ...prev, [postId]: data }));
     } catch (error) {
-      console.error("Error fetching likes and dislikes data:", error);
+      // console.error("Error fetching likes and dislikes data:", error);
     }
   };
-
-  useEffect(() => {
-    if (posts.length > 0) {
-      posts.forEach(post => fetchLikesDislikesData(post._id));
-    }
-  }, [posts]);
 
   const handleLike = async (postId: string) => {
     const result = await likePost(currentUser._id, postId);
@@ -176,38 +170,27 @@ const TaggedPostComponent = () => {
     }
   };
 
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    customPaging: () => (
-      <div className="w-5 h-0.5 rounded-lg mt-2 bg-gray-500 dark:bg-gray-500"></div>
-    ),
-    dotsClass: "slick-dots slick-thumb flex justify-center",
-  };
+  useEffect(() => {
+    if (posts.length > 0) {
+      posts.forEach(post => fetchLikesDislikesData(post._id));
+    }
+  }, [posts]);
 
-  const handleRemoveTag = async (postId: string) => {
+  const handleDeletePost = async (postId: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This post will be removed from the tagged list!",
+      text: "You will not be able to recover this post!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, remove it!",
+      confirmButtonText: "Yes, delete it!",
     }).then(async result => {
       if (result.isConfirmed) {
-        // console.log("removing post, postId:", postId);
-        await removeTaggedPostForUser(currentUser._id, postId);
+        // console.log("Deleting post, postId:", postId);
+        await deletePostForUser(postId);
 
-        Swal.fire(
-          "Removed!",
-          "Your post has been removed from tagged list.",
-          "success"
-        );
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
         window.location.reload();
       }
     });
@@ -215,9 +198,9 @@ const TaggedPostComponent = () => {
 
   return (
     <>
-      <div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
-        {taggedPosts.length > 0 ? (
-          taggedPosts.map(post => (
+    <div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
+        {posts.length > 0 ? (
+          posts.map(post => (
             <div
               key={post._id}
               className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
@@ -245,18 +228,31 @@ const TaggedPostComponent = () => {
                     </p>
                   </div>
                 </div>
-                <div className="relative">
+                <div className="relative flex">
+                  <>
+                    {post.isBlocked && (
+                      <div title="Post is blocked by admin">
+                        <FaTimesCircle className="text-red-500" />
+                      </div>
+                    )}
+                  </>
+
                   <button
                     className="focus:outline-none mr-2"
                     onClick={() => toggleOptions(post._id)}>
                     <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
                   </button>
                   {showOptions === post._id && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 cursor-pointer rounded-lg shadow-lg z-10">
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                       <p
-                        onClick={() => handleRemoveTag(post._id)}
+                        onClick={() => navigate(`/editpost/${post._id}`)}
                         className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Remove tag
+                        Edit Post
+                      </p>
+                      <p
+                        onClick={() => handleDeletePost(post._id)}
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                        Delete Post
                       </p>
                     </div>
                   )}
@@ -297,6 +293,7 @@ const TaggedPostComponent = () => {
                     <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                   </button>
                 </div>
+
                 <div>
                   <div className="gap-2  flex mt-4 items-center text-xs cursor-pointer">
                     <div className="flex gap-2  cursor-pointer">
@@ -380,4 +377,4 @@ const TaggedPostComponent = () => {
   );
 };
 
-export default TaggedPostComponent;
+export default MyPostComponent;

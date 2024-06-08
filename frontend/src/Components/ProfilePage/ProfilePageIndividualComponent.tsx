@@ -17,7 +17,7 @@ import { getUserProfile } from "../../API/User/user";
 import { getPostsLengthOfTheUser } from "../../API/Post/post";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
- 
+
 import { FaMapMarkedAlt } from "react-icons/fa";
 import {
   dislikePost,
@@ -36,7 +36,7 @@ import {
   AiFillLike,
   AiFillDislike,
 } from "react-icons/ai";
-import PostsDisplayCommon from "../PostsDisplayCommon";
+import PostsDisplayCommon from "../Post/PostsDisplayCommon";
 
 interface UserInfo {
   coverPhoto: string;
@@ -545,7 +545,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <div className="mt-4">
+              <div className="mt-4  flex items-center text-center align-middle justify-center ">
                 {isMutualFollower ? (
                   <p className="text-green-500">
                     Following each other since {formatDate(followDate)}
@@ -560,7 +560,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="mt-6 flex space-x-4">
+          <div className="mt-6 flex space-x-4 items-center align-middle justify-center">
             {userDetails.isPrivate ? (
               <>
                 {!isFollower && !iRequestedHim && (
@@ -640,7 +640,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
             userDetails.followers.some(
               follower => follower.userId === currentUser._id
             )) ? (
-            <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar   lg:grid lg:grid-cols-3   ">
+              <div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
               {posts.length > 0 ? (
                 posts.map(post => (
                   <div
@@ -758,16 +758,18 @@ const ProfilePageIndividualComponent: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p>No posts available</p>
+                <p className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center  text-center ">No posts available</p>
               )}
             </div>
           ) : (
-            <div className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg">
+            <div className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center text-center align-middle justify-center">
               Can't view profile, please send friend request to view full
               profile
             </div>
           )}
         </div>
+
+        
 
         <Modal
           isOpen={showFollowersModal}
