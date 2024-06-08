@@ -3,9 +3,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store/reduxStore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+ 
 import Swal from "sweetalert2";
 import {
   dislikePost,
@@ -29,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
+import PostsDisplayCommon from "../PostsDisplayCommon";
 
 const TaggedPostComponent = () => {
   const navigate = useNavigate();
@@ -267,77 +266,8 @@ const TaggedPostComponent = () => {
                 </div>
               </div>
 
-              {post.images.length > 0 && post.videos.length > 0 ? (
-                <Slider {...settings}>
-                  {post.images.map((image: string, index: number) => (
-                    <div key={index}>
-                      <img
-                        src={image}
-                        alt={`Post image ${index}`}
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  ))}
-                  {post.videos.map((video: string, index: number) => (
-                    <div key={index}>
-                      <video
-                        src={video}
-                        controls
-                        autoPlay
-                        muted
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  ))}
-                </Slider>
-              ) : post.images.length > 0 ? (
-                post.images.length === 1 ? (
-                  <img
-                    src={post.images[0]}
-                    alt={`Post image`}
-                    className="w-full h-auto"
-                  />
-                ) : (
-                  <Slider {...settings}>
-                    {post.images.map((image: string, index: number) => (
-                      <div key={index}>
-                        <img
-                          src={image}
-                          alt={`Post image ${index}`}
-                          className="w-full h-auto"
-                        />
-                      </div>
-                    ))}
-                  </Slider>
-                )
-              ) : post.videos.length > 0 ? (
-                post.videos.length === 1 ? (
-                  <video
-                    src={post.videos[0]}
-                    controls
-                    autoPlay
-                    muted
-                    className="w-full h-auto"
-                  />
-                ) : (
-                  <Slider {...settings}>
-                    {post.videos.map((video: string, index: number) => (
-                      <div key={index}>
-                        <video
-                          src={video}
-                          controls
-                          autoPlay
-                          muted
-                          className="w-full h-auto"
-                        />
-                      </div>
-                    ))}
-                  </Slider>
-                )
-              ) : (
-                <p></p>
-              )}
-              <p className="mt-4">{post.captions}</p>
+              <PostsDisplayCommon post={post} />
+
               <div className="flex justify-between">
                 <div className="flex gap-2 items-center mt-4">
                   <button
