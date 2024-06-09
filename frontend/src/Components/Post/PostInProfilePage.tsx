@@ -25,7 +25,7 @@ const PostInProfilePage = () => {
         ))}
       </div>
 
-      <div className="mt-4 p-2 bg-white text-black dark:text-white dark:bg-slate-700 rounded-lg shadow-lg">
+      <div className="mt-4 p-2 bg-white text-black dark:text-white dark:bg-slate-900 rounded-lg shadow-lg">
         {activeSection === "MY POSTS" && <MyPostComponent />}
 
         {activeSection === "SAVED POSTS" && <SavedPostComponent />}

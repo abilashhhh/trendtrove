@@ -360,7 +360,7 @@ const TaggedPostComponent = () => {
             </div>
           ))
         ) : (
-          <p className="p-5 font-medium size-5">No posts available</p>
+          <div className="p-10 font-medium ">No posts available</div>
 
         )}
       </div>

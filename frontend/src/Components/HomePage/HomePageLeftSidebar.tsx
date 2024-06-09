@@ -15,16 +15,19 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
   const addPost = () => navigate("/addpost");
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
-  const buttonClasses = "flex items-center justify-center w-full p-2 rounded  transition-colors duration-300";
-  const buttonHoverClasses = "hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-400 dark:hover:text-black";
-  const activeButtonClasses = "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white dark:text-black shadow-lg";
+  const buttonClasses = "flex items-center justify-center w-full p-2 rounded transition-colors duration-300 text-gray-800 dark:text-gray-200";
+  const buttonHoverClasses = "hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 dark:hover:text-gray-200";
+  const activeButtonClasses = "bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-100 shadow-md";
+
+
+
 
   const isActive = (path) => location.pathname === path ? activeButtonClasses : "";
 
   return (
-    <aside className="h-full flex pl-2 pt-2 pb-2 bg-slate-900 dark:bg-slate-700 shadow-lg">
-      <div className={`bg-gray-800 rounded-lg dark:bg-gray-800 ${isCollapsed ? "w-16" : "w-64"} ${isLeftSidebarOpen ? "block" : "hidden"} lg:block transition-all duration-300`}>
-        <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar flex flex-col items-center">
+    <aside className="h-full flex pl-2 pt-2 pb-2 bg-slate-800 dark:bg-slate-700 shadow-lg">
+      <div className={`bg-gray-800 rounded-lg dark:bg-slate-800 ${isCollapsed ? "w-16" : "w-52"} ${isLeftSidebarOpen ? "block" : "hidden"} lg:block transition-all duration-300`}>
+        <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto font-semibold no-scrollbar flex flex-col items-center">
           <button onClick={toggleCollapse} className="mb-2 p-2 bg-gray-700 text-white rounded-full">
             {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
           </button>

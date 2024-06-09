@@ -26,40 +26,40 @@ const SettingsMiddlePage = () => {
   return (
     <>
       <ToastContainer />
-      <main className="flex-1 min-h-screen pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white no-scrollbar">
+      <main className="flex-1 min-h-full pb-2 lg:pl-2 pt-2 pr-2   bg-gray-800 dark:bg-gray-700 text-black dark:text-white no-scrollbar">
         <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
          
           <div className="flex flex-col md:flex-row gap-4 h-full">
-            <div className="w-full md:w-1/5 bg-gray-300 dark:bg-slate-700 rounded-lg flex flex-col text-black dark:text-white text-xl">
+            <div className="w-full md:w-1/5  rounded-lg flex flex-col text-black dark:text-white text-l">
               <div className="p-4 space-y-4">
-              <h1 className="text-2xl font-semibold underline text-center mb-4">
+              <h1 className="text-xl font-semibold underline text-center mb-4">
             Settings
           </h1>
                 {!currentUser.isGoogleSignedIn && (
                   <button
                     onClick={() => setActiveSection("ChangePassword")}
-                    className="bg-gray-400 dark:bg-slate-500 w-full rounded p-3 hover:bg-gray-500 dark:hover:bg-slate-400">
+                    className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
                     Change Password
                   </button>
                 )}
                 <button
                   onClick={() => setActiveSection("DeleteAccount")}
-                  className="bg-gray-400 dark:bg-slate-500 w-full rounded p-3 hover:bg-gray-500 dark:hover:bg-slate-400">
+                  className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
                   Delete Account
                 </button>
                 <button
                   onClick={() => setActiveSection("SuspendAccount")}
-                  className="bg-gray-400 dark:bg-slate-500 w-full rounded p-3 hover:bg-gray-500 dark:hover:bg-slate-400">
+                  className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
                   Suspend Account
                 </button>
                 <button
                   onClick={() => setActiveSection("PrivateAccount")}
-                  className="bg-gray-400 dark:bg-slate-500 w-full rounded p-3 hover:bg-gray-500 dark:hover:bg-slate-400">
+                  className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
                   Change to private account
                 </button>
               </div>
             </div>
-            <div className="w-full md:w-4/5 bg-gray-300 dark:bg-slate-600 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto no-scrollbar">
+            <div className="w-full md:w-4/5 bg-gray-200 dark:bg-slate-800 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto no-scrollbar">
               <div className="p-4 w-full">
                 {activeSection === "ChangePassword" && (
                   <ChangePassword currentUser={currentUser} />
@@ -140,14 +140,15 @@ const ChangePassword = ({ currentUser }) => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl mb-4">Change Password</h2>
+    <div className="p-2">
+      <h2 className="text-2xl mb-6 underline">Change Password</h2>
       <form className="space-y-4" onSubmit={handleChangePassword}>
         <div>
           <label className="block text-sm">Current Password</label>
           <input
             type="password"
-            className="w-full p-2 rounded bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+            placeholder="Enter current password here.."
+            className="w-full font-thin size-8 m-2 p-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
             value={currentPassword}
             onChange={e => setCurrentPassword(e.target.value)}
           />
@@ -156,7 +157,8 @@ const ChangePassword = ({ currentUser }) => {
           <label className="block text-sm">New Password</label>
           <input
             type="password"
-            className="w-full p-2 rounded bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+             placeholder="Enter new password here.."
+            className="w-full font-thin size-8 m-2 p-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
             value={newPassword}
             onChange={e => setNewPassword(e.target.value)}
           />
@@ -165,7 +167,8 @@ const ChangePassword = ({ currentUser }) => {
           <label className="block text-sm">Confirm New Password</label>
           <input
             type="password"
-            className="w-full p-2 rounded bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+             placeholder="Confirm new password here.."
+            className="w-full font-thin size-8 m-2 p-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
             value={confirmNewPassword}
             onChange={e => setConfirmNewPassword(e.target.value)}
           />
@@ -179,6 +182,8 @@ const ChangePassword = ({ currentUser }) => {
     </div>
   );
 };
+
+
 const DeleteAccount = ({ currentUser }) => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
@@ -221,7 +226,7 @@ const DeleteAccount = ({ currentUser }) => {
 
         setTimeout(() => {
           navigate("/");
-        }, 3000);
+        }, 2000);
       }
     });
   };

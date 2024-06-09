@@ -356,7 +356,7 @@ const MyPostComponent = () => {
             </div>
           ))
         ) : (
-          <p>No posts available</p>
+          <p className="p-5 font-medium ">No posts available</p>
         )}
       </div>
 

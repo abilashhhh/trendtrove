@@ -346,7 +346,7 @@ const SavedPostComponent = () => {
             </div>
           ))
         ) : (
-          <p className="p-5 font-medium size-5">No posts available</p>
+          <p className="p-5 font-medium ">No posts available</p>
         )}
       </div>
 
