@@ -19,7 +19,8 @@ import {
   FaUser,
   FaPaperPlane,
   FaTrash,
-  FaPen
+  FaPen,
+  FaReply
 } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -45,10 +46,12 @@ const CommentsPage: React.FC = () => {
 
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
-
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editedCommentText, setEditedCommentText] = useState<string>("");
+  
   const getAllComments = async (postId: string | undefined) => {
     const allComments = await getAllCommentsForThisPost(postId);
-    console.log("allCommentsData: ", allComments);
+    // console.log("allCommentsData: ", allComments);
     setComments(allComments.data);
     setCommentText("");
   };
@@ -56,6 +59,26 @@ const CommentsPage: React.FC = () => {
   useEffect(() => {
     getAllComments(postId);
   }, []);
+
+  const startEditingComment = (commentId: string, currentComment: string) => {
+    setEditingCommentId(commentId);
+    setEditedCommentText(currentComment);
+  };
+  
+  const handleSaveEditedComment = async () => {
+    if (editedCommentText.trim() !== "" && editingCommentId) {
+      // const res = await editComment(editingCommentId, editedCommentText);
+      // if (res.status === "success") {
+      //   toast.success("Comment edited successfully");
+      //   getAllComments(postId);
+      //   setEditingCommentId(null);
+      //   setEditedCommentText("");
+      // } else {
+      //   toast.error("Failed to edit comment");
+      // }
+    }
+  };
+  
 
   const userDetails = useUserDetails();
   const navigate = useNavigate();
@@ -90,7 +113,7 @@ const CommentsPage: React.FC = () => {
       const data = await getPostLikesAndDislikesInfo(postId);
       setLikesDislikesData(prev => ({ ...prev, [postId]: data }));
     } catch (error) {
-      console.error("Error fetching likes and dislikes data:", error);
+      // console.error("Error fetching likes and dislikes data:", error);
     }
   };
 
@@ -162,7 +185,7 @@ const CommentsPage: React.FC = () => {
         }
       }
     } catch (error) {
-      console.log("Error fetching liked and disliked posts:", error);
+      // console.log("Error fetching liked and disliked posts:", error);
     }
   };
 
@@ -174,7 +197,7 @@ const CommentsPage: React.FC = () => {
   }, [userDetails?._id]);
 
   const handleSavePost = async (postId: string) => {
-    console.log("handleSavePost: ", postId);
+    // console.log("handleSavePost: ", postId);
     const response = await savePost(userDetails._id, postId);
     if (response.status === "success") {
       toast.success("Post saved successfully");
@@ -185,7 +208,7 @@ const CommentsPage: React.FC = () => {
 
   const handleLike = async (postId: string) => {
     const result = await likePost(userDetails._id, postId);
-    console.log("Result of handleLike: ", result);
+    // console.log("Result of handleLike: ", result);
 
     setLikedPosts(prev => ({
       ...prev,
@@ -203,7 +226,7 @@ const CommentsPage: React.FC = () => {
 
   const handleDislike = async (postId: string) => {
     const result = await dislikePost(userDetails._id, postId);
-    console.log("Result of handleDislike: ", result);
+    // console.log("Result of handleDislike: ", result);
 
     setDislikedPosts(prev => ({
       ...prev,
@@ -286,7 +309,7 @@ const CommentsPage: React.FC = () => {
 
   const handleDeleteComment = async (commentId : string) => {
     const res = await deleteCommentFromPost(commentId);
-    console.log("Res: ", res);
+    // console.log("Res: ", res);
 
     if (res?.deleteComment?.status === "success") {
       toast.success("Comment deleted");
@@ -296,17 +319,22 @@ const CommentsPage: React.FC = () => {
       getAllComments(postId);
   }
 
-  // const handleEditComment = async (commentId : string) => {
-  //   const res = await deleteCommentFromPost(commentId);
-  //   console.log("Res: ", res);
+  const handleEditComment = async (commentId : string) => {
 
-  //   if (res.status === "success") {
-  //     toast.success("Comment deleted");
-  //     getAllComments(postId);
-  //   } else {
-  //     toast.error("Comment not deleted");
-  //   }
-  // }
+    console.log("Commment id to edit : ", commentId)
+
+    // const res = await editUserComment(commentId);
+    // console.log("Res: ", res);
+
+    // if (res.status === "success") {
+    //   toast.success("Comment deleted");
+    //   getAllComments(postId);
+    // } else {
+    //   toast.error("Comment not deleted");
+    // }
+  }
+
+  
 
 
 
@@ -493,7 +521,7 @@ const CommentsPage: React.FC = () => {
             <div className="bg-white text-black dark:text-white lg:w-3/10 p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 w-full">
               <div className="flex flex-col h-full">
                 <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar">
-                  {comments.map(comment => (
+                  {/* {comments.map(comment => (
                     <div
                       key={comment.id}
                       className="bg-gray-200 dark:bg-slate-700 p-4 rounded-lg mb-2 flex items-start">
@@ -518,8 +546,16 @@ const CommentsPage: React.FC = () => {
                           </div>
                           <div className="flex  justify-end gap-2 font-light text-sm  ">
                          
-                          <div className="cursor-pointer" onClick={() => handleDeleteComment(comment._id)}> <FaTrash /></div>
-                          <div  className="cursor-pointer" onClick={() => handleEditComment(comment._id)}> <   FaPen /></div>
+                         {comment?.userId !== userDetails._id &&     <div  className="cursor-pointer flex gap-2  items-center" onClick={() => handleReplyComment(comment._id)}> Reply <  FaReply /></div> }
+
+                         {comment?.userId === userDetails._id &&  <div className="cursor-pointer" onClick={() => handleDeleteComment(comment._id)}> <FaTrash /></div>}
+                         {comment?.userId === userDetails._id &&     <div  className="cursor-pointer" onClick={() =>
+                                  startEditingComment(
+                                    comment._id,
+                                    comment.comment
+                                  )
+                                }> <   FaPen /></div> }
+                         {/* {comment?.userId === userDetails._id &&     <div  className="cursor-pointer" onClick={() => handleEditComment(comment._id)}> <   FaPen /></div> } 
                           </div>
                         </div>
 
@@ -528,7 +564,94 @@ const CommentsPage: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
+                    {comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <div
+                        key={comment._id}
+                        className="flex items-start justify-between w-full mt-4 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
+                        <div className="flex items-start">
+                          <img
+                            src={comment.dp}
+                            alt=""
+                            className="rounded-full h-8 w-8 mr-2 cursor-pointer"
+                            onClick={() =>
+                              navigate(`/profiles/${comment.username}`)
+                            }
+                          />
+                          <div>
+                            <p
+                              className="font-bold cursor-pointer"
+                              onClick={() =>
+                                navigate(
+                                  `/profiles/${comment.username}`
+                                )
+                              }>
+                              {comment.username}
+                            </p>
+                            <p className="text-xs font-light text-gray-500 dark:text-gray-400">
+                              {new Date(comment.createdAt).toLocaleString()}
+                            </p>
+                            {editingCommentId === comment._id ? (
+                              <div className="flex flex-col mt-2">
+                                <textarea
+                                  className="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                  rows={2}
+                                  value={editedCommentText}
+                                  onChange={(e) =>
+                                    setEditedCommentText(e.target.value)
+                                  }></textarea>
+                                <div className="flex justify-end space-x-2">
+                                  <button
+                                    onClick={() => {
+                                      setEditingCommentId(null);
+                                      setEditedCommentText("");
+                                    }}
+                                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none">
+                                    Cancel
+                                  </button>
+                                  <button
+                                    onClick={handleSaveEditedComment}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
+                                    Save
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                {comment.comment}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center ml-4">
+                          {comment.userId === userDetails._id && (
+                            <>
+                              <button
+                                className="text-blue-500 hover:text-blue-600 focus:outline-none"
+                                onClick={() =>
+                                  startEditingComment(
+                                    comment._id,
+                                    comment.comment
+                                  )
+                                }>
+                                Edit
+                              </button>
+                              <button
+                                className="ml-2 text-red-500 hover:text-red-600 focus:outline-none"
+                                onClick={() => handleDeleteComment(comment._id)}>
+                                Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="mt-4 text-gray-500 dark:text-gray-400">
+                      No comments yet.
+                    </p>
+                  )}
                   {comments.length === 0 && "No comments yet"}
                 </div>
 
