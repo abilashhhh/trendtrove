@@ -229,202 +229,193 @@
     return (
       <Layout>
         <ToastContainer />
-        <main className=" bg-gray-800 w-full dark:bg-gray-700  text-black dark:text-white ">
+        <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white">
           <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700 ">
-            <div className="flex flex-col lg:flex-row w-full h-full ">
-              <div className=" bg-slate-100 dark:bg-slate-700 rounded-lg  -ml-2 lg:m-2 flex justify-center align-middle items-center">
-              <div className="lg:w-7/10  ">
-              <div className="max-w-xl w-full h-full rounded-lg m-2">
-
-                  <div className="bg-white  dark:bg-gray-900 rounded-lg shadow-lg p-4 ">
-                    <div className="flex items-center  mb-4 ">
-                      <img
-                        src={post.dp}
-                        alt=""
-                        className="rounded-full h-10 w-10 mr-4 cursor-pointer"
-                        onClick={() => navigate(`/profiles/${post.username}`)}
-                      />
-                      <div>
-                        <p
-                          className="font-bold cursor-pointer"
+            <div className="flex flex-col lg:flex-row w-full h-full overflow-auto   "> 
+              <div className="bg-slate-100 dark:bg-slate-700 rounded-lg -ml-2 lg:m-2 flex justify-center items-center ">
+                <div className="lg:w-7/10 w-full">
+                  <div className="max-w-2xl w-full h-full rounded-lg m-2 ">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4  ">
+                      <div className="flex items-center mb-4 ">
+                        <img
+                          src={post.dp}
+                          alt=""
+                          className="rounded-full h-10 w-10 mr-4 cursor-pointer"
                           onClick={() => navigate(`/profiles/${post.username}`)}
-                        >
-                          {post.username}
-                        </p>
-                        {post.location && (
-                          <p className="text-xs flex items-center text-gray-500 dark:text-gray-400 font-light">
-                            <FaMapMarkedAlt className="mr-1" /> {post.location}
+                        />
+                        <div>
+                          <p
+                            className="font-bold cursor-pointer"
+                            onClick={() => navigate(`/profiles/${post.username}`)}
+                          >
+                            {post.username}
                           </p>
-                        )}
-                        <p className="text-xs font-light text-gray-500 dark:text-gray-400">
-                          {new Date(post.createdAt).toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="ml-auto relative">
-                        <button
-                          className="focus:outline-none"
-                          onClick={() => toggleOptions(post._id)}
-                        >
-                          <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
-                        </button>
-                        {showOptions === post._id && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                            <p
-                              className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                              onClick={() => navigate(`/profiles/${post.username}`)}
-                            >
-                              View Profile
+                          {post.location && (
+                            <p className="text-xs flex items-center text-gray-500 dark:text-gray-400 font-light">
+                              <FaMapMarkedAlt className="mr-1" /> {post.location}
                             </p>
-                            <p
-                              className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                              onClick={() => navigate(`/reportPost/${postId}`)}
-                            >
-                              Report Post
-                            </p>
-                            <p
-                              className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                              onClick={() => handleSavePost(postId)}
-                            >
-                              Save Post
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-
-                    <PostsDisplayCommon post={post} />
-                    
-                    
-                    <div className="flex justify-between ">
-                      <div className="flex gap-2 items-center mt-4">
-                        <button
-                          className={`flex items-center space-x-2 hover:text-blue-600 ${
-                            likedPosts[post._id]
-                              ? "text-blue-600"
-                              : "text-gray-600 dark:text-gray-400"
-                          }`}
-                          onClick={() => handleLike(post._id)}
-                        >
-                          {likedPosts[post._id] ? (
-                            <AiFillLike
-                              title="Like Post"
-                              className="text-xl md:text-2xl lg:text-3xl"
-                            />
-                          ) : (
-                            <AiOutlineLike
-                              title="Like Post"
-                              className="text-xl md:text-2xl lg:text-3xl"
-                            />
                           )}
-                        </button>
-                        <button
-                          className={`flex items-center space-x-2 hover:text-red-600 ${
-                            dislikedPosts[post._id]
-                              ? "text-red-600"
-                              : "text-gray-600 dark:text-gray-400"
-                          }`}
-                          onClick={() => handleDislike(post._id)}
-                        >
-                          {dislikedPosts[post._id] ? (
-                            <AiFillDislike
-                              title="Dislike Post"
-                              className="text-xl md:text-2xl lg:text-3xl"
-                            />
-                          ) : (
-                            <AiOutlineDislike
-                              title="Dislike Post"
-                              className="text-xl md:text-2xl lg:text-3xl"
-                            />
-                          )}
-                        </button>
-                        <button
-                          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600"
-                          onClick={() => navigate(`/post/${post._id}`)}
-                        >
-                          <AiOutlineComment
-                            title="Add a comment"
-                            className="text-xl md:text-2xl lg:text-3xl"
-                          />
-                        </button>
-                      </div>
-                      <div className="flex gap-5 text-center items-center justify-center">
-                        <div className="flex gap-2 mt-4 cursor-pointer">
-                          <div title="Hashtags">
-                            <FaHashtag
-                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
-                              onClick={() => {
-                                setShowModal(true);
-                                setModalHashtags(post.hashtags);
-                                setShowingData("Hashtags");
-                              }}
-                            />
-                          </div>
-                          <div title="Mentions">
-                            <FaUser
-                              className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
-                              onClick={() => {
-                                setShowModal(true);
-                                setModalHashtags(post.mentions);
-                                setShowingData("Mentions");
-                              }}
-                            />
-                          </div>
+                          <p className="text-xs font-light text-gray-500 dark:text-gray-400">
+                            {new Date(post.createdAt).toLocaleString()}
+                          </p>
                         </div>
-                        <div className="flex gap-2 mt-2 cursor-pointer">
-                          <p
-                            className="text-xs mt-2"
-                            title="Likes count"
-                            onClick={() => {
-                              setShowLikesDislikesModal(true);
-                              setModalLikesDislikes(
-                                likesDislikesData[post._id].likesdislikesinfo
-                                ?.likedUsers
-                            );
-                              
-                              setShowingDataLikesDislikes("Liked Users");
-                            }}
+                        <div className="ml-auto relative">
+                          <button
+                            className="focus:outline-none"
+                            onClick={() => toggleOptions(post._id)}
                           >
-                            Likes:  {(likesDislikesData[post._id] &&
-                          likesDislikesData[post._id].likesdislikesinfo
-                            ?.likesCount) ||
-                          0}
-                          </p>
-                          <p className="text-xs mt-2">|</p>
-                          <p
-                            className="text-xs mt-2"
-                            title="Dislikes count"
-                            onClick={() => {
-                              setShowLikesDislikesModal(true);
-                              setModalLikesDislikes(
-                                likesDislikesData[post._id].likesdislikesinfo
-                                ?.dislikedUsers
-                            );
-                              setShowingDataLikesDislikes("Disliked Users");
-                            }}
+                            <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
+                          </button>
+                          {showOptions === post._id && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                              <p
+                                className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                onClick={() => navigate(`/profiles/${post.username}`)}
+                              >
+                                View Profile
+                              </p>
+                              <p
+                                className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                onClick={() => navigate(`/reportPost/${post._id}`)}
+                              >
+                                Report Post
+                              </p>
+                              <p
+                                className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                onClick={() => handleSavePost(post._id)}
+                              >
+                                Save Post
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+  
+                      <PostsDisplayCommon post={post} />
+  
+                      <div className="flex justify-between">
+                        <div className="flex gap-2 items-center mt-4">
+                          <button
+                            className={`flex items-center space-x-2 hover:text-blue-600 ${
+                              likedPosts[post._id]
+                                ? 'text-blue-600'
+                                : 'text-gray-600 dark:text-gray-400'
+                            }`}
+                            onClick={() => handleLike(post._id)}
                           >
-                            Dislikes: {(likesDislikesData[post._id] &&
-                          likesDislikesData[post._id].likesdislikesinfo
-                            ?.dislikesCount) ||
-                          0}
-                          </p>
+                            {likedPosts[post._id] ? (
+                              <AiFillLike
+                                title="Like Post"
+                                className="text-xl md:text-2xl lg:text-3xl"
+                              />
+                            ) : (
+                              <AiOutlineLike
+                                title="Like Post"
+                                className="text-xl md:text-2xl lg:text-3xl"
+                              />
+                            )}
+                          </button>
+                          <button
+                            className={`flex items-center space-x-2 hover:text-red-600 ${
+                              dislikedPosts[post._id]
+                                ? 'text-red-600'
+                                : 'text-gray-600 dark:text-gray-400'
+                            }`}
+                            onClick={() => handleDislike(post._id)}
+                          >
+                            {dislikedPosts[post._id] ? (
+                              <AiFillDislike
+                                title="Dislike Post"
+                                className="text-xl md:text-2xl lg:text-3xl"
+                              />
+                            ) : (
+                              <AiOutlineDislike
+                                title="Dislike Post"
+                                className="text-xl md:text-2xl lg:text-3xl"
+                              />
+                            )}
+                          </button>
+                          <button
+                            className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600"
+                            onClick={() => navigate(`/post/${post._id}`)}
+                          >
+                            <AiOutlineComment
+                              title="Add a comment"
+                              className="text-xl md:text-2xl lg:text-3xl"
+                            />
+                          </button>
+                        </div>
+                        <div className="flex gap-5 text-center items-center justify-center">
+                          <div className="flex gap-2 mt-4 cursor-pointer">
+                            <div title="Hashtags">
+                              <FaHashtag
+                                className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setModalHashtags(post.hashtags);
+                                  setShowingData('Hashtags');
+                                }}
+                              />
+                            </div>
+                            <div title="Mentions">
+                              <FaUser
+                                className="bg-slate-200 dark:bg-slate-700 rounded-full p-1 size-6"
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setModalHashtags(post.mentions);
+                                  setShowingData('Mentions');
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex gap-2 mt-2 cursor-pointer">
+                            <p
+                              className="text-xs mt-2"
+                              title="Likes count"
+                              onClick={() => {
+                                setShowLikesDislikesModal(true);
+                                setModalLikesDislikes(
+                                  likesDislikesData[post._id]?.likesdislikesinfo?.likedUsers || []
+                                );
+                                setShowingDataLikesDislikes('Liked Users');
+                              }}
+                            >
+                              Likes: {(likesDislikesData[post._id]?.likesdislikesinfo?.likesCount) || 0}
+                            </p>
+                            <p className="text-xs mt-2">|</p>
+                            <p
+                              className="text-xs mt-2"
+                              title="Dislikes count"
+                              onClick={() => {
+                                setShowLikesDislikesModal(true);
+                                setModalLikesDislikes(
+                                  likesDislikesData[post._id]?.likesdislikesinfo?.dislikedUsers || []
+                                );
+                                setShowingDataLikesDislikes('Disliked Users');
+                              }}
+                            >
+                              Dislikes: {(likesDislikesData[post._id]?.likesdislikesinfo?.dislikesCount) || 0}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              </div>
-              <div className="bg-white text-black dark:text-white lg:w-3/10 p-2 lg:-ml-1 mr-2 lg:m-2 rounded-lg dark:bg-gray-800 lg:w-full">
+              
+              <div className="bg-white text-black dark:text-white lg:w-3/10 p-2 lg:-ml-1 mr-2 lg:m-2 rounded-lg dark:bg-gray-800 w-full ">
                 <h2 className="text-xl p-3 font-semibold mb-4 underline ">Comments</h2>
                 <div className="bg-slate-200 dark:bg-slate-700 p-3 rounded-lg font-bold">
-
                   {userDetails.username && userDetails.username}
-                </div>
+                </div>  
               </div>
+
+
+
             </div>
           </div>
-    
+  
           <MentionsHashtagsModal
             isOpen={showModal}
             onClose={() => setShowModal(false)}
@@ -440,6 +431,6 @@
         </main>
       </Layout>
     );
-    };
-    
-    export default CommentsPage;
+  };
+  
+  export default CommentsPage;
