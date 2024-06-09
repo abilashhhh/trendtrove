@@ -16,6 +16,7 @@ interface PostsDisplayCommonProps {
 }
 
 const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
+  
   const settings = {
     dots: true,
     arrows: false,
