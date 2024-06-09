@@ -1,3 +1,4 @@
+import { Comment, CommentInterface } from "../../../types/commentInterface";
 import { PostDataInterface, ReportPost } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
@@ -10,7 +11,6 @@ export const handleCreatePost = async (
 ) => {
   try {
     // console.log("Post data in handleCreatePost :", postData);
-
 
     if (!postData.userId) {
       throw new ErrorInApplication("User ID is required to create a post", 400);
@@ -26,7 +26,6 @@ export const handleCreatePost = async (
       dp: userData?.dp,
     };
 
-    
     // // console.log("User exists....");
     const newPost = await dbPostRepository.addNewPost(newPostData);
     // await dbPostRepository.taggedDataFromPosts(postData.mentions , newPost._id)
@@ -55,7 +54,10 @@ export const handleupdatepost = async (
     if (!postData.postId) {
       throw new ErrorInApplication("post ID is required to update a post", 400);
     }
-    await dbPostRepository.taggedDataFromPosts(postData.mentions , postData.postId)
+    await dbPostRepository.taggedDataFromPosts(
+      postData.mentions,
+      postData.postId
+    );
     // console.log("User exists....");
     const newPost = await dbPostRepository.updatePost(postData);
     // console.log("updated post data:", newPost);
@@ -164,7 +166,6 @@ export const handleGetPostsOfCurrentUser = async (
     );
   }
 };
- 
 
 export const handleGetTaggedPostsOfCurrentUser = async (
   id: string,
@@ -332,7 +333,7 @@ export const handleRemoveTaggedPosts = async (
     }
     const removeTaggedPostsForUser =
       await dbPostRepository.removeTaggedPostsForUser(userId, postId);
-    
+
     return removeTaggedPostsForUser;
   } catch (error) {
     // console.log("Error in removeTaggedPostsForUser");
@@ -477,3 +478,57 @@ export const handleDeltePosts = async (
     throw new ErrorInApplication("Failed to get delete posts", 500);
   }
 };
+
+;
+
+
+
+export const handleCreateComment = async (
+  commentData: CommentInterface,
+  dbPostRepository: ReturnType<PostDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    // console.log("Post data in handleCreateComment :", postData);
+
+    if (!commentData.userId) {
+      throw new ErrorInApplication("User ID is required to create a post", 400);
+    }
+    if (!commentData.postId) {
+      throw new ErrorInApplication("Post ID is required to create a comment", 400);
+    }
+    
+    const userData = await dbUserRepository.getUserById(commentData.userId);
+    if (!userData) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+
+    const newComment  = await dbPostRepository.addNewComment(commentData);
+    return newComment;
+  } catch (error) {
+    console.error("Error in handleCreateComment:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to create comment", 500);
+  }
+};
+
+
+export const handleGetAllComments = async (
+  postId: String,
+  dbPostRepository: ReturnType<PostDBInterface>,
+) => {
+  try {
+    // console.log("handleGetAllComments reached");
+    const handleGetAllComments = await dbPostRepository.getAllComments(postId);
+    // console.log("All posts from handleGetAllComments :", handleGetAllComments);
+    return handleGetAllComments;
+  } catch (error) {
+    // console.log("Error in handleGetAllComments");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all comments", 500);
+  }
+}

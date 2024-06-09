@@ -182,6 +182,26 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         const deltePostResult = yield (0, postAuthApplications_1.handleDeltePosts)(postId, dbPostRepository);
         res.status(200).json({ deltePostResult });
     }));
+    const addComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const commentData = req.body;
+        console.log("COmment data in add Comment controller : ", commentData);
+        const createComment = yield (0, postAuthApplications_1.handleCreateComment)(commentData, dbPostRepository, dbUserRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Comment created successfully",
+            data: createComment,
+        });
+    }));
+    const getallcomments = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { postId } = req.params;
+        const allComments = yield (0, postAuthApplications_1.handleGetAllComments)(postId, dbPostRepository);
+        // console.log("All commens t0 send back : ", allComments)
+        res.status(201).json({
+            status: "success",
+            message: "All comments fetched for the post ",
+            data: allComments,
+        });
+    }));
     return {
         addPost,
         updatepost,
@@ -203,6 +223,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getdislikedposts,
         getlikesdislikesinfo,
         deletepost,
+        addComment,
+        getallcomments
     };
 };
 exports.default = postController;

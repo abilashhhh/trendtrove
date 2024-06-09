@@ -1,4 +1,5 @@
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
+import { Comment, CommentInterface } from "../../types/commentInterface";
 import { PostDataInterface } from "../../types/postsInterface";
 
 export const postDBRepository = (
@@ -8,8 +9,8 @@ export const postDBRepository = (
     await repository.addNewPost(postData);
   };
 
-  const taggedDataFromPosts = async (usernames: string[] , postId : string) => {
-    await repository.taggedDataFromPosts(usernames , postId);
+  const taggedDataFromPosts = async (usernames: string[], postId: string) => {
+    await repository.taggedDataFromPosts(usernames, postId);
   };
 
   const getPostById = async (postId: string) => {
@@ -34,7 +35,7 @@ export const postDBRepository = (
 
   const getAllSavedPostsForCurrentUser = async (id: string) =>
     await repository.getAllSavedPostsForCurrentUser(id);
-  
+
   const getAllTaggedPostsForCurrentUser = async (id: string) =>
     await repository.getAllTaggedPostsForCurrentUser(id);
 
@@ -77,6 +78,13 @@ export const postDBRepository = (
   const unblockPost = async (postId: string) =>
     await repository.unblockPost(postId);
 
+  const addNewComment = async (commentData: CommentInterface) => {
+    await repository.addNewComment(commentData);
+  };
+
+  const getAllComments = async (postId: String) =>
+    await repository.getAllComments(postId);
+
   return {
     addNewPost,
     taggedDataFromPosts,
@@ -101,6 +109,8 @@ export const postDBRepository = (
     getDislikedPosts,
     getlikesdislikesInfo,
     deltePostForUser,
+    addNewComment,
+    getAllComments,
   };
 };
 

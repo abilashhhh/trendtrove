@@ -3,7 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../Layout";
 import useUserDetails from "../../Hooks/useUserDetails";
 import PostsDisplayCommon from "../Post/PostsDisplayCommon";
-import { getPostUsingPostId } from "../../API/Post/post";
+import {
+  addCommentToPost,
+  getAllCommentsForThisPost,
+  getPostUsingPostId,
+} from "../../API/Post/post";
 import LoadingSpinner from "../LoadingSpinner";
 import { Post } from "../../Types/Post";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
@@ -12,8 +16,6 @@ import {
   FaMapMarkedAlt,
   FaHashtag,
   FaUser,
-  FaShare,
-  FaRocket,
   FaPaperPlane,
 } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
@@ -37,12 +39,25 @@ import { ToastContainer, toast } from "react-toastify";
 
 const CommentsPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
+
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+
+  const getAllComments = async (postId: string | undefined) => {
+    const allComments = await getAllCommentsForThisPost(postId);
+    console.log("allCommentsData: ", allComments);
+    setComments(allComments.data);
+    setCommentText("");
+  };
+
+  useEffect(() => {
+    getAllComments(postId);
+  }, []);
+
   const userDetails = useUserDetails();
   const navigate = useNavigate();
   const [post, setPostDetails] = useState<Post | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [showingData, setShowingData] = useState("");
@@ -242,17 +257,38 @@ const CommentsPage: React.FC = () => {
     );
   }
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
+    // if (commentText.trim() !== "") {
+    //   const newComment = {
+    //     id: comments.length + 1,
+    //     text: commentText,
+    //     username: userDetails.username,
+    //     dp: userDetails.dp,
+    //     createdAt: new Date().toISOString(),
+    //   };
+    //   setComments([...comments, newComment]);
+    //   setCommentText("");
+    // }
+
     if (commentText.trim() !== "") {
-      const newComment = {
-        id: comments.length + 1,
-        text: commentText,
+      const userComment = {
+        postId,
+        userId: userDetails?._id,
+        comment: commentText,
         username: userDetails.username,
         dp: userDetails.dp,
         createdAt: new Date().toISOString(),
       };
-      setComments([...comments, newComment]);
-      setCommentText("");
+
+      const res = await addCommentToPost(userComment);
+      console.log("Res: ", res);
+
+      if (res.status === "success") {
+        toast.success("Comment added");
+        getAllComments(postId);
+      } else {
+        toast.error("Comment not added");
+      }
     }
   };
 
@@ -260,7 +296,7 @@ const CommentsPage: React.FC = () => {
     <Layout>
       <ToastContainer />
       <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white">
-        <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700 overflow-auto no-scrollbar">
+        <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700  overflow-x-hidden  overflow-y-auto no-scrollbar">
           <div className="flex flex-col lg:flex-row w-full h-full">
             <div className="bg-slate-100 dark:bg-slate-700 rounded-lg -ml-2 lg:m-2 flex justify-center items-center">
               <div className="lg:w-7/10 w-full">
@@ -442,55 +478,58 @@ const CommentsPage: React.FC = () => {
                   {comments.map(comment => (
                     <div
                       key={comment.id}
-                      className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg mb-2 flex items-start">
+                      className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg mb-2 flex items-start ">
                       <div className="flex-shrink-0 flex items-start space-x-2 mr-2">
                         <img
                           src={comment.dp}
                           alt="DP"
-                          className="w-10 h-10 rounded-full"
+                          className="w-6 h-6 rounded-full"
                         />
                         <div>
                           <h1 className="font-bold">{comment.username}</h1>
                         </div>
                       </div>
                       <div className="flex-grow">
-                        <p className="text-sm">{comment.text}</p>
+                        <p className="text-sm">{comment.comment}</p>
                       </div>
                     </div>
                   ))}
+                  {comments.length === 0 && "No comments yet"}
                 </div>
 
-                <div className="bg-slate-300 dark:bg-slate-900 p-3 rounded-lg font-bold flex items-center gap-1 m-1 sticky bottom-0">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={userDetails.dp}
-                      alt="DP"
-                      className="w-12 h-12 rounded-full"
-                    />
-                    <div>
-                      <h1 className="font-extrabold">{userDetails.username}</h1>
-                      <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
-                        {new Date().toLocaleString()}
-                      </p>
+                <div className="bg-slate-300 dark:bg-slate-900 p-3 rounded-lg font-bold flex flex-col sm:flex-row items-center m-1 sticky bottom-0">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center m-1 sticky bottom-0 w-full">
+                    <div className="flex items-center gap-2 mb-2 sm:mb-0 sm:mr-4">
+                      <img
+                        src={userDetails.dp}
+                        alt="DP"
+                        className="w-6 h-6 rounded-full hidden sm:block"
+                      />
+                      <div className="lg:mr-4 hidden sm:block">
+                        <h1 className="text-xs font-bold">
+                          {userDetails.username}
+                        </h1>
+                        <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
+                          {new Date().toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-row items-center w-full sm:ml-4">
+                      <input
+                        type="text"
+                        placeholder="Add a comment"
+                        value={commentText}
+                        onChange={e => setCommentText(e.target.value)}
+                        className="bg-gray-200 dark:bg-gray-700 w-full p-2 rounded-md"
+                      />
+                      <button
+                        type="submit"
+                        className="ml-2 sm:ml-4 bg-slate-500 text-white p-2 rounded-md hover:bg-slate-600 transition-colors flex items-center gap-2"
+                        onClick={handleAddComment}>
+                        <FaPaperPlane />
+                      </button>
                     </div>
                   </div>
-
-                  <div className="flex-grow ml-4">
-                    <input
-                      type="text"
-                      placeholder="Add a comment"
-                      value={commentText}
-                      onChange={e => setCommentText(e.target.value)}
-                      className="bg-gray-200 dark:bg-gray-700 w-full p-2 rounded-md"
-                    />
-                  </div>
-
-                  <button
-                    className="ml-4 bg-slate-500 text-white px-4 py-2 rounded-md hover:bg-slate-600 transition-colors flex items-center gap-2"
-                    onClick={handleAddComment}>
-                    Send
-                    <FaPaperPlane />
-                  </button>
                 </div>
               </div>
             </div>

@@ -3,7 +3,9 @@ import { Document, Schema, model } from "mongoose";
 interface CommentInterface extends Document {
   postId: string;
   userId: string;
+  username: string;
   comment: string;
+  dp: string;
   replies: string[];
   report: string[];
   likes: string[];
@@ -31,6 +33,8 @@ const commentSchema = new Schema<CommentInterface>({
   postId: { type: String, required: true },
   userId: { type: String, required: true },
   comment: { type: String, required: true },
+  username : {type: String},
+  dp: {type: String},
   replies: [replyCommentSchema],
   likes: [{ type: String }],
   isBlock: { type: Boolean, default: false },

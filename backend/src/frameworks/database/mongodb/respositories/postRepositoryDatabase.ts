@@ -9,6 +9,8 @@ import User from "../models/userModel";
 import Like from "../models/likePostModel";
 import Dislike from "../models/dislikePostModel";
 import ErrorInApplication from "../../../../utils/ErrorInApplication";
+import Comment from "../models/commentModel";
+import { Comment, CommentInterface } from "../../../../types/commentInterface";
 
 //////////////////////////////////////////////////////////
 
@@ -412,6 +414,35 @@ export const postRepositoryMongoDB = () => {
     }
     return post;
   };
+
+
+  
+  
+  const addNewComment = async (newCommentData: CommentInterface) => {
+    try {
+      const newComment = new Comment(newCommentData);
+      const newCommentDataSaved = await newComment.save();
+      console.log("newCommentDataSaved: ",newCommentDataSaved)
+      return newCommentDataSaved
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error adding new post!");
+    }
+  };
+  const getAllComments = async (postId :String) => {  
+    try {
+      const allComments = await Comment.find({ postId });
+      // console.log("Allcomments:", allComments)
+      return allComments;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching comments!");  
+    }
+  };
+  
+
+  
+
   ////////////////////////////////////////////////
 
   const removeAllTaggedPostsForAllUsers = async () => {
@@ -452,6 +483,8 @@ export const postRepositoryMongoDB = () => {
     deltePostForUser,
     blockPost,
     unblockPost,
+    addNewComment,
+    getAllComments
   };
 };
 //////////////////////////////////////////////////////////

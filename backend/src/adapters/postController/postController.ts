@@ -6,9 +6,11 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostDataInterface, ReportPost } from "../../types/postsInterface";
 import {
+  handleCreateComment,
   handleCreatePost,
   handleDeltePosts,
   handleDislikePosts,
+  handleGetAllComments,
   handleGetDislikedPosts,
   handleGetLengthForUser,
   handleGetLikedPosts,
@@ -28,6 +30,7 @@ import {
 } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
+import { Comment, CommentInterface } from "../../types/commentInterface";
 
 const postController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
@@ -284,6 +287,34 @@ const postController = (
     res.status(200).json({ deltePostResult });
   });
 
+
+  const addComment = asyncHandler(async (req: Request, res: Response) => {
+    const commentData: CommentInterface = req.body;
+    console.log("COmment data in add Comment controller : ", commentData)
+    const createComment = await handleCreateComment(
+      commentData,
+      dbPostRepository,
+      dbUserRepository
+    );
+    res.status(201).json({
+      status: "success",
+      message: "Comment created successfully",
+      data: createComment,
+    });
+  });
+
+  
+  const getallcomments = asyncHandler(async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const allComments = await handleGetAllComments(postId, dbPostRepository);
+    // console.log("All commens t0 send back : ", allComments)
+    res.status(201).json({
+      status: "success",
+      message: "All comments fetched for the post ",
+      data: allComments,
+    });
+  });
+
   return {
     addPost,
     updatepost,
@@ -305,6 +336,8 @@ const postController = (
     getdislikedposts,
     getlikesdislikesinfo,
     deletepost,
+    addComment,
+    getallcomments
   };
 };
 

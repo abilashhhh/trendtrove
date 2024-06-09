@@ -19,6 +19,7 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const likePostModel_1 = __importDefault(require("../models/likePostModel"));
 const dislikePostModel_1 = __importDefault(require("../models/dislikePostModel"));
 const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInApplication"));
+const commentModel_1 = __importDefault(require("../models/commentModel"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
@@ -364,6 +365,29 @@ const postRepositoryMongoDB = () => {
         }
         return post;
     });
+    const addNewComment = (newCommentData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const newComment = new commentModel_1.default(newCommentData);
+            const newCommentDataSaved = yield newComment.save();
+            console.log("newCommentDataSaved: ", newCommentDataSaved);
+            return newCommentDataSaved;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error adding new post!");
+        }
+    });
+    const getAllComments = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const allComments = yield commentModel_1.default.find({ postId });
+            // console.log("Allcomments:", allComments)
+            return allComments;
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error("Error fetching comments!");
+        }
+    });
     ////////////////////////////////////////////////
     const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -401,6 +425,8 @@ const postRepositoryMongoDB = () => {
         deltePostForUser,
         blockPost,
         unblockPost,
+        addNewComment,
+        getAllComments
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

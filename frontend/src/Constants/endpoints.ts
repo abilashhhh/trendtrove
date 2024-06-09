@@ -1,5 +1,6 @@
 const END_POINTS = {
 
+  // AUTH
   LOGIN: "/api/auth/signin",
   GOOGLE_LOGIN_SIGNUP_USER: "/api/auth/googlesigninup",
   SIGNUP_USER: "/api/auth/signup",
@@ -12,6 +13,7 @@ const END_POINTS = {
   FORGOT_PASSWORD: 'api/auth/forgotpassword',
   FORGOT_PASSWORD_CHANGE: 'api/auth/forgotpasswordchange',
   
+  // USER PROFILE
   GET_USER_INFO: "/api/profile/getuserinfo",
   EDIT_PROFILE: "/api/profile/editprofile",
   UPLOAD_PROFILE_PHOTO: "/api/profile/dp",
@@ -22,6 +24,7 @@ const END_POINTS = {
   UPLOAD_COVER: 'api/profile/uploadcover',
   UPLOAD_DP: 'api/profile/uploaddp',
 
+  // USER
   GET_ALL_USERS : '/api/user/getallusers',
   GET_USER_PROFILE : '/api/user/getuserprofile/:username',
   FOLLOW_REQUEST: 'api/user/followuser',
@@ -30,6 +33,7 @@ const END_POINTS = {
   ACCEPT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/acceptrequest',
   REJECT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/rejectrequest',
   
+  // POST
   ADD_POST :'api/post/addpost',
   UPDATE_POST :'api/post/updatepost',
   GET_POSTS_FOR_USER:'api/post/getpostforuser',
@@ -50,7 +54,11 @@ const END_POINTS = {
   GET_LIKED_POSTS : '/api/post/getlikedposts/:userId',
   GET_DISLIKED_POSTS : '/api/post/getdislikedposts/:userId',
   GET_LIKES_DISLIKES_INFO : '/api/post/getlikesdislikesinfo/:postId',
+  // COMMENT
+  ADD_COMMENT: 'api/post/addcomment',
+  GET_ALL_COMMENTS : '/api/post/getallcomments/:postId',
 
+  // ADMIN
   ADMIN_LOGOUT: 'api/admin/logout',
   REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
   GET_USERS: 'api/admin/getusersforadmin',

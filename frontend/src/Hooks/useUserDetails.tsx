@@ -7,6 +7,7 @@ import { StoreType } from "../Redux/Store/reduxStore";
 
 function useUserDetails() {
   const initialUserInfo: UserInfo = {
+    // userId: "",
     name: "",
     username: "",
     email: "",
@@ -57,7 +58,7 @@ function useUserDetails() {
 
     fetchUserInfo();
   }, [userId]);
-
+console.log("Userdetials :", userDetails)
   return userDetails;
 }
 

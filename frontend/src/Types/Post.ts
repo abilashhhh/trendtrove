@@ -20,14 +20,15 @@ export interface Post {
 }
 
 export interface Comment {
-  id: string;
-  user: string;
-  post: string;
-  content: string;
-  likes?: string[];
-  replies?: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  postId: string;
+  userId: string;
+  username: string;
+  comment: string;
+  dp: string;
+  replies: string[];
+  report: string[];
+  likes: string[];
+  isBlock: boolean;
 }
 
 export interface PostResponse {
@@ -35,24 +36,23 @@ export interface PostResponse {
   message: string;
 }
 
-
 export interface GetAllPostsForUser {
   status: string;
   message: string;
-  postData :Post
+  postData: Post;
 }
+
 export interface GetOnePost {
   status: string;
   message: string;
-  postData :Post
+  postData: Post;
 }
 
 export interface GetAllPostsOfCurrentUser {
   status: string;
   message: string;
-  postData :Post
+  postData: Post;
 }
-
 
 export interface ReportPostResponse {
   status: string;
@@ -72,36 +72,43 @@ export interface LikePostResponse {
   status: string;
   message: string;
 }
+
 export interface DislikePostResponse {
   status: string;
   message: string;
 }
 
- 
+export interface AddCommentResponse {
+  status: string;
+  message: string;
+}
+
 export interface ReportPostData {
-  postId: string,
+  postId: string;
   reason: string;
   comments: string;
   reporterId: string;
   reporterUsername: string;
 }
 
-
 export interface GetLikedPostsResponse {
   likedPosts: any;
- 
-  data: string[]
-
+  data: string[];
 }
+
 export interface GetDislikedPostsResponse {
   dislikedPosts: any;
-  data: string[]
+  data: string[];
 }
 export interface GetLikesDislikesInfoResponse {
-  likesCount: number,
-  dislikesCount: number,
-  likedUsers: string[]
-  dislikedUsers:string[]
+  likesCount: number;
+  dislikesCount: number;
+  likedUsers: string[];
+  dislikedUsers: string[];
 }
 
- 
+export interface GetAllCommentsResponse {
+  status: string;
+  message: string;
+  data: Comment;
+}

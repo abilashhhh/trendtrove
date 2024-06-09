@@ -12,6 +12,8 @@ const commentSchema = new mongoose_1.Schema({
     postId: { type: String, required: true },
     userId: { type: String, required: true },
     comment: { type: String, required: true },
+    username: { type: String },
+    dp: { type: String },
     replies: [replyCommentSchema],
     likes: [{ type: String }],
     isBlock: { type: Boolean, default: false },

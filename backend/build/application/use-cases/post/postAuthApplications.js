@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleGetAllComments = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -376,3 +376,45 @@ const handleDeltePosts = (postId, dbPostRepository) => __awaiter(void 0, void 0,
     }
 });
 exports.handleDeltePosts = handleDeltePosts;
+;
+const handleCreateComment = (commentData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("Post data in handleCreateComment :", postData);
+        if (!commentData.userId) {
+            throw new ErrorInApplication_1.default("User ID is required to create a post", 400);
+        }
+        if (!commentData.postId) {
+            throw new ErrorInApplication_1.default("Post ID is required to create a comment", 400);
+        }
+        const userData = yield dbUserRepository.getUserById(commentData.userId);
+        if (!userData) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        const newComment = yield dbPostRepository.addNewComment(commentData);
+        return newComment;
+    }
+    catch (error) {
+        console.error("Error in handleCreateComment:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to create comment", 500);
+    }
+});
+exports.handleCreateComment = handleCreateComment;
+const handleGetAllComments = (postId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handleGetAllComments reached");
+        const handleGetAllComments = yield dbPostRepository.getAllComments(postId);
+        // console.log("All posts from handleGetAllComments :", handleGetAllComments);
+        return handleGetAllComments;
+    }
+    catch (error) {
+        // console.log("Error in handleGetAllComments");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all comments", 500);
+    }
+});
+exports.handleGetAllComments = handleGetAllComments;

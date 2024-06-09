@@ -2,8 +2,10 @@ import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
 import {
+  AddCommentResponse,
   DeletePostResponse,
   DislikePostResponse,
+  GetAllCommentsResponse,
   GetAllPostsForUser,
   GetAllPostsOfCurrentUser,
   GetDislikedPostsResponse,
@@ -365,6 +367,44 @@ export const getPostLikesAndDislikesInfo = async (postId: string) => {
       `${END_POINTS.GET_LIKES_DISLIKES_INFO.replace(":postId", postId)}`
     );
     // console.log("getPostLikesAndDislikesInfo response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+// COMMENTS
+/////////////////////////////////////////////////////////////////////////////
+
+export const addCommentToPost = async (
+  payload: Partial<Comment>
+): Promise<AddCommentResponse> => {
+  try {
+    console.log("addCommentToPost function, payload: ", payload);
+    const response = await axiosUserInstance.post<AddCommentResponse>(
+      END_POINTS.ADD_COMMENT,
+      payload
+    );
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const getAllCommentsForThisPost = async (postId: string) => {
+  try {
+    console.log("getAllCommentsForThisPost , postId: ", postId);
+    const response = await axiosUserInstance.get<GetAllCommentsResponse>(
+      `${END_POINTS.GET_ALL_COMMENTS.replace(":postId", postId)}`
+    );
+    console.log("getAllCommentsForThisPost response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
