@@ -8,6 +8,7 @@ import Header from "./HomePage/HomePageHeaderComponent";
 import LeftSidebar from "./HomePage/HomePageLeftSidebar";
 import BottomNavBar from "./HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "./LoadingSpinner";
+import useUserDetails from "../Hooks/useUserDetails";
 
 interface Props {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ const Layout: React.FC<Props> = ({ children }) => {
   const [isDarkMode, setDarkMode] = useState(true);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-
+const userDetails = useUserDetails()
   const toggleDarkMode = () => {
     setDarkMode(!isDarkMode);
   };
@@ -56,7 +57,7 @@ const Layout: React.FC<Props> = ({ children }) => {
     <>
       <ToastContainer />
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
-        <Header toggleLeftSidebar={toggleLeftSidebar} />
+        <Header toggleLeftSidebar={toggleLeftSidebar} userDetails={userDetails} />
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}

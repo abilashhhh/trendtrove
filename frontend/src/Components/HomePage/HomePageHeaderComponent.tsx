@@ -8,8 +8,8 @@ interface HeaderProps {
   toggleLeftSidebar: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar }) => {
-  const currentUser: any = useSelector((state: StoreType) => state.userAuth.user);
+const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar , userDetails}) => {
+  const currentUser: any = userDetails
 
   return (
     <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2">
