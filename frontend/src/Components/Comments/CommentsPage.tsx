@@ -229,14 +229,14 @@
     return (
       <Layout>
         <ToastContainer />
-        <main className=" bg-gray-800 w-full dark:bg-gray-700 text-white">
-          <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700 text-white">
+        <main className=" bg-gray-800 w-full dark:bg-gray-700  text-black dark:text-white ">
+          <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700 ">
             <div className="flex flex-col lg:flex-row w-full h-full ">
-              <div className="  -ml-2 lg:m-2 flex justify-center align-middle items-center">
-              <div className="lg:w-7/10   ">
-              <div className="max-w-2xl w-full h-full rounded-lg m-2">
+              <div className=" bg-slate-100 dark:bg-slate-700 rounded-lg  -ml-2 lg:m-2 flex justify-center align-middle items-center">
+              <div className="lg:w-7/10  ">
+              <div className="max-w-xl w-full h-full rounded-lg m-2">
 
-                  <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 ">
+                  <div className="bg-white  dark:bg-gray-900 rounded-lg shadow-lg p-4 ">
                     <div className="flex items-center  mb-4 ">
                       <img
                         src={post.dp}
@@ -415,8 +415,12 @@
                 </div>
               </div>
               </div>
-              <div className="bg-gray-600 lg:w-3/10 p-2 mr-2 lg:m-2 rounded-lg dark:bg-gray-800 lg:w-full">
-                <h2 className="text-2xl font-semibold mb-4 underline ">Comments</h2>
+              <div className="bg-white text-black dark:text-white lg:w-3/10 p-2 lg:-ml-1 mr-2 lg:m-2 rounded-lg dark:bg-gray-800 lg:w-full">
+                <h2 className="text-xl p-3 font-semibold mb-4 underline ">Comments</h2>
+                <div className="bg-slate-200 dark:bg-slate-700 p-3 rounded-lg font-bold">
+
+                  {userDetails.username && userDetails.username}
+                </div>
               </div>
             </div>
           </div>
