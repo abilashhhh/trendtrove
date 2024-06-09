@@ -388,6 +388,20 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error fetching comments!");
         }
     });
+    const deleteComment = (commentId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const deleteComment = yield commentModel_1.default.findByIdAndDelete(commentId);
+            if (!deleteComment) {
+                throw new Error("comment not found");
+            }
+            // console.log("comment deleted successfully:", deleteComment);
+            return { status: "success", message: "Comment deleted" };
+        }
+        catch (error) {
+            console.error("Error deleting comment:", error);
+            throw new Error("Error deleting comment!");
+        }
+    });
     ////////////////////////////////////////////////
     const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -426,7 +440,8 @@ const postRepositoryMongoDB = () => {
         blockPost,
         unblockPost,
         addNewComment,
-        getAllComments
+        getAllComments,
+        deleteComment
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

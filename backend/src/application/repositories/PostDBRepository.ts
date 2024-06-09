@@ -82,8 +82,11 @@ export const postDBRepository = (
     await repository.addNewComment(commentData);
   };
 
-  const getAllComments = async (postId: String) =>
+  const getAllComments = async (postId: string) =>
     await repository.getAllComments(postId);
+
+  const deleteComment = async (commentId: string) =>
+    await repository.deleteComment(commentId);
 
   return {
     addNewPost,
@@ -111,6 +114,7 @@ export const postDBRepository = (
     deltePostForUser,
     addNewComment,
     getAllComments,
+    deleteComment,
   };
 };
 

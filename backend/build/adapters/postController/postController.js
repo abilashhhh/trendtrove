@@ -202,6 +202,11 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: allComments,
         });
     }));
+    const deleteComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { commentId } = req.params;
+        const deleteComment = yield (0, postAuthApplications_1.handleDelteComment)(commentId, dbPostRepository);
+        res.status(200).json({ deleteComment });
+    }));
     return {
         addPost,
         updatepost,
@@ -224,7 +229,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getlikesdislikesinfo,
         deletepost,
         addComment,
-        getallcomments
+        getallcomments,
+        deleteComment
     };
 };
 exports.default = postController;

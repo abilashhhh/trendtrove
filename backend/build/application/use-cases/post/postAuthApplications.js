@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetAllComments = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleDelteComment = exports.handleGetAllComments = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -376,7 +376,6 @@ const handleDeltePosts = (postId, dbPostRepository) => __awaiter(void 0, void 0,
     }
 });
 exports.handleDeltePosts = handleDeltePosts;
-;
 const handleCreateComment = (commentData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("Post data in handleCreateComment :", postData);
@@ -418,3 +417,18 @@ const handleGetAllComments = (postId, dbPostRepository) => __awaiter(void 0, voi
     }
 });
 exports.handleGetAllComments = handleGetAllComments;
+const handleDelteComment = (commentId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handleDelteComment reached");
+        const handleDelteComment = yield dbPostRepository.deleteComment(commentId);
+        return handleDelteComment;
+    }
+    catch (error) {
+        // console.log("Error in handleDelteComment");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to delete posts", 500);
+    }
+});
+exports.handleDelteComment = handleDelteComment;

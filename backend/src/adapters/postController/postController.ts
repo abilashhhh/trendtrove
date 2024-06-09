@@ -8,6 +8,7 @@ import { PostDataInterface, ReportPost } from "../../types/postsInterface";
 import {
   handleCreateComment,
   handleCreatePost,
+  handleDelteComment,
   handleDeltePosts,
   handleDislikePosts,
   handleGetAllComments,
@@ -287,6 +288,7 @@ const postController = (
     res.status(200).json({ deltePostResult });
   });
 
+ 
 
   const addComment = asyncHandler(async (req: Request, res: Response) => {
     const commentData: CommentInterface = req.body;
@@ -315,6 +317,12 @@ const postController = (
     });
   });
 
+  const deleteComment = asyncHandler(async (req: Request, res: Response) => {
+    const { commentId } = req.params;
+    const deleteComment = await handleDelteComment(commentId, dbPostRepository);
+    res.status(200).json({ deleteComment });
+  });
+
   return {
     addPost,
     updatepost,
@@ -337,7 +345,8 @@ const postController = (
     getlikesdislikesinfo,
     deletepost,
     addComment,
-    getallcomments
+    getallcomments,
+    deleteComment
   };
 };
 

@@ -479,10 +479,6 @@ export const handleDeltePosts = async (
   }
 };
 
-;
-
-
-
 export const handleCreateComment = async (
   commentData: CommentInterface,
   dbPostRepository: ReturnType<PostDBInterface>,
@@ -495,15 +491,18 @@ export const handleCreateComment = async (
       throw new ErrorInApplication("User ID is required to create a post", 400);
     }
     if (!commentData.postId) {
-      throw new ErrorInApplication("Post ID is required to create a comment", 400);
+      throw new ErrorInApplication(
+        "Post ID is required to create a comment",
+        400
+      );
     }
-    
+
     const userData = await dbUserRepository.getUserById(commentData.userId);
     if (!userData) {
       throw new ErrorInApplication("User not found", 404);
     }
 
-    const newComment  = await dbPostRepository.addNewComment(commentData);
+    const newComment = await dbPostRepository.addNewComment(commentData);
     return newComment;
   } catch (error) {
     console.error("Error in handleCreateComment:", error);
@@ -514,10 +513,9 @@ export const handleCreateComment = async (
   }
 };
 
-
 export const handleGetAllComments = async (
   postId: String,
-  dbPostRepository: ReturnType<PostDBInterface>,
+  dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("handleGetAllComments reached");
@@ -531,4 +529,27 @@ export const handleGetAllComments = async (
     }
     throw new ErrorInApplication("Failed to get all comments", 500);
   }
-}
+};
+
+
+
+export const handleDelteComment = async (
+  commentId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleDelteComment reached");
+
+    const handleDelteComment = await dbPostRepository.deleteComment(
+      commentId
+    );
+    return handleDelteComment;
+  } catch (error) {
+    // console.log("Error in handleDelteComment");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to delete posts", 500);
+  }
+};
+

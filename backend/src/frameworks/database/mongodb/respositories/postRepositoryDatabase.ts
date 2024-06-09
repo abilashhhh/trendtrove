@@ -386,6 +386,7 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  
   const getPostById = async (postId: string) => {
     return await Post.findById(postId);
   };
@@ -441,6 +442,19 @@ const getAllComments = async (postId) => {
   }
 };
 
+const deleteComment = async (commentId: string) => {
+  try {
+    const deleteComment = await Comment.findByIdAndDelete(commentId);
+    if (!deleteComment) {
+      throw new Error("comment not found");
+    }
+    // console.log("comment deleted successfully:", deleteComment);
+    return { status: "success", message: "Comment deleted" };
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    throw new Error("Error deleting comment!");
+  }
+};
 
   ////////////////////////////////////////////////
 
@@ -483,7 +497,8 @@ const getAllComments = async (postId) => {
     blockPost,
     unblockPost,
     addNewComment,
-    getAllComments
+    getAllComments,
+    deleteComment
   };
 };
 //////////////////////////////////////////////////////////

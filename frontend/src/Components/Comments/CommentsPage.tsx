@@ -5,6 +5,7 @@ import useUserDetails from "../../Hooks/useUserDetails";
 import PostsDisplayCommon from "../Post/PostsDisplayCommon";
 import {
   addCommentToPost,
+  deleteCommentFromPost,
   getAllCommentsForThisPost,
   getPostUsingPostId,
 } from "../../API/Post/post";
@@ -17,7 +18,8 @@ import {
   FaHashtag,
   FaUser,
   FaPaperPlane,
-  FaMousePointer,
+  FaTrash,
+  FaPen
 } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -259,18 +261,6 @@ const CommentsPage: React.FC = () => {
   }
 
   const handleAddComment = async () => {
-    // if (commentText.trim() !== "") {
-    //   const newComment = {
-    //     id: comments.length + 1,
-    //     text: commentText,
-    //     username: userDetails.username,
-    //     dp: userDetails.dp,
-    //     createdAt: new Date().toISOString(),
-    //   };
-    //   setComments([...comments, newComment]);
-    //   setCommentText("");
-    // }
-
     if (commentText.trim() !== "") {
       const userComment = {
         postId,
@@ -292,6 +282,33 @@ const CommentsPage: React.FC = () => {
       }
     }
   };
+
+
+  const handleDeleteComment = async (commentId : string) => {
+    const res = await deleteCommentFromPost(commentId);
+    console.log("Res: ", res);
+
+    if (res?.deleteComment?.status === "success") {
+      toast.success("Comment deleted");
+      } else {
+        toast.error("Comment not deleted");
+        }
+      getAllComments(postId);
+  }
+
+  // const handleEditComment = async (commentId : string) => {
+  //   const res = await deleteCommentFromPost(commentId);
+  //   console.log("Res: ", res);
+
+  //   if (res.status === "success") {
+  //     toast.success("Comment deleted");
+  //     getAllComments(postId);
+  //   } else {
+  //     toast.error("Comment not deleted");
+  //   }
+  // }
+
+
 
   return (
     <Layout>
@@ -479,11 +496,11 @@ const CommentsPage: React.FC = () => {
                   {comments.map(comment => (
                     <div
                       key={comment.id}
-                      className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg mb-2 flex items-start">
-                      <div className="flex flex-col">
-                        <div className="flex flex-row justify-between">
+                      className="bg-gray-200 dark:bg-slate-700 p-4 rounded-lg mb-2 flex items-start">
+                      <div className="flex flex-col w-full  ">
+                        <div className="flex flex-row justify-between  ">
                           <div
-                            className="flex-shrink-0 flex items-start space-x-2 mr-2 cursor-pointer"
+                            className="flex items-start space-x-2 mr-2 cursor-pointer "
                             onClick={() =>
                               navigate(`/profiles/${comment?.username}`)
                             }>
@@ -499,11 +516,10 @@ const CommentsPage: React.FC = () => {
                               </span>
                             </div>
                           </div>
-                          <div className="flex">
-                            <FaMousePointer />
-                            <FaMousePointer />
-                            <FaMousePointer />
-                            <FaMousePointer />
+                          <div className="flex  justify-end gap-2 font-light text-sm  ">
+                         
+                          <div className="cursor-pointer" onClick={() => handleDeleteComment(comment._id)}> <FaTrash /></div>
+                          <div  className="cursor-pointer" onClick={() => handleEditComment(comment._id)}> <   FaPen /></div>
                           </div>
                         </div>
 

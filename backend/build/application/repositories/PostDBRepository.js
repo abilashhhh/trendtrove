@@ -46,6 +46,7 @@ const postDBRepository = (repository) => {
         yield repository.addNewComment(commentData);
     });
     const getAllComments = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllComments(postId); });
+    const deleteComment = (commentId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteComment(commentId); });
     return {
         addNewPost,
         taggedDataFromPosts,
@@ -72,6 +73,7 @@ const postDBRepository = (repository) => {
         deltePostForUser,
         addNewComment,
         getAllComments,
+        deleteComment,
     };
 };
 exports.postDBRepository = postDBRepository;

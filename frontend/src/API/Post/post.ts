@@ -411,3 +411,17 @@ export const getAllCommentsForThisPost = async (postId: string) => {
     throw error;
   }
 };
+
+export const deleteCommentFromPost = async (commentId: string) => {
+  try {
+    console.log("deleteCommentFromPost , commentId: ", commentId);
+    const response = await axiosUserInstance.delete<GetAllCommentsResponse>(
+      `${END_POINTS.DELETE_COMMENT.replace(":commentId", commentId)}`
+    );
+    console.log("deleteCommentFromPost response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
