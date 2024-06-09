@@ -19,11 +19,11 @@ const ProfileMainCenterComponent: React.FC<ProfileMainCenterComponentProps> = ({
 
       <div className="md:flex flex-col gap-2 overflow-hidden">
         <div className="no-scrollbar overflow-y-auto flex-1">
-          <Followers />
+          <Followers  userDetails={userDetails} />
         </div>
 
         <div className="no-scrollbar overflow-y-auto flex-1">
-          <Following />
+          <Following userDetails={userDetails} />
         </div>
       </div>
     </main>

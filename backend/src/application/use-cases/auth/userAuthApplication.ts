@@ -1,5 +1,3 @@
- 
-
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 const otpGenerator = require("otp-generator");
 import { UserDBInterface } from "../../repositories/userDBRepository";

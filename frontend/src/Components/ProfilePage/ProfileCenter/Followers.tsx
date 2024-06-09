@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../../../Redux/Store/reduxStore";
 import { useNavigate } from "react-router-dom";
 
-const Followers = () => {
-  const currentUser = useSelector((state: StoreType) => state.userAuth.user);
+const Followers = ({userDetails}) => {
+  const currentUser = userDetails
   const navigate = useNavigate();
 
   const formatDate = (date: string | undefined) => {

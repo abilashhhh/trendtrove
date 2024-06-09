@@ -234,7 +234,8 @@
             <div className="flex flex-col lg:flex-row w-full h-full ">
               <div className="  -ml-2 lg:m-2 flex justify-center align-middle items-center">
               <div className="lg:w-7/10   ">
-                <div className="max-w-xxl  h-full  rounded-lg m-2">
+              <div className="max-w-2xl w-full h-full rounded-lg m-2">
+
                   <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 ">
                     <div className="flex items-center  mb-4 ">
                       <img
@@ -415,7 +416,7 @@
               </div>
               </div>
               <div className="bg-gray-600 lg:w-3/10 p-2 mr-2 lg:m-2 rounded-lg dark:bg-gray-800 lg:w-full">
-                <h2 className="text-xl font-semibold mb-4">Comments</h2>
+                <h2 className="text-2xl font-semibold mb-4 underline ">Comments</h2>
               </div>
             </div>
           </div>
