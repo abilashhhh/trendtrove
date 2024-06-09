@@ -473,7 +473,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto no-scrollbar bg-gray-800 dark:bg-gray-700 text-white">
       <ToastContainer />
-      <div className="mx-auto h-screen rounded-lg shadow-lg bg-slate-200 dark:bg-slate-800 overflow-auto no-scrollbar">
+      <div className="mx-auto h-screen rounded-lg shadow-lg bg-slate-200 dark:bg-slate-900 overflow-auto no-scrollbar">
         <div className="bg-cover bg-center h-72">
           <img
             src={userDetails.coverPhoto || "/"}
