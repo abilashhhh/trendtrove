@@ -204,6 +204,9 @@ const CommentsPage: React.FC = () => {
 
     fetchPostDetails();
   }, [postId]);
+ 
+
+
 
   if (loading) {
     return (
@@ -256,7 +259,7 @@ const CommentsPage: React.FC = () => {
                         {new Date(post.createdAt).toLocaleString()}
                       </p>
                     </div>
-                    <div className="ml-auto">
+                    <div className="ml-auto relative">
                       <button
                         className="focus:outline-none"
                         onClick={() => toggleOptions(post._id)}
@@ -287,7 +290,11 @@ const CommentsPage: React.FC = () => {
                       )}
                     </div>
                   </div>
+
+
                   <PostsDisplayCommon post={post} />
+                  
+                  
                   <div className="flex justify-between ">
                     <div className="flex gap-2 items-center mt-4">
                       <button

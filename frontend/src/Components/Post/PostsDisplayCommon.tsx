@@ -36,11 +36,13 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
         <Slider {...settings}>
           {post.images.map((image: string, index: number) => (
             <div key={index}>
+              <a href={image}>
               <img
                 src={image}
                 alt={`Post image ${index}`}
                 className="w-full h-auto"
               />
+              </a>
             </div>
           ))}
           {post.videos.map((video: string, index: number) => (
@@ -57,20 +59,24 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
         </Slider>
       ) : post.images.length > 0 ? (
         post.images.length === 1 ? (
-          <img
+          <a href={post.images[0]}>
+            <img
             src={post.images[0]}
             alt={`Post image`}
             className="w-full h-auto"
           />
+          </a>
         ) : (
           <Slider {...settings}>
             {post.images.map((image: string, index: number) => (
               <div key={index}>
+                <a href={image}>
                 <img
                   src={image}
                   alt={`Post image ${index}`}
                   className="w-full h-auto"
                 />
+                </a>
               </div>
             ))}
           </Slider>
