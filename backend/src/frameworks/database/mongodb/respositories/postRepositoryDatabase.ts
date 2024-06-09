@@ -429,19 +429,18 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error adding new post!");
     }
   };
-  const getAllComments = async (postId :String) => {  
-    try {
-      const allComments = await Comment.find({ postId });
-      // console.log("Allcomments:", allComments)
-      return allComments;
-    } catch (error) {
-      console.error(error);
-      throw new Error("Error fetching comments!");  
-    }
-  };
-  
 
-  
+const getAllComments = async (postId) => {
+  try {
+    const allComments = await Comment.find({ postId }).sort({ createdAt: -1 });
+    // console.log("Allcomments:", allComments)
+    return allComments;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching comments!");  
+  }
+};
+
 
   ////////////////////////////////////////////////
 

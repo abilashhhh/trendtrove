@@ -474,28 +474,29 @@ const CommentsPage: React.FC = () => {
 
             <div className="bg-white text-black dark:text-white lg:w-3/10 p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 w-full">
               <div className="flex flex-col h-full">
-                <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar">
-                  {comments.map(comment => (
-                    <div
-                      key={comment.id}
-                      className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg mb-2 flex items-start ">
-                      <div className="flex-shrink-0 flex items-start space-x-2 mr-2">
-                        <img
-                          src={comment.dp}
-                          alt="DP"
-                          className="w-6 h-6 rounded-full"
-                        />
-                        <div>
-                          <h1 className="font-bold">{comment.username}</h1>
-                        </div>
-                      </div>
-                      <div className="flex-grow">
-                        <p className="text-sm">{comment.comment}</p>
-                      </div>
-                    </div>
-                  ))}
-                  {comments.length === 0 && "No comments yet"}
-                </div>
+
+              <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar">
+  {comments.map(comment => (
+    <div key={comment.id} className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg mb-2 flex items-start">
+      <div className="flex flex-col">
+      <div className="flex-shrink-0 flex items-start space-x-2 mr-2">
+        <img src={comment.dp} alt="DP" className="w-6 h-6 rounded-full" />
+        <div className="font-bold">
+          {comment.username}{" "}
+          <span className="font-light text-xs">
+            {formatDate(comment.createdAt)}
+          </span>
+        </div>
+      </div>
+      <div className="flex-grow">
+        <p className="text-sm mt-1">{comment.comment}</p>
+      </div>
+      </div>
+    </div>
+  ))}
+  {comments.length === 0 && "No comments yet"}
+</div>
+
 
                 <div className="bg-slate-300 dark:bg-slate-900 p-3 rounded-lg font-bold flex flex-col sm:flex-row items-center m-1 sticky bottom-0">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center m-1 sticky bottom-0 w-full">
@@ -506,7 +507,7 @@ const CommentsPage: React.FC = () => {
                         className="w-6 h-6 rounded-full hidden sm:block"
                       />
                       <div className="lg:mr-4 hidden sm:block">
-                        <h1 className="text-xs font-bold">
+                        <h1 className="text-s font-bold">
                           {userDetails.username}
                         </h1>
                         <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">

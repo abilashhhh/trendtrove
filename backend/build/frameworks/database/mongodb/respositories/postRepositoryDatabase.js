@@ -379,7 +379,7 @@ const postRepositoryMongoDB = () => {
     });
     const getAllComments = (postId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const allComments = yield commentModel_1.default.find({ postId });
+            const allComments = yield commentModel_1.default.find({ postId }).sort({ createdAt: -1 });
             // console.log("Allcomments:", allComments)
             return allComments;
         }
