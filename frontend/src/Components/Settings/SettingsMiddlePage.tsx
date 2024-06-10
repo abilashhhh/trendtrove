@@ -2,26 +2,24 @@ import React, { useState } from "react";
 import {
   changePassword,
   deleteAccount,
+  premiumAccount,
   privateAccount,
   suspendAccount,
 } from "../../API/Profile/profile";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
-import { StoreType } from "../../Redux/Store/reduxStore";
 import {
   validatePassword,
   validateConfirmPassword,
 } from "../../utils/validations";
 import { useNavigate } from "react-router-dom";
+import useUserDetails from "../../Hooks/useUserDetails";
 
 // Main Settings Page Component
 const SettingsMiddlePage = () => {
-  const [activeSection, setActiveSection] = useState("");
-  const currentUser: any = useSelector(
-    (state: StoreType) => state.userAuth.user
-  );
+  const [activeSection, setActiveSection] = useState("PremiumAccount");
+  const currentUser = useUserDetails()
   const navigate = useNavigate();
   return (
     <>
@@ -57,6 +55,11 @@ const SettingsMiddlePage = () => {
                   className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
                   Change to private account
                 </button>
+                <button
+                  onClick={() => setActiveSection("PremiumAccount")}
+                  className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
+                  Premium account
+                </button>
               </div>
             </div>
             <div className="w-full md:w-4/5 bg-gray-200 dark:bg-slate-800 rounded-lg flex text-black dark:text-white text-xl h-full overflow-auto no-scrollbar">
@@ -72,6 +75,9 @@ const SettingsMiddlePage = () => {
                 )}
                 {activeSection === "PrivateAccount" && (
                   <PrivateAccount currentUser={currentUser} />
+                )}
+                {activeSection === "PremiumAccount" && (
+                  <PremiumAccount currentUser={currentUser} />
                 )}
               </div>
             </div>
@@ -186,7 +192,7 @@ const ChangePassword = ({ currentUser }) => {
 
 const DeleteAccount = ({ currentUser }) => {
   const navigate = useNavigate();
-  const [password, setPassword] = useState("");
+  
 
   const handleDeleteAccount = async () => {
     Swal.fire({
@@ -248,7 +254,6 @@ const DeleteAccount = ({ currentUser }) => {
 };
 
 const SuspendAccount = ({ currentUser }) => {
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const handleSuspendAccount = async () => {
     Swal.fire({
@@ -309,7 +314,6 @@ const SuspendAccount = ({ currentUser }) => {
 };
 
 const PrivateAccount = ({ currentUser }) => {
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handlePrivateAccount = async () => {
@@ -365,6 +369,66 @@ const PrivateAccount = ({ currentUser }) => {
         className="bg-purple-500 dark:bg-purple-700 rounded p-2 mt-4 hover:bg-purple-400 dark:hover:bg-purple-600"
         onClick={handlePrivateAccount}>
         Set Account to Private
+      </button>
+    </div>
+  );
+};
+
+const PremiumAccount = ({ currentUser }) => {
+  const navigate = useNavigate();
+
+  const handlePremiumAccount = async () => {
+    Swal.fire({
+      title: "Enter your password",
+      input: "password",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "off",
+        spellcheck: "false",
+      },
+      showCancelButton: true,
+      confirmButtonText: "To Payment",
+      showLoaderOnConfirm: true,
+      preConfirm: async password => {
+        try {
+          const premiumAccountResult = await premiumAccount(
+            currentUser._id,
+            password
+          );
+
+          if (premiumAccountResult.status === "success") {
+            toast.success("Account set to premium successfully");
+          } else {
+            Swal.showValidationMessage(
+              `Failed to set account to premium: ${premiumAccountResult.message}`
+            );
+          }
+        } catch (error) {
+          Swal.showValidationMessage(
+            `Failed to set account to premium. Try again`
+          );
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then(result => {
+      if (result.isConfirmed) {
+        setTimeout(() => {
+          navigate("/home");
+        }, 3000);
+      }
+    });
+  };
+
+  return (
+    <div>
+      <h2 className="text-xl mb-4">Set Account to premium</h2>
+      <p>Are you sure you want to set your account to premium?</p>
+      <p>Confirm your password and proceed to payment</p>
+      <button
+        className="bg-blue-500 dark:bg-blue-700 rounded p-2 mt-4 hover:bg-blue-400 dark:hover:bg-blue-600"
+        onClick={handlePremiumAccount}>
+        Switch to premium account
       </button>
     </div>
   );

@@ -9,7 +9,7 @@ const MediaItem = ({ type, src }) => {
   } else if (type === "video") {
     return (
       <video autoPlay loop controls className="w-full h-full object-cover">
-        <source src={src} type="video/mp4" />
+        <source  src={src} type="video/mp4" />
       </video>
     );
   }

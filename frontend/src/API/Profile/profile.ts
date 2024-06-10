@@ -7,6 +7,7 @@ import {
   DeleteAccountResponse,
   EditProfileResponse,
   GetUserInfoResponse,
+  PremiuumAccountResponse,
   SuspendAccountResponse,
   UserInfo,
 } from "../../Types/userProfile";
@@ -133,6 +134,27 @@ export const privateAccount = async (
 
     const response = await axiosUserInstance.patch<SuspendAccountResponse>(
       `${END_POINTS.PRIVATE_ACCOUNT.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
+    );
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const premiumAccount = async (
+  userId: string,
+  password: string
+): Promise<PremiuumAccountResponse> => {
+  try {
+    // console.log(userId, password, "from private acc");
+
+    const response = await axiosUserInstance.patch<SuspendAccountResponse>(
+      `${END_POINTS.PREMIUM_ACCOUNT.replace(":userId", userId).replace(
         ":password",
         password
       )}`

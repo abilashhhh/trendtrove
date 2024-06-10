@@ -65,6 +65,10 @@ export interface SuspendAccountResponse {
   status: string, 
   message: string,
 }
+export interface PremiuumAccountResponse {
+  status: string, 
+  message: string,
+}
 
 export interface GetOtherUserInfoResponse {
   status: string,
