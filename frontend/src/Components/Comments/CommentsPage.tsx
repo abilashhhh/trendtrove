@@ -537,7 +537,7 @@ const CommentsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white text-black dark:text-white p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 sm:mr-4">
+              <div className="bg-white text-black dark:text-white p-2 sm:mt-2 lg:m-2 flex-grow rounded-lg dark:bg-gray-800 sm:mr-4">
                 <div className="flex flex-col h-full w-full">
                   <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar w-full">
                     {comments.length > 0 ? (
