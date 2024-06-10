@@ -55,7 +55,7 @@ const userDetails = useUserDetails()
 
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
         <Header toggleLeftSidebar={toggleLeftSidebar} userDetails={userDetails} />
         <div className="flex flex-1 overflow-hidden">
