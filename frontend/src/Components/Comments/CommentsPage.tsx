@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../Layout";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import useUserDetails from "../../Hooks/useUserDetails";
 import PostsDisplayCommon from "../Post/PostsDisplayCommon";
 import {
@@ -41,7 +44,6 @@ import {
   getDislikedPosts,
   getPostLikesAndDislikesInfo,
 } from "../../API/Post/post";
-import { ToastContainer, toast } from "react-toastify";
 
 const CommentsPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -310,8 +312,8 @@ const CommentsPage: React.FC = () => {
       console.log("Res: ", res);
 
       if (res.status === "success") {
-        setReplyingTo(null)
-    setReplyText("");
+        setReplyingTo(null);
+        setReplyText("");
 
         toast.success("Reply added");
         getAllComments(postId);
@@ -319,8 +321,6 @@ const CommentsPage: React.FC = () => {
         toast.error("Reply not added");
       }
     }
-
- 
   };
 
   const handleDeleteComment = async (commentId: string) => {
@@ -357,9 +357,8 @@ const CommentsPage: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
       <Layout>
-        <ToastContainer />
+      <ToastContainer />
         <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white">
           <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700  overflow-x-hidden  overflow-y-auto no-scrollbar">
             <div className="flex flex-col lg:flex-row w-full h-full">
@@ -660,37 +659,55 @@ const CommentsPage: React.FC = () => {
                                   </div>
                                 </div>
                               )}
-                          {comment.replies.length > 0 && (
-  <div>
-    <button className="text-red-600" onClick={() => setShowReplies((prev) => (prev === comment._id ? null : comment._id))}>
-      {showReplies === comment._id ? "Hide Replies" : `Show ${comment.replies.length} replies`}
-    </button>
-    {showReplies === comment._id && (
-      <div>
-        {comment.replies.map(reply => (
-          <div
-            key={reply._id}
-            className="ml-8 mt-2 p-2 border-l-2 border-gray-200 dark:border-gray-600">
-            <div className="flex flex-row gap-2 items-center">
-              <div>
-                <img src={reply.dp} className="w-6 h-6 rounded-full" alt="" />
-              </div>
-              <div className="flex flex-row gap-2 items-center">
-                <p className="text-sm font-semibold">{reply.username}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {new Date(reply.createdAt).toLocaleString()}
-                </p>
-              </div>
-            </div>
-            <p className="text-gray-700 dark:text-gray-300">{reply.reply}</p>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-)}
-
-
+                              {comment.replies.length > 0 && (
+                                <div>
+                                  <button
+                                    className="text-red-600"
+                                    onClick={() =>
+                                      setShowReplies(prev =>
+                                        prev === comment._id
+                                          ? null
+                                          : comment._id
+                                      )
+                                    }>
+                                    {showReplies === comment._id
+                                      ? "Hide Replies"
+                                      : `Show ${comment.replies.length} replies`}
+                                  </button>
+                                  {showReplies === comment._id && (
+                                    <div>
+                                      {comment.replies.map(reply => (
+                                        <div
+                                          key={reply._id}
+                                          className="ml-8 mt-2 p-2 border-l-2 border-gray-200 dark:border-gray-600">
+                                          <div className="flex flex-row gap-2 items-center">
+                                            <div>
+                                              <img
+                                                src={reply.dp}
+                                                className="w-6 h-6 rounded-full"
+                                                alt=""
+                                              />
+                                            </div>
+                                            <div className="flex flex-row gap-2 items-center">
+                                              <p className="text-sm font-semibold">
+                                                {reply.username}
+                                              </p>
+                                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                {new Date(
+                                                  reply.createdAt
+                                                ).toLocaleString()}
+                                              </p>
+                                            </div>
+                                          </div>
+                                          <p className="text-gray-700 dark:text-gray-300">
+                                            {reply.reply}
+                                          </p>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
