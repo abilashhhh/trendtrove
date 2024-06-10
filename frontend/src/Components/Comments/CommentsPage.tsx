@@ -12,7 +12,7 @@ import {
   handleAddReplyToComment,
 } from "../../API/Post/post";
 import LoadingSpinner from "../LoadingSpinner";
-import { Post } from "../../Types/Post";
+import { Post, Reply } from "../../Types/Post";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
 import {
@@ -55,7 +55,6 @@ const CommentsPage: React.FC = () => {
 
   const getAllComments = async (postId: string | undefined) => {
     const allComments = await getAllCommentsForThisPost(postId);
-    // console.log("allCommentsData: ", allComments);
     setComments(allComments.data);
     setCommentText("");
   };
@@ -311,6 +310,9 @@ const CommentsPage: React.FC = () => {
       console.log("Res: ", res);
 
       if (res.status === "success") {
+        setReplyingTo(null)
+    setReplyText("");
+
         toast.success("Reply added");
         getAllComments(postId);
       } else {
@@ -318,9 +320,7 @@ const CommentsPage: React.FC = () => {
       }
     }
 
-    setComments(updatedComments);
-    setReplyText("");
-    setReplyingTo(null);
+ 
   };
 
   const handleDeleteComment = async (commentId: string) => {
@@ -661,36 +661,7 @@ const CommentsPage: React.FC = () => {
                                 </div>
                               )}
                               {comment.replies.map(
-                                (reply: {
-                                  _id: React.Key | null | undefined;
-                                  username:
-                                    | string
-                                    | number
-                                    | boolean
-                                    | React.ReactElement<
-                                        any,
-                                        | string
-                                        | React.JSXElementConstructor<any>
-                                      >
-                                    | Iterable<React.ReactNode>
-                                    | React.ReactPortal
-                                    | null
-                                    | undefined;
-                                  createdAt: string | number | Date;
-                                  reply:
-                                    | string
-                                    | number
-                                    | boolean
-                                    | React.ReactElement<
-                                        any,
-                                        | string
-                                        | React.JSXElementConstructor<any>
-                                      >
-                                    | Iterable<React.ReactNode>
-                                    | React.ReactPortal
-                                    | null
-                                    | undefined;
-                                }) => (
+                                (reply: Reply) => (
                                   <div
                                     key={reply._id}
                                     className="ml-8 mt-2 p-2 border-l-2 border-gray-200 dark:border-gray-600">
