@@ -371,12 +371,13 @@ const CommentsPage: React.FC = () => {
         <ToastContainer />
         <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white items-center">
           <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700   overflow-x-hidden  overflow-y-auto no-scrollbar ">
-            <div className="flex flex-col lg:flex-row w-full h-full ">
-              <div className="bg-slate-100 dark:bg-slate-700  rounded-lg -ml-2 lg:m-2 flex justify-center items-center">
-                <div className="lg:w-7/10 w-full items-center">
-                  <div className="max-w-2xl w-full h-full rounded-lg m-2 items-center">
-                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 items-center">
-                      <div className="flex items-center mb-4 ">
+            <div className="flex flex-col lg:flex-row w-full h-full  justify-center">
+            <div className="bg-slate-100 dark:bg-slate-700  rounded-lg -ml-2 lg:m-2 flex justify-center items-center">
+              
+                <div className="lg:w-7/10 w-full flex justify-center items-center">
+                  <div className="max-w-2xl w-full h-full rounded-lg m-2  items-center">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg  shadow-lg p-4 items-center">
+                      <div className="flex items-center  mb-4 ">
                         <img
                           src={post.dp}
                           alt=""
