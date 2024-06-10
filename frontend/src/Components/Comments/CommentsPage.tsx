@@ -529,50 +529,7 @@ const CommentsPage: React.FC = () => {
             <div className="bg-white text-black dark:text-white lg:w-3/10 p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 w-full">
               <div className="flex flex-col h-full">
                 <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar">
-                  {/* {comments.map(comment => (
-                    <div
-                      key={comment.id}
-                      className="bg-gray-200 dark:bg-slate-700 p-4 rounded-lg mb-2 flex items-start">
-                      <div className="flex flex-col w-full  ">
-                        <div className="flex flex-row justify-between  ">
-                          <div
-                            className="flex items-start space-x-2 mr-2 cursor-pointer "
-                            onClick={() =>
-                              navigate(`/profiles/${comment?.username}`)
-                            }>
-                            <img
-                              src={comment.dp}
-                              alt="DP"
-                              className="w-6 h-6 rounded-full"
-                            />
-                            <div className="font-bold">
-                              {comment.username}{" "}
-                              <span className="font-light text-xs">
-                                {formatDate(comment.createdAt)}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex  justify-end gap-2 font-light text-sm  ">
-                         
-                         {comment?.userId !== userDetails._id &&     <div  className="cursor-pointer flex gap-2  items-center" onClick={() => handleReplyComment(comment._id)}> Reply <  FaReply /></div> }
-
-                         {comment?.userId === userDetails._id &&  <div className="cursor-pointer" onClick={() => handleDeleteComment(comment._id)}> <FaTrash /></div>}
-                         {comment?.userId === userDetails._id &&     <div  className="cursor-pointer" onClick={() =>
-                                  startEditingComment(
-                                    comment._id,
-                                    comment.comment
-                                  )
-                                }> <   FaPen /></div> }
-                         {/* {comment?.userId === userDetails._id &&     <div  className="cursor-pointer" onClick={() => handleEditComment(comment._id)}> <   FaPen /></div> } 
-                          </div>
-                        </div>
-
-                        <div className="flex-grow">
-                          <p className="text-sm mt-1">{comment.comment}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))} */}
+                 
                     {comments.length > 0 ? (
                     comments.map((comment) => (
                       <div
@@ -597,34 +554,35 @@ const CommentsPage: React.FC = () => {
                               }>
                               {comment.username}
                             </p>
-                            <p className="text-xs font-light text-gray-500 dark:text-gray-400">
+                            <p className="text-xs font-light text-gray-500 dark:text-gray-400 ">
                               {new Date(comment.createdAt).toLocaleString()}
                             </p>
                             {editingCommentId === comment._id ? (
-                              <div className="flex flex-col mt-2">
-                                <textarea
-                                  className="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                                  rows={2}
-                                  value={editedCommentText}
-                                  onChange={(e) =>
-                                    setEditedCommentText(e.target.value)
-                                  }></textarea>
-                                <div className="flex justify-end space-x-2">
-                                  <button
-                                    onClick={() => {
-                                      setEditingCommentId(null);
-                                      setEditedCommentText("");
-                                    }}
-                                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none">
-                                    Cancel
-                                  </button>
-                                  <button
-                                    onClick={handleSaveEditedComment}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
-                                    Save
-                                  </button>
-                                </div>
-                              </div>
+                             <div className="flex flex-col mt-2 w-full">
+                             <textarea
+                               className="w-96 h-32 p-4 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                               value={editedCommentText}
+                               onChange={(e) => setEditedCommentText(e.target.value)}
+                             ></textarea>
+                             <div className="flex justify-end space-x-2">
+                               <button
+                                 onClick={() => {
+                                   setEditingCommentId(null);
+                                   setEditedCommentText("");
+                                 }}
+                                 className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none"
+                               >
+                                 Cancel
+                               </button>
+                               <button
+                                 onClick={handleSaveEditedComment}
+                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+                               >
+                                 Save
+                               </button>
+                             </div>
+                           </div>
+                           
                             ) : (
                               <p className="mt-1 text-gray-700 dark:text-gray-300">
                                 {comment.comment}
@@ -632,8 +590,9 @@ const CommentsPage: React.FC = () => {
                             )}
                           </div>
                         </div>
+                        
                         <div className="flex items-center ml-4">
-                          {comment.userId === userDetails._id && (
+                          {comment.userId === userDetails._id ? (
                             <>
                               <button
                                 className="text-blue-500 hover:text-blue-600 focus:outline-none"
@@ -651,8 +610,23 @@ const CommentsPage: React.FC = () => {
                                 Delete
                               </button>
                             </>
-                          )}
+                          ): 
+                           
+                              <button
+                                className="text-green-500 hover:text-green-600 focus:outline-none"
+                                onClick={() =>
+                                  handleReplyComment(
+                                    comment._id,
+                                  )
+                                }>
+                              <div className="flex gap-2 items-center" >  Reply  <  FaReply /></div>
+                              </button>
+                               
+                          
+                          }
                         </div>
+                       
+                        
                       </div>
                     ))
                   ) : (
