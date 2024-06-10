@@ -517,7 +517,7 @@ const CommentsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white text-black dark:text-white   p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 max-w-screen-lg  sm:mr-4 ">
+              <div className="bg-white text-black dark:text-white   p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800    sm:mr-4 ">
                 <div className="flex flex-col h-full w-full">
                   <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar w-full">
                     {comments.length > 0 ? (
@@ -525,8 +525,9 @@ const CommentsPage: React.FC = () => {
                         <div
                           key={comment._id}
                           className="flex items-start justify-between  overflow-wrap break-all  mt-4 w-full  bg-white dark:bg-slate-900 rounded-lg p-4 shadow-md">
-                          <div className="flex items-start flex-col w-full">
-                            <div className="flex flex-row  gap-2 w-full items-center">
+                          <div className="flex items-start  flex-col w-full">
+                            <div className="flex flex-row gap-2 w-full justify-between items-center">
+                              <div className="flex w-full gap-2 items-center">
                               <img
                                 src={comment.dp}
                                 alt=""
@@ -545,7 +546,8 @@ const CommentsPage: React.FC = () => {
                               <p className="text-xs font-light text-gray-500 dark:text-gray-400 ">
                                 {new Date(comment.createdAt).toLocaleString()}
                               </p>
-                              <div className="flex items-center ml-4 gap-2 w-full">
+                              </div>
+                              <div className="flex justify-end items-center ml-4 gap-2 w-full">
                                 {comment.userId === userDetails._id ? (
                                   <>
                                     <button
