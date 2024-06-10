@@ -518,17 +518,15 @@ const CommentsPage: React.FC = () => {
               </div>
 
               <div className="bg-white text-black dark:text-white   p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 max-w-screen-lg  sm:mr-4 ">
-                <div className="flex flex-col h-full">
-                  <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar">
+                <div className="flex flex-col h-full w-full">
+                  <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar w-full">
                     {comments.length > 0 ? (
                       comments.map(comment => (
                         <div
                           key={comment._id}
-                          className="flex items-start justify-between  overflow-wrap break-all  mt-4   bg-white dark:bg-slate-900 rounded-lg p-4 shadow-md">
-                          <div className="flex items-start flex-col ">
-                            <div
-                              className="flex flex-row  gap-2 w-full items-center 
-                          ">
+                          className="flex items-start justify-between  overflow-wrap break-all  mt-4 w-full  bg-white dark:bg-slate-900 rounded-lg p-4 shadow-md">
+                          <div className="flex items-start flex-col w-full">
+                            <div className="flex flex-row  gap-2 w-full items-center">
                               <img
                                 src={comment.dp}
                                 alt=""
@@ -547,7 +545,7 @@ const CommentsPage: React.FC = () => {
                               <p className="text-xs font-light text-gray-500 dark:text-gray-400 ">
                                 {new Date(comment.createdAt).toLocaleString()}
                               </p>
-                              <div className="flex items-center ml-4 gap-2">
+                              <div className="flex items-center ml-4 gap-2 w-full">
                                 {comment.userId === userDetails._id ? (
                                   <>
                                     <button
@@ -558,18 +556,18 @@ const CommentsPage: React.FC = () => {
                                           comment.comment
                                         )
                                       }>
-                                      <div className="flex gap-1 items-center">
-                                      Edit <FaPen />
-                                    </div>
+                                      <div className="flex gap-1 items-center ">
+                                        Edit <FaPen />
+                                      </div>
                                     </button>
                                     <button
                                       className="ml-2 text-red-500 hover:text-red-600 focus:outline-none"
                                       onClick={() =>
                                         handleDeleteComment(comment._id)
                                       }>
-                                          <div className="flex gap-1 items-center">
-                                      Delete <FaTrash />
-                                    </div>
+                                      <div className="flex gap-1 items-center">
+                                        Delete <FaTrash />
+                                      </div>
                                     </button>
                                   </>
                                 ) : (
@@ -585,11 +583,11 @@ const CommentsPage: React.FC = () => {
                                 )}
                               </div>
                             </div>
-                            <div className="overflow-x-hidden  w-full">
+                            <div className="overflow-x-hidden   w-full">
                               {editingCommentId === comment._id ? (
                                 <div className="flex flex-col mt-2 w-full">
                                   <textarea
-                                    className="w-96 h-32 p-4 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                    className="w-full h-32 p-4 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                                     value={editedCommentText}
                                     onChange={e =>
                                       setEditedCommentText(e.target.value)
