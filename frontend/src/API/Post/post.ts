@@ -5,6 +5,7 @@ import {
   AddCommentResponse,
   DeletePostResponse,
   DislikePostResponse,
+  EditCommentResponse,
   GetAllCommentsResponse,
   GetAllPostsForUser,
   GetAllPostsOfCurrentUser,
@@ -419,6 +420,25 @@ export const deleteCommentFromPost = async (commentId: string) => {
       `${END_POINTS.DELETE_COMMENT.replace(":commentId", commentId)}`
     );
     console.log("deleteCommentFromPost response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const editComment = async (
+  commentId: string, 
+  updatedText: string
+): Promise<AddCommentResponse> => {
+  try {
+    console.log("edit comment function, payload:", { commentId, updatedText });
+    const response = await axiosUserInstance.put<EditCommentResponse>(
+      END_POINTS.EDIT_COMMENT,
+      { commentId, updatedText }
+    );
+    console.log("editComment response:", response.data);
+
     return response.data;
   } catch (error) {
     handleAxiosError(error);

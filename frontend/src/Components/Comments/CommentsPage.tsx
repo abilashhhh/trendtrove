@@ -6,6 +6,7 @@ import PostsDisplayCommon from "../Post/PostsDisplayCommon";
 import {
   addCommentToPost,
   deleteCommentFromPost,
+  editComment,
   getAllCommentsForThisPost,
   getPostUsingPostId,
 } from "../../API/Post/post";
@@ -60,24 +61,7 @@ const CommentsPage: React.FC = () => {
     getAllComments(postId);
   }, []);
 
-  const startEditingComment = (commentId: string, currentComment: string) => {
-    setEditingCommentId(commentId);
-    setEditedCommentText(currentComment);
-  };
   
-  const handleSaveEditedComment = async () => {
-    if (editedCommentText.trim() !== "" && editingCommentId) {
-      // const res = await editComment(editingCommentId, editedCommentText);
-      // if (res.status === "success") {
-      //   toast.success("Comment edited successfully");
-      //   getAllComments(postId);
-      //   setEditingCommentId(null);
-      //   setEditedCommentText("");
-      // } else {
-      //   toast.error("Failed to edit comment");
-      // }
-    }
-  };
   
 
   const userDetails = useUserDetails();
@@ -319,11 +303,33 @@ const CommentsPage: React.FC = () => {
       getAllComments(postId);
   }
 
-  const handleEditComment = async (commentId : string) => {
 
-    console.log("Commment id to edit : ", commentId)
+  const startEditingComment = (commentId: string, currentComment: string) => {
+    setEditingCommentId(commentId);
+    setEditedCommentText(currentComment);
+  };
+  
+  const handleSaveEditedComment = async () => {
+    if (editedCommentText.trim() !== "" && editingCommentId) {
+      const res = await editComment(editingCommentId, editedCommentText);
+      if (res.status === "success") {
+        toast.success("Comment edited successfully");
+        getAllComments(postId);
+        setEditingCommentId(null);
+        setEditedCommentText("");
+      getAllComments(postId);
 
-    // const res = await editUserComment(commentId);
+      } else {
+        toast.error("Failed to edit comment");
+      }
+    }
+  };
+
+  // const handleEditComment = async (commentId : string) => {
+
+  //   console.log("Commment id to edit : ", commentId)
+
+  //   // const res = await editUserComment(commentId);
     // console.log("Res: ", res);
 
     // if (res.status === "success") {
@@ -332,13 +338,15 @@ const CommentsPage: React.FC = () => {
     // } else {
     //   toast.error("Comment not deleted");
     // }
-  }
+  // }
 
   
 
 
 
   return (
+    <>
+    <ToastContainer />
     <Layout>
       <ToastContainer />
       <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white">
@@ -708,6 +716,8 @@ const CommentsPage: React.FC = () => {
         />
       </main>
     </Layout>
+    </>
+
   );
 };
 

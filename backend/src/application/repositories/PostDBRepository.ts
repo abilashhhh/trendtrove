@@ -88,6 +88,9 @@ export const postDBRepository = (
   const deleteComment = async (commentId: string) =>
     await repository.deleteComment(commentId);
 
+  const editComment = async (commentId: string, updatedText: string) =>
+    await repository.editComment(commentId, updatedText);
+
   return {
     addNewPost,
     taggedDataFromPosts,
@@ -115,6 +118,7 @@ export const postDBRepository = (
     addNewComment,
     getAllComments,
     deleteComment,
+    editComment
   };
 };
 

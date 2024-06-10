@@ -533,6 +533,7 @@ export const handleGetAllComments = async (
 
 
 
+
 export const handleDelteComment = async (
   commentId: string,
   dbPostRepository: ReturnType<PostDBInterface>
@@ -553,3 +554,23 @@ export const handleDelteComment = async (
   }
 };
 
+export const handleEditComments = async (
+  commentId: string, 
+  updatedText: string, 
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleEditComments reached");
+
+    const handleEditComments = await dbPostRepository.editComment(
+      commentId, updatedText
+    );
+    return handleEditComments;
+  } catch (error) {
+    // console.log("Error in handleEditComments");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to delete posts", 500);
+  }
+};

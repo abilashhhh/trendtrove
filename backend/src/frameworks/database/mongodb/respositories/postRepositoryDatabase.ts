@@ -417,6 +417,7 @@ export const postRepositoryMongoDB = () => {
   };
 
 
+
   
   
   const addNewComment = async (newCommentData: CommentInterface) => {
@@ -453,6 +454,22 @@ const deleteComment = async (commentId: string) => {
   } catch (error) {
     console.error("Error deleting comment:", error);
     throw new Error("Error deleting comment!");
+  }
+};
+
+const editComment = async (commentId: string, updatedText: string) => {
+  try {
+    const editedComment = await Comment.findByIdAndUpdate(
+      commentId,
+      { comment: updatedText },
+      { new: true }
+    );
+    if (!editedComment) {
+      throw new ErrorInApplication("Comment not found", 404);
+    }
+    return editedComment;
+  } catch (error) {
+    throw new Error ( "Error updating comment" );
   }
 };
 
@@ -498,7 +515,8 @@ const deleteComment = async (commentId: string) => {
     unblockPost,
     addNewComment,
     getAllComments,
-    deleteComment
+    deleteComment,
+    editComment
   };
 };
 //////////////////////////////////////////////////////////

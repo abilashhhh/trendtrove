@@ -207,6 +207,24 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         const deleteComment = yield (0, postAuthApplications_1.handleDelteComment)(commentId, dbPostRepository);
         res.status(200).json({ deleteComment });
     }));
+    const editComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { commentId, updatedText } = req.body;
+        console.log("handleEditComments:", commentId, updatedText);
+        try {
+            const allComments = yield (0, postAuthApplications_1.handleEditComments)(commentId, updatedText, dbPostRepository);
+            res.status(201).json({
+                status: "success",
+                message: "All comments edited for the post",
+                data: allComments,
+            });
+        }
+        catch (error) {
+            res.status(error.status || 500).json({
+                status: "error",
+                message: error.message || "Failed to edit comments",
+            });
+        }
+    }));
     return {
         addPost,
         updatepost,
@@ -230,7 +248,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         deletepost,
         addComment,
         getallcomments,
-        deleteComment
+        deleteComment,
+        editComment
     };
 };
 exports.default = postController;

@@ -112,3 +112,9 @@ export interface GetAllCommentsResponse {
   message: string;
   data: Comment;
 }
+
+export interface EditCommentResponse {
+  status: string;
+  message: string;
+}
+

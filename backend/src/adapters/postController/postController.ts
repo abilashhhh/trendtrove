@@ -11,6 +11,7 @@ import {
   handleDelteComment,
   handleDeltePosts,
   handleDislikePosts,
+  handleEditComments,
   handleGetAllComments,
   handleGetDislikedPosts,
   handleGetLengthForUser,
@@ -323,6 +324,28 @@ const postController = (
     res.status(200).json({ deleteComment });
   });
 
+
+  const editComment = asyncHandler(async (req: Request, res: Response) => {
+    const { commentId, updatedText } = req.body;  
+    console.log("handleEditComments:", commentId, updatedText);
+
+    try {
+      const allComments = await handleEditComments(commentId, updatedText, dbPostRepository);
+      res.status(201).json({
+        status: "success",
+        message: "All comments edited for the post",
+        data: allComments,
+      });
+    } catch (error : any) {
+      res.status(error.status || 500).json({
+        status: "error",
+        message: error.message || "Failed to edit comments",
+      });
+    }
+  });
+  
+  
+
   return {
     addPost,
     updatepost,
@@ -346,7 +369,8 @@ const postController = (
     deletepost,
     addComment,
     getallcomments,
-    deleteComment
+    deleteComment,
+    editComment
   };
 };
 

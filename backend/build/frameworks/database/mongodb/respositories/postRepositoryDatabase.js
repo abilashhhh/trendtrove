@@ -402,6 +402,18 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error deleting comment!");
         }
     });
+    const editComment = (commentId, updatedText) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const editedComment = yield commentModel_1.default.findByIdAndUpdate(commentId, { comment: updatedText }, { new: true });
+            if (!editedComment) {
+                throw new ErrorInApplication_1.default("Comment not found", 404);
+            }
+            return editedComment;
+        }
+        catch (error) {
+            throw new Error("Error updating comment");
+        }
+    });
     ////////////////////////////////////////////////
     const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -441,7 +453,8 @@ const postRepositoryMongoDB = () => {
         unblockPost,
         addNewComment,
         getAllComments,
-        deleteComment
+        deleteComment,
+        editComment
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;
