@@ -26,6 +26,10 @@ import {
   FaTrash,
   FaPen,
   FaReply,
+  FaComment,
+  FaCommentAlt,
+  FaCommentDollar,
+  FaComments,
 } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import {
@@ -70,18 +74,24 @@ const CommentsPage: React.FC = () => {
   const navigate = useNavigate();
   const [post, setPostDetails] = useState<Post | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+  
   const [showModal, setShowModal] = useState(false);
   const [showingData, setShowingData] = useState("");
   const [modalHashtags, setModalHashtags] = useState<string[]>([]);
-
+  
   const [showLikesDislikesModal, setShowLikesDislikesModal] = useState(false);
   const [showingDataLikesDislikes, setShowingDataLikesDislikes] = useState("");
   const [modalLikesDislikes, setModalLikesDislikes] = useState<string[]>([]);
-
+  
   const [posts, setPosts] = useState<any[]>([]);
   const [showOptions, setShowOptions] = useState<string | null>(null);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+  
+  const [showCommentsSection, setShowCommentsSection] = useState<boolean>(false);
+  const toggleShowCommentsSection = () => {
+    setShowCommentsSection(!showCommentsSection)
+  };
+
   const [dislikedPosts, setDislikedPosts] = useState<{
     [key: string]: boolean;
   }>({});
@@ -359,14 +369,14 @@ const CommentsPage: React.FC = () => {
     <>
       <Layout>
         <ToastContainer />
-        <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white">
-          <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700  overflow-x-hidden  overflow-y-auto no-scrollbar">
-            <div className="flex flex-col lg:flex-row w-full h-full">
-              <div className="bg-slate-100 dark:bg-slate-700 rounded-lg -ml-2 lg:m-2 flex justify-center items-center">
-                <div className="lg:w-7/10 w-full">
-                  <div className="max-w-2xl w-full h-full rounded-lg m-2">
-                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4">
-                      <div className="flex items-center mb-4">
+        <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white items-center">
+          <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700   overflow-x-hidden  overflow-y-auto no-scrollbar ">
+            <div className="flex flex-col lg:flex-row w-full h-full ">
+              <div className="bg-slate-100 dark:bg-slate-700  rounded-lg -ml-2 lg:m-2 flex justify-center items-center">
+                <div className="lg:w-7/10 w-full items-center">
+                  <div className="max-w-2xl w-full h-full rounded-lg m-2 items-center">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 items-center">
+                      <div className="flex items-center mb-4 ">
                         <img
                           src={post.dp}
                           alt=""
@@ -470,6 +480,8 @@ const CommentsPage: React.FC = () => {
                             onClick={() => navigate(`/post/${post._id}`)}>
                             <AiOutlineComment
                               title="Add a comment"
+                               onClick={toggleShowCommentsSection} 
+          
                               className="text-xl md:text-2xl lg:text-3xl"
                             />
                           </button>
@@ -536,8 +548,8 @@ const CommentsPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="bg-white text-black dark:text-white p-2 sm:mt-2 lg:m-2 flex-grow rounded-lg dark:bg-gray-800 sm:mr-4">
+    
+              {showCommentsSection && <div className="bg-white text-black dark:text-white p-2 sm:mt-2 lg:m-2 flex-grow rounded-lg dark:bg-gray-800 sm:mr-4">
                 <div className="flex flex-col h-full w-full">
                   <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar w-full">
                     {comments.length > 0 ? (
@@ -758,7 +770,8 @@ const CommentsPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>}
+
             </div>
           </div>
 

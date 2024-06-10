@@ -10,7 +10,6 @@ const MediaItem = ({ type, src }) => {
     return (
       <video autoPlay loop controls className="w-full h-full object-cover">
         <source src={src} type="video/mp4" />
-        Your browser does not support the video tag.
       </video>
     );
   }
