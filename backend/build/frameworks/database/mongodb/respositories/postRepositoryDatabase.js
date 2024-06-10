@@ -445,6 +445,9 @@ const postRepositoryMongoDB = () => {
             const followingUserIds = currentUser === null || currentUser === void 0 ? void 0 : currentUser.following.map(follow => follow.userId);
             const allPosts = yield postModel_1.default.aggregate([
                 {
+                    $sort: { createdAt: -1 }
+                },
+                {
                     $lookup: {
                         from: 'users',
                         localField: 'userId',

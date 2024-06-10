@@ -504,6 +504,9 @@ export const postRepositoryMongoDB = () => {
       const followingUserIds = currentUser?.following.map(follow => follow.userId);
       const allPosts = await Post.aggregate([
         {
+          $sort: { createdAt: -1 } 
+        },
+        {
           $lookup: {
             from: 'users',
             localField: 'userId',

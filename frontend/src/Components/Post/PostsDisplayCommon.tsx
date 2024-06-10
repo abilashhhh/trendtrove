@@ -33,10 +33,11 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
 
   return (
     <div className="p-6" onDoubleClick={() => navigate(`/post/${post._id}`)}>
-      {post.images.length > 0 && post.videos.length > 0 ? (
+    <div >
+    {post.images.length > 0 && post.videos.length > 0 ? (
         <Slider {...settings}>
           {post.images.map((image: string, index: number) => (
-            <div key={index}>
+            <div key={index}  >
               <a href={image}>
               <img
                 src={image}
@@ -109,6 +110,7 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
       ) : (
         <p></p>
       )}
+    </div>
       <p className="mt-4 ">{post.captions}</p>
     </div>
   );

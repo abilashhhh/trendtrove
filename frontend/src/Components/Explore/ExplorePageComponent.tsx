@@ -18,7 +18,7 @@ const MediaItem = ({ type, src }) => {
 
 
 const getRandomSpan = () => {
-  const spans = [1, 2];
+  const spans = [ 5, 4, 5,6, 3 , 4 ];
   return spans[Math.floor(Math.random() * spans.length)];
 };
 
