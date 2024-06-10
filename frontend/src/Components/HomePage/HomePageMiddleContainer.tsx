@@ -225,6 +225,9 @@ const MiddleContainer: React.FC = () => {
                     <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
                       {new Date(post.createdAt).toLocaleString()}
                     </p>
+                    <p className="text-xs font-light cursor-text text-slate-400 dark:text-slate-500">
+  {post.createdAt !== post.updatedAt ? "Edited" : ""}
+</p>
                   </div>
                 </div>
                 <div className="relative">

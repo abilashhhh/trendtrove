@@ -294,7 +294,7 @@ const TaggedPostComponent = () => {
                       <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
                     )}
                   </button>
-                  <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
+                  <button  onClick={() => navigate(`/post/${post._id}`)} className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
                     <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                   </button>
                 </div>

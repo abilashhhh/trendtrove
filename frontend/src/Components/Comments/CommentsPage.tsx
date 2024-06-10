@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../Layout";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import useUserDetails from "../../Hooks/useUserDetails";
 import PostsDisplayCommon from "../Post/PostsDisplayCommon";
@@ -171,7 +171,7 @@ const CommentsPage: React.FC = () => {
         }
       }
     } catch (error) {
-      // console.log("Error fetching liked and disliked posts:", error);
+      console.log("Error fetching liked and disliked posts:", error);
     }
   };
 
@@ -183,7 +183,7 @@ const CommentsPage: React.FC = () => {
   }, [userDetails?._id]);
 
   const handleSavePost = async (postId: string) => {
-    // console.log("handleSavePost: ", postId);
+    console.log("handleSavePost: ", postId);
     const response = await savePost(userDetails._id, postId);
     if (response.status === "success") {
       toast.success("Post saved successfully");
@@ -194,7 +194,7 @@ const CommentsPage: React.FC = () => {
 
   const handleLike = async (postId: string) => {
     const result = await likePost(userDetails._id, postId);
-    // console.log("Result of handleLike: ", result);
+    console.log("Result of handleLike: ", result);
 
     setLikedPosts(prev => ({
       ...prev,
@@ -212,7 +212,7 @@ const CommentsPage: React.FC = () => {
 
   const handleDislike = async (postId: string) => {
     const result = await dislikePost(userDetails._id, postId);
-    // console.log("Result of handleDislike: ", result);
+    console.log("Result of handleDislike: ", result);
 
     setDislikedPosts(prev => ({
       ...prev,
@@ -242,7 +242,7 @@ const CommentsPage: React.FC = () => {
         const response = await getPostUsingPostId(postId);
         setPostDetails(response.postData);
       } catch (error) {
-        console.error("Error fetching post details:", error);
+        // console.error("Error fetching post details:", error);
       } finally {
         setLoading(false);
       }
@@ -281,7 +281,7 @@ const CommentsPage: React.FC = () => {
       };
 
       const res = await addCommentToPost(userComment);
-      console.log("Res: ", res);
+      // console.log("Res: ", res);
 
       if (res.status === "success") {
         toast.success("Comment added");
@@ -309,7 +309,7 @@ const CommentsPage: React.FC = () => {
       };
 
       const res = await handleAddReplyToComment(userReply);
-      console.log("Res: ", res);
+      // console.log("Res: ", res);
 
       if (res.status === "success") {
         setReplyingTo(null);
@@ -358,7 +358,7 @@ const CommentsPage: React.FC = () => {
   return (
     <>
       <Layout>
-      <ToastContainer />
+        <ToastContainer />
         <main className="bg-gray-800 w-full dark:bg-gray-700 text-black dark:text-white">
           <div className="bg-gray-800 w-full h-full rounded-lg dark:bg-gray-700  overflow-x-hidden  overflow-y-auto no-scrollbar">
             <div className="flex flex-col lg:flex-row w-full h-full">
@@ -565,6 +565,11 @@ const CommentsPage: React.FC = () => {
                                 </p>
                                 <p className="text-xs font-light text-gray-500 dark:text-gray-400">
                                   {new Date(comment.createdAt).toLocaleString()}
+                                </p>
+                                <p className="text-xs font-light text-slate-400 dark:text-slate-500">
+                                  {comment.createdAt !== comment.updatedAt
+                                    ? "Edited"
+                                    : ""}
                                 </p>
                               </div>
                               <div className="flex justify-end items-center ml-4 gap-2 w-full">
