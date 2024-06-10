@@ -52,6 +52,7 @@ const CommentsPage: React.FC = () => {
   const [editedCommentText, setEditedCommentText] = useState<string>("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
+  const [showReplies, setShowReplies] = useState(false);
 
   const getAllComments = async (postId: string | undefined) => {
     const allComments = await getAllCommentsForThisPost(postId);
@@ -302,7 +303,6 @@ const CommentsPage: React.FC = () => {
         username: userDetails.username,
         dp: userDetails.dp,
         reply: replyText,
-        dp: userDetails.dp,
         createdAt: new Date().toISOString(),
       };
 
@@ -660,32 +660,37 @@ const CommentsPage: React.FC = () => {
                                   </div>
                                 </div>
                               )}
-                              {comment.replies.map(
-                                (reply: Reply) => (
-                                  <div
-                                    key={reply._id}
-                                    className="ml-8 mt-2 p-2 border-l-2 border-gray-200 dark:border-gray-600">
-                                   <div className="flex flex-row gap-2 items-center" >
-                                    <div>
-                                      <img src={reply.dp} className="w-6 h-6 rounded-full" alt="" />
-                                    </div>
-                                   <div className="flex flex-row gap-2 items-center">
-                                    <p className="text-sm font-semibold">
-                                      {reply.username}
-                                    </p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                      {new Date(
-                                        reply.createdAt
-                                      ).toLocaleString()}
-                                    </p>
-                                    </div>
-                                   </div>
-                                    <p className="text-gray-700 dark:text-gray-300">
-                                      {reply.reply}
-                                    </p>
-                                  </div>
-                                )
-                              )}
+                          {comment.replies.length > 0 && (
+  <div>
+    <button className="text-red-600" onClick={() => setShowReplies((prev) => (prev === comment._id ? null : comment._id))}>
+      {showReplies === comment._id ? "Hide Replies" : `Show ${comment.replies.length} replies`}
+    </button>
+    {showReplies === comment._id && (
+      <div>
+        {comment.replies.map(reply => (
+          <div
+            key={reply._id}
+            className="ml-8 mt-2 p-2 border-l-2 border-gray-200 dark:border-gray-600">
+            <div className="flex flex-row gap-2 items-center">
+              <div>
+                <img src={reply.dp} className="w-6 h-6 rounded-full" alt="" />
+              </div>
+              <div className="flex flex-row gap-2 items-center">
+                <p className="text-sm font-semibold">{reply.username}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {new Date(reply.createdAt).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300">{reply.reply}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
+
                             </div>
                           </div>
                         </div>
