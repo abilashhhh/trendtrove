@@ -45,6 +45,9 @@ const postDBRepository = (repository) => {
     const addNewComment = (commentData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewComment(commentData);
     });
+    const addNewReply = (replyData) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.addNewReply(replyData);
+    });
     const getAllComments = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllComments(postId); });
     const deleteComment = (commentId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteComment(commentId); });
     const editComment = (commentId, updatedText) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.editComment(commentId, updatedText); });
@@ -73,6 +76,7 @@ const postDBRepository = (repository) => {
         getlikesdislikesInfo,
         deltePostForUser,
         addNewComment,
+        addNewReply,
         getAllComments,
         deleteComment,
         editComment

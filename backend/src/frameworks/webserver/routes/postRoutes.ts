@@ -46,6 +46,7 @@ const postRouter = () => {
   router.get("/getallcomments/:postId", authMiddleware, controller.getallcomments);
   router.delete("/deletecomment/:commentId", authMiddleware, controller.deleteComment);
   router.put("/editcomment", authMiddleware, controller.editComment);
+  router.post("/replytocomment", authMiddleware , controller.replytocomment)
 
 
 

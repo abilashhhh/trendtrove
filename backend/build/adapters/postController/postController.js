@@ -192,6 +192,16 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: createComment,
         });
     }));
+    const replytocomment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const replyData = req.body;
+        console.log("Reply data in controller : ", replyData);
+        const createReply = yield (0, postAuthApplications_1.handleReplyToComment)(replyData, dbPostRepository, dbUserRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Reply added successfully",
+            data: createReply,
+        });
+    }));
     const getallcomments = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { postId } = req.params;
         const allComments = yield (0, postAuthApplications_1.handleGetAllComments)(postId, dbPostRepository);
@@ -249,7 +259,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         addComment,
         getallcomments,
         deleteComment,
-        editComment
+        editComment,
+        replytocomment
     };
 };
 exports.default = postController;

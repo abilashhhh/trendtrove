@@ -1,5 +1,5 @@
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
-import { Comment, CommentInterface } from "../../types/commentInterface";
+import { Comment, CommentInterface, ReplyInterface } from "../../types/commentInterface";
 import { PostDataInterface } from "../../types/postsInterface";
 
 export const postDBRepository = (
@@ -81,6 +81,9 @@ export const postDBRepository = (
   const addNewComment = async (commentData: CommentInterface) => {
     await repository.addNewComment(commentData);
   };
+  const addNewReply = async (replyData: ReplyInterface) => {
+    await repository.addNewReply(replyData);
+  }
 
   const getAllComments = async (postId: string) =>
     await repository.getAllComments(postId);
@@ -116,6 +119,7 @@ export const postDBRepository = (
     getlikesdislikesInfo,
     deltePostForUser,
     addNewComment,
+    addNewReply,
     getAllComments,
     deleteComment,
     editComment

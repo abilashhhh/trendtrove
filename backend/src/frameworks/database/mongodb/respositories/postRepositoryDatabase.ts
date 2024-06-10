@@ -10,7 +10,10 @@ import Like from "../models/likePostModel";
 import Dislike from "../models/dislikePostModel";
 import ErrorInApplication from "../../../../utils/ErrorInApplication";
 import Comment from "../models/commentModel";
-import { Comment, CommentInterface } from "../../../../types/commentInterface";
+import {
+  CommentInterface,
+  ReplyInterface,
+} from "../../../../types/commentInterface";
 
 //////////////////////////////////////////////////////////
 
@@ -23,18 +26,15 @@ export const postRepositoryMongoDB = () => {
       const newPostData = await newPost.save();
       // console.log("newPostData: ",newPostData)
 
-      await taggedDataFromPosts(newPostData?.mentions , newPostData?._id)
+      await taggedDataFromPosts(newPostData?.mentions, newPostData?._id);
 
-      return newPostData
+      return newPostData;
     } catch (error) {
       // console.log(error);
       throw new Error("Error adding new post!");
     }
   };
 
-
-
-  
   const updatePost = async (postData: PostDataInterface) => {
     try {
       const updatedPost = await Post.findByIdAndUpdate(
@@ -51,8 +51,8 @@ export const postRepositoryMongoDB = () => {
 
   const taggedDataFromPosts = async (usernames: string[], postId: string) => {
     try {
-      console.log("Usrenamse : ", usernames)
-      console.log("postId : ", postId)
+      console.log("Usrenamse : ", usernames);
+      console.log("postId : ", postId);
       const updatePromises = usernames.map(username =>
         User.findOneAndUpdate(
           { username: username },
@@ -60,14 +60,13 @@ export const postRepositoryMongoDB = () => {
           { new: true, upsert: true }
         )
       );
-  
+
       await Promise.all(updatePromises);
     } catch (error) {
-      console.error(error);  
+      console.error(error);
       throw new Error("Error updating post - adding tags!");
     }
   };
-  
 
   const getAllPostsForUser = async (id: string) => {
     try {
@@ -194,28 +193,30 @@ export const postRepositoryMongoDB = () => {
       if (!userId) {
         throw new Error("User ID is required");
       }
-  
+
       const user = await User.findById(userId);
       if (!user) {
         throw new Error("User not found");
       }
       // console.log("user: ", user  )
-  
+
       const taggedPostIds = user.taggedPosts;
       // console.log("taggedPostIds:", taggedPostIds);
-    
-      const taggedPosts = await Post.find({ _id: { $in: taggedPostIds } }).sort({
-        createdAt: -1,
-      });
+
+      const taggedPosts = await Post.find({ _id: { $in: taggedPostIds } }).sort(
+        {
+          createdAt: -1,
+        }
+      );
       // console.log("taggedPosts:", taggedPosts);
-  
+
       return taggedPosts;
     } catch (error: any) {
       console.error(error.message);
       throw new Error("Error getting tagged posts of current user!");
     }
   };
-  
+
   const getParticularPostsForCurrentUser = async (id: string) => {
     try {
       if (!id) {
@@ -386,7 +387,6 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  
   const getPostById = async (postId: string) => {
     return await Post.findById(postId);
   };
@@ -403,7 +403,6 @@ export const postRepositoryMongoDB = () => {
     return post;
   };
 
-
   const unblockPost = async (postId: string) => {
     const post = await Post.findByIdAndUpdate(
       postId,
@@ -416,62 +415,86 @@ export const postRepositoryMongoDB = () => {
     return post;
   };
 
-
-
-  
-  
   const addNewComment = async (newCommentData: CommentInterface) => {
     try {
       const newComment = new Comment(newCommentData);
       const newCommentDataSaved = await newComment.save();
-      console.log("newCommentDataSaved: ",newCommentDataSaved)
-      return newCommentDataSaved
+      console.log("newCommentDataSaved: ", newCommentDataSaved);
+      return newCommentDataSaved;
     } catch (error) {
       console.log(error);
       throw new Error("Error adding new post!");
     }
   };
 
-const getAllComments = async (postId) => {
-  try {
-    const allComments = await Comment.find({ postId }).sort({ createdAt: -1 });
-    // console.log("Allcomments:", allComments)
-    return allComments;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error fetching comments!");  
-  }
-};
+  const addNewReply = async (newReply: ReplyInterface) => {
+    try {
+      const comment = await Comment.findById(newReply.commentId);
+      if (!comment) {
+        throw new Error("Comment not found");
+      }
 
-const deleteComment = async (commentId: string) => {
-  try {
-    const deleteComment = await Comment.findByIdAndDelete(commentId);
-    if (!deleteComment) {
-      throw new Error("comment not found");
-    }
-    // console.log("comment deleted successfully:", deleteComment);
-    return { status: "success", message: "Comment deleted" };
-  } catch (error) {
-    console.error("Error deleting comment:", error);
-    throw new Error("Error deleting comment!");
-  }
-};
+      const reply = {
+        postId: newReply.postId,
+        userId: newReply.userId,
+        username: newReply.username,
+        reply: newReply.reply,
+        dp: newReply.dp,
+      };
 
-const editComment = async (commentId: string, updatedText: string) => {
-  try {
-    const editedComment = await Comment.findByIdAndUpdate(
-      commentId,
-      { comment: updatedText },
-      { new: true }
-    );
-    if (!editedComment) {
-      throw new ErrorInApplication("Comment not found", 404);
+      comment.replies.push(reply);
+
+      await comment.save();
+      console.log("Comment reply : ", comment);
+      return comment;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error adding new reply!");
     }
-    return editedComment;
-  } catch (error) {
-    throw new Error ( "Error updating comment" );
-  }
-};
+  };
+
+  const getAllComments = async (postId: string) => {
+    try {
+      const allComments = await Comment.find({ postId }).sort({
+        createdAt: -1,
+      });
+      // console.log("Allcomments:", allComments)
+      return allComments;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching comments!");
+    }
+  };
+
+  const deleteComment = async (commentId: string) => {
+    try {
+      const deleteComment = await Comment.findByIdAndDelete(commentId);
+      if (!deleteComment) {
+        throw new Error("comment not found");
+      }
+      // console.log("comment deleted successfully:", deleteComment);
+      return { status: "success", message: "Comment deleted" };
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      throw new Error("Error deleting comment!");
+    }
+  };
+
+  const editComment = async (commentId: string, updatedText: string) => {
+    try {
+      const editedComment = await Comment.findByIdAndUpdate(
+        commentId,
+        { comment: updatedText },
+        { new: true }
+      );
+      if (!editedComment) {
+        throw new ErrorInApplication("Comment not found", 404);
+      }
+      return editedComment;
+    } catch (error) {
+      throw new Error("Error updating comment");
+    }
+  };
 
   ////////////////////////////////////////////////
 
@@ -479,16 +502,16 @@ const editComment = async (commentId: string, updatedText: string) => {
     try {
       // Update all users and set their taggedPosts array to an empty array
       await User.updateMany({}, { $set: { taggedPosts: [] } });
-      
+
       console.log("All tagged posts removed for all users.");
     } catch (error: any) {
       console.error(error.message);
       throw new Error("Error removing tagged posts for all users!");
     }
   };
-  
+
   // removeAllTaggedPostsForAllUsers()
-  
+
   return {
     addNewPost,
     taggedDataFromPosts,
@@ -514,9 +537,10 @@ const editComment = async (commentId: string, updatedText: string) => {
     blockPost,
     unblockPost,
     addNewComment,
+    addNewReply,
     getAllComments,
     deleteComment,
-    editComment
+    editComment,
   };
 };
 //////////////////////////////////////////////////////////

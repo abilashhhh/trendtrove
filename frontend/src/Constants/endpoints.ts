@@ -56,6 +56,7 @@ const END_POINTS = {
   GET_LIKES_DISLIKES_INFO : '/api/post/getlikesdislikesinfo/:postId',
   // COMMENT
   ADD_COMMENT: 'api/post/addcomment',
+  ADD_REPLY_FOR_COMMENT: 'api/post/replytocomment',
   GET_ALL_COMMENTS : '/api/post/getallcomments/:postId',
   DELETE_COMMENT : '/api/post/deletecomment/:commentId',
   EDIT_COMMENT : '/api/post/editcomment',

@@ -4,7 +4,7 @@ import { AuthService } from "../../frameworks/services/authenticationService";
 import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-import { PostDataInterface, ReportPost } from "../../types/postsInterface";
+import { PostDataInterface,  ReportPostInterface } from "../../types/postsInterface";
 import {
   handleCreateComment,
   handleCreatePost,
@@ -26,13 +26,14 @@ import {
   handleLikePosts,
   handleRemoveSavePosts,
   handleRemoveTaggedPosts,
+  handleReplyToComment,
   handleReportPosts,
   handleSavePosts,
   handleupdatepost,
 } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { Comment, CommentInterface } from "../../types/commentInterface";
+import {  CommentInterface, ReplyInterface } from "../../types/commentInterface";
 
 const postController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
@@ -187,7 +188,7 @@ const postController = (
   );
 
   const reportPost = asyncHandler(async (req: Request, res: Response) => {
-    const data: ReportPost = req.body;
+    const data: ReportPostInterface = req.body;
     const reportPost = await handleReportPosts(data, dbPostRepository);
     res.status(201).json({
       status: "success",
@@ -306,6 +307,21 @@ const postController = (
     });
   });
 
+  const replytocomment = asyncHandler(async (req: Request, res: Response) => {
+    const replyData: ReplyInterface = req.body;
+    console.log("Reply data in controller : ", replyData)
+    const createReply = await handleReplyToComment(
+      replyData,
+      dbPostRepository,
+      dbUserRepository
+    );
+    res.status(201).json({
+      status: "success",
+      message: "Reply added successfully",
+      data: createReply,
+    });
+  });
+
   
   const getallcomments = asyncHandler(async (req: Request, res: Response) => {
     const { postId } = req.params;
@@ -370,7 +386,8 @@ const postController = (
     addComment,
     getallcomments,
     deleteComment,
-    editComment
+    editComment,
+    replytocomment
   };
 };
 

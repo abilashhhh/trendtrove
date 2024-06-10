@@ -10,3 +10,12 @@ export interface CommentInterface {
     likes: string[];
     isBlock: boolean;
 }
+
+export interface ReplyInterface {
+    commentId: string;
+    postId: string;
+    userId: string;
+    username: string;
+    reply: string;
+    dp: string;
+  }

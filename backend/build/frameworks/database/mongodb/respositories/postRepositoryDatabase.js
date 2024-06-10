@@ -377,9 +377,34 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error adding new post!");
         }
     });
+    const addNewReply = (newReply) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const comment = yield commentModel_1.default.findById(newReply.commentId);
+            if (!comment) {
+                throw new Error("Comment not found");
+            }
+            const reply = {
+                postId: newReply.postId,
+                userId: newReply.userId,
+                username: newReply.username,
+                reply: newReply.reply,
+                dp: newReply.dp,
+            };
+            comment.replies.push(reply);
+            yield comment.save();
+            console.log("Comment reply : ", comment);
+            return comment;
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error("Error adding new reply!");
+        }
+    });
     const getAllComments = (postId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const allComments = yield commentModel_1.default.find({ postId }).sort({ createdAt: -1 });
+            const allComments = yield commentModel_1.default.find({ postId }).sort({
+                createdAt: -1,
+            });
             // console.log("Allcomments:", allComments)
             return allComments;
         }
@@ -452,9 +477,10 @@ const postRepositoryMongoDB = () => {
         blockPost,
         unblockPost,
         addNewComment,
+        addNewReply,
         getAllComments,
         deleteComment,
-        editComment
+        editComment,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

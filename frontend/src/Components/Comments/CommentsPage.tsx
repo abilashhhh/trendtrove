@@ -9,6 +9,7 @@ import {
   editComment,
   getAllCommentsForThisPost,
   getPostUsingPostId,
+  handleAddReplyToComment,
 } from "../../API/Post/post";
 import LoadingSpinner from "../LoadingSpinner";
 import { Post } from "../../Types/Post";
@@ -49,6 +50,8 @@ const CommentsPage: React.FC = () => {
   const [commentText, setCommentText] = useState("");
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editedCommentText, setEditedCommentText] = useState<string>("");
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState("");
 
   const getAllComments = async (postId: string | undefined) => {
     const allComments = await getAllCommentsForThisPost(postId);
@@ -287,6 +290,39 @@ const CommentsPage: React.FC = () => {
     }
   };
 
+  const handleReplyComment = (commentId: React.SetStateAction<null>) => {
+    setReplyingTo(commentId);
+  };
+
+  const handleAddReply = async (commentId: any) => {
+    if (replyText.trim() !== "") {
+      const userReply = {
+        commentId,
+        postId,
+        userId: userDetails?._id,
+        username: userDetails.username,
+        dp: userDetails.dp,
+        reply: replyText,
+        dp: userDetails.dp,
+        createdAt: new Date().toISOString(),
+      };
+
+      const res = await handleAddReplyToComment(userReply);
+      console.log("Res: ", res);
+
+      if (res.status === "success") {
+        toast.success("Reply added");
+        getAllComments(postId);
+      } else {
+        toast.error("Reply not added");
+      }
+    }
+
+    setComments(updatedComments);
+    setReplyText("");
+    setReplyingTo(null);
+  };
+
   const handleDeleteComment = async (commentId: string) => {
     const res = await deleteCommentFromPost(commentId);
     // console.log("Res: ", res);
@@ -318,21 +354,6 @@ const CommentsPage: React.FC = () => {
       }
     }
   };
-
-  // const handleEditComment = async (commentId : string) => {
-
-  //   console.log("Commment id to edit : ", commentId)
-
-  //   // const res = await editUserComment(commentId);
-  // console.log("Res: ", res);
-
-  // if (res.status === "success") {
-  //   toast.success("Comment deleted");
-  //   getAllComments(postId);
-  // } else {
-  //   toast.error("Comment not deleted");
-  // }
-  // }
 
   return (
     <>
@@ -517,35 +538,35 @@ const CommentsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white text-black dark:text-white   p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800    sm:mr-4 ">
+              <div className="bg-white text-black dark:text-white p-2 sm:mt-2 lg:m-2 rounded-lg dark:bg-gray-800 sm:mr-4">
                 <div className="flex flex-col h-full w-full">
                   <div className="flex-grow overflow-y-auto overflow-x-hidden no-scrollbar w-full">
                     {comments.length > 0 ? (
                       comments.map(comment => (
                         <div
                           key={comment._id}
-                          className="flex items-start justify-between  overflow-wrap break-all  mt-4 w-full  bg-white dark:bg-slate-900 rounded-lg p-4 shadow-md">
-                          <div className="flex items-start  flex-col w-full">
+                          className="flex items-start justify-between overflow-wrap break-all mt-4 w-full bg-white dark:bg-slate-900 rounded-lg p-4 shadow-md">
+                          <div className="flex items-start flex-col w-full">
                             <div className="flex flex-row gap-2 w-full justify-between items-center">
                               <div className="flex w-full gap-2 items-center">
-                              <img
-                                src={comment.dp}
-                                alt=""
-                                className="rounded-full h-8 w-8 mr-2 cursor-pointer"
-                                onClick={() =>
-                                  navigate(`/profiles/${comment.username}`)
-                                }
-                              />
-                              <p
-                                className="font-bold cursor-pointer"
-                                onClick={() =>
-                                  navigate(`/profiles/${comment.username}`)
-                                }>
-                                {comment.username}
-                              </p>
-                              <p className="text-xs font-light text-gray-500 dark:text-gray-400 ">
-                                {new Date(comment.createdAt).toLocaleString()}
-                              </p>
+                                <img
+                                  src={comment.dp}
+                                  alt=""
+                                  className="rounded-full h-8 w-8 mr-2 cursor-pointer"
+                                  onClick={() =>
+                                    navigate(`/profiles/${comment.username}`)
+                                  }
+                                />
+                                <p
+                                  className="font-bold cursor-pointer"
+                                  onClick={() =>
+                                    navigate(`/profiles/${comment.username}`)
+                                  }>
+                                  {comment.username}
+                                </p>
+                                <p className="text-xs font-light text-gray-500 dark:text-gray-400">
+                                  {new Date(comment.createdAt).toLocaleString()}
+                                </p>
                               </div>
                               <div className="flex justify-end items-center ml-4 gap-2 w-full">
                                 {comment.userId === userDetails._id ? (
@@ -558,7 +579,7 @@ const CommentsPage: React.FC = () => {
                                           comment.comment
                                         )
                                       }>
-                                      <div className="flex gap-1 items-center ">
+                                      <div className="flex gap-1 items-center">
                                         Edit <FaPen />
                                       </div>
                                     </button>
@@ -585,7 +606,7 @@ const CommentsPage: React.FC = () => {
                                 )}
                               </div>
                             </div>
-                            <div className="overflow-x-hidden   w-full">
+                            <div className="overflow-x-hidden w-full">
                               {editingCommentId === comment._id ? (
                                 <div className="flex flex-col mt-2 w-full">
                                   <textarea
@@ -615,6 +636,85 @@ const CommentsPage: React.FC = () => {
                                   {comment.comment}
                                 </div>
                               )}
+                              {replyingTo === comment._id && (
+                                <div className="mt-2">
+                                  <textarea
+                                    className="w-full h-24 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                    value={replyText}
+                                    onChange={e =>
+                                      setReplyText(e.target.value)
+                                    }></textarea>
+                                  <div className="flex justify-end mt-2">
+                                    <button
+                                      className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none mr-2"
+                                      onClick={() => setReplyingTo(null)}>
+                                      Cancel
+                                    </button>
+                                    <button
+                                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+                                      onClick={() =>
+                                        handleAddReply(comment._id)
+                                      }>
+                                      Reply
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                              {comment.replies.map(
+                                (reply: {
+                                  _id: React.Key | null | undefined;
+                                  username:
+                                    | string
+                                    | number
+                                    | boolean
+                                    | React.ReactElement<
+                                        any,
+                                        | string
+                                        | React.JSXElementConstructor<any>
+                                      >
+                                    | Iterable<React.ReactNode>
+                                    | React.ReactPortal
+                                    | null
+                                    | undefined;
+                                  createdAt: string | number | Date;
+                                  reply:
+                                    | string
+                                    | number
+                                    | boolean
+                                    | React.ReactElement<
+                                        any,
+                                        | string
+                                        | React.JSXElementConstructor<any>
+                                      >
+                                    | Iterable<React.ReactNode>
+                                    | React.ReactPortal
+                                    | null
+                                    | undefined;
+                                }) => (
+                                  <div
+                                    key={reply._id}
+                                    className="ml-8 mt-2 p-2 border-l-2 border-gray-200 dark:border-gray-600">
+                                   <div className="flex flex-row gap-2 items-center" >
+                                    <div>
+                                      <img src={reply.dp} className="w-6 h-6 rounded-full" alt="" />
+                                    </div>
+                                   <div className="flex flex-row gap-2 items-center">
+                                    <p className="text-sm font-semibold">
+                                      {reply.username}
+                                    </p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                      {new Date(
+                                        reply.createdAt
+                                      ).toLocaleString()}
+                                    </p>
+                                    </div>
+                                   </div>
+                                    <p className="text-gray-700 dark:text-gray-300">
+                                      {reply.reply}
+                                    </p>
+                                  </div>
+                                )
+                              )}
                             </div>
                           </div>
                         </div>
@@ -624,9 +724,7 @@ const CommentsPage: React.FC = () => {
                         No comments yet.
                       </p>
                     )}
-                    {comments.length === 0 && "No comments yet"}
                   </div>
-
                   <div className="bg-slate-300 dark:bg-slate-900 p-3 rounded-lg font-bold flex flex-col sm:flex-row items-center m-1 sticky bottom-0">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center m-1 sticky bottom-0 w-full">
                       <div className="flex items-center gap-2 mb-2 sm:mb-0 sm:mr-4">

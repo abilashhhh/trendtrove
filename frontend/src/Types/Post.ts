@@ -31,6 +31,18 @@ export interface Comment {
   isBlock: boolean;
 }
 
+export interface Reply {
+  commentId: string;
+  postId: string;
+  userId: string;
+  username: string;
+  reply: string;
+  dp: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
 export interface PostResponse {
   status: string;
   message: string;
@@ -79,6 +91,11 @@ export interface DislikePostResponse {
 }
 
 export interface AddCommentResponse {
+  status: string;
+  message: string;
+}
+
+export interface AddReplyResponse {
   status: string;
   message: string;
 }

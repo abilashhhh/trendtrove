@@ -40,6 +40,7 @@ const postRouter = () => {
     router.get("/getallcomments/:postId", authMiddleware_1.default, controller.getallcomments);
     router.delete("/deletecomment/:commentId", authMiddleware_1.default, controller.deleteComment);
     router.put("/editcomment", authMiddleware_1.default, controller.editComment);
+    router.post("/replytocomment", authMiddleware_1.default, controller.replytocomment);
     return router;
 };
 exports.default = postRouter;

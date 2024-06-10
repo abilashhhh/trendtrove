@@ -1,4 +1,4 @@
-import { Comment, CommentInterface } from "../../../types/commentInterface";
+import { Comment, CommentInterface, ReplyInterface } from "../../../types/commentInterface";
 import { PostDataInterface, ReportPost } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
@@ -512,7 +512,47 @@ export const handleCreateComment = async (
     throw new ErrorInApplication("Failed to create comment", 500);
   }
 };
+export const handleReplyToComment = async (
+  replyData: ReplyInterface,
+  dbPostRepository: ReturnType<PostDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    // console.log("Post data in handleReplyToComment:", replyData);
 
+    // Validate required fields
+    if (!replyData.userId) {
+      throw new ErrorInApplication("User ID is required to create a reply", 400);
+    }
+    if (!replyData.postId) {
+      throw new ErrorInApplication("Post ID is required to create a reply", 400);
+    }
+    if (!replyData.commentId) {
+      throw new ErrorInApplication("Comment ID is required to create a reply", 400);
+    }
+
+    // Get user data from the repository
+    const userData = await dbUserRepository.getUserById(replyData.userId);
+    if (!userData) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+    console.log("Post data in handleReplyToComment:", replyData);
+
+    // Add the new reply to the post
+    const newReplyAdded = await dbPostRepository.addNewReply(replyData);
+    return newReplyAdded;
+  } catch (error) {
+    console.error("Error in handleReplyToComment:", error);
+
+    // Re-throw custom application errors
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+
+    // Throw a generic error for unexpected cases
+    throw new ErrorInApplication("Failed to create reply", 500);
+  }
+};
 export const handleGetAllComments = async (
   postId: String,
   dbPostRepository: ReturnType<PostDBInterface>

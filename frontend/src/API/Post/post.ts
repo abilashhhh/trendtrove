@@ -3,6 +3,8 @@ import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
 import {
   AddCommentResponse,
+  AddReplyResponse,
+  Comment,
   DeletePostResponse,
   DislikePostResponse,
   EditCommentResponse,
@@ -16,6 +18,7 @@ import {
   LikePostResponse,
   Post,
   PostResponse,
+  Reply,
   ReportPostData,
   ReportPostResponse,
   SavePostResponse,
@@ -399,6 +402,8 @@ export const addCommentToPost = async (
 };
 
 
+
+
 export const getAllCommentsForThisPost = async (postId: string) => {
   try {
     console.log("getAllCommentsForThisPost , postId: ", postId);
@@ -439,6 +444,24 @@ export const editComment = async (
     );
     console.log("editComment response:", response.data);
 
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const handleAddReplyToComment = async (
+  payload: Partial<Reply>
+): Promise<AddReplyResponse> => {
+  try {
+    console.log("handleAddReplyToComment function, payload: ", payload);
+    const response = await axiosUserInstance.post<AddReplyResponse>(
+      END_POINTS.ADD_REPLY_FOR_COMMENT,
+      payload
+    );
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
