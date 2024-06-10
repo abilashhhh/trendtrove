@@ -129,6 +129,11 @@ export interface GetAllCommentsResponse {
   message: string;
   data: Comment;
 }
+export interface GetAllPostsForExploreResponse {
+  status: string;
+  message: string;
+  data: Post;
+}
 
 export interface EditCommentResponse {
   status: string;

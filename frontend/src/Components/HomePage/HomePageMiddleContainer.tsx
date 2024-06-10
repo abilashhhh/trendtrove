@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
- 
+
 import { StoreType } from "../../Redux/Store/reduxStore";
 import {
   dislikePost,
@@ -191,8 +191,6 @@ const MiddleContainer: React.FC = () => {
     }
   };
 
- 
-
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700   text-white items-center justify-center">
       <ToastContainer />
@@ -226,8 +224,8 @@ const MiddleContainer: React.FC = () => {
                       {new Date(post.createdAt).toLocaleString()}
                     </p>
                     <p className="text-xs font-light cursor-text text-slate-400 dark:text-slate-500">
-  {post.createdAt !== post.updatedAt ? "Edited" : ""}
-</p>
+                      {post.createdAt !== post.updatedAt ? "Edited" : ""}
+                    </p>
                   </div>
                 </div>
                 <div className="relative">
@@ -257,11 +255,9 @@ const MiddleContainer: React.FC = () => {
                   )}
                 </div>
               </div>
- 
+
               <PostsDisplayCommon post={post} />
 
-               
-             
               <div className="flex justify-between">
                 <div className="flex gap-2 items-center mt-4">
                   <button
@@ -398,5 +394,3 @@ const MiddleContainer: React.FC = () => {
 };
 
 export default MiddleContainer;
-
- 

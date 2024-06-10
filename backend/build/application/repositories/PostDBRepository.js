@@ -51,6 +51,7 @@ const postDBRepository = (repository) => {
     const getAllComments = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllComments(postId); });
     const deleteComment = (commentId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteComment(commentId); });
     const editComment = (commentId, updatedText) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.editComment(commentId, updatedText); });
+    const getAllPublicPosts = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPublicPosts(id); });
     return {
         addNewPost,
         taggedDataFromPosts,
@@ -79,7 +80,8 @@ const postDBRepository = (repository) => {
         addNewReply,
         getAllComments,
         deleteComment,
-        editComment
+        editComment,
+        getAllPublicPosts
     };
 };
 exports.postDBRepository = postDBRepository;

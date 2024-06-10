@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -312,6 +312,21 @@ const handleDislikePosts = (userId, postId, dbPostRepository) => __awaiter(void 
     }
 });
 exports.handleDislikePosts = handleDislikePosts;
+const handleGetAllPublicPosts = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGetAllPublicPosts reached");
+        const getAllPublicPosts = yield dbPostRepository.getAllPublicPosts(id);
+        return getAllPublicPosts;
+    }
+    catch (error) {
+        // console.log("Error in handleGetAllPublicPosts");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all public  posts for explore", 500);
+    }
+});
+exports.handleGetAllPublicPosts = handleGetAllPublicPosts;
 const handleGetLikedPosts = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("handleGetLikedPosts reached");

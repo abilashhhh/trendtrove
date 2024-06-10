@@ -162,6 +162,16 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: dislikePost,
         });
     }));
+    const getallpublicpostsforexplore = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { userId } = req.body;
+            const allPosts = yield (0, postAuthApplications_1.handleGetAllPublicPosts)(userId, dbPostRepository);
+            res.status(200).json({ allPosts });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Failed to fetch public posts", error });
+        }
+    }));
     const getlikedposts = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.params;
         const likedPosts = yield (0, postAuthApplications_1.handleGetLikedPosts)(userId, dbPostRepository);
@@ -253,6 +263,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         likePost,
         dislikePost,
         getlikedposts,
+        getallpublicpostsforexplore,
         getdislikedposts,
         getlikesdislikesinfo,
         deletepost,

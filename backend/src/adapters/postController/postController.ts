@@ -13,6 +13,7 @@ import {
   handleDislikePosts,
   handleEditComments,
   handleGetAllComments,
+  handleGetAllPublicPosts,
   handleGetDislikedPosts,
   handleGetLengthForUser,
   handleGetLikedPosts,
@@ -258,6 +259,16 @@ const postController = (
     });
   });
 
+  const getallpublicpostsforexplore = asyncHandler(async (req: Request, res: Response) => {
+    try {
+    const { userId }: { userId: string } = req.body;
+
+      const allPosts = await handleGetAllPublicPosts(userId, dbPostRepository);
+      res.status(200).json({ allPosts });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch public posts", error });
+    }
+  });
   const getlikedposts = asyncHandler(async (req: Request, res: Response) => {
     const { userId } = req.params;
     const likedPosts = await handleGetLikedPosts(userId, dbPostRepository);
@@ -380,6 +391,7 @@ const postController = (
     likePost,
     dislikePost,
     getlikedposts,
+    getallpublicpostsforexplore,
     getdislikedposts,
     getlikesdislikesinfo,
     deletepost,

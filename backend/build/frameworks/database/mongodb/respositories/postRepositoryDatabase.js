@@ -439,6 +439,71 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error updating comment");
         }
     });
+    const getAllPublicPosts = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const currentUser = yield userModel_1.default.findById(id);
+            const followingUserIds = currentUser === null || currentUser === void 0 ? void 0 : currentUser.following.map(follow => follow.userId);
+            const allPosts = yield postModel_1.default.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user',
+                    },
+                },
+                {
+                    $unwind: '$user',
+                },
+                {
+                    $match: {
+                        $or: [
+                            { 'user.isPrivate': false },
+                            { 'user._id': { $in: followingUserIds } },
+                        ],
+                        isBlocked: false,
+                        isArchived: false,
+                    },
+                },
+                {
+                    $project: {
+                        images: 1,
+                        videos: 1,
+                        userId: 1,
+                        captions: 1,
+                        username: 1,
+                        dp: 1,
+                        location: 1,
+                        hashtags: 1,
+                        mentions: 1,
+                        likes: 1,
+                        shares: 1,
+                        comments: 1,
+                        createdAt: 1,
+                        updatedAt: 1,
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$images',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$videos',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+            ]);
+            console.log("All posts : ", allPosts);
+            return allPosts;
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error('Error fetching public posts!');
+        }
+    });
     ////////////////////////////////////////////////
     const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -481,6 +546,7 @@ const postRepositoryMongoDB = () => {
         getAllComments,
         deleteComment,
         editComment,
+        getAllPublicPosts
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

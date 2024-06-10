@@ -87,12 +87,15 @@ export const postDBRepository = (
 
   const getAllComments = async (postId: string) =>
     await repository.getAllComments(postId);
-
+  
   const deleteComment = async (commentId: string) =>
     await repository.deleteComment(commentId);
-
+  
   const editComment = async (commentId: string, updatedText: string) =>
     await repository.editComment(commentId, updatedText);
+  
+  const getAllPublicPosts = async (id:string) =>
+    await repository.getAllPublicPosts(id);
 
   return {
     addNewPost,
@@ -122,7 +125,8 @@ export const postDBRepository = (
     addNewReply,
     getAllComments,
     deleteComment,
-    editComment
+    editComment,
+    getAllPublicPosts
   };
 };
 

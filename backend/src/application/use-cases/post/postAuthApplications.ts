@@ -398,6 +398,27 @@ export const handleDislikePosts = async (
   }
 };
 
+
+
+export const handleGetAllPublicPosts = async (
+  id:string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    console.log("handleGetAllPublicPosts reached");
+
+    const getAllPublicPosts = await dbPostRepository.getAllPublicPosts(id);
+    return getAllPublicPosts;
+  } catch (error) {
+    // console.log("Error in handleGetAllPublicPosts");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all public  posts for explore", 500);
+  }
+};
+
+
 export const handleGetLikedPosts = async (
   userId: string,
   dbPostRepository: ReturnType<PostDBInterface>

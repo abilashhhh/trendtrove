@@ -40,6 +40,7 @@ const postRouter = () => {
   router.get("/getdislikedposts/:userId", authMiddleware, controller.getdislikedposts);
   router.get("/getlikesdislikesinfo/:postId", authMiddleware, controller.getlikesdislikesinfo);
   router.delete("/deletepost/:postId", authMiddleware, controller.deletepost);
+  router.get("/getallpublicpostsforexplore", authMiddleware, controller.getallpublicpostsforexplore);
   
   // COMMENT
   router.post("/addcomment", authMiddleware , controller.addComment)

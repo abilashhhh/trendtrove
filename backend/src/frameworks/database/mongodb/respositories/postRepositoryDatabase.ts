@@ -466,6 +466,7 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+
   const deleteComment = async (commentId: string) => {
     try {
       const deleteComment = await Comment.findByIdAndDelete(commentId);
@@ -493,6 +494,74 @@ export const postRepositoryMongoDB = () => {
       return editedComment;
     } catch (error) {
       throw new Error("Error updating comment");
+    }
+  };
+
+  const getAllPublicPosts = async (id:string) => {
+    try {
+      const currentUser = await User.findById(id);
+
+      const followingUserIds = currentUser?.following.map(follow => follow.userId);
+      const allPosts = await Post.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        {
+          $unwind: '$user',
+        },
+        {
+          $match: {
+            $or: [
+              { 'user.isPrivate': false },
+              { 'user._id': { $in: followingUserIds } },
+            ],
+            isBlocked: false,
+            isArchived: false,
+          },
+        },
+        {
+          $project: {
+            images: 1,
+            videos: 1,
+            userId: 1,
+            captions: 1,
+            username: 1,
+            dp: 1,
+            location: 1,
+            hashtags: 1,
+            mentions: 1,
+            likes: 1,
+            shares: 1,
+            comments: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+        {
+          $unwind: {
+            path: '$images',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: '$videos',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ]);
+  
+      console.log("All posts : ", allPosts)
+  
+      return allPosts;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error fetching public posts!');
     }
   };
 
@@ -541,6 +610,7 @@ export const postRepositoryMongoDB = () => {
     getAllComments,
     deleteComment,
     editComment,
+    getAllPublicPosts
   };
 };
 //////////////////////////////////////////////////////////

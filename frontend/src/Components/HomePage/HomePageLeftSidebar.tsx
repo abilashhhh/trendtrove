@@ -13,6 +13,8 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
   const settings = () => navigate("/settings");
   const findFriends = () => navigate("/friends");
   const addPost = () => navigate("/addpost");
+  const explore = () => navigate("/explore");
+  const chats= () => navigate("/chats");
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const buttonClasses = "flex items-center justify-center w-full p-2 rounded transition-colors duration-300 text-gray-800 dark:text-gray-200";
@@ -25,7 +27,7 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
   const isActive = (path) => location.pathname === path ? activeButtonClasses : "";
 
   return (
-    <aside className="h-full flex pl-2 pt-2 pb-2 bg-slate-800 dark:bg-slate-700 shadow-lg">
+    <aside className="h-full flex pl-2 pt-2 pb-2 bg-slate-800 dark:bg-slate-700 shadow-lg ">
       <div className={`bg-gray-800 rounded-lg dark:bg-slate-800 ${isCollapsed ? "w-16" : "w-52"} ${isLeftSidebarOpen ? "block" : "hidden"} lg:block transition-all duration-300`}>
         <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto font-semibold no-scrollbar flex flex-col items-center">
           <button onClick={toggleCollapse} className="mb-2 p-2 bg-gray-700 text-white rounded-full">
@@ -36,7 +38,7 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
               <FaHome className="inline-block mr-2" />
               {!isCollapsed && "Home"}
             </button>
-            <button className={`${buttonClasses} ${buttonHoverClasses} ${isActive("/explore")}`}>
+            <button  onClick={explore} className={`${buttonClasses} ${buttonHoverClasses} ${isActive("/explore")}`}>
               <BsExposure className="inline-block mr-2" />
               {!isCollapsed && "Explore"}
             </button>
@@ -44,7 +46,7 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
               <FaPlusCircle className="inline-block mr-2" />
               {!isCollapsed && "Add Post"}
             </button>
-            <button className={`${buttonClasses} ${buttonHoverClasses} ${isActive("/chats")}`}>
+            <button onClick={chats} className={`${buttonClasses} ${buttonHoverClasses} ${isActive("/chats")}`}>
               <FaCommentAlt className="inline-block mr-2" />
               {!isCollapsed && "Chats"}
             </button>

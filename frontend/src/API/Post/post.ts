@@ -9,6 +9,7 @@ import {
   DislikePostResponse,
   EditCommentResponse,
   GetAllCommentsResponse,
+  GetAllPostsForExploreResponse,
   GetAllPostsForUser,
   GetAllPostsOfCurrentUser,
   GetDislikedPostsResponse,
@@ -468,3 +469,23 @@ export const handleAddReplyToComment = async (
     throw error;
   }
 };
+
+
+
+
+export const getAllPublicPostsForExplore = async () => {
+  try {
+    console.log("getAllPublicPostsForExplore ");
+    const response = await axiosUserInstance.get<GetAllPostsForExploreResponse>(
+      END_POINTS.GET_ALL_POSTS_FOR_EXPLORE
+    );
+    console.log("getAllPublicPostsForExplore response:", response.data.allPosts);
+    return response.data.allPosts;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+getAllPublicPostsForExplore()

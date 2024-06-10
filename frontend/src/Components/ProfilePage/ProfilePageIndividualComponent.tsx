@@ -11,14 +11,12 @@ import {
   rejectFollowRequests,
 } from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
-import { useSelector } from "react-redux";
-import { StoreType } from "../../Redux/Store/reduxStore";
 import { getUserProfile } from "../../API/User/user";
 import { getPostsLengthOfTheUser } from "../../API/Post/post";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { FaMapMarkedAlt } from "react-icons/fa";
+import {  FaMapMarkedAlt } from "react-icons/fa";
 import {
   dislikePost,
   fetchAllPostsForUserUsingUsername,
@@ -37,6 +35,7 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import PostsDisplayCommon from "../Post/PostsDisplayCommon";
+import useUserDetails from "../../Hooks/useUserDetails";
 
 interface UserInfo {
   coverPhoto: string;
@@ -66,12 +65,16 @@ const formatDate = (date: string | undefined) => {
 
 const ProfilePageIndividualComponent: React.FC = () => {
   const { username } = useParams<{ username: string }>();
-  const currentUser = useSelector((state: StoreType) => state.userAuth.user);
+  const currentUser = useUserDetails()
   let navigate = useNavigate();
 
   if (username === currentUser?.username) {
     navigate("/profile");
   }
+  const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false);
+  const toggleMoreOptions = () => {
+    setShowMoreOptions(prevState => !prevState);
+  };
 
   const [userDetails, setUserDetails] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -182,6 +185,16 @@ const ProfilePageIndividualComponent: React.FC = () => {
     }
   };
 
+  const handleSavePost = async (postId: string) => {
+    console.log("handleSavePost: ", postId);
+    const response = await savePost(currentUser?._id, postId);
+    if (response.status === "success") {
+      toast.success("Post saved successfully");
+    } else {
+      toast.error("Error saving post");
+    }
+  };
+
   const handleOnUnfollowUser = async (
     targetUserId: string,
     targetUserUserName: string
@@ -287,6 +300,14 @@ const ProfilePageIndividualComponent: React.FC = () => {
     };
     fetchPostCount();
   }, [username]);
+
+
+  const handleBlockUser = () => {
+    console.log("handleBlockUser, " , currentUser._id, username)
+  }
+  const handleReportUser = () => {
+    console.log("handleReportUser ",  currentUser._id, username)
+  }
 
   const fetchUserPosts = async (username: string | undefined) => {
     try {
@@ -631,6 +652,29 @@ const ProfilePageIndividualComponent: React.FC = () => {
                 Unfollow
               </button>
             )}
+            <div className="relative">
+      <button
+        onClick={toggleMoreOptions}
+        className="bg-slate-800 p-2 rounded-lg text-white font-bold relative">
+        <FiMoreVertical   />
+      </button>
+      {showMoreOptions && (
+        <div className="absolute mt-4 right-0 p-1 w-40 bg-slate-200 dark:bg-slate-800 rounded-lg shadow-lg z-10">
+          <button onClick={handleBlockUser} className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
+            Block User
+          </button>
+          <button  onClick={handleReportUser}  className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
+            Report User
+          </button>
+          <button  className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
+            Share Profile
+          </button>
+          <button className="block w-full text-left py-2 px-4 rounded-lg  bg-slate-300 dark:bg-slate-900 text-black dark:text-white">
+            Message
+          </button>
+        </div>
+      )}
+    </div>
           </div>
         </div>
 
@@ -640,7 +684,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
             userDetails.followers.some(
               follower => follower.userId === currentUser._id
             )) ? (
-              <div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
+            <div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
               {posts.length > 0 ? (
                 posts.map(post => (
                   <div
@@ -733,7 +777,9 @@ const ProfilePageIndividualComponent: React.FC = () => {
                             <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
                           )}
                         </button>
-                        <button  onClick={() => navigate(`/post/${post._id}`)} className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
+                        <button
+                          onClick={() => navigate(`/post/${post._id}`)}
+                          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
                           <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
                         </button>
                       </div>
@@ -758,7 +804,9 @@ const ProfilePageIndividualComponent: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center  text-center ">No posts available</p>
+                <p className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center  text-center ">
+                  No posts available
+                </p>
               )}
             </div>
           ) : (
@@ -768,8 +816,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
             </div>
           )}
         </div>
-
-        
 
         <Modal
           isOpen={showFollowersModal}

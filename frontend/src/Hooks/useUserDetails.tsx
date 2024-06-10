@@ -58,7 +58,7 @@ function useUserDetails() {
 
     fetchUserInfo();
   }, [userId]);
-console.log("Userdetials :", userDetails)
+// console.log("Userdetials :", userDetails)
   return userDetails;
 }
 
