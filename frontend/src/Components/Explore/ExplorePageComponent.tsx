@@ -16,15 +16,14 @@ const MediaItem = ({ type, src }) => {
   return null;
 };
 
-
 const getRandomSpan = () => {
-  const spans = [ 5, 4, 5,6, 3 , 4 ];
+  const spans = [5, 4, 5, 6, 1, 3, 4, 2, 4];
   return spans[Math.floor(Math.random() * spans.length)];
 };
 
 const ExplorePageComponent = () => {
   const [allPosts, setAllPosts] = useState([]);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -48,17 +47,15 @@ const ExplorePageComponent = () => {
               <React.Fragment key={post._id + index}>
                 {post.images && (
                   <div
-                    onClick={() => navigate(`/post/${post._id}`)} 
-                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}
-                  >
+                    onClick={() => navigate(`/post/${post._id}`)}
+                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}>
                     <MediaItem type="image" src={post.images} />
                   </div>
                 )}
                 {post.videos && (
                   <div
-                    onClick={() => navigate(`/post/${post._id}`)} 
-                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}
-                  >
+                    onClick={() => navigate(`/post/${post._id}`)}
+                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}>
                     <MediaItem type="video" src={post.videos} />
                   </div>
                 )}
