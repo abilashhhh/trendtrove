@@ -13,8 +13,11 @@ import {
   handleDeleteAccount,
   handleSuspendAccount,
   handlePrivateAccount,
+  handleRazorpayOrder,
+  handleVerifyPassword,
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
+import Razorpay from "razorpay";
 
 const profileController = (
   userDBRepositoryImplementation: UserRepositoryMongoDB,
@@ -110,6 +113,56 @@ const profileController = (
     });
   });
 
+  const verifyPassword = asyncHandler(async (req: Request, res: Response) => {
+    const { id, password } = req.params;
+    
+    try {
+      const result = await handleVerifyPassword(id, password, dbUserRepository, authService);
+      res.json({
+        status: "success",
+        message: "Password verified successfully",
+        result,
+      });
+    } catch (error : any) {
+      res.status((error as ErrorInApplication).statusCode || 500).json({
+        status: "error",
+        message: error.message || "Failed to verify password",
+      });
+    }
+  });
+
+
+  
+
+
+  const createRazorpayOrder = async (req: Request, res: Response) => {
+    try {
+      const razorPay = new Razorpay({
+        key_id: process.env.RAZORPAY_ID_KEY!,
+        key_secret: process.env.RAZORPAY_SECRET_KEY!,
+      });
+  
+      const options = req.body;
+  
+      const order = await razorPay.orders.create(options);
+  
+      if (!order) {
+        return res.status(500).send("Error creating order");
+      } else {
+        return res.json({
+          status: "success",
+          message: "Razorpay order successful",
+          order,
+        });
+      }
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+      return res.status(500).send("Internal server error");
+    }
+  };
+  
+ 
+
   return {
     getUserInfo,
     editProfile,
@@ -117,6 +170,8 @@ const profileController = (
     deleteAccount,
     suspendAccount,
     privateAccount,
+    verifyPassword,
+    createRazorpayOrder
   };
 };
 

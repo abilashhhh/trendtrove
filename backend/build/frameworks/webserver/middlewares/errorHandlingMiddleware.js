@@ -11,6 +11,7 @@ const errorHandlingMiddleware = (err, req, res, next) => {
     let message = err instanceof ErrorInApplication_1.default
         ? err.message
         : "An unexpected error occurred";
+    console.log("Error middleware:", { status, message });
     res.status(statusCode).json({ status, message });
 };
 exports.default = errorHandlingMiddleware;

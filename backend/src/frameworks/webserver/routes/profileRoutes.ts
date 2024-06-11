@@ -7,22 +7,24 @@ import { userDBRepository } from "../../../application/repositories/userDBReposi
 import profileController from "../../../adapters/profileController/profileController";
 
 const profileRouter = () => {
-  const router = express();
+  const router = express() 
 
   const controller = profileController(
- 
     userRepositoryMongoDB,
     userDBRepository,
     authService,
     authServiceInterface
   );
 
-  router.get("/getuserinfo" ,authMiddleware , controller.getUserInfo);
-  router.patch("/editprofile" ,authMiddleware , controller.editProfile);
-  router.patch("/changepassword" , authMiddleware ,controller.changePassword);
-  router.delete("/deleteaccount/:id/:password" ,authMiddleware ,controller.deleteAccount);
-  router.patch("/suspendaccount/:id/:password" ,authMiddleware ,controller.suspendAccount);
-  router.patch("/privateaccount/:id/:password" ,authMiddleware ,controller.privateAccount);
+  router.get("/getuserinfo", authMiddleware, controller.getUserInfo);
+  router.patch("/editprofile", authMiddleware, controller.editProfile);
+  router.patch("/changepassword", authMiddleware, controller.changePassword);
+  router.delete("/deleteaccount/:id/:password", authMiddleware, controller.deleteAccount);
+  router.patch("/suspendaccount/:id/:password", authMiddleware, controller.suspendAccount);
+  router.patch("/privateaccount/:id/:password", authMiddleware, controller.privateAccount);
+  router.get("/verifypassword/:id/:password", authMiddleware, controller.verifyPassword);
+  // router.post("/order", controller.createRazorpayOrder);
+
   return router;
 };
 

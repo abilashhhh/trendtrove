@@ -22,6 +22,7 @@ const END_POINTS = {
   SUSPEND_ACCOUNT: "/api/profile/suspendaccount/:userId/:password",
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
   PREMIUM_ACCOUNT: "/api/profile/premiumaccount/:userId/:password",
+  VERIFY_PASSWORD: "/api/profile/verifypassword/:userId/:password",
   UPLOAD_COVER: 'api/profile/uploadcover',
   UPLOAD_DP: 'api/profile/uploaddp',
 

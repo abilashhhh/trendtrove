@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const profileAuthApplication_1 = require("../../application/use-cases/profile/profileAuthApplication");
+const razorpay_1 = __importDefault(require("razorpay"));
 const profileController = (userDBRepositoryImplementation, userDBRepositoryInterface, authServiceImplementation, authServiceInterface) => {
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
@@ -72,6 +73,47 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             result,
         });
     }));
+    const verifyPassword = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id, password } = req.params;
+        try {
+            const result = yield (0, profileAuthApplication_1.handleVerifyPassword)(id, password, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "Password verified successfully",
+                result,
+            });
+        }
+        catch (error) {
+            res.status(error.statusCode || 500).json({
+                status: "error",
+                message: error.message || "Failed to verify password",
+            });
+        }
+    }));
+    const createRazorpayOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const razorPay = new razorpay_1.default({
+                key_id: process.env.RAZORPAY_ID_KEY,
+                key_secret: process.env.RAZORPAY_SECRET_KEY,
+            });
+            const options = req.body;
+            const order = yield razorPay.orders.create(options);
+            if (!order) {
+                return res.status(500).send("Error creating order");
+            }
+            else {
+                return res.json({
+                    status: "success",
+                    message: "Razorpay order successful",
+                    order,
+                });
+            }
+        }
+        catch (error) {
+            console.error("Error creating Razorpay order:", error);
+            return res.status(500).send("Internal server error");
+        }
+    });
     return {
         getUserInfo,
         editProfile,
@@ -79,6 +121,8 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         deleteAccount,
         suspendAccount,
         privateAccount,
+        verifyPassword,
+        createRazorpayOrder
     };
 };
 exports.default = profileController;

@@ -70,6 +70,11 @@ export interface PremiuumAccountResponse {
   message: string,
 }
 
+export interface PasswordCheckResponse {
+  status: string, 
+  message: string,
+}
+
 export interface GetOtherUserInfoResponse {
   status: string,
   message: string,

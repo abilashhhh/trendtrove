@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
+// import Razorpay from "razorpay";
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("handleUserInfo ran in profile usecase");
@@ -65,8 +66,8 @@ const handleEditProfile = (profileInfo, dbUserRepository) => __awaiter(void 0, v
         }
     }
     catch (err) {
-        // console.log("Error:", err);
-        throw new ErrorInApplication_1.default("User not found!", 401);
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to edit profile", 500);
     }
 });
 exports.handleEditProfile = handleEditProfile;
@@ -74,22 +75,19 @@ const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepositor
     try {
         const userExists = yield dbUserRepository.getUserById(_id);
         if (!userExists) {
-            throw new Error("User not found");
+            throw new ErrorInApplication_1.default("User not found", 404);
         }
-        // Validate the current password
         const isPasswordValid = yield authService.comparePassword(currentPassword, userExists.password);
         if (!isPasswordValid) {
-            throw new ErrorInApplication_1.default("nvalid current password", 401);
+            throw new ErrorInApplication_1.default("Invalid current password", 401);
         }
-        // Encrypt the new password
         const encryptedNewPassword = yield authService.encryptPassword(newPassword);
-        // Update user's password in the database
         const user = yield dbUserRepository.updatePassword(_id, encryptedNewPassword);
         return user;
     }
     catch (err) {
-        console.error("Error: ", err);
-        throw new ErrorInApplication_1.default("Failed to change password", 401);
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to change password", 500);
     }
 });
 exports.handlePasswordChange = handlePasswordChange;
@@ -97,65 +95,56 @@ const handleDeleteAccount = (userId, password, dbUserRepository, authService) =>
     try {
         const userExists = yield dbUserRepository.getUserById(userId);
         if (!userExists) {
-            throw new Error("User not found");
+            throw new ErrorInApplication_1.default("User not found", 404);
         }
-        // Validate the current password
         const isPasswordValid = yield authService.comparePassword(password, userExists.password);
         if (!isPasswordValid) {
-            throw new ErrorInApplication_1.default("nvalid current password", 401);
+            throw new ErrorInApplication_1.default("Invalid current password", 401);
         }
-        // Update user's password in the database
         const user = yield dbUserRepository.deleteAccount(userId);
         return user;
     }
     catch (err) {
-        console.error("Error: ", err);
-        throw new ErrorInApplication_1.default("Failed to change password", 401);
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to delete account", 500);
     }
 });
 exports.handleDeleteAccount = handleDeleteAccount;
 const handleSuspendAccount = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // console.log("Userdetails in handleSUspend: ", userId, password)
         const userExists = yield dbUserRepository.getUserById(userId);
         if (!userExists) {
-            throw new Error("User not found");
+            throw new ErrorInApplication_1.default("User not found", 404);
         }
-        // Validate the current password
         const isPasswordValid = yield authService.comparePassword(password, userExists.password);
         if (!isPasswordValid) {
-            throw new ErrorInApplication_1.default("nvalid current password", 401);
+            throw new ErrorInApplication_1.default("Invalid current password", 401);
         }
-        // Update user's password in the database
         const user = yield dbUserRepository.suspendAccount(userId);
         return user;
     }
     catch (err) {
-        console.error("Error: ", err);
-        throw new ErrorInApplication_1.default("Failed to change password", 401);
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to suspend account", 500);
     }
 });
 exports.handleSuspendAccount = handleSuspendAccount;
 const handlePrivateAccount = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // console.log("Userdetails in handlePrivateAccount: ", userId, password)
         const userExists = yield dbUserRepository.getUserById(userId);
         if (!userExists) {
-            throw new Error("User not found");
+            throw new ErrorInApplication_1.default("User not found", 404);
         }
-        // console.log("userExists in handlePrivateAccount: ", userExists)
-        // Validate the current password
         const isPasswordValid = yield authService.comparePassword(password, userExists.password);
         if (!isPasswordValid) {
             throw new ErrorInApplication_1.default("Invalid current password", 401);
         }
-        // Update user's password in the database
         const user = yield dbUserRepository.privateAccount(userId);
         return user;
     }
     catch (err) {
-        console.error("Error: ", err);
-        throw new ErrorInApplication_1.default("Failed to change to private account", 401);
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to change to private account", 500);
     }
 });
 exports.handlePrivateAccount = handlePrivateAccount;
@@ -165,7 +154,7 @@ const handleGetAllUsers = (id, dbUserRepository) => __awaiter(void 0, void 0, vo
         return user;
     }
     catch (err) {
-        console.error("Error: ", err);
+        throw new Error(err);
         throw new ErrorInApplication_1.default("Failed to get all users data", 401);
     }
 });
@@ -176,8 +165,8 @@ const handleUserbyUsername = (username, dbUserRepository) => __awaiter(void 0, v
         return user;
     }
     catch (err) {
-        console.error("Error: ", err);
-        throw new ErrorInApplication_1.default("Failed to get all users data", 401);
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to handleUserbyUsername", 500);
     }
 });
 exports.handleUserbyUsername = handleUserbyUsername;
@@ -195,7 +184,9 @@ const handleFollowUserRequest = (userId, targetUserId, dbUserRepository) => __aw
         };
     }
     catch (err) {
-        console.error("Error: ", err);
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
         throw new ErrorInApplication_1.default("Failed to handle follow request", 401);
     }
 });
@@ -214,7 +205,9 @@ const handleUnFollowUserRequest = (userId, targetUserId, dbUserRepository) => __
         };
     }
     catch (err) {
-        console.error("Error: ", err);
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
         throw new ErrorInApplication_1.default("Failed to handle unfollow request", 401);
     }
 });
@@ -233,7 +226,9 @@ const handleCancelFollowUserRequest = (userId, targetUserId, dbUserRepository) =
         };
     }
     catch (err) {
-        console.error("Error: ", err);
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
         throw new ErrorInApplication_1.default("Failed to unsend friend request", 401);
     }
 });
@@ -252,7 +247,9 @@ const handleAcceptFollowUserRequest = (userId, targetUserId, dbUserRepository) =
         };
     }
     catch (err) {
-        console.error("Error: ", err);
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
         throw new ErrorInApplication_1.default("Failed to unsend friend request", 401);
     }
 });
@@ -271,8 +268,39 @@ const handleRejectFollowUserRequest = (userId, targetUserId, dbUserRepository) =
         };
     }
     catch (err) {
-        console.error("Error: ", err);
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
         throw new ErrorInApplication_1.default("Failed to reject friend request", 401);
     }
 });
 exports.handleRejectFollowUserRequest = handleRejectFollowUserRequest;
+const handleVerifyPassword = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        const isPasswordValid = yield authService.comparePassword(password, userExists === null || userExists === void 0 ? void 0 : userExists.password);
+        if (!isPasswordValid) {
+            throw new ErrorInApplication_1.default("Invalid current password", 401);
+        }
+    }
+    catch (err) {
+        throw new Error(err);
+    }
+});
+exports.handleVerifyPassword = handleVerifyPassword;
+// export const handleRazorpayOrder = async( 
+//   razorpayOrder: string,
+//   dbUserRepository: ReturnType<UserDBInterface>)=> {
+//     try {
+//       const razorPay = new Razorpay({
+//         key_id : process.env.RAZORPAY_ID_KEY ,
+//         key_secret:  RAZORPAY_SECRET_KEY ,
+//       })
+//     } catch (error) {
+//       console.error("Error: ", error);
+//       throw new ErrorInApplication("Failed to create razorpay order", 401)
+//     }
+//   }

@@ -7,7 +7,8 @@ import {
   DeleteAccountResponse,
   EditProfileResponse,
   GetUserInfoResponse,
-  PremiuumAccountResponse,
+  PasswordCheckResponse,
+  PremiumAccountResponse,
   SuspendAccountResponse,
   UserInfo,
 } from "../../Types/userProfile";
@@ -32,15 +33,11 @@ const handleAxiosError = (error: any) => {
   }
 };
 
-export const getUserInfo = async (
- 
-): Promise<GetUserInfoResponse> => {
+export const getUserInfo = async (): Promise<GetUserInfoResponse> => {
   try {
-    // console.log("Userid: ", userId);
     const response = await axiosUserInstance.get<GetUserInfoResponse>(
-    END_POINTS.GET_USER_INFO
+      END_POINTS.GET_USER_INFO
     );
-    // console.log("response :", response);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -48,18 +45,14 @@ export const getUserInfo = async (
   }
 };
 
- 
-
 export const editProfile = async (
   userInfo: UserInfo
 ): Promise<EditProfileResponse> => {
   try {
-    // console.log("edit profile api, userInfo:", userInfo);
     const response = await axiosUserInstance.patch<EditProfileResponse>(
       END_POINTS.EDIT_PROFILE,
       userInfo
     );
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -71,12 +64,10 @@ export const changePassword = async (
   payload: ChangePasswordInterface
 ): Promise<ChangePasswordResponse> => {
   try {
-    // console.log("changePassword, userInfo:", payload);
     const response = await axiosUserInstance.patch<ChangePasswordResponse>(
       END_POINTS.CHANGE_PASSWORD,
       payload
     );
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -89,14 +80,12 @@ export const deleteAccount = async (
   password: string
 ): Promise<DeleteAccountResponse> => {
   try {
-    // console.log(userId, password, "from deklete acc");
     const response = await axiosUserInstance.delete<DeleteAccountResponse>(
       `${END_POINTS.DELETE_ACCOUNT.replace(":userId", userId).replace(
         ":password",
         password
       )}`
     );
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -109,15 +98,12 @@ export const suspendAccount = async (
   password: string
 ): Promise<SuspendAccountResponse> => {
   try {
-    // console.log(userId, password, "from susp acc");
-
     const response = await axiosUserInstance.patch<SuspendAccountResponse>(
       `${END_POINTS.SUSPEND_ACCOUNT.replace(":userId", userId).replace(
         ":password",
         password
       )}`
     );
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -125,20 +111,17 @@ export const suspendAccount = async (
   }
 };
 
-export const privateAccount = async (
+export const setPrivateAccount = async (
   userId: string,
   password: string
 ): Promise<SuspendAccountResponse> => {
   try {
-    // console.log(userId, password, "from private acc");
-
     const response = await axiosUserInstance.patch<SuspendAccountResponse>(
       `${END_POINTS.PRIVATE_ACCOUNT.replace(":userId", userId).replace(
         ":password",
         password
       )}`
     );
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -146,20 +129,35 @@ export const privateAccount = async (
   }
 };
 
-export const premiumAccount = async (
+export const setPremiumAccount = async (
   userId: string,
   password: string
-): Promise<PremiuumAccountResponse> => {
+): Promise<PremiumAccountResponse> => {
   try {
-    // console.log(userId, password, "from private acc");
-
-    const response = await axiosUserInstance.patch<SuspendAccountResponse>(
+    const response = await axiosUserInstance.patch<PremiumAccountResponse>(
       `${END_POINTS.PREMIUM_ACCOUNT.replace(":userId", userId).replace(
         ":password",
         password
       )}`
     );
-    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const passwordCheck = async (
+  userId: string,
+  password: string
+): Promise<PasswordCheckResponse> => {
+  try {
+    const response = await axiosUserInstance.get<PasswordCheckResponse>(
+      `${END_POINTS.VERIFY_PASSWORD.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);

@@ -16,6 +16,8 @@ const errorHandlingMiddleware = (
       ? err.message
       : "An unexpected error occurred";
 
+  console.log("Error middleware:", { status, message });
+
   res.status(statusCode).json({ status, message });
 };
 

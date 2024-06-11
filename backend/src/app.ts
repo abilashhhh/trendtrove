@@ -12,9 +12,9 @@ connectToMongoDB();
 expressConfigurations(app);
 routes(app);
 
-app.use(errorHandlingMiddleware);
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorInApplication("Request not found", 404));
-});
+  });
+app.use(errorHandlingMiddleware);
 
 serverConfigurations(app);

@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import {
   changePassword,
   deleteAccount,
+  passwordCheck,
   premiumAccount,
   privateAccount,
+  setPrivateAccount,
   suspendAccount,
 } from "../../API/Profile/profile";
 import { ToastContainer, toast } from "react-toastify";
@@ -133,6 +135,7 @@ const ChangePassword = ({ currentUser }) => {
               navigate("/home");
             }, 3000);
           } else {
+            
             toast.error(`Failed to update password: ${changeResult.message}`);
             return;
           }
@@ -216,11 +219,13 @@ const DeleteAccount = ({ currentUser }) => {
           if (deleteAccountResult.status === "success") {
             return deleteAccountResult;
           } else {
+          Swal.showValidationMessage(`Check your current password`);
             Swal.showValidationMessage(
               `Failed to delete account: ${deleteAccountResult.message}`
             );
           }
         } catch (error) {
+          Swal.showValidationMessage(`Check your current password`);
           Swal.showValidationMessage(`Failed to delete account. Try again`);
         }
       },
@@ -281,11 +286,13 @@ const SuspendAccount = ({ currentUser }) => {
             }, 3000);
             return suspendAccountResult;
           } else {
+          Swal.showValidationMessage(`Check your current password`);
             Swal.showValidationMessage(
               `Failed to suspend account: ${suspendAccountResult.message}`
             );
           }
         } catch (error) {
+          Swal.showValidationMessage(`Check your current password`);
           Swal.showValidationMessage(`Failed to suspend account. Try again`);
         }
       },
@@ -313,6 +320,8 @@ const SuspendAccount = ({ currentUser }) => {
   );
 };
 
+ 
+
 const PrivateAccount = ({ currentUser }) => {
   const navigate = useNavigate();
 
@@ -332,7 +341,7 @@ const PrivateAccount = ({ currentUser }) => {
       preConfirm: async password => {
         try {
           // Call the API function to set the account to private
-          const privateAccountResult = await privateAccount(
+          const privateAccountResult = await setPrivateAccount(
             currentUser._id,
             password
           );
@@ -341,11 +350,16 @@ const PrivateAccount = ({ currentUser }) => {
             toast.success("Account set to private successfully");
             // Additional actions after setting the account to private
           } else {
+          Swal.showValidationMessage(`Check your current password`);
+
             Swal.showValidationMessage(
+              
               `Failed to set account to private: ${privateAccountResult.message}`
             );
           }
         } catch (error) {
+          Swal.showValidationMessage(`Check your current password`);
+
           Swal.showValidationMessage(
             `Failed to set account to private. Try again`
           );
@@ -374,11 +388,14 @@ const PrivateAccount = ({ currentUser }) => {
   );
 };
 
+
+
+
 const PremiumAccount = ({ currentUser }) => {
   const navigate = useNavigate();
 
   const handlePremiumAccount = async () => {
-    Swal.fire({
+    const { value: password } = await Swal.fire({
       title: "Enter your password",
       input: "password",
       inputAttributes: {
@@ -388,36 +405,25 @@ const PremiumAccount = ({ currentUser }) => {
         spellcheck: "false",
       },
       showCancelButton: true,
-      confirmButtonText: "To Payment",
-      showLoaderOnConfirm: true,
-      preConfirm: async password => {
-        try {
-          const premiumAccountResult = await premiumAccount(
-            currentUser._id,
-            password
-          );
-
-          if (premiumAccountResult.status === "success") {
-            toast.success("Account set to premium successfully");
-          } else {
-            Swal.showValidationMessage(
-              `Failed to set account to premium: ${premiumAccountResult.message}`
-            );
-          }
-        } catch (error) {
-          Swal.showValidationMessage(
-            `Failed to set account to premium. Try again`
-          );
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    }).then(result => {
-      if (result.isConfirmed) {
-        setTimeout(() => {
-          navigate("/home");
-        }, 3000);
-      }
+      confirmButtonText: "Verify Password",
     });
+
+    if (password) {
+      try {
+        const verifyPasswordResult = await passwordCheck(currentUser._id, password);
+
+        if (verifyPasswordResult.status === "success") {
+          toast.success("Password verification successful");
+          toast.success("Continue to payment");
+          // Add your payment handling logic here
+          // navigate("/home"); // Navigate to the home page
+        } else if(verifyPasswordResult.status !== "success"){
+          toast.error("Failed to verify password, try again");
+        }
+      } catch (error) {
+        toast.error("Failed to verify password. Try again");
+      }
+    }
   };
 
   return (
