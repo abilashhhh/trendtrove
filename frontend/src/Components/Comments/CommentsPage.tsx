@@ -87,7 +87,7 @@ const CommentsPage: React.FC = () => {
   const [showOptions, setShowOptions] = useState<string | null>(null);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
   
-  const [showCommentsSection, setShowCommentsSection] = useState<boolean>(false);
+  const [showCommentsSection, setShowCommentsSection] = useState<boolean>(true);
   const toggleShowCommentsSection = () => {
     setShowCommentsSection(!showCommentsSection)
   };
