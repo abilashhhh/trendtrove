@@ -131,6 +131,7 @@ const ExplorePageComponent = () => {
               </React.Fragment>
             ))}
           </div>
+          <div className="p-24 bg-slate-900"></div>
         </div>
       </main>
     </Layout>
