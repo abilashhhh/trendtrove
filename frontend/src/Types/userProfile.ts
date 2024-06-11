@@ -75,6 +75,11 @@ export interface PasswordCheckResponse {
   message: string,
 }
 
+export interface PaymentResponse {
+  status: string, 
+  message: string,
+}
+
 export interface GetOtherUserInfoResponse {
   status: string,
   message: string,

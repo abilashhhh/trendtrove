@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   changePassword,
   deleteAccount,
+  makepayment,
   passwordCheck,
   premiumAccount,
   privateAccount,
@@ -387,7 +388,9 @@ const PremiumAccount = ({ currentUser }) => {
   const [passwordVerified, setPasswordVerified] = useState(false);
 
   const handlePayment = async () => {
-    console.log("Handle payment reached");
+    const makePayment  = await makepayment();
+    
+    console.log("Handle payment reached: ", makePayment);
   };
 
   const handlePremiumAccount = async () => {

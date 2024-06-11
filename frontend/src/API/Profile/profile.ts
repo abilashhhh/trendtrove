@@ -164,3 +164,15 @@ export const passwordCheck = async (
     throw error;
   }
 };
+
+export const makepayment = async (): Promise<PaymentResponse> => {
+  try {
+    const response = await axiosUserInstance.post<PaymentResponse>(
+      END_POINTS.VERIFY_PASSWORD
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};

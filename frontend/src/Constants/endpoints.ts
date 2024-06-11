@@ -23,6 +23,7 @@ const END_POINTS = {
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
   PREMIUM_ACCOUNT: "/api/profile/premiumaccount/:userId/:password",
   VERIFY_PASSWORD: "/api/profile/verifypassword/:userId/:password",
+  MAKE_PAYMENT: "/api/profile/makepayment",
   UPLOAD_COVER: 'api/profile/uploadcover',
   UPLOAD_DP: 'api/profile/uploaddp',
 

@@ -20,7 +20,7 @@ const profileRouter = () => {
     router.patch("/suspendaccount/:id/:password", authMiddleware_1.default, controller.suspendAccount);
     router.patch("/privateaccount/:id/:password", authMiddleware_1.default, controller.privateAccount);
     router.get("/verifypassword/:id/:password", authMiddleware_1.default, controller.verifyPassword);
-    // router.post("/order", controller.createRazorpayOrder);
+    router.post("/makepayment", controller.createRazorpayOrder);
     return router;
 };
 exports.default = profileRouter;
