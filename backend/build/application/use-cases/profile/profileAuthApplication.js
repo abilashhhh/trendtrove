@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
+const razorpay_1 = __importDefault(require("razorpay"));
 // import Razorpay from "razorpay";
 const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -291,16 +292,45 @@ const handleVerifyPassword = (userId, password, dbUserRepository, authService) =
     }
 });
 exports.handleVerifyPassword = handleVerifyPassword;
-// export const handleRazorpayOrder = async( 
-//   razorpayOrder: string,
-//   dbUserRepository: ReturnType<UserDBInterface>)=> {
-//     try {
-//       const razorPay = new Razorpay({
-//         key_id : process.env.RAZORPAY_ID_KEY ,
-//         key_secret:  RAZORPAY_SECRET_KEY ,
-//       })
-//     } catch (error) {
-//       console.error("Error: ", error);
-//       throw new ErrorInApplication("Failed to create razorpay order", 401)
-//     }
-//   }
+const razorpay = new razorpay_1.default({
+    key_id: process.env.RAZORPAY_ID_KEY,
+    key_secret: process.env.RAZORPAY_SECRET_KEY,
+});
+const handleVerifiedAccountPayment = (userId, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const options = {
+            amount: 50000, // 500 INR in paise
+            currency: 'INR',
+            receipt: `receipt_order_${Date.now()}`,
+        };
+        const order = yield razorpay.orders.create(options);
+        console.log("Razorpay order details : ", userId, order);
+        if (!order) {
+            throw new ErrorInApplication_1.default("Error completing the payment for verified account", 401);
+        }
+        // let paymentDetailsUpdation = await dbUserRepository.setPaymentDetails(
+        //   userId,
+        //   order
+        // );
+        // console.log("paymentDetailsUpdation: ,", paymentDetailsUpdation)
+        return order;
+    }
+    catch (err) {
+        console.error('Error creating Razorpay order:', err);
+        throw new Error(err);
+    }
+});
+exports.handleVerifiedAccountPayment = handleVerifiedAccountPayment;
+const handleSetPremiumAccount = (userId, paymentId, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        console.log("Reached handleSetPremiumAccount:", userId, paymentId);
+    }
+    catch (err) {
+        throw new Error(err);
+    }
+});
+exports.handleSetPremiumAccount = handleSetPremiumAccount;

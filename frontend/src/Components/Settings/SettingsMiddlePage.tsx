@@ -5,7 +5,6 @@ import {
   makepayment,
   passwordCheck,
   premiumAccount,
-  privateAccount,
   setPrivateAccount,
   suspendAccount,
 } from "../../API/Profile/profile";
@@ -18,6 +17,7 @@ import {
 } from "../../utils/validations";
 import { useNavigate } from "react-router-dom";
 import useUserDetails from "../../Hooks/useUserDetails";
+import upload from "../../utils/cloudinary";
 
 // Main Settings Page Component
 const SettingsMiddlePage = () => {
@@ -389,13 +389,16 @@ interface Props {
 const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
   const navigate = useNavigate();
   const [passwordVerified, setPasswordVerified] = useState(false);
+  const [paymentDone, setPaymentDone] = useState(false);
+ 
+
 
   const handlePayment = async () => {
     try {
       const paymentResponse = await makepayment();
       if (paymentResponse?.status === 'success') {
         const options = {
-          key: 'rzp_test_vflODNYZwlJUMg',
+          key: import.meta.env.VITE_RAZORPAY_ID_KEY,
           amount: paymentResponse.order.amount,
           currency: paymentResponse.order.currency,
           name: 'TrendTrove',
@@ -405,11 +408,16 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
             // Handle successful payment here
             // Update user premium status in your backend
             try {
-              await premiumAccount(currentUser._id, response.razorpay_payment_id);
-              toast.success('Payment Successful. Your account is now premium.');
-              // navigate('/profile');
+            const res =   await premiumAccount(currentUser._id, response.razorpay_payment_id);
+            if(res.status === "success") {
+              toast.success('Payment Successful.');
+              toast.success('Proceed to upload the documents.');
+              setPaymentDone(true)
+            }
+             
             } catch (error) {
               toast.error('Failed to update account status. Please contact support.');
+              
             }
           },
           prefill: {
@@ -462,6 +470,53 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
     }
   };
 
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+     
+      setIsUploading(true);
+      try {
+        const urls = await Promise.all(
+          files.map(async file => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            return new Promise<string>((resolve, reject) => {
+              reader.onloadend = async () => {
+                try {
+                  const imgData = reader.result as string;
+                  const response = await upload(
+                    imgData,
+                    err => toast.error(err),
+                    "premiumAccountDocuments",
+                    "image"
+                  );
+                  if (response?.url) {
+                    resolve(response.url);
+                  } else {
+                    reject("Failed to upload image");
+                  }
+                } catch (error) {
+                  reject(error);
+                }
+              };
+            });
+          })
+        );
+        setPostData(prevState => ({
+          ...prevState,
+          images: [...(prevState.images || []), ...urls],
+        }));
+        toast.success("Images uploaded successfully");
+      } catch (error) {
+        toast.error("Failed to upload images");
+        console.log("Error uploading images: ", error);
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
+  
+
   return (
     <div>
       <ToastContainer />
@@ -508,6 +563,47 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
           </div>
         </div>
       )}
+
+{paymentDone && 
+
+  <div>
+      <form onSubmit={handleDocumentSubmit}>
+            <div className="mb-4">
+              <label className="block text-sm font-small text-gray-700 dark:text-gray-300">
+                Reason for reporting
+              </label>
+              <select
+                value={documenttype}
+                onChange={(e) => setDocumentSubmit(e.target.value)}
+                className="mt-1 block w-4/5 rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                required
+              >
+                <option value="" disabled>
+                  Select a document type
+                </option>
+                <option value="spam">Spam</option>
+                <option value="harassment">Harassment</option>
+                <option value="offensive">Offensive</option>
+                <option value="inappropriate">Inappropriate Content</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Additional Documents
+              </label>
+             
+            </div>
+            <button
+              type="submit"
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Submit documents
+            </button>
+          </form>
+    </div>
+}
+
     </div>
   );
 };

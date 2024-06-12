@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const profileAuthApplication_1 = require("../../application/use-cases/profile/profileAuthApplication");
-const razorpay_1 = __importDefault(require("razorpay"));
 const profileController = (userDBRepositoryImplementation, userDBRepositoryInterface, authServiceImplementation, authServiceInterface) => {
     const dbUserRepository = userDBRepositoryInterface(userDBRepositoryImplementation());
     const authService = authServiceInterface(authServiceImplementation());
@@ -91,46 +90,82 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
     }));
-    const razorpay = new razorpay_1.default({
-        key_id: process.env.RAZORPAY_ID_KEY,
-        key_secret: process.env.RAZORPAY_SECRET_KEY,
-    });
-    const createRazorpayOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const makeVerifiedAccountPayment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
         try {
-            const options = {
-                amount: 50000, // 500 INR in paise
-                currency: 'INR',
-                receipt: `receipt_order_${Date.now()}`,
-            };
-            const order = yield razorpay.orders.create(options);
-            if (!order) {
-                return res.status(500).send('Error creating order');
-            }
-            return res.json({ status: 'success', order });
+            const order = yield (0, profileAuthApplication_1.handleVerifiedAccountPayment)(userId, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "Premium account payment completed successfully",
+                order
+            });
         }
         catch (error) {
-            console.error('Error creating Razorpay order:', error);
-            return res.status(500).send('Internal server error');
+            console.log("error in completing payment");
+            res.status(error.statusCode || 500).json({
+                status: "error",
+                message: error.message || "Failed to completing payment",
+            });
         }
-    });
-    const setPremiumAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    const setPremiumAccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId, paymentId } = req.body;
         try {
             console.log("setPremiumAccount reached, ", userId, paymentId);
-            const user = yield User.findById(userId);
-            if (!user) {
-                return res.status(404).json({ status: 'error', message: 'User not found' });
-            }
-            user.isPremium = true;
-            user.premiumPaymentId = paymentId;
-            yield user.save();
-            return res.json({ status: 'success', message: 'User upgraded to premium' });
+            const order = yield (0, profileAuthApplication_1.handleSetPremiumAccount)(userId, paymentId, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "Premium account payment completed  and submitted for verification successfully",
+                order
+            });
         }
         catch (error) {
-            console.error('Error setting premium account:', error);
-            return res.status(500).json({ status: 'error', message: 'Internal server error' });
+            console.log("error in completing payment");
+            res.status(error.statusCode || 500).json({
+                status: "error",
+                message: error.message || "Failed  account payment and  verification ",
+            });
         }
-    });
+    }));
+    // const razorpay = new Razorpay({
+    //   key_id: process.env.RAZORPAY_ID_KEY!,
+    //   key_secret: process.env.RAZORPAY_SECRET_KEY!,
+    // });
+    // const makeVerifiedAccountPayment = async (req: Request, res: Response) => {
+    //   try {
+    //     const options = {
+    //       amount: 50000, // 500 INR in paise
+    //       currency: 'INR',
+    //       receipt: `receipt_order_${Date.now()}`,
+    //     };
+    //     const order = await razorpay.orders.create(options);
+    //     console.log("Razorpay order details : ", order)
+    //     if (!order) {
+    //       return res.status(500).send('Error creating order');
+    //     }
+    //     return res.json({ status: 'success', order });
+    //   } catch (error) {
+    //     console.error('Error creating Razorpay order:', error);
+    //     return res.status(500).send('Internal server error');
+    //   }
+    // };
+    //  const setPremiumAccount = async (req: Request, res: Response) => {
+    //     const { userId, paymentId } = req.body;
+    //     try {
+    //        console.log("setPremiumAccount reached, ", userId, paymentId)
+    //        const user = await User.findById(userId);
+    //       if (!user) {
+    //         return res.status(404).json({ status: 'error', message: 'User not found' });
+    //       }
+    //       user.isPremium = true;
+    //       user.premiumPaymentId = paymentId;
+    //       await user.save();
+    //       return res.json({ status: 'success', message: 'User upgraded to premium' });
+    //     } catch (error) {
+    //       console.error('Error setting premium account:', error);
+    //       return res.status(500).json({ status: 'error', message: 'Internal server error' });
+    //     }
+    //   };
     return {
         getUserInfo,
         editProfile,
@@ -139,7 +174,7 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         suspendAccount,
         privateAccount,
         verifyPassword,
-        createRazorpayOrder,
+        makeVerifiedAccountPayment,
         setPremiumAccount
     };
 };

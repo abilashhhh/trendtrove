@@ -4,6 +4,7 @@ import { ProfileInterface } from "../../../types/profileInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 import { AuthServiceInterface } from "../../services/authenticationServiceInterface";
+import Razorpay from "razorpay";
 // import Razorpay from "razorpay";
 
 export const handleUserInfo = async (
@@ -360,17 +361,65 @@ export const handleVerifyPassword = async (
   }
 };
 
-// export const handleRazorpayOrder = async( 
-//   razorpayOrder: string,
-//   dbUserRepository: ReturnType<UserDBInterface>)=> {
-//     try {
-//       const razorPay = new Razorpay({
-//         key_id : process.env.RAZORPAY_ID_KEY ,
-//         key_secret:  RAZORPAY_SECRET_KEY ,
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_ID_KEY!,
+    key_secret: process.env.RAZORPAY_SECRET_KEY!,
+  });
+
+export const handleVerifiedAccountPayment = async (
+  userId : string,  
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+  ) => {
+  try {
+    const options = {
+      amount: 50000, // 500 INR in paise
+      currency: 'INR',
+      receipt: `receipt_order_${Date.now()}`,
+    };
+
+    const order = await razorpay.orders.create(options);
+  
+    console.log("Razorpay order details : ", userId, order)
+    
+    if (!order) {
+      throw new ErrorInApplication("Error completing the payment for verified account", 401);
+      }
+
+      // let paymentDetailsUpdation = await dbUserRepository.setPaymentDetails(
+      //   userId,
+      //   order
+      // );
+      // console.log("paymentDetailsUpdation: ,", paymentDetailsUpdation)
+
+      return  order 
+      } catch (err : any) {
+        console.error('Error creating Razorpay order:', err);
         
-//       })
-//     } catch (error) {
-//       console.error("Error: ", error);
-//       throw new ErrorInApplication("Failed to create razorpay order", 401)
-//     }
-//   }
+        throw new Error(err)
+        }
+        };
+
+        
+
+  
+ 
+        export const handleSetPremiumAccount = async (
+          userId: string,
+          paymentId: string,
+          dbUserRepository: ReturnType<UserDBInterface>,
+          authService: ReturnType<AuthServiceInterface>
+        ) => {
+          try {
+            const userExists = await dbUserRepository.getUserById(userId);
+            if (!userExists) {
+              throw new ErrorInApplication("User not found", 404);
+            }
+
+            console.log("Reached handleSetPremiumAccount:", userId, paymentId)
+  
+          } catch (err : any) {
+         
+            throw new Error(err)
+          }
+        };

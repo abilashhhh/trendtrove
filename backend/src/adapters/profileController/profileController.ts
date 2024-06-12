@@ -15,6 +15,8 @@ import {
   handlePrivateAccount,
   handleRazorpayOrder,
   handleVerifyPassword,
+  handleVerifiedAccountPayment,
+  handleSetPremiumAccount,
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
 import Razorpay from "razorpay";
@@ -133,55 +135,97 @@ const profileController = (
   });
 
 
-  
+  const makeVerifiedAccountPayment = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
 
-
-  const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_ID_KEY!,
-    key_secret: process.env.RAZORPAY_SECRET_KEY!,
+    try {
+      const order = await handleVerifiedAccountPayment(userId, dbUserRepository, authService);
+      res.json({
+        status: "success",
+        message: "Premium account payment completed successfully",
+        order
+      });
+    } catch (error : any) {
+      console.log("error in completing payment")
+      res.status((error as ErrorInApplication).statusCode || 500).json({
+        status: "error",
+        message: error.message || "Failed to completing payment",
+      });
+    }
   });
-  
-  const createRazorpayOrder = async (req: Request, res: Response) => {
-    try {
-      const options = {
-        amount: 50000, // 500 INR in paise
-        currency: 'INR',
-        receipt: `receipt_order_${Date.now()}`,
-      };
-  
-      const order = await razorpay.orders.create(options);
-  
-      if (!order) {
-        return res.status(500).send('Error creating order');
-      }
-  
-      return res.json({ status: 'success', order });
-    } catch (error) {
-      console.error('Error creating Razorpay order:', error);
-      return res.status(500).send('Internal server error');
-    }
-  };
- 
- const setPremiumAccount = async (req: Request, res: Response) => {
+
+
+  const setPremiumAccount = asyncHandler(async (req: Request, res: Response) => {
     const { userId, paymentId } = req.body;
-  
     try {
-       console.log("setPremiumAccount reached, ", userId, paymentId)
-       const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ status: 'error', message: 'User not found' });
-      }
-  
-      user.isPremium = true;
-      user.premiumPaymentId = paymentId;
-      await user.save();
-  
-      return res.json({ status: 'success', message: 'User upgraded to premium' });
-    } catch (error) {
-      console.error('Error setting premium account:', error);
-      return res.status(500).json({ status: 'error', message: 'Internal server error' });
+      console.log("setPremiumAccount reached, ", userId, paymentId)
+      const order = await handleSetPremiumAccount( userId, paymentId,dbUserRepository, authService);
+      res.json({
+        status: "success",
+        message: "Premium account payment completed  and submitted for verification successfully",
+        order
+      });
+    } catch (error : any) {
+      console.log("error in completing payment")
+      res.status((error as ErrorInApplication).statusCode || 500).json({
+        status: "error",
+        message: error.message || "Failed  account payment and  verification ",
+      });
     }
-  };
+  });
+
+
+
+
+  // const razorpay = new Razorpay({
+  //   key_id: process.env.RAZORPAY_ID_KEY!,
+  //   key_secret: process.env.RAZORPAY_SECRET_KEY!,
+  // });
+  
+  // const makeVerifiedAccountPayment = async (req: Request, res: Response) => {
+  //   try {
+  //     const options = {
+  //       amount: 50000, // 500 INR in paise
+  //       currency: 'INR',
+  //       receipt: `receipt_order_${Date.now()}`,
+  //     };
+  
+  //     const order = await razorpay.orders.create(options);
+  
+  //     console.log("Razorpay order details : ", order)
+
+  //     if (!order) {
+  //       return res.status(500).send('Error creating order');
+  //     }
+  
+  //     return res.json({ status: 'success', order });
+  //   } catch (error) {
+  //     console.error('Error creating Razorpay order:', error);
+  //     return res.status(500).send('Internal server error');
+  //   }
+  // };
+ 
+
+//  const setPremiumAccount = async (req: Request, res: Response) => {
+//     const { userId, paymentId } = req.body;
+  
+//     try {
+//        console.log("setPremiumAccount reached, ", userId, paymentId)
+//        const user = await User.findById(userId);
+//       if (!user) {
+//         return res.status(404).json({ status: 'error', message: 'User not found' });
+//       }
+  
+//       user.isPremium = true;
+//       user.premiumPaymentId = paymentId;
+//       await user.save();
+  
+//       return res.json({ status: 'success', message: 'User upgraded to premium' });
+//     } catch (error) {
+//       console.error('Error setting premium account:', error);
+//       return res.status(500).json({ status: 'error', message: 'Internal server error' });
+//     }
+//   };
 
   return {
     getUserInfo,
@@ -191,7 +235,7 @@ const profileController = (
     suspendAccount,
     privateAccount,
     verifyPassword,
-    createRazorpayOrder,
+    makeVerifiedAccountPayment,
     setPremiumAccount
   };
 };
