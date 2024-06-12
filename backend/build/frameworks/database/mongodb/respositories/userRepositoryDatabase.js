@@ -413,7 +413,7 @@ const userRepositoryMongoDB = () => {
         }
     });
     const handleDocumentSubmission = (userId, documentType, images) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
+        var _a, _b, _c, _d;
         try {
             const premiumAccount = yield premiumAccount_1.default.findOne({ userId });
             if (!premiumAccount) {
@@ -423,6 +423,9 @@ const userRepositoryMongoDB = () => {
                 type: documentType,
                 image: images,
             });
+            if (((_c = (_b = premiumAccount === null || premiumAccount === void 0 ? void 0 : premiumAccount.premiumRequest) === null || _b === void 0 ? void 0 : _b.documents) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+                (_d = premiumAccount === null || premiumAccount === void 0 ? void 0 : premiumAccount.premiumRequest) === null || _d === void 0 ? void 0 : _d.isRequested = true;
+            }
             yield premiumAccount.save();
             return { status: "success", message: "Documents submitted successfully" };
         }

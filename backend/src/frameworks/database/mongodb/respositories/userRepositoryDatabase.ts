@@ -544,6 +544,10 @@ export const userRepositoryMongoDB = () => {
         image: images,
       });
 
+      if (premiumAccount?.premiumRequest?.documents?.length > 0) {
+        premiumAccount?.premiumRequest?.isRequested = true;
+      }
+
       await premiumAccount.save();
       return { status: "success", message: "Documents submitted successfully" };
     } catch (error) {
