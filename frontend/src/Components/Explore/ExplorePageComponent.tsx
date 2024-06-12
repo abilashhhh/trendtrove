@@ -46,6 +46,13 @@ const ExplorePageComponent = () => {
     fetchAllPosts();
   }, []);
 
+  // Extract unique hashtags from allPosts
+  const allAvailableHashtags = [...new Set(
+    allPosts
+      .filter(post => post.hashtags)
+      .flatMap(post => post.hashtags.map(hashtag => hashtag.toLowerCase()))
+  )];
+
   const filteredPosts = allPosts.filter(post => {
     const lowercasedSearchContent = searchContent.toLowerCase();
     const lowercasedActiveHashtag = activeHashtag.toLowerCase();
@@ -65,26 +72,18 @@ const ExplorePageComponent = () => {
     );
   });
 
-  const allAvailableHashtags = allPosts.reduce((acc, post) => {
-    if (post.hashtags) {
-      const lowercasedHashtags = post.hashtags.map(hashtag =>
-        hashtag.toLowerCase()
-      );
-      return acc.concat(lowercasedHashtags);
-    }
-    return acc;
-  }, []);
-
   return (
     <Layout>
       <main className="bg-gray-800 min-h-screen dark:bg-gray-700 text-black dark:text-white gap-2 p-2 w-full sm:-ml-2 overflow-y-auto no-scrollbar">
         <div className="flex flex-col gap-2">
           <div className="p-2 rounded-lg w-full bg-gray-200 dark:bg-gray-800 flex items-center">
-                
-                <FaSearch onClick={() => { setSearchedContent(''); setActiveHashtag(""); }} className="w-8 h-8 bg-gray-200 dark:bg-gray-800 p-2 rounded-lg" />
+            <FaSearch
+              onClick={() => { setSearchedContent(''); setActiveHashtag(""); }}
+              className="w-8 h-8 bg-gray-200 dark:bg-gray-800 p-2 rounded-lg"
+            />
             <input
               type="text"
-              onChange={e => {
+              onChange={(e) => {
                 setSearchedContent(e.target.value);
                 setActiveHashtag("");
               }}
@@ -92,7 +91,7 @@ const ExplorePageComponent = () => {
               className="bg-gray-200 dark:bg-gray-800 text-white w-full p-2 rounded-lg mr-2 focus:outline-none"
             />
           </div>
-          <div className="p-2 rounded-lg w-full bg-slate-200 dark:bg-slate-900   flex-nowrap gap-2 mb-2 overflow-x-auto no-scrollbar flex">
+          <div className="p-2 rounded-lg w-full bg-slate-200 dark:bg-slate-900 flex-nowrap gap-2 mb-2 overflow-x-auto no-scrollbar flex">
             {allAvailableHashtags.map((hashtag, index) => (
               <button
                 key={index}
@@ -104,7 +103,8 @@ const ExplorePageComponent = () => {
                   activeHashtag === hashtag
                     ? "bg-slate-300 dark:bg-slate-700  text-black dark:text-white"
                     : "bg-slate-100 dark:bg-slate-800  text-black dark:text-white"
-                }`}>
+                }`}
+              >
                 {hashtag}
               </button>
             ))}
@@ -117,14 +117,16 @@ const ExplorePageComponent = () => {
                 {post.images && (
                   <div
                     onClick={() => navigate(`/post/${post._id}`)}
-                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}>
+                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}
+                  >
                     <MediaItem type="image" src={post.images} />
                   </div>
                 )}
                 {post.videos && (
                   <div
                     onClick={() => navigate(`/post/${post._id}`)}
-                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}>
+                    className={`col-span-${getRandomSpan()} row-span-${getRandomSpan()} w-full h-full cursor-pointer`}
+                  >
                     <MediaItem type="video" src={post.videos} />
                   </div>
                 )}
