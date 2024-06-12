@@ -18,6 +18,7 @@ const END_POINTS = {
   EDIT_PROFILE: "/api/profile/editprofile",
   UPLOAD_PROFILE_PHOTO: "/api/profile/dp",
   CHANGE_PASSWORD: "/api/profile/changepassword",
+  CHANGE_PASSWORD2: "/api/profile/changepassword2",
   DELETE_ACCOUNT: "/api/profile/deleteaccount/:userId/:password",
   SUSPEND_ACCOUNT: "/api/profile/suspendaccount/:userId/:password",
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",

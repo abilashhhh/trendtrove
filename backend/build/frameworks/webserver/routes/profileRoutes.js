@@ -16,6 +16,7 @@ const profileRouter = () => {
     router.get("/getuserinfo", authMiddleware_1.default, controller.getUserInfo);
     router.patch("/editprofile", authMiddleware_1.default, controller.editProfile);
     router.patch("/changepassword", authMiddleware_1.default, controller.changePassword);
+    router.patch("/changepassword2", authMiddleware_1.default, controller.changePassword2);
     router.delete("/deleteaccount/:id/:password", authMiddleware_1.default, controller.deleteAccount);
     router.patch("/suspendaccount/:id/:password", authMiddleware_1.default, controller.suspendAccount);
     router.patch("/privateaccount/:id/:password", authMiddleware_1.default, controller.privateAccount);

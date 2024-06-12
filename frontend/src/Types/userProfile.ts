@@ -55,6 +55,10 @@ export interface ChangePasswordInterface {
   currentPassword: string,
   newPassword: string, 
 }
+export interface ChangePasswordInterface2 {
+  _id: string, 
+  newPassword: string, 
+}
 
 export interface DeleteAccountResponse {
   status: string, 

@@ -45,6 +45,15 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             userData,
         });
     }));
+    const changePassword2 = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { _id, newPassword } = req.body;
+        const userData = yield (0, profileAuthApplication_1.handlePasswordChange2)(_id, newPassword, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "Password changed successfully",
+            userData,
+        });
+    }));
     const deleteAccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id, password } = req.params;
         const result = yield (0, profileAuthApplication_1.handleDeleteAccount)(id, password, dbUserRepository, authService);
@@ -177,6 +186,7 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         getUserInfo,
         editProfile,
         changePassword,
+        changePassword2,
         deleteAccount,
         suspendAccount,
         privateAccount,

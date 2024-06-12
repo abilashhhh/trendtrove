@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
 import {
   ChangePasswordInterface,
+  ChangePasswordInterface2,
   ChangePasswordResponse,
   DeleteAccountResponse,
   DocsSubmittedkResponse,
@@ -70,6 +71,21 @@ export const changePassword = async (
   try {
     const response = await axiosUserInstance.patch<ChangePasswordResponse>(
       END_POINTS.CHANGE_PASSWORD,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const changePassword2 = async (
+  payload: ChangePasswordInterface2 
+): Promise<ChangePasswordResponse> => {
+  try {
+    const response = await axiosUserInstance.patch<ChangePasswordResponse>(
+      END_POINTS.CHANGE_PASSWORD2,
       payload
     );
     return response.data;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handlePremiumAccountUserProgress = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePublicAccount = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handlePremiumAccountUserProgress = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePublicAccount = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handlePasswordChange2 = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const razorpay_1 = __importDefault(require("razorpay"));
 // import Razorpay from "razorpay";
@@ -73,6 +73,22 @@ const handleEditProfile = (profileInfo, dbUserRepository) => __awaiter(void 0, v
     }
 });
 exports.handleEditProfile = handleEditProfile;
+const handlePasswordChange2 = (_id, newPassword, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userExists = yield dbUserRepository.getUserById(_id);
+        if (!userExists) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        const encryptedNewPassword = yield authService.encryptPassword(newPassword);
+        const user = yield dbUserRepository.updatePassword(_id, encryptedNewPassword);
+        return user;
+    }
+    catch (err) {
+        throw new Error(err);
+        throw new ErrorInApplication_1.default("Failed to change password", 500);
+    }
+});
+exports.handlePasswordChange2 = handlePasswordChange2;
 const handlePasswordChange = (_id, currentPassword, newPassword, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userExists = yield dbUserRepository.getUserById(_id);

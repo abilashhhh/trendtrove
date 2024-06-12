@@ -67,6 +67,33 @@ export const handleEditProfile = async (
     throw new ErrorInApplication("Failed to edit profile", 500);
   }
 };
+ 
+
+export const handlePasswordChange2 = async (
+  _id: string,
+  newPassword: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  try {
+    const userExists = await dbUserRepository.getUserById(_id);
+    if (!userExists) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+
+    const encryptedNewPassword = await authService.encryptPassword(newPassword);
+    const user = await dbUserRepository.updatePassword(
+      _id,
+      encryptedNewPassword
+    );
+
+    return user;
+  } catch (err: any) {
+    throw new Error(err);
+    throw new ErrorInApplication("Failed to change password", 500);
+  }
+};
+
 export const handlePasswordChange = async (
   _id: string,
   currentPassword: string,

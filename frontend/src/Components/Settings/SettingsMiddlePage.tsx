@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   changePassword,
+  changePassword2,
   deleteAccount,
   getUserProgressInPremiumaccount,
   handledocSupport,
@@ -47,6 +48,13 @@ const SettingsMiddlePage = () => {
                     Change Password
                   </button>
                 )}
+                {currentUser.isGoogleSignedIn && (
+                  <button
+                    onClick={() => setActiveSection("ChangePassword2")}
+                    className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
+                    Change Password
+                  </button>
+                )}
                 <button
                   onClick={() => setActiveSection("DeleteAccount")}
                   className="bg-gray-200 dark:bg-slate-800 w-full rounded p-3 hover:bg-gray-300 dark:hover:bg-slate-700">
@@ -73,6 +81,9 @@ const SettingsMiddlePage = () => {
               <div className="p-4 w-full">
                 {activeSection === "ChangePassword" && (
                   <ChangePassword currentUser={currentUser} />
+                )}
+                {activeSection === "ChangePassword2" && (
+                  <ChangePassword2 currentUser={currentUser} />
                 )}
                 {activeSection === "DeleteAccount" && (
                   <DeleteAccount currentUser={currentUser} />
@@ -166,6 +177,97 @@ const ChangePassword = ({ currentUser }) => {
             onChange={e => setCurrentPassword(e.target.value)}
           />
         </div>
+        <div>
+          <label className="block text-sm">New Password</label>
+          <input
+            type="password"
+            placeholder="Enter new password here.."
+            className="w-full font-thin size-8 m-2 p-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm">Confirm New Password</label>
+          <input
+            type="password"
+            placeholder="Confirm new password here.."
+            className="w-full font-thin size-8 m-2 p-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+            value={confirmNewPassword}
+            onChange={e => setConfirmNewPassword(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 dark:bg-blue-700 rounded p-2 hover:bg-blue-400 dark:hover:bg-blue-600">
+          Update Password
+        </button>
+      </form>
+    </div>
+  );
+};
+
+// Change Password Component
+const ChangePassword2 = ({ currentUser }) => {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const navigate = useNavigate();
+  const handleChangePassword = async e => {
+    e.preventDefault();
+
+    // Validate passwords
+    const passwordError = validatePassword(newPassword);
+    const confirmPasswordError = validateConfirmPassword(confirmNewPassword);
+
+    if (passwordError || confirmPasswordError) {
+      toast.error(passwordError || confirmPasswordError);
+      return;
+    }
+
+    // Check if passwords match
+    if (newPassword !== confirmNewPassword) {
+      toast.error("New passwords do not match");
+      return;
+    }
+
+    const userInfo = { _id: currentUser._id, newPassword };
+    console.log("userinfo :", userInfo);
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to change your password?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, change it!",
+    }).then(async result => {
+      if (result.isConfirmed) {
+        try {
+          const changeResult = await changePassword2(userInfo);
+          if (changeResult.status === "success") {
+            toast.success("Password updated successfully");
+            setTimeout(() => {
+              navigate("/home");
+            }, 3000);
+          } else {
+            toast.error(`Failed to update password: ${changeResult.message}`);
+            return;
+          }
+        } catch (error) {
+          toast.error(
+            "Failed to update password, Check all fields and try again"
+          );
+        }
+      }
+    });
+  };
+
+  return (
+    <div className="p-2">
+      <h2 className="text-2xl mb-6 underline">Change Password</h2>
+      <form className="space-y-4" onSubmit={handleChangePassword}>
+         
         <div>
           <label className="block text-sm">New Password</label>
           <input

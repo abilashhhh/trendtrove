@@ -20,6 +20,7 @@ import {
   handleverifydocspremium,
   handlePremiumAccountUserProgress,
   handlePublicAccount,
+  handlePasswordChange2,
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
 import Razorpay from "razorpay";
@@ -61,6 +62,20 @@ const profileController = (
     const userData = await handlePasswordChange(
       _id,
       currentPassword,
+      newPassword,
+      dbUserRepository,
+      authService
+    );
+    res.json({
+      status: "success",
+      message: "Password changed successfully",
+      userData,
+    });
+  });
+  const changePassword2 = asyncHandler(async (req: Request, res: Response) => {
+    const { _id, newPassword } = req.body;
+    const userData = await handlePasswordChange2(
+      _id,
       newPassword,
       dbUserRepository,
       authService
@@ -268,6 +283,7 @@ const profileController = (
     getUserInfo,
     editProfile,
     changePassword,
+    changePassword2,
     deleteAccount,
     suspendAccount,
     privateAccount,
