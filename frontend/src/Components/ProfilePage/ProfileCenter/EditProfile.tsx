@@ -24,6 +24,7 @@ import { usernameAvailability } from "../../../API/Auth/auth";
 import { editProfile } from "../../../API/Profile/profile";
 import { useNavigate } from "react-router-dom";
 import upload from "../../../utils/cloudinary";
+import ImageCropper from "../../ImageCropper";
 
 interface ProfileProps {
   userDetails: UserInfo;
@@ -42,57 +43,64 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
     null
   );
 
-  const handleDp = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isCropping, setIsCropping] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [isDpCrop, setIsDpCrop] = useState(true);
+  
+
+  const handleDp = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = async () => {
-        const imgData = reader.result as string;
-        try {
-          const response = await upload(imgData, err => toast.error(err), "dp", "image");
-          if (response?.url) {
-            setFormData(prevState => ({
-              ...prevState,
-              dp: response.url,
-            }));
-            toast.success("Profile picture updated successfully");
-          }
-        } catch (error) {
-          toast.error("Failed to upload profile picture");
-          console.error("Error uploading profile picture:", error);
-        }
+      reader.onloadend = () => {
+        setImageToCrop(reader.result as string);
+        setIsDpCrop(true);
+        setIsCropping(true);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleCoverPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = async () => {
-        const imgData = reader.result as string;
-        try {
-          const response = await upload(
-            imgData,
-            err => toast.error(err),
-            "cover", "image"
-          );
-          if (response?.url) {
-            setFormData(prevState => ({
-              ...prevState,
-              coverPhoto: response.url,
-            }));
-            toast.success("Cover photo updated successfully");
-          }
-        } catch (error) {
-          toast.error("Failed to upload cover photo");
-          console.error("Error uploading cover photo:", error);
-        }
+      reader.onloadend = () => {
+        setImageToCrop(reader.result as string);
+        setIsDpCrop(false);
+        setIsCropping(true);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  const handleCropComplete = async (croppedImageUrl: string) => {
+    try {
+      const response = await upload(
+        croppedImageUrl,
+        (err) => toast.error(err),
+        isDpCrop ? "dp" : "cover",
+        "image"
+      );
+      if (response?.url) {
+        setFormData((prevState) => ({
+          ...prevState,
+          [isDpCrop ? "dp" : "coverPhoto"]: response.url,
+        }));
+        toast.success(
+          isDpCrop
+            ? "Profile picture updated successfully"
+            : "Cover photo updated successfully"
+        );
+      }
+    } catch (error) {
+      toast.error("Failed to upload image");
+      console.error("Error uploading image:", error);
+    }
+    setIsCropping(false);
+    setImageToCrop(null);
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -149,7 +157,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
         break;
     }
 
-    setValidationErrors(prevErrors => ({
+    setValidationErrors((prevErrors) => ({
       ...prevErrors,
       [name]: validationMessage,
     }));
@@ -166,7 +174,7 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
     }
 
     const hasErrors = Object.values(validationErrors).some(
-      error => error !== ""
+      (error) => error !== ""
     );
 
     if (!hasErrors) {
@@ -192,21 +200,21 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
   return (
     <>
       <ToastContainer />
+     
       <main className="flex-1 p-2 bg-gray-800 min-h-screen w-full dark:bg-gray-700 text-white overflow-auto">
-        {/* <div className="overflow-y-auto no-scrollbar"> */}
         <div className="max-w-full mx-auto relative">
-          {/* Profile Info */}
+        {!isCropping && !imageToCrop && (
           <form
             onSubmit={handleSubmit}
-            className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative">
-            {/* Edit Profile Button */}
+            className="px-6 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg mb-4 relative"
+          >
             <button
               type="submit"
-              className="absolute top-4 right-4 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+              className="absolute top-4 right-4 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+            >
               Save Changes
             </button>
 
-            {/* Profile Picture */}
             <div className="flex items-center justify-between mb-4">
               <img
                 src={formData.dp}
@@ -412,12 +420,11 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
               </div>
             </div>
 
-            {/* Cover Picture */}
             <div className="flex items-center justify-between mb-4 mt-10">
               <img
                 src={formData.coverPhoto}
                 alt="Cover photo"
-                className="h-140 w-140   object-cover border-4 border-white dark:border-gray-100"
+                className="h-140 w-140 object-cover border-4 border-white dark:border-gray-100"
               />
             </div>
 
@@ -433,9 +440,15 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
                 Upload Cover Photo
               </p>
             </label>
-          </form>
+          </form> )}
+          {isCropping && imageToCrop && (
+        <ImageCropper
+          imageSrc={imageToCrop}
+          onCropComplete={handleCropComplete}
+          onClose={() => setIsCropping(false)}
+        />
+      )}
         </div>
-        {/* </div> */}
       </main>
     </>
   );
