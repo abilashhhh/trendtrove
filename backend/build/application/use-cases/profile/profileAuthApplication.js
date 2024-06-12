@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const razorpay_1 = __importDefault(require("razorpay"));
 // import Razorpay from "razorpay";
@@ -300,7 +300,7 @@ const handleVerifiedAccountPayment = (userId, dbUserRepository, authService) => 
     try {
         const options = {
             amount: 50000, // 500 INR in paise
-            currency: 'INR',
+            currency: "INR",
             receipt: `receipt_order_${Date.now()}`,
         };
         const order = yield razorpay.orders.create(options);
@@ -308,15 +308,10 @@ const handleVerifiedAccountPayment = (userId, dbUserRepository, authService) => 
         if (!order) {
             throw new ErrorInApplication_1.default("Error completing the payment for verified account", 401);
         }
-        // let paymentDetailsUpdation = await dbUserRepository.setPaymentDetails(
-        //   userId,
-        //   order
-        // );
-        // console.log("paymentDetailsUpdation: ,", paymentDetailsUpdation)
         return order;
     }
     catch (err) {
-        console.error('Error creating Razorpay order:', err);
+        console.error("Error creating Razorpay order:", err);
         throw new Error(err);
     }
 });
@@ -328,9 +323,26 @@ const handleSetPremiumAccount = (userId, paymentId, dbUserRepository, authServic
             throw new ErrorInApplication_1.default("User not found", 404);
         }
         console.log("Reached handleSetPremiumAccount:", userId, paymentId);
+        let paymentDetailsUpdation = yield dbUserRepository.setPaymentDetails(userId, paymentId);
+        console.log("paymentDetailsUpdation: ,", paymentDetailsUpdation);
     }
     catch (err) {
         throw new Error(err);
     }
 });
 exports.handleSetPremiumAccount = handleSetPremiumAccount;
+const handleverifydocspremium = (userId, documentType, images, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        console.log("Reached handleDocumentSubmission:", userId, documentType, images);
+        let handleDocumentSubmission = yield dbUserRepository.handleDocumentSubmission(userId, documentType, images);
+        console.log("handleDocumentSubmission: ,", handleDocumentSubmission);
+    }
+    catch (err) {
+        throw new Error(err);
+    }
+});
+exports.handleverifydocspremium = handleverifydocspremium;

@@ -75,6 +75,17 @@ export interface PasswordCheckResponse {
   message: string,
 }
 
+export interface DocumentSupportTypes {
+  userId: string;
+  documentType: string;
+  images: string[];
+}
+
+export interface DocsSubmittedkResponse {
+  status: string;
+  message: string;
+}
+
 export interface PaymentResponse {
   status: string, 
   message: string,

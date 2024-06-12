@@ -33,7 +33,7 @@ export const handleUserInfo = async (
       isVerifiedAccount: userData.isVerifiedAccount,
       notifications: userData.notifications,
       savedPosts: userData.savedPosts,
-    taggedPosts: userData?.taggedPosts,
+      taggedPosts: userData?.taggedPosts,
       isGoogleSignedIn: userData.isGoogleSignedIn,
       isBlocked: userData.isBlocked,
       isPrivate: userData.isPrivate,
@@ -41,7 +41,7 @@ export const handleUserInfo = async (
       updatedAt: userData.updatedAt,
     };
     return user;
-  } catch (err:any) {
+  } catch (err: any) {
     // console.log("error : ", err);
     throw new ErrorInApplication("User not found!", 401);
   }
@@ -61,8 +61,8 @@ export const handleEditProfile = async (
         // console.log("user: ", user);
       }
     }
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to edit profile", 500);
   }
 };
@@ -79,17 +79,23 @@ export const handlePasswordChange = async (
       throw new ErrorInApplication("User not found", 404);
     }
 
-    const isPasswordValid = await authService.comparePassword(currentPassword, userExists.password);
+    const isPasswordValid = await authService.comparePassword(
+      currentPassword,
+      userExists.password
+    );
     if (!isPasswordValid) {
       throw new ErrorInApplication("Invalid current password", 401);
     }
 
     const encryptedNewPassword = await authService.encryptPassword(newPassword);
-    const user = await dbUserRepository.updatePassword(_id, encryptedNewPassword);
+    const user = await dbUserRepository.updatePassword(
+      _id,
+      encryptedNewPassword
+    );
 
     return user;
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to change password", 500);
   }
 };
@@ -106,7 +112,10 @@ export const handleDeleteAccount = async (
       throw new ErrorInApplication("User not found", 404);
     }
 
-    const isPasswordValid = await authService.comparePassword(password, userExists.password);
+    const isPasswordValid = await authService.comparePassword(
+      password,
+      userExists.password
+    );
     if (!isPasswordValid) {
       throw new ErrorInApplication("Invalid current password", 401);
     }
@@ -114,8 +123,8 @@ export const handleDeleteAccount = async (
     const user = await dbUserRepository.deleteAccount(userId);
 
     return user;
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to delete account", 500);
   }
 };
@@ -132,7 +141,10 @@ export const handleSuspendAccount = async (
       throw new ErrorInApplication("User not found", 404);
     }
 
-    const isPasswordValid = await authService.comparePassword(password, userExists.password);
+    const isPasswordValid = await authService.comparePassword(
+      password,
+      userExists.password
+    );
     if (!isPasswordValid) {
       throw new ErrorInApplication("Invalid current password", 401);
     }
@@ -140,8 +152,8 @@ export const handleSuspendAccount = async (
     const user = await dbUserRepository.suspendAccount(userId);
 
     return user;
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to suspend account", 500);
   }
 };
@@ -157,7 +169,10 @@ export const handlePrivateAccount = async (
       throw new ErrorInApplication("User not found", 404);
     }
 
-    const isPasswordValid = await authService.comparePassword(password, userExists.password);
+    const isPasswordValid = await authService.comparePassword(
+      password,
+      userExists.password
+    );
     if (!isPasswordValid) {
       throw new ErrorInApplication("Invalid current password", 401);
     }
@@ -165,13 +180,11 @@ export const handlePrivateAccount = async (
     const user = await dbUserRepository.privateAccount(userId);
 
     return user;
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to change to private account", 500);
   }
 };
-
-
 
 export const handleGetAllUsers = async (
   id: string,
@@ -180,8 +193,8 @@ export const handleGetAllUsers = async (
   try {
     const user = await dbUserRepository.getAllUsers(id);
     return user;
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to get all users data", 401);
   }
 };
@@ -194,8 +207,8 @@ export const handleUserbyUsername = async (
     const user = await dbUserRepository.getUserByUsername(username);
 
     return user;
-  } catch (err:any) {
-   throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
     throw new ErrorInApplication("Failed to handleUserbyUsername", 500);
   }
 };
@@ -217,9 +230,9 @@ export const handleFollowUserRequest = async (
       message: newResult.message,
       user: targetUser,
     };
-  } catch (err:any) {
+  } catch (err: any) {
     if (err instanceof ErrorInApplication) {
-      throw err;  
+      throw err;
     }
     throw new ErrorInApplication("Failed to handle follow request", 401);
   }
@@ -243,9 +256,9 @@ export const handleUnFollowUserRequest = async (
       message: newResult.message,
       user: targetUser,
     };
-  } catch (err:any) {
+  } catch (err: any) {
     if (err instanceof ErrorInApplication) {
-      throw err;  
+      throw err;
     }
     throw new ErrorInApplication("Failed to handle unfollow request", 401);
   }
@@ -272,9 +285,9 @@ export const handleCancelFollowUserRequest = async (
       message: newResult.message,
       user: targetUser,
     };
-  } catch (err:any) {
+  } catch (err: any) {
     if (err instanceof ErrorInApplication) {
-      throw err;  
+      throw err;
     }
     throw new ErrorInApplication("Failed to unsend friend request", 401);
   }
@@ -301,9 +314,9 @@ export const handleAcceptFollowUserRequest = async (
       message: newResult.message,
       user: targetUser,
     };
-  } catch (err:any) {
+  } catch (err: any) {
     if (err instanceof ErrorInApplication) {
-      throw err;  
+      throw err;
     }
     throw new ErrorInApplication("Failed to unsend friend request", 401);
   }
@@ -330,14 +343,13 @@ export const handleRejectFollowUserRequest = async (
       message: newResult.message,
       user: targetUser,
     };
-  } catch (err:any) {
+  } catch (err: any) {
     if (err instanceof ErrorInApplication) {
-      throw err;  
+      throw err;
     }
     throw new ErrorInApplication("Failed to reject friend request", 401);
   }
 };
-
 
 export const handleVerifyPassword = async (
   userId: string,
@@ -350,76 +362,105 @@ export const handleVerifyPassword = async (
     if (!userExists) {
       throw new ErrorInApplication("User not found", 404);
     }
-    const isPasswordValid = await authService.comparePassword(password, userExists?.password);
+    const isPasswordValid = await authService.comparePassword(
+      password,
+      userExists?.password
+    );
 
     if (!isPasswordValid) {
       throw new ErrorInApplication("Invalid current password", 401);
     }
-  } catch (err : any) {
- 
-    throw new Error(err)
+  } catch (err: any) {
+    throw new Error(err);
   }
 };
 
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_ID_KEY!,
-    key_secret: process.env.RAZORPAY_SECRET_KEY!,
-  });
+  key_id: process.env.RAZORPAY_ID_KEY!,
+  key_secret: process.env.RAZORPAY_SECRET_KEY!,
+});
 
 export const handleVerifiedAccountPayment = async (
-  userId : string,  
+  userId: string,
   dbUserRepository: ReturnType<UserDBInterface>,
   authService: ReturnType<AuthServiceInterface>
-  ) => {
+) => {
   try {
     const options = {
       amount: 50000, // 500 INR in paise
-      currency: 'INR',
+      currency: "INR",
       receipt: `receipt_order_${Date.now()}`,
     };
 
     const order = await razorpay.orders.create(options);
-  
-    console.log("Razorpay order details : ", userId, order)
-    
+
+    console.log("Razorpay order details : ", userId, order);
+
     if (!order) {
-      throw new ErrorInApplication("Error completing the payment for verified account", 401);
-      }
+      throw new ErrorInApplication(
+        "Error completing the payment for verified account",
+        401
+      );
+    }
 
-      // let paymentDetailsUpdation = await dbUserRepository.setPaymentDetails(
-      //   userId,
-      //   order
-      // );
-      // console.log("paymentDetailsUpdation: ,", paymentDetailsUpdation)
+    return order;
+  } catch (err: any) {
+    console.error("Error creating Razorpay order:", err);
 
-      return  order 
-      } catch (err : any) {
-        console.error('Error creating Razorpay order:', err);
-        
-        throw new Error(err)
-        }
-        };
+    throw new Error(err);
+  }
+};
 
-        
+export const handleSetPremiumAccount = async (
+  userId: string,
+  paymentId: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  try {
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+    console.log("Reached handleSetPremiumAccount:", userId, paymentId);
 
-  
- 
-        export const handleSetPremiumAccount = async (
-          userId: string,
-          paymentId: string,
-          dbUserRepository: ReturnType<UserDBInterface>,
-          authService: ReturnType<AuthServiceInterface>
-        ) => {
-          try {
-            const userExists = await dbUserRepository.getUserById(userId);
-            if (!userExists) {
-              throw new ErrorInApplication("User not found", 404);
-            }
+    let paymentDetailsUpdation = await dbUserRepository.setPaymentDetails(
+      userId,
+      paymentId
+    );
+    console.log("paymentDetailsUpdation: ,", paymentDetailsUpdation);
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
 
-            console.log("Reached handleSetPremiumAccount:", userId, paymentId)
-  
-          } catch (err : any) {
-         
-            throw new Error(err)
-          }
-        };
+export const handleverifydocspremium = async (
+  userId: string,
+  documentType: string,
+  images: string[],
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  try {
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+
+    console.log(
+      "Reached handleDocumentSubmission:",
+      userId,
+      documentType,
+      images
+    );
+    let handleDocumentSubmission =
+      await dbUserRepository.handleDocumentSubmission(
+        userId,
+        documentType,
+        images
+      );
+    console.log("handleDocumentSubmission: ,", handleDocumentSubmission);
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};

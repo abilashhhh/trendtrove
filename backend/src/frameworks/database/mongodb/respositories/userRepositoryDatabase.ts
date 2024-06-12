@@ -5,6 +5,7 @@ import {
   UserInterface,
 } from "../../../../types/userInterface";
 import Post from "../models/postModel";
+import PremiumAccount from "../models/premiumAccount";
 import ReportPost from "../models/reportPostModel";
 
 import User from "../models/userModel";
@@ -245,7 +246,7 @@ export const userRepositoryMongoDB = () => {
   const getAllReportsForAdmin = async () => {
     try {
       const reports = await ReportPost.find().exec();
-  
+
       const detailedReports = await Promise.all(
         reports.map(async report => {
           try {
@@ -265,16 +266,16 @@ export const userRepositoryMongoDB = () => {
           }
         })
       );
-  
+
       const validReports = detailedReports.filter(report => report !== null);
-  
+
       return validReports;
     } catch (error) {
       console.error("Error getting all reports:", error);
       throw new Error("Error getting all reports");
     }
   };
-  
+
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne(
@@ -491,6 +492,66 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const setPaymentDetails = async (userId: string, paymentId: string) => {
+    try {
+      const currentUser = await User.findById(userId);
+
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+
+      let premiumAccount = await PremiumAccount.findOne({ userId });
+
+      if (!premiumAccount) {
+        premiumAccount = new PremiumAccount({
+          userId,
+          paymentDetails: paymentId,
+          premiumRequest: {
+            isRequested: true,
+            documents: [],
+          },
+        });
+      } else {
+        premiumAccount.paymentDetails = paymentId;
+      }
+
+      await premiumAccount.save();
+      return {
+        status: "success",
+        message: "Payment details updated successfully",
+      };
+    } catch (error) {
+      console.error("Error in setPaymentDetails", error);
+
+      throw new Error("Error in updating payment details");
+    }
+  };
+
+  const handleDocumentSubmission = async (
+    userId: string,
+    documentType: string,
+    images: string[]
+  ) => {
+    try {
+      const premiumAccount = await PremiumAccount.findOne({ userId });
+
+      if (!premiumAccount) {
+        throw new Error("Premium account not found");
+      }
+
+      premiumAccount?.premiumRequest?.documents.push({
+        type: documentType,
+        image: images,
+      });
+
+      await premiumAccount.save();
+      return { status: "success", message: "Documents submitted successfully" };
+    } catch (error) {
+      console.error("Error in handleDocumentSubmission", error);
+      throw new Error("Error in submitting documents");
+    }
+  };
+
   const clearAll = async () => {
     try {
       const result = await User.updateMany(
@@ -539,6 +600,8 @@ export const userRepositoryMongoDB = () => {
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
+    setPaymentDetails,
+    handleDocumentSubmission,
   };
 };
 //////////////////////////////////////////////////////////

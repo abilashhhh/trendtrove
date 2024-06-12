@@ -81,6 +81,15 @@ export const userDBRepository = (
   const rejectFriendRequest = async (userId: string, targetUserId: string) =>
     await repository.rejectFriendRequest(userId, targetUserId);
 
+  const setPaymentDetails = async (userId: string, paymentId: string) =>
+    await repository.setPaymentDetails(userId, paymentId);
+
+  const handleDocumentSubmission = async (
+    userId: string,
+    documentType: string,
+    images: string[]
+  ) => await repository.handleDocumentSubmission(userId, documentType, images);
+
   return {
     addUser,
     getUserByEmail,
@@ -105,6 +114,8 @@ export const userDBRepository = (
     cancelSendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
+    setPaymentDetails,
+    handleDocumentSubmission,
   };
 };
 

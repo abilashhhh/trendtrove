@@ -5,6 +5,8 @@ import {
   ChangePasswordInterface,
   ChangePasswordResponse,
   DeleteAccountResponse,
+  DocsSubmittedkResponse,
+  DocumentSupportTypes,
   EditProfileResponse,
   GetUserInfoResponse,
   PasswordCheckResponse,
@@ -129,6 +131,24 @@ export const setPrivateAccount = async (
   }
 };
 
+export const passwordCheck = async (
+  userId: string,
+  password: string
+): Promise<PasswordCheckResponse> => {
+  try {
+    const response = await axiosUserInstance.get<PasswordCheckResponse>(
+      `${END_POINTS.VERIFY_PASSWORD.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const premiumAccount  = async (
   userId: string,
   paymentId: string
@@ -144,16 +164,15 @@ export const premiumAccount  = async (
   }
 };
 
-export const passwordCheck = async (
-  userId: string,
-  password: string
+
+
+export const handledocSupport = async (
+ payload : DocumentSupportTypes
 ): Promise<PasswordCheckResponse> => {
   try {
-    const response = await axiosUserInstance.get<PasswordCheckResponse>(
-      `${END_POINTS.VERIFY_PASSWORD.replace(":userId", userId).replace(
-        ":password",
-        password
-      )}`
+    const response = await axiosUserInstance.post<DocsSubmittedkResponse>(
+      END_POINTS.VERIFY_DOCS_PREMIUM
+      , payload
     );
     return response.data;
   } catch (error) {

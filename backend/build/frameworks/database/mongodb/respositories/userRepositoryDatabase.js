@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRepositoryMongoDB = void 0;
 const postModel_1 = __importDefault(require("../models/postModel"));
+const premiumAccount_1 = __importDefault(require("../models/premiumAccount"));
 const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 //////////////////////////////////////////////////////////
@@ -380,6 +381,56 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in rejecting the friend request");
         }
     });
+    const setPaymentDetails = (userId, paymentId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const currentUser = yield userModel_1.default.findById(userId);
+            if (!currentUser) {
+                throw new Error("User not found");
+            }
+            let premiumAccount = yield premiumAccount_1.default.findOne({ userId });
+            if (!premiumAccount) {
+                premiumAccount = new premiumAccount_1.default({
+                    userId,
+                    paymentDetails: paymentId,
+                    premiumRequest: {
+                        isRequested: true,
+                        documents: [],
+                    },
+                });
+            }
+            else {
+                premiumAccount.paymentDetails = paymentId;
+            }
+            yield premiumAccount.save();
+            return {
+                status: "success",
+                message: "Payment details updated successfully",
+            };
+        }
+        catch (error) {
+            console.error("Error in setPaymentDetails", error);
+            throw new Error("Error in updating payment details");
+        }
+    });
+    const handleDocumentSubmission = (userId, documentType, images) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        try {
+            const premiumAccount = yield premiumAccount_1.default.findOne({ userId });
+            if (!premiumAccount) {
+                throw new Error("Premium account not found");
+            }
+            (_a = premiumAccount === null || premiumAccount === void 0 ? void 0 : premiumAccount.premiumRequest) === null || _a === void 0 ? void 0 : _a.documents.push({
+                type: documentType,
+                image: images,
+            });
+            yield premiumAccount.save();
+            return { status: "success", message: "Documents submitted successfully" };
+        }
+        catch (error) {
+            console.error("Error in handleDocumentSubmission", error);
+            throw new Error("Error in submitting documents");
+        }
+    });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -422,6 +473,8 @@ const userRepositoryMongoDB = () => {
         cancelSendFriendRequest,
         acceptFriendRequest,
         rejectFriendRequest,
+        setPaymentDetails,
+        handleDocumentSubmission,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

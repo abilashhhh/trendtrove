@@ -36,6 +36,8 @@ const userDBRepository = (repository) => {
     const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.cancelSendFriendRequest(userId, targetUserId); });
     const acceptFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.acceptFriendRequest(userId, targetUserId); });
     const rejectFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.rejectFriendRequest(userId, targetUserId); });
+    const setPaymentDetails = (userId, paymentId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.setPaymentDetails(userId, paymentId); });
+    const handleDocumentSubmission = (userId, documentType, images) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.handleDocumentSubmission(userId, documentType, images); });
     return {
         addUser,
         getUserByEmail,
@@ -60,6 +62,8 @@ const userDBRepository = (repository) => {
         cancelSendFriendRequest,
         acceptFriendRequest,
         rejectFriendRequest,
+        setPaymentDetails,
+        handleDocumentSubmission,
     };
 };
 exports.userDBRepository = userDBRepository;

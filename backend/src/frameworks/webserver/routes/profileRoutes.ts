@@ -25,6 +25,7 @@ const profileRouter = () => {
   router.get("/verifypassword/:id/:password", authMiddleware, controller.verifyPassword);
   router.post("/makepayment",  authMiddleware, controller.makeVerifiedAccountPayment);
   router.post("/premiumaccount" ,authMiddleware , controller.setPremiumAccount);
+  router.post("/toverifydocspremium" ,authMiddleware , controller.toverifydocspremium);
 
   return router;
 };
