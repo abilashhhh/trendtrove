@@ -23,6 +23,7 @@ const adminRouter = () => {
   router.delete("/logout", adminMiddleware ,controller.logout);
   router.get("/getusersforadmin",adminMiddleware, controller.getAllUsersForAdmin);
   router.get("/getallpostreportsandposts",adminMiddleware, controller.getallpostreports);
+  router.get("/getpremiumaccountrequests",adminMiddleware, controller.getpremiumaccountrequests);
   router.patch("/blockuser/:id" ,adminMiddleware,controller.blockAccount);
   router.patch("/unblockuser/:id" ,adminMiddleware,controller.unblockAccount);
   router.patch("/blockpost/:postId" ,adminMiddleware,controller.blockPost);

@@ -6,6 +6,7 @@ import {
   BlockPostResponse,
   BlockUserResponse,
   GetPostReportsResponse,
+  GetPremiumAccountResponse,
   GetUsersResponse,
 } from "../../Types/admin";
 import axios, { AxiosError } from "axios";
@@ -64,6 +65,20 @@ export const getAllUsersForAdmin = async (): Promise<GetUsersResponse> => {
     throw error;
   }
 };
+
+export const fetchAllPremiumAccountData =
+  async (): Promise<GetPremiumAccountResponse> => {
+    try {
+      console.log("called fetchAllPremiumAccountData");
+      const response = await axiosAdminInstance.get<GetPremiumAccountResponse>(
+        END_POINTS.GET_PREMIUM_ACCOUNTS
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  };
 
 export const fetchAllPostReportsAndPosts =
   async (): Promise<GetPostReportsResponse> => {

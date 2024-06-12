@@ -9,11 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import ReactPaginate from "react-paginate";
 
-function AdminUsersListComponent() {
+const AdminUsersListComponent = () => {
   const [users, setUsers] = useState([]);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const itemsPerPage = 5; // Set the number of items per page
 
   useEffect(() => {
@@ -94,6 +95,27 @@ function AdminUsersListComponent() {
     });
   };
 
+  const openModal = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
+  const ImageModal: React.FC<{ imageUrl: string; onClose: () => void }> = ({ imageUrl, onClose }) => {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <div className="bg-white p-4 rounded-lg max-w-4xl w-full">
+          <img src={imageUrl} alt="Large Image" className="max-w-full h-auto" />
+          <button onClick={onClose} className="block mt-4 mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
       <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar flex flex-col">
@@ -143,7 +165,8 @@ function AdminUsersListComponent() {
                     <img
                       src={user.dp}
                       alt={`${user.name}`}
-                      className="w-10 h-10 rounded-full"
+                      className="w-10 h-10 rounded-full cursor-pointer"
+                      onClick={() => openModal(user.dp)}
                     />
                   </td>
                   <td className="p-2 border border-gray-300 dark:border-gray-600">
@@ -199,6 +222,8 @@ function AdminUsersListComponent() {
           activeClassName="active"
         />
       </div>
+      {selectedImage && <ImageModal imageUrl={selectedImage} onClose={closeModal} />}
+
     </main>
   );
 }

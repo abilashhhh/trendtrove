@@ -6,11 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "../../Components/LoadingSpinner";
 import AdminLeftSidebar from "../../Components/AdminPage/AdminLeftSidebar";
 import AdminHeader from "../../Components/AdminPage/AdminHeader";
-import AdminHomePageContent from "../../Components/AdminPage/AdminWelcomePage";
 import { useNavigate } from "react-router-dom";
 import { logoutAdmin } from "../../API/Admin/admin";
+import AdminPremiumManagementComponent from "../../Components/AdminPage/AdminPremiumManagementComponent";
 
-function AdminHomePage() {
+function AdminPremiumManagement() {
   const navigate = useNavigate();
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(true);
   const [isDarkMode, setDarkMode] = useState(true);
@@ -23,23 +23,9 @@ function AdminHomePage() {
   const toggleLeftSidebar = () => {
     setLeftSidebarOpen(!isLeftSidebarOpen);
   };
-
-  // const handleLogout = async () => {
-  //   try {
-  //     toast.error("Logging Out");
-  //     setTimeout(() => {
-  //       dispatch(adminLogout());
-  //     }, 3000);
-  //   } catch (error) {
-  //     console.error("Logout failed", error);
-  //     toast.error("Log out failed");
-  //   }
-  // };
-
-
+ 
   const handleLogout = async () => {
     const response = await logoutAdmin();
-     console.log("handle logout response: ", response)
     if (response.status === "success") {
       toast.error("Logging Out");
       setTimeout(() => {
@@ -54,11 +40,9 @@ function AdminHomePage() {
   const handlePremiumAccounts = () => {
     navigate("/admin/premiummanagement");
   };
-
   const handleUsersReports = () => {
     navigate("/admin/postReport");
   };
-
 
   const handleHome = () => {
     navigate("/admin/home");
@@ -90,15 +74,14 @@ function AdminHomePage() {
             handleLogout={handleLogout}
             handleUsersList={handleUsersList}
             handleUsersReports={handleUsersReports}
-            handlePremiumAccounts={handlePremiumAccounts}
-
             handleHome={handleHome}
+            handlePremiumAccounts={handlePremiumAccounts}
           />
-          <AdminHomePageContent />
+          <AdminPremiumManagementComponent />
         </div>
       </div>
     </>
   );
 }
 
-export default AdminHomePage;
+export default AdminPremiumManagement;

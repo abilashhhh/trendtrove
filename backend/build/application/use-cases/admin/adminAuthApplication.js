@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUnblockPost = exports.handleBlockPost = exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handkeGetallpostreports = exports.handleGetAllUsersForAdmin = void 0;
+exports.handleUnblockPost = exports.handleBlockPost = exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handkeGetPremiumRequests = exports.handkeGetallpostreports = exports.handleGetAllUsersForAdmin = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleGetAllUsersForAdmin = (dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -38,6 +38,18 @@ const handkeGetallpostreports = (dbUserRepository) => __awaiter(void 0, void 0, 
     }
 });
 exports.handkeGetallpostreports = handkeGetallpostreports;
+const handkeGetPremiumRequests = (dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handkeGetPremiumRequests called")
+        const reports = yield dbUserRepository.getAllPremiumRequestsForAdmin();
+        return reports;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to get all users data", 401);
+    }
+});
+exports.handkeGetPremiumRequests = handkeGetPremiumRequests;
 const handleBlockAccount = (userId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("Userdetails in handle block: ", userId)

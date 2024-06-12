@@ -31,6 +31,7 @@ const userDBRepository = (repository) => {
     const getAllUsers = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsers(userId); });
     const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
     const getAllReportsForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllReportsForAdmin(); });
+    const getAllPremiumRequestsForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPremiumRequestsForAdmin(); });
     const followUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.followUser(userId, targetUserId); });
     const unfollowUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unfollowUser(userId, targetUserId); });
     const cancelSendFriendRequest = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.cancelSendFriendRequest(userId, targetUserId); });
@@ -56,6 +57,7 @@ const userDBRepository = (repository) => {
         getAllUsers,
         getAllUsersForAdmin,
         getAllReportsForAdmin,
+        getAllPremiumRequestsForAdmin,
         blockAccount,
         unblockAccount,
         followUser,
@@ -65,7 +67,7 @@ const userDBRepository = (repository) => {
         rejectFriendRequest,
         setPaymentDetails,
         handleDocumentSubmission,
-        premiumUsersProgress
+        premiumUsersProgress,
     };
 };
 exports.userDBRepository = userDBRepository;

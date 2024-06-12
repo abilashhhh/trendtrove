@@ -13,6 +13,7 @@ function AdminReportManagementComponent() {
   const [postReports, setPostReports] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [reportsPerPage] = useState(5);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const getUserPostsReports = async () => {
     try {
@@ -92,6 +93,27 @@ function AdminReportManagementComponent() {
     });
   };
 
+  
+  const openModal = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+  const ImageModal: React.FC<{ imageUrl: string; onClose: () => void }> = ({ imageUrl, onClose }) => {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <div className="bg-white p-4 rounded-lg max-w-4xl w-full">
+          <img src={imageUrl} alt="Large Image" className="max-w-full h-auto" />
+          <button onClick={onClose} className="block mt-4 mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
       <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar flex flex-col">
@@ -116,7 +138,7 @@ function AdminReportManagementComponent() {
                   <td className="border px-4 py-2">{report.postId}</td>
                   <td className="border px-4 py-2">
                     <div>
-                     { report.postDetails.images[0] && <img src={report.postDetails?.images[0]} alt="Post" className="w-32 h-w-32 object-cover"/> }
+                     { report.postDetails.images[0] && <img   onClick={() => openModal(report.postDetails?.images[0])} src={report.postDetails?.images[0]} alt="Post" className="w-32 h-w-32 object-cover"/> }
                       <p>Caption :{report.postDetails.captions}</p>
                       <p>Username: {report.postDetails.username}</p>
                     </div>
@@ -162,6 +184,8 @@ function AdminReportManagementComponent() {
           />
         </div>
       </div>
+      {selectedImage && <ImageModal imageUrl={selectedImage} onClose={closeModal} />}
+
     </main>
   );
 }

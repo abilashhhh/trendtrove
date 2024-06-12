@@ -23,18 +23,7 @@ function AdminUsersList() {
   const toggleLeftSidebar = () => {
     setLeftSidebarOpen(!isLeftSidebarOpen);
   };
-
-  // const handleLogout = async () => {
-  //   try {
-  //     toast.error("Logging Out");
-  //     setTimeout(() => {
-  //       dispatch(adminLogout());
-  //     }, 3000);
-  //   } catch (error) {
-  //     console.error("Logout failed", error);
-  //     toast.error("Log out failed");
-  //   }
-  // };
+ 
 
   const handleLogout = async () => {
     const response = await logoutAdmin();
@@ -52,6 +41,10 @@ function AdminUsersList() {
 
   const handleUsersReports = () => {
     navigate("/admin/postReport");
+  };
+
+  const handlePremiumAccounts = () => {
+    navigate("/admin/premiummanagement");
   };
 
   const handleHome = () => {
@@ -85,6 +78,7 @@ function AdminUsersList() {
              handleUsersList={handleUsersList}
             handleUsersReports={handleUsersReports}
             handleHome={handleHome}
+            handlePremiumAccounts={handlePremiumAccounts}
           />
           <AdminUsersListComponent />
         </div>

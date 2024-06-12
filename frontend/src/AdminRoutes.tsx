@@ -6,6 +6,7 @@ import PrivateRoute from "./PrivateRoute";
 // import PublicRoute from "./PublicRoute";
 import AdminUsersList from "./Pages/Admin/AdminUsersList";
 import AdminReportManagement from "./Pages/Admin/AdminReportManagement";
+import AdminPremiumManagement from "./Pages/Admin/AdminPremiumManagement";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const AdminRoutes: React.FC = () => {
         <Route path="/home" element={<AdminHomePage />} />
         <Route path="/userslist" element={<AdminUsersList />} />
         <Route path="/postReport" element={<AdminReportManagement />} />
+        <Route path="/premiummanagement" element={<AdminPremiumManagement />} />
       </Route>
     </Routes>
   );

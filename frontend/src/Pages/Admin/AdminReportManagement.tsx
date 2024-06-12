@@ -52,6 +52,9 @@ function AdminReportManagement() {
   const handleUsersReports = () => {
     navigate("/admin/postReport");
   };
+  const handlePremiumAccounts = () => {
+    navigate("/admin/premiummanagement");
+  };
 
   const handleHome = () => {
     navigate("/admin/home");
@@ -84,6 +87,7 @@ function AdminReportManagement() {
             handleUsersList={handleUsersList}
             handleUsersReports={handleUsersReports}
             handleHome={handleHome}
+            handlePremiumAccounts={handlePremiumAccounts}
           />
           <AdminReportManagementComponent />
         </div>

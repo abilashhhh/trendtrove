@@ -223,6 +223,16 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error getting all reports");
         }
     });
+    const getAllPremiumRequestsForAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const premiumAccounts = yield premiumAccount_1.default.find().exec();
+            return premiumAccounts;
+        }
+        catch (error) {
+            console.error("Error getting all PremiumAccount:", error);
+            throw new Error("Error getting all PremiumAccount");
+        }
+    });
     const changeIsAccountVerified = (email) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield userModel_1.default.updateOne({ email }, {
@@ -482,6 +492,7 @@ const userRepositoryMongoDB = () => {
         getAllUsers,
         getAllUsersForAdmin,
         getAllReportsForAdmin,
+        getAllPremiumRequestsForAdmin,
         blockAccount,
         unblockAccount,
         followUser,

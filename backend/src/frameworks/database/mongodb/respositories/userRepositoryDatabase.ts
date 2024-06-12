@@ -276,6 +276,17 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const getAllPremiumRequestsForAdmin = async () => {
+    try {
+      const premiumAccounts = await PremiumAccount.find().exec();
+
+      return premiumAccounts
+    } catch (error) {
+      console.error("Error getting all PremiumAccount:", error);
+      throw new Error("Error getting all PremiumAccount");
+    }
+  };
+
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne(
@@ -614,6 +625,7 @@ export const userRepositoryMongoDB = () => {
     getAllUsers,
     getAllUsersForAdmin,
     getAllReportsForAdmin,
+    getAllPremiumRequestsForAdmin,
     blockAccount,
     unblockAccount,
     followUser,

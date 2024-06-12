@@ -28,6 +28,19 @@ export const handkeGetallpostreports = async (
   }
 };
 
+export const handkeGetPremiumRequests = async (
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    // console.log("handkeGetPremiumRequests called")
+    const reports = await dbUserRepository.getAllPremiumRequestsForAdmin();
+    return reports;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to get all users data", 401);
+  }
+};
+
 export const handleBlockAccount = async (
   userId: string,
   dbUserRepository: ReturnType<UserDBInterface>

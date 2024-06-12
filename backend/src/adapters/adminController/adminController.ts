@@ -13,6 +13,7 @@ import {
   handleBlockPost,
   handleUnblockPost,
   handkeGetallpostreports,
+  handkeGetPremiumRequests,
 } from "../../application/use-cases/admin/adminAuthApplication";
 
 const adminController = (
@@ -54,6 +55,17 @@ const adminController = (
         status: "success",
         message: "All reports info fetched",
         reports,
+      });
+    }
+  );
+
+  const getpremiumaccountrequests = asyncHandler(
+    async (req: Request, res: Response) => {
+      const premiumAccountRequests = await handkeGetPremiumRequests(dbUserRepository);
+      res.json({
+        status: "success",
+        message: "All premiumAccountRequests info fetched",
+        premiumAccountRequests,
       });
     }
   );
@@ -106,6 +118,7 @@ const adminController = (
     unblockAccount,
     blockPost,
     unblockPost,
+    getpremiumaccountrequests,
   };
 };
 

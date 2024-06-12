@@ -64,6 +64,9 @@ export const userDBRepository = (
   const getAllReportsForAdmin = async () =>
     await repository.getAllReportsForAdmin();
 
+  const getAllPremiumRequestsForAdmin = async () =>
+    await repository.getAllPremiumRequestsForAdmin();
+
   const followUser = async (userId: string, targetUserId: string) =>
     await repository.followUser(userId, targetUserId);
 
@@ -110,6 +113,7 @@ export const userDBRepository = (
     getAllUsers,
     getAllUsersForAdmin,
     getAllReportsForAdmin,
+    getAllPremiumRequestsForAdmin,
     blockAccount,
     unblockAccount,
     followUser,
@@ -119,7 +123,7 @@ export const userDBRepository = (
     rejectFriendRequest,
     setPaymentDetails,
     handleDocumentSubmission,
-    premiumUsersProgress
+    premiumUsersProgress,
   };
 };
 

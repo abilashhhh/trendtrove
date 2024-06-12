@@ -1,5 +1,6 @@
 import { ReportPostData } from "./Post";
 import {User} from "./signInUser"
+import { PremiumAccountInterface } from "./userProfile";
 
 export interface AdminLoginInterface {
     email: string;
@@ -22,6 +23,12 @@ export interface GetPostReportsResponse {
     status: string,
     message: string,
     reports: ReportPostData[],
+}
+
+export interface GetPremiumAccountResponse {
+    status: string,
+    message: string,
+    premium: PremiumAccountInterface[],
 }
 
 export interface BlockUserResponse {

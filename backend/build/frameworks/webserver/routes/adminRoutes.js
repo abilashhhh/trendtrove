@@ -18,6 +18,7 @@ const adminRouter = () => {
     router.delete("/logout", adminMiddleware_1.default, controller.logout);
     router.get("/getusersforadmin", adminMiddleware_1.default, controller.getAllUsersForAdmin);
     router.get("/getallpostreportsandposts", adminMiddleware_1.default, controller.getallpostreports);
+    router.get("/getpremiumaccountrequests", adminMiddleware_1.default, controller.getpremiumaccountrequests);
     router.patch("/blockuser/:id", adminMiddleware_1.default, controller.blockAccount);
     router.patch("/unblockuser/:id", adminMiddleware_1.default, controller.unblockAccount);
     router.patch("/blockpost/:postId", adminMiddleware_1.default, controller.blockPost);

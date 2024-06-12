@@ -9,6 +9,7 @@ const AdminLeftSidebar = ({
   handleUsersList,
   handleUsersReports,
   handleHome,
+  handlePremiumAccounts
 }) => {
   return (
     <aside
@@ -35,6 +36,11 @@ const AdminLeftSidebar = ({
             onClick={handleUsersReports}>
             <FaImages className="inline-block mr-2" />
             Post Reports
+          </button>
+          <button
+            className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white p-2 rounded ml-4 md:ml-0 font-bold hover:bg-slate-600 hover:dark:bg-slate-200 hover:dark:text-black hover:text-white"
+            onClick={handlePremiumAccounts}>
+         Premium Account
           </button>
           <button
             onClick={toggleDarkMode}

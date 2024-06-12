@@ -38,6 +38,14 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             reports,
         });
     }));
+    const getpremiumaccountrequests = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const premiumAccountRequests = yield (0, adminAuthApplication_1.handkeGetPremiumRequests)(dbUserRepository);
+        res.json({
+            status: "success",
+            message: "All premiumAccountRequests info fetched",
+            premiumAccountRequests,
+        });
+    }));
     const blockAccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const result = yield (0, adminAuthApplication_1.handleBlockAccount)(id, dbUserRepository);
@@ -82,6 +90,7 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
         unblockAccount,
         blockPost,
         unblockPost,
+        getpremiumaccountrequests,
     };
 };
 exports.default = adminController;
