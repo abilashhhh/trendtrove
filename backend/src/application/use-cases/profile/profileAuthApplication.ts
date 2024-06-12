@@ -37,6 +37,7 @@ export const handleUserInfo = async (
       isGoogleSignedIn: userData.isGoogleSignedIn,
       isBlocked: userData.isBlocked,
       isPrivate: userData.isPrivate,
+      isPremium: userData.isPremium,
       createdAt: userData.createdAt,
       updatedAt: userData.updatedAt,
     };

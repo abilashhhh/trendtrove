@@ -16,6 +16,7 @@ import { UserInfo } from "../../../Types/userProfile";
 import { useNavigate } from "react-router-dom";
 import PostInProfilePage from "../../Post/PostInProfilePage";
 import { getPostsLengthOfTheUser } from "../../../API/Post/post";
+import useUserDetails from "../../../Hooks/useUserDetails";
 
 interface ProfileProps {
   userDetails: UserInfo;
@@ -31,11 +32,14 @@ const formatDate = (date: string | undefined) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
+const Profile: React.FC<ProfileProps> = () => {
+  const userDetails = useUserDetails()
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate("/editProfile");
   };
+
+  console.log("User details : ", userDetails)
 
   const [postCount, setPostCount] = useState(0);
 

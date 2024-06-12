@@ -43,6 +43,7 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             isGoogleSignedIn: userData.isGoogleSignedIn,
             isBlocked: userData.isBlocked,
             isPrivate: userData.isPrivate,
+            isPremium: userData.isPremium,
             createdAt: userData.createdAt,
             updatedAt: userData.updatedAt,
         };

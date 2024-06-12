@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faLock, faImage, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import {
   cancelFollowRequest,
@@ -20,6 +20,7 @@ interface UserInfo {
   name: string;
   dp: string;
   isPrivate: boolean;
+  isPremium: boolean;
   bio: string;
   createdAt?: string;
   posts?: any[];
@@ -265,7 +266,10 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
           </div>
           <div className="ml-6">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-              {userDetails.username}
+              {userDetails.username} {userDetails.isPremium ?    <FontAwesomeIcon
+                icon={faCheckCircle}
+                className="text-blue-500"
+              /> :""}
               {userDetails.isPrivate && (
                 <FontAwesomeIcon
                   icon={faLock}

@@ -544,7 +544,15 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
     setProgress(progress)
     console.log("Progress :" , progress.result)
 
-  if(progress.result.paymentDetails && progress.result.premiumRequest.documents.length !<= 0 ){
+    if(progress.result.premiumRequest.isAdminApproved){
+      setAdminApproved(true);   
+      setPasswordVerified(true);
+      setPaymentDone(true)
+      setdocumentsSubmitted(true)
+      
+    }
+
+else  if(progress.result.paymentDetails && progress.result.premiumRequest.documents.length !<= 0 ){
       setPasswordVerified(true);
       setPaymentDone(true)
     }
@@ -554,11 +562,7 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
       setPaymentDone(true)
       setdocumentsSubmitted(true)
     }
-   else if(progress.result.premiumRequest.isAdminApproved){
-      setAdminApproved(true);
-      
-    }
-
+   
   }
 
   useEffect(()=> { 
@@ -688,14 +692,16 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
       {adminApproved && 
         <div>
           <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-     Coongratulations
+     Congratulations
       </div>
         <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
         You are an premium account holder now
       </div>
+      <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
       <h3>Premium account valid till 
-        {progress?.result?.premiumExpiresAt?.toLocaleString()}
+{" "}        {new Date(progress?.result?.premiumExpiresAt).toLocaleDateString()}
       </h3>
+      </div>
         </div>
       }
     </div>

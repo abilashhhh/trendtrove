@@ -18,6 +18,7 @@ export interface UserInterface {
   isGoogleSignedIn?: boolean;
   isBlocked?: boolean;
   isPrivate?: boolean;
+  isPremium?: boolean;
   createdAt?: string;
 }
 
@@ -41,6 +42,7 @@ export interface GoogleUserInterface {
   isVerifiedAccount?: boolean;
   isBlocked?: boolean;
   isPrivate?: boolean;
+  isPremium?: boolean;
   createdAt?: string;
 }
 
@@ -65,5 +67,6 @@ export interface UserDataInterface {
   isGoogleSignedIn?: boolean;
   isBlocked?: boolean;
   isPrivate?: boolean;
+  isPremium?: boolean;
   createdAt?: string;
 }

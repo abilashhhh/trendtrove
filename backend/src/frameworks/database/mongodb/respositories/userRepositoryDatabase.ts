@@ -217,7 +217,7 @@ export const userRepositoryMongoDB = () => {
           isBlocked: { $ne: true },
           isSuspended: { $ne: true },
         },
-        "username dp name bio isPrivate followers following requestedByMe requestsForMe createdAt posts coverPhoto"
+        "username dp name bio isPrivate isPremium followers following requestedByMe requestsForMe createdAt posts coverPhoto"
       ).exec();
       // console.log(users);
       return users;
@@ -233,7 +233,7 @@ export const userRepositoryMongoDB = () => {
         {
           isAdmin: { $ne: true },
         },
-        "username dp name email bio isPrivate isSuspended isBlocked isGoogleSignedIn "
+        "username dp name email bio isPrivate   isSuspended isBlocked isGoogleSignedIn "
       ).exec();
       // console.log(users);
       return users;

@@ -5,11 +5,14 @@
     import { useSelector } from "react-redux";
     import { StoreType } from "../../Redux/Store/reduxStore";
     import { getAllUsers } from "../../API/User/user";
-    import { FaSearch } from "react-icons/fa";
+    import { FaIdBadge, FaSearch } from "react-icons/fa";
 
     import ProfileSectionFriendsPage from "./ProfileSectionFriendsPage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faCrown } from "@fortawesome/free-solid-svg-icons";
 
     interface User {
+      isPremium: any;
       _id: string;
       username: string;
       name: string;
@@ -99,7 +102,10 @@
                             />
                             <div className="flex-1 flex flex-col text-left">
                               <h3 className="font-semibold text-lg">
-                                {user.username}
+                                {user.username}  {user.isPremium ?    <FontAwesomeIcon
+                        icon={faCheckCircle}
+                        className="text-blue-500"
+                      /> :""}
                               </h3>
                               <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {user.name}
