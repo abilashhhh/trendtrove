@@ -375,6 +375,27 @@ export const handleVerifyPassword = async (
   }
 };
 
+export const handlePremiumAccountUserProgress = async (
+  userId: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  try {
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+ 
+    let premiumUsersProgress = await dbUserRepository.premiumUsersProgress(
+      userId,
+    );
+
+    return premiumUsersProgress
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_ID_KEY!,
   key_secret: process.env.RAZORPAY_SECRET_KEY!,

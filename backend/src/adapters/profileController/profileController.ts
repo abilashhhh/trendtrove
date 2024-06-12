@@ -18,6 +18,7 @@ import {
   handleVerifiedAccountPayment,
   handleSetPremiumAccount,
   handleverifydocspremium,
+  handlePremiumAccountUserProgress,
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
 import Razorpay from "razorpay";
@@ -139,6 +140,28 @@ const profileController = (
     }
   });
 
+  const premiumaccountuserprogress = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body
+    try {
+      const result = await handlePremiumAccountUserProgress(
+        userId,
+        dbUserRepository,
+        authService
+      );
+      res.json({
+        status: "success",
+        message: "premiumaccountuserprogress receivec successfully",
+        result,
+      });
+    } catch (error: any) {
+      console.log("error in handlePremiumAccountUserProgress");
+      res.status((error as ErrorInApplication).statusCode || 500).json({
+        status: "error",
+        message: error.message || "Failed to get premium account userr progress",
+      });
+    }
+  });
+
   const makeVerifiedAccountPayment = asyncHandler(
     async (req: Request, res: Response) => {
       const { userId }: { userId: string } = req.body;
@@ -236,6 +259,7 @@ const profileController = (
     makeVerifiedAccountPayment,
     setPremiumAccount,
     toverifydocspremium,
+    premiumaccountuserprogress
   };
 };
 

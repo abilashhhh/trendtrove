@@ -434,6 +434,19 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in submitting documents");
         }
     });
+    const premiumUsersProgress = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const premiumAccount = yield premiumAccount_1.default.findOne({ userId });
+            if (!premiumAccount) {
+                throw new Error("Premium account not found");
+            }
+            return premiumAccount;
+        }
+        catch (error) {
+            console.error("Error in handleDocumentSubmission", error);
+            throw new Error("Error in submitting documents");
+        }
+    });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -478,6 +491,7 @@ const userRepositoryMongoDB = () => {
         rejectFriendRequest,
         setPaymentDetails,
         handleDocumentSubmission,
+        premiumUsersProgress
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   changePassword,
   deleteAccount,
+  getUserProgressInPremiumaccount,
   handledocSupport,
   makepayment,
   passwordCheck,
@@ -20,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import useUserDetails from "../../Hooks/useUserDetails";
 import upload from "../../utils/cloudinary";
 import { DocumentSupportTypes } from "../../Types/userProfile";
+import { FaTicketAlt } from "react-icons/fa";
 
 // Main Settings Page Component
 const SettingsMiddlePage = () => {
@@ -392,9 +394,12 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
   const navigate = useNavigate();
   const [passwordVerified, setPasswordVerified] = useState(false);
   const [paymentDone, setPaymentDone] = useState(false);
+  const [documentsSubmitted, setdocumentsSubmitted] = useState(false);
+  const [adminApproved, setAdminApproved] = useState(false);
   const [documentType, setDocumentType] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [progress, setProgress] = useState();
 
   const handlePayment = async () => {
     try {
@@ -522,6 +527,9 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
       console.log("Documents submitted for handleDocSupport : ", payload)
       if (response.status === 'success') {
         toast.success('Documents submitted successfully');
+        setTimeout(()=>{
+          window.location.reload()
+        },100)
       } else {
         toast.error('Failed to submit documents');
       }
@@ -530,6 +538,32 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
     }
   };
  
+  const userProgressInPremiumaccount = async () => {
+    console.log("userProgressInPremiumaccount ran")
+    const progress = await getUserProgressInPremiumaccount()
+    setProgress(progress)
+    console.log("Progress :" , progress.result)
+
+  if(progress.result.paymentDetails && progress.result.premiumRequest.documents.length !<= 0 ){
+      setPasswordVerified(true);
+      setPaymentDone(true)
+    }
+
+    else if(progress.result.premiumRequest.isRequested){
+      setPasswordVerified(true);
+      setPaymentDone(true)
+      setdocumentsSubmitted(true)
+    }
+   else if(progress.result.premiumRequest.isAdminApproved){
+      setAdminApproved(true);
+      
+    }
+
+  }
+
+  useEffect(()=> { 
+    userProgressInPremiumaccount()
+  },[currentUser._id])
  
 
   return (
@@ -578,10 +612,16 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
           </div>
         </div>
       )}
-      {paymentDone && (
+      {paymentDone && !documentsSubmitted && (
         <div>
           <form onSubmit={handleDocumentSubmit}>
             <div className="mb-4">
+            <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+       Payment completed successfully 
+      </div>
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+        Upload documents to get premium account
+      </h2>
               <label className="block text-sm font-small text-gray-700 dark:text-gray-300">
                 Type of Document
               </label>
@@ -634,6 +674,30 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
           </form>
         </div>
       )}
+
+      {documentsSubmitted &&  !adminApproved &&
+        <div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+       Payment completed successfully 
+      </div>
+        <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+        Documents submitted successfully, admin will verify and process your request.
+      </div>
+        </div>
+      }
+      {adminApproved && 
+        <div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+     Coongratulations
+      </div>
+        <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+        You are an premium account holder now
+      </div>
+      <h3>Premium account valid till 
+        {progress?.result?.premiumExpiresAt?.toLocaleString()}
+      </h3>
+        </div>
+      }
     </div>
   );
 };

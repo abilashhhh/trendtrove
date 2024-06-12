@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handlePremiumAccountUserProgress = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const razorpay_1 = __importDefault(require("razorpay"));
 // import Razorpay from "razorpay";
@@ -292,6 +292,20 @@ const handleVerifyPassword = (userId, password, dbUserRepository, authService) =
     }
 });
 exports.handleVerifyPassword = handleVerifyPassword;
+const handlePremiumAccountUserProgress = (userId, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userExists = yield dbUserRepository.getUserById(userId);
+        if (!userExists) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        let premiumUsersProgress = yield dbUserRepository.premiumUsersProgress(userId);
+        return premiumUsersProgress;
+    }
+    catch (err) {
+        throw new Error(err);
+    }
+});
+exports.handlePremiumAccountUserProgress = handlePremiumAccountUserProgress;
 const razorpay = new razorpay_1.default({
     key_id: process.env.RAZORPAY_ID_KEY,
     key_secret: process.env.RAZORPAY_SECRET_KEY,

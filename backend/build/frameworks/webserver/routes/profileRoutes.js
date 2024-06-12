@@ -23,6 +23,7 @@ const profileRouter = () => {
     router.post("/makepayment", authMiddleware_1.default, controller.makeVerifiedAccountPayment);
     router.post("/premiumaccount", authMiddleware_1.default, controller.setPremiumAccount);
     router.post("/toverifydocspremium", authMiddleware_1.default, controller.toverifydocspremium);
+    router.get("/premiumaccountuserprogress", authMiddleware_1.default, controller.premiumaccountuserprogress);
     return router;
 };
 exports.default = profileRouter;

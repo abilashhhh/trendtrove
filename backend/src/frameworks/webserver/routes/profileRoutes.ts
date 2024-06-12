@@ -26,6 +26,7 @@ const profileRouter = () => {
   router.post("/makepayment",  authMiddleware, controller.makeVerifiedAccountPayment);
   router.post("/premiumaccount" ,authMiddleware , controller.setPremiumAccount);
   router.post("/toverifydocspremium" ,authMiddleware , controller.toverifydocspremium);
+  router.get("/premiumaccountuserprogress" ,authMiddleware , controller.premiumaccountuserprogress);
 
   return router;
 };

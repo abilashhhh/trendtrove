@@ -556,6 +556,23 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const premiumUsersProgress = async (
+    userId: string,
+  ) => {
+    try {
+      const premiumAccount = await PremiumAccount.findOne({ userId });
+
+      if (!premiumAccount) {
+        throw new Error("Premium account not found");
+      }
+
+      return  premiumAccount
+    } catch (error) {
+      console.error("Error in handleDocumentSubmission", error);
+      throw new Error("Error in submitting documents");
+    }
+  };
+
   const clearAll = async () => {
     try {
       const result = await User.updateMany(
@@ -606,6 +623,7 @@ export const userRepositoryMongoDB = () => {
     rejectFriendRequest,
     setPaymentDetails,
     handleDocumentSubmission,
+    premiumUsersProgress
   };
 };
 //////////////////////////////////////////////////////////

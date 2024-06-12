@@ -90,6 +90,24 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
     }));
+    const premiumaccountuserprogress = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        try {
+            const result = yield (0, profileAuthApplication_1.handlePremiumAccountUserProgress)(userId, dbUserRepository, authService);
+            res.json({
+                status: "success",
+                message: "premiumaccountuserprogress receivec successfully",
+                result,
+            });
+        }
+        catch (error) {
+            console.log("error in handlePremiumAccountUserProgress");
+            res.status(error.statusCode || 500).json({
+                status: "error",
+                message: error.message || "Failed to get premium account userr progress",
+            });
+        }
+    }));
     const makeVerifiedAccountPayment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.body;
         try {
@@ -157,6 +175,7 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         makeVerifiedAccountPayment,
         setPremiumAccount,
         toverifydocspremium,
+        premiumaccountuserprogress
     };
 };
 exports.default = profileController;

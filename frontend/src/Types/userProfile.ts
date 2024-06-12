@@ -129,3 +129,33 @@ export interface UploadDpResponse {
   dp : string
 }
 
+
+
+
+interface DocumentSchema {
+  type: string;
+  image: string[];
+}
+
+interface PremiumRequest {
+  isRequested: boolean;
+  isAdminApproved: boolean;
+  documents: DocumentSchema[];
+}
+
+export interface PremiumAccountInterface extends Document {
+  userId: String;
+  isPremium: boolean;
+  premiumExpiresAt?: Date;
+  paymentDetails?: string;
+  premiumRequest: PremiumRequest;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+export interface PremiumAccountProgressInterface {
+  status : string, 
+  message : string ,
+  result : PremiumAccountInterface
+}

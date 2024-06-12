@@ -84,6 +84,9 @@ export const userDBRepository = (
   const setPaymentDetails = async (userId: string, paymentId: string) =>
     await repository.setPaymentDetails(userId, paymentId);
 
+  const premiumUsersProgress = async (userId: string) =>
+    await repository.premiumUsersProgress(userId);
+
   const handleDocumentSubmission = async (
     userId: string,
     documentType: string,
@@ -116,6 +119,7 @@ export const userDBRepository = (
     rejectFriendRequest,
     setPaymentDetails,
     handleDocumentSubmission,
+    premiumUsersProgress
   };
 };
 

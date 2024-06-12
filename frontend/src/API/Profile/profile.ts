@@ -10,6 +10,8 @@ import {
   EditProfileResponse,
   GetUserInfoResponse,
   PasswordCheckResponse,
+  PremiumAccountInterface,
+  PremiumAccountProgressInterface,
   PremiumAccountResponse,
   SuspendAccountResponse,
   UserInfo,
@@ -141,6 +143,19 @@ export const passwordCheck = async (
         ":password",
         password
       )}`
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getUserProgressInPremiumaccount = async (
+): Promise<PremiumAccountProgressInterface> => {
+  try {
+    const response = await axiosUserInstance.get<PremiumAccountProgressInterface>(
+      END_POINTS.GET_PREMIUM_USER_PROGRESS 
     );
     return response.data;
   } catch (error) {
