@@ -159,6 +159,7 @@ const AdminPremiumManagementComponent: React.FC = () => {
         <h1 className="text-center text-xl font-semibold mb-4">
           Premium Account Management
         </h1>
+        {premiumAccounts.length >= 1 && <>        
         <div className="mb-4">
           <input
             type="text"
@@ -340,7 +341,9 @@ const AdminPremiumManagementComponent: React.FC = () => {
             pageClassName="px-3 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
             activeClassName="bg-gray-400 dark:bg-gray-600"
           />
-        </div>
+        </div> </>
+        }
+        {premiumAccounts.length <= 0 && <div>No requests found</div>}
       </div>
 
       {selectedImage && (

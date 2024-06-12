@@ -144,6 +144,7 @@ interface PremiumRequest {
 }
 
 export interface PremiumAccountInterface extends Document {
+  hasExpired: any;
   userId: String;
   isPremium: boolean;
   premiumExpiresAt?: Date;

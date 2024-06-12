@@ -396,7 +396,8 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
   const [paymentDone, setPaymentDone] = useState(false);
   const [documentsSubmitted, setdocumentsSubmitted] = useState(false);
   const [adminApproved, setAdminApproved] = useState(false);
-  const [documentType, setDocumentType] = useState('');
+  const [hasExpired, setHasExpired] = useState(false);
+  const [documentType, setDocumentType] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [progress, setProgress] = useState();
@@ -404,25 +405,30 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
   const handlePayment = async () => {
     try {
       const paymentResponse = await makepayment();
-      console.log("payment resp : ", paymentResponse)
-      if (paymentResponse?.status === 'success') {
+      console.log("payment resp : ", paymentResponse);
+      if (paymentResponse?.status === "success") {
         const options = {
           key: import.meta.env.VITE_RAZORPAY_ID_KEY,
           amount: paymentResponse.order.amount,
           currency: paymentResponse.order.currency,
-          name: 'TrendTrove',
-          description: 'Premium Account Payment',
+          name: "TrendTrove",
+          description: "Premium Account Payment",
           order_id: paymentResponse.order.id,
           handler: async (response: any) => {
             try {
-              const res = await premiumAccount(currentUser._id, response.razorpay_payment_id);
-              if (res.status === 'success') {
-                toast.success('Payment Successful.');
-                toast.success('Proceed to upload the documents.');
+              const res = await premiumAccount(
+                currentUser._id,
+                response.razorpay_payment_id
+              );
+              if (res.status === "success") {
+                toast.success("Payment Successful.");
+                toast.success("Proceed to upload the documents.");
                 setPaymentDone(true);
               }
             } catch (error) {
-              toast.error('Failed to update account status. Please contact support.');
+              toast.error(
+                "Failed to update account status. Please contact support."
+              );
             }
           },
           prefill: {
@@ -430,47 +436,50 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
             email: currentUser.email,
           },
           notes: {
-            address: 'TrendTrove',
+            address: "TrendTrove",
           },
           theme: {
-            color: '#666666',
+            color: "#666666",
           },
         };
         const razorpay = new (window as any).Razorpay(options);
         razorpay.open();
       } else {
-        toast.error('Failed to initiate payment');
+        toast.error("Failed to initiate payment");
       }
     } catch (error) {
-      toast.error('Failed to initiate payment');
+      toast.error("Failed to initiate payment");
     }
   };
 
   const handlePremiumAccount = async () => {
     const { value: password } = await Swal.fire({
-      title: 'Enter your password',
-      input: 'password',
+      title: "Enter your password",
+      input: "password",
       inputAttributes: {
-        autocapitalize: 'off',
-        autocorrect: 'off',
-        autocomplete: 'off',
-        spellcheck: 'false',
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "off",
+        spellcheck: "false",
       },
       showCancelButton: true,
-      confirmButtonText: 'Verify Password',
+      confirmButtonText: "Verify Password",
     });
 
     if (password) {
       try {
-        const verifyPasswordResult = await passwordCheck(currentUser._id, password);
-        if (verifyPasswordResult.status === 'success') {
-          toast.success('Password verification successful');
+        const verifyPasswordResult = await passwordCheck(
+          currentUser._id,
+          password
+        );
+        if (verifyPasswordResult.status === "success") {
+          toast.success("Password verification successful");
           setPasswordVerified(true);
         } else {
-          toast.error('Failed to verify password, try again');
+          toast.error("Failed to verify password, try again");
         }
       } catch (error) {
-        toast.error('Failed to verify password. Try again');
+        toast.error("Failed to verify password. Try again");
       }
     }
   };
@@ -524,51 +533,63 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
     };
     try {
       const response = await handledocSupport(payload);
-      console.log("Documents submitted for handleDocSupport : ", payload)
-      if (response.status === 'success') {
-        toast.success('Documents submitted successfully');
-        setTimeout(()=>{
-          window.location.reload()
-        },100)
+      console.log("Documents submitted for handleDocSupport : ", payload);
+      if (response.status === "success") {
+        toast.success("Documents submitted successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
-        toast.error('Failed to submit documents');
+        toast.error("Failed to submit documents");
       }
     } catch (error) {
-      toast.error('Failed to submit documents');
+      toast.error("Failed to submit documents");
     }
   };
- 
+
   const userProgressInPremiumaccount = async () => {
-    console.log("userProgressInPremiumaccount ran")
-    const progress = await getUserProgressInPremiumaccount()
-    setProgress(progress)
-    console.log("Progress :" , progress.result)
+    console.log("userProgressInPremiumaccount ran");
+    const progress = await getUserProgressInPremiumaccount();
+    setProgress(progress);
+    console.log("Progress :", progress.result);
 
-    if(progress.result.premiumRequest.isAdminApproved){
-      setAdminApproved(true);   
+    if (progress.result.hasExpired) {
+      setAdminApproved(false);
+      setPasswordVerified(false);
+      setPaymentDone(false);
+      setdocumentsSubmitted(false);
+      setHasExpired(true);
+    } else if (
+      progress.result.premiumRequest.isAdminApproved &&
+      !progress.result.hasExpired
+    ) {
+      setAdminApproved(true);
       setPasswordVerified(true);
-      setPaymentDone(true)
-      setdocumentsSubmitted(true)
+      setPaymentDone(true);
+      setdocumentsSubmitted(true);
+      setHasExpired(false);
+
       
-    }
-
-else  if(progress.result.paymentDetails && progress.result.premiumRequest.documents.length !<= 0 ){
+    } else if (
+      progress.result.paymentDetails &&
+      progress.result.premiumRequest.documents.length! <= 0
+    ) {
       setPasswordVerified(true);
-      setPaymentDone(true)
-    }
+      setPaymentDone(true);
+      setHasExpired(false);
 
-    else if(progress.result.premiumRequest.isRequested){
+    } else if (progress.result.premiumRequest.isRequested) {
       setPasswordVerified(true);
-      setPaymentDone(true)
-      setdocumentsSubmitted(true)
-    }
-   
-  }
+      setPaymentDone(true);
+      setdocumentsSubmitted(true);
+      setHasExpired(false);
 
-  useEffect(()=> { 
-    userProgressInPremiumaccount()
-  },[currentUser._id])
- 
+    }
+  };
+
+  useEffect(() => {
+    userProgressInPremiumaccount();
+  }, [currentUser._id]);
 
   return (
     <div>
@@ -582,8 +603,7 @@ else  if(progress.result.paymentDetails && progress.result.premiumRequest.docume
           <p>Confirm your password and proceed to payment</p>
           <button
             className="bg-blue-500 dark:bg-blue-700 rounded p-2 mt-4 hover:bg-blue-400 dark:hover:bg-blue-600"
-            onClick={handlePremiumAccount}
-          >
+            onClick={handlePremiumAccount}>
             Switch to Premium Account
           </button>
         </div>
@@ -591,7 +611,8 @@ else  if(progress.result.paymentDetails && progress.result.premiumRequest.docume
       {passwordVerified && !paymentDone && (
         <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Upgrade to a verified account and enjoy exclusive benefits designed to enhance your experience.
+            Upgrade to a verified account and enjoy exclusive benefits designed
+            to enhance your experience.
           </p>
           <ul className="list-disc pl-6 text-gray-600 dark:text-gray-400 mb-4">
             <li>Exclusive access to premium features and tools.</li>
@@ -609,8 +630,7 @@ else  if(progress.result.paymentDetails && progress.result.premiumRequest.docume
           <div>
             <button
               className="bg-blue-500 dark:bg-blue-700 text-white rounded p-2 mt-4 hover:bg-blue-400 dark:hover:bg-blue-600"
-              onClick={handlePayment}
-            >
+              onClick={handlePayment}>
               Proceed to Payment
             </button>
           </div>
@@ -620,21 +640,20 @@ else  if(progress.result.paymentDetails && progress.result.premiumRequest.docume
         <div>
           <form onSubmit={handleDocumentSubmit}>
             <div className="mb-4">
-            <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-       Payment completed successfully 
-      </div>
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-        Upload documents to get premium account
-      </h2>
+              <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+                Payment completed successfully
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                Upload documents to get premium account
+              </h2>
               <label className="block text-sm font-small text-gray-700 dark:text-gray-300">
                 Type of Document
               </label>
               <select
                 value={documentType}
-                onChange={(e) => setDocumentType(e.target.value)}
+                onChange={e => setDocumentType(e.target.value)}
                 className="mt-1 block w-4/5 rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                required
-              >
+                required>
                 <option value="" disabled>
                   Select a document type
                 </option>
@@ -648,7 +667,11 @@ else  if(progress.result.paymentDetails && progress.result.premiumRequest.docume
             <div>
               {images.map((image, index) => (
                 <div key={index}>
-                  <img src={image} alt={`Uploaded document ${index + 1}`} className="mb-4" />
+                  <img
+                    src={image}
+                    alt={`Uploaded document ${index + 1}`}
+                    className="mb-4"
+                  />
                 </div>
               ))}
             </div>
@@ -659,51 +682,71 @@ else  if(progress.result.paymentDetails && progress.result.premiumRequest.docume
               <input
                 type="file"
                 multiple
-                  accept="image/*"
+                accept="image/*"
                 onChange={handleAddImage}
                 className="mt-1 block w-4/5 rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                 required
               />
             </div>
-            {
-                !isUploading && <button
-              type="submit"
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
+            {!isUploading && (
+              <button
+                type="submit"
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                 Submit documents
-            
-            </button>
-              }
-
+              </button>
+            )}
           </form>
         </div>
       )}
 
-      {documentsSubmitted &&  !adminApproved &&
+      {documentsSubmitted && !adminApproved && (
         <div>
           <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-       Payment completed successfully 
-      </div>
-        <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-        Documents submitted successfully, admin will verify and process your request.
-      </div>
+            Payment completed successfully
+          </div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+            Documents submitted successfully, admin will verify and process your
+            request.
+          </div>
         </div>
-      }
-      {adminApproved && 
+      )}
+      {adminApproved && !hasExpired && (
         <div>
           <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-     Congratulations
-      </div>
-        <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-        You are an premium account holder now
-      </div>
-      <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
-      <h3>Premium account valid till 
-{" "}        {new Date(progress?.result?.premiumExpiresAt).toLocaleDateString()}
-      </h3>
-      </div>
+            Congratulations
+          </div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+            You are an premium account holder now
+          </div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+            <h3>
+              Premium account valid till{" "}
+              {new Date(
+                progress?.result?.premiumExpiresAt
+              ).toLocaleDateString()}
+            </h3>
+          </div>
         </div>
-      }
+      )}
+      {hasExpired && (
+        <div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+            Premium account expired
+          </div>
+          
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+            <h3>
+              Premium account expired on {" "}
+              {new Date(
+                progress?.result?.premiumExpiresAt
+              ).toLocaleDateString()}
+            </h3>
+          </div>
+          <div className="p-5 mx-auto my-5 rounded-lg bg-slate-900 text-white text-center text-lg font-bold max-w-md shadow-lg">
+            Proceeed to payment to get premium features again 
+          </div>
+        </div>
+      )}
     </div>
   );
 };

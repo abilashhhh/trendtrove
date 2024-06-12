@@ -10,6 +10,7 @@ const premiumAccountSchema = new mongoose_1.Schema({
     isPremium: { type: Boolean, default: false },
     premiumExpiresAt: { type: Date },
     paymentDetails: { type: String },
+    hasExpired: { type: Boolean, default: false },
     premiumRequest: {
         isRequested: { type: Boolean, default: false },
         isAdminApproved: { type: Boolean, default: false },

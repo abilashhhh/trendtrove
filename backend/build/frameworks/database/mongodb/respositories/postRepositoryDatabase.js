@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postRepositoryMongoDB = void 0;
+const cron = require('node-cron');
 const postModel_1 = __importDefault(require("../models/postModel"));
 const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
@@ -370,31 +371,61 @@ const postRepositoryMongoDB = () => {
         const oneMonthFromNow = new Date();
         oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
         const premiumDetails = yield premiumAccount_1.default.findOneAndUpdate({ userId: userId }, {
-            'premiumRequest.isAdminApproved': true,
+            "premiumRequest.isAdminApproved": true,
             premiumExpiresAt: oneMonthFromNow,
             isPremium: true,
+            hasExpired: false,
         }, { new: true });
         yield userModel_1.default.findByIdAndUpdate(userId, {
-            isPremium: true
-        });
-        if (!premiumDetails) {
-            throw new ErrorInApplication_1.default('premiumDetails not found', 404);
-        }
-        return premiumDetails;
-    });
-    const rejectPremium = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-        const premiumDetails = yield premiumAccount_1.default.findOneAndUpdate({ userId: userId }, {
-            'premiumRequest.isAdminApproved': false,
-            premiumExpiresAt: null,
-            isPremium: false,
-        }, { new: true });
-        yield userModel_1.default.findByIdAndUpdate(userId, {
-            isPremium: false
+            isPremium: true,
         });
         if (!premiumDetails) {
             throw new ErrorInApplication_1.default("premiumDetails not found", 404);
         }
         return premiumDetails;
+    });
+    const rejectPremium = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        const premiumDetails = yield premiumAccount_1.default.findOneAndUpdate({ userId: userId }, {
+            "premiumRequest.isAdminApproved": false,
+            premiumExpiresAt: null,
+            isPremium: false,
+        }, { new: true });
+        yield userModel_1.default.findByIdAndUpdate(userId, {
+            isPremium: false,
+        });
+        if (!premiumDetails) {
+            throw new ErrorInApplication_1.default("premiumDetails not found", 404);
+        }
+        return premiumDetails;
+    });
+    const checkAndExpirePremiumAccounts = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const now = new Date();
+            const expiredAccounts = yield premiumAccount_1.default.find({
+                premiumExpiresAt: { $lte: now },
+                hasExpired: false,
+            });
+            for (const account of expiredAccounts) {
+                yield premiumAccount_1.default.findByIdAndUpdate(account._id, {
+                    premiumExpiresAt: null,
+                    isPremium: false,
+                    hasExpired: true,
+                    paymentDetails: null,
+                    "premiumRequest.isAdminApproved": false,
+                });
+                yield userModel_1.default.findByIdAndUpdate(account.userId, {
+                    isPremium: false,
+                });
+            }
+            console.log(`${expiredAccounts.length} premium accounts have been updated as expired.`);
+        }
+        catch (error) {
+            console.error('Error updating expired premium accounts:', error);
+        }
+    });
+    cron.schedule('* * * * *', () => {
+        console.log('Running cron job to check for expired premium accounts...');
+        checkAndExpirePremiumAccounts();
     });
     const addNewComment = (newCommentData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -476,24 +507,24 @@ const postRepositoryMongoDB = () => {
             const followingUserIds = currentUser === null || currentUser === void 0 ? void 0 : currentUser.following.map(follow => follow.userId);
             const allPosts = yield postModel_1.default.aggregate([
                 {
-                    $sort: { createdAt: -1 }
+                    $sort: { createdAt: -1 },
                 },
                 {
                     $lookup: {
-                        from: 'users',
-                        localField: 'userId',
-                        foreignField: '_id',
-                        as: 'user',
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user",
                     },
                 },
                 {
-                    $unwind: '$user',
+                    $unwind: "$user",
                 },
                 {
                     $match: {
                         $or: [
-                            { 'user.isPrivate': false },
-                            { 'user._id': { $in: followingUserIds } },
+                            { "user.isPrivate": false },
+                            { "user._id": { $in: followingUserIds } },
                         ],
                         isBlocked: false,
                         isArchived: false,
@@ -519,13 +550,13 @@ const postRepositoryMongoDB = () => {
                 },
                 {
                     $unwind: {
-                        path: '$images',
+                        path: "$images",
                         preserveNullAndEmptyArrays: true,
                     },
                 },
                 {
                     $unwind: {
-                        path: '$videos',
+                        path: "$videos",
                         preserveNullAndEmptyArrays: true,
                     },
                 },
@@ -535,7 +566,7 @@ const postRepositoryMongoDB = () => {
         }
         catch (error) {
             console.error(error);
-            throw new Error('Error fetching public posts!');
+            throw new Error("Error fetching public posts!");
         }
     });
     ////////////////////////////////////////////////
@@ -582,7 +613,7 @@ const postRepositoryMongoDB = () => {
         getAllComments,
         deleteComment,
         editComment,
-        getAllPublicPosts
+        getAllPublicPosts,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;
