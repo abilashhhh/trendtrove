@@ -186,6 +186,34 @@ export const handlePrivateAccount = async (
     throw new ErrorInApplication("Failed to change to private account", 500);
   }
 };
+export const handlePublicAccount = async (
+  userId: string,
+  password: string,
+  dbUserRepository: ReturnType<UserDBInterface>,
+  authService: ReturnType<AuthServiceInterface>
+) => {
+  try {
+    const userExists = await dbUserRepository.getUserById(userId);
+    if (!userExists) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+
+    const isPasswordValid = await authService.comparePassword(
+      password,
+      userExists.password
+    );
+    if (!isPasswordValid) {
+      throw new ErrorInApplication("Invalid current password", 401);
+    }
+
+    const user = await dbUserRepository.publicAccount(userId);
+
+    return user;
+  } catch (err: any) {
+    throw new Error(err);
+    throw new ErrorInApplication("Failed to change to private account", 500);
+  }
+};
 
 export const handleGetAllUsers = async (
   id: string,

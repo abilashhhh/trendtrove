@@ -22,6 +22,7 @@ const profileRouter = () => {
   router.delete("/deleteaccount/:id/:password", authMiddleware, controller.deleteAccount);
   router.patch("/suspendaccount/:id/:password", authMiddleware, controller.suspendAccount);
   router.patch("/privateaccount/:id/:password", authMiddleware, controller.privateAccount);
+  router.patch("/publicaccount/:id/:password", authMiddleware, controller.publicaccount);
   router.get("/verifypassword/:id/:password", authMiddleware, controller.verifyPassword);
   router.post("/makepayment",  authMiddleware, controller.makeVerifiedAccountPayment);
   router.post("/premiumaccount" ,authMiddleware , controller.setPremiumAccount);

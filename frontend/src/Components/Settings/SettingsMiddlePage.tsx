@@ -8,6 +8,7 @@ import {
   passwordCheck,
   premiumAccount,
   setPrivateAccount,
+  setPublicAccount,
   suspendAccount,
 } from "../../API/Profile/profile";
 import { ToastContainer, toast } from "react-toastify";
@@ -321,6 +322,7 @@ const SuspendAccount = ({ currentUser }) => {
   );
 };
 
+
 const PrivateAccount = ({ currentUser }) => {
   const navigate = useNavigate();
 
@@ -339,7 +341,6 @@ const PrivateAccount = ({ currentUser }) => {
       showLoaderOnConfirm: true,
       preConfirm: async password => {
         try {
-          // Call the API function to set the account to private
           const privateAccountResult = await setPrivateAccount(
             currentUser._id,
             password
@@ -349,18 +350,50 @@ const PrivateAccount = ({ currentUser }) => {
             toast.success("Account set to private successfully");
             // Additional actions after setting the account to private
           } else {
-            Swal.showValidationMessage(`Check your current password`);
-
-            Swal.showValidationMessage(
-              `Failed to set account to private: ${privateAccountResult.message}`
-            );
+            Swal.showValidationMessage(`Failed to set account to private: ${privateAccountResult.message}`);
           }
         } catch (error) {
-          Swal.showValidationMessage(`Check your current password`);
+          Swal.showValidationMessage(`Failed to set account to private. Try again`);
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then(result => {
+      if (result.isConfirmed) {
+        setTimeout(() => {
+          navigate("/home");
+        }, 3000);
+      }
+    });
+  };
 
-          Swal.showValidationMessage(
-            `Failed to set account to private. Try again`
+  const handlePublicAccount = async () => {
+    Swal.fire({
+      title: "Enter your password",
+      input: "password",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "off",
+        spellcheck: "false",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Change to public account",
+      showLoaderOnConfirm: true,
+      preConfirm: async password => {
+        try {
+          const publicAccountResult = await setPublicAccount(
+            currentUser._id,
+            password
           );
+
+          if (publicAccountResult.status === "success") {
+            toast.success("Account set to public successfully");
+            // Additional actions after setting the account to public
+          } else {
+            Swal.showValidationMessage(`Failed to set account to public: ${publicAccountResult.message}`);
+          }
+        } catch (error) {
+          Swal.showValidationMessage(`Failed to set account to public. Try again`);
         }
       },
       allowOutsideClick: () => !Swal.isLoading(),
@@ -375,16 +408,34 @@ const PrivateAccount = ({ currentUser }) => {
 
   return (
     <div>
-      <h2 className="text-xl mb-4">Set Account to Private</h2>
-      <p>Are you sure you want to set your account to private?</p>
-      <button
-        className="bg-purple-500 dark:bg-purple-700 rounded p-2 mt-4 hover:bg-purple-400 dark:hover:bg-purple-600"
-        onClick={handlePrivateAccount}>
-        Set Account to Private
-      </button>
+      <h2 className="text-xl mb-4">Account Privacy</h2>
+      {!currentUser.isPrivate && (
+        <div>
+          <p>Are you sure you want to set your account to private?</p>
+          <button
+            className="bg-purple-500 dark:bg-purple-700 rounded p-2 mt-4 hover:bg-purple-400 dark:hover:bg-purple-600"
+            onClick={handlePrivateAccount}
+          >
+            Set Account to Private
+          </button>
+        </div>
+      )}
+      {currentUser.isPrivate && (
+        <div>
+          <p>Are you sure you want to set your account to public?</p>
+          <button
+            className="bg-purple-500 dark:bg-purple-700 rounded p-2 mt-4 hover:bg-purple-400 dark:hover:bg-purple-600"
+            onClick={handlePublicAccount}
+          >
+            Set Account to Public
+          </button>
+        </div>
+      )}
     </div>
   );
 };
+
+
 
 interface Props {
   currentUser: { _id: string; name: string; email: string };

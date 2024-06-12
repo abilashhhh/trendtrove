@@ -28,6 +28,7 @@ const userDBRepository = (repository) => {
     const blockAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.blockAccount(userId); });
     const unblockAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unblockAccount(userId); });
     const privateAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.privateAccount(userId); });
+    const publicAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.publicAccount(userId); });
     const getAllUsers = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsers(userId); });
     const getAllUsersForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllUsersForAdmin(); });
     const getAllReportsForAdmin = () => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllReportsForAdmin(); });
@@ -52,6 +53,7 @@ const userDBRepository = (repository) => {
         deleteAccount,
         suspendAccount,
         privateAccount,
+        publicAccount,
         changeIsAccountVerified,
         changeIsAccountUnverified,
         getAllUsers,

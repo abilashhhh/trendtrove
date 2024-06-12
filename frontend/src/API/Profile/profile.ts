@@ -133,6 +133,24 @@ export const setPrivateAccount = async (
   }
 };
 
+export const setPublicAccount = async (
+  userId: string,
+  password: string
+): Promise<SuspendAccountResponse> => {
+  try {
+    const response = await axiosUserInstance.patch<SuspendAccountResponse>(
+      `${END_POINTS.PUBLIC_ACCOUNT.replace(":userId", userId).replace(
+        ":password",
+        password
+      )}`
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const passwordCheck = async (
   userId: string,
   password: string

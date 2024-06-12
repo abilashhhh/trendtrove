@@ -55,6 +55,9 @@ export const userDBRepository = (
   const privateAccount = async (userId: string) =>
     await repository.privateAccount(userId);
 
+  const publicAccount = async (userId: string) =>
+    await repository.publicAccount(userId);
+
   const getAllUsers = async (userId: string) =>
     await repository.getAllUsers(userId);
 
@@ -108,6 +111,7 @@ export const userDBRepository = (
     deleteAccount,
     suspendAccount,
     privateAccount,
+    publicAccount,
     changeIsAccountVerified,
     changeIsAccountUnverified,
     getAllUsers,

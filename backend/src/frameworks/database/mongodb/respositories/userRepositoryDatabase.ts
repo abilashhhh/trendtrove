@@ -203,8 +203,23 @@ export const userRepositoryMongoDB = () => {
 
       return user;
     } catch (error) {
-      console.error("Error suspending account:", error);
-      throw new Error("Error suspending account!");
+      console.error("Error setting private account:", error);
+      throw new Error("Error setting private account!");
+    }
+  };
+
+  const publicAccount = async (_id: string) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { isPrivate: false },
+        { new: true }
+      );
+
+      return user;
+    } catch (error) {
+      console.error("Error setting public account:", error);
+      throw new Error("Error setting public account!");
     }
   };
 
@@ -280,7 +295,7 @@ export const userRepositoryMongoDB = () => {
     try {
       const premiumAccounts = await PremiumAccount.find().exec();
 
-      return premiumAccounts
+      return premiumAccounts;
     } catch (error) {
       console.error("Error getting all PremiumAccount:", error);
       throw new Error("Error getting all PremiumAccount");
@@ -567,9 +582,7 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
-  const premiumUsersProgress = async (
-    userId: string,
-  ) => {
+  const premiumUsersProgress = async (userId: string) => {
     try {
       const premiumAccount = await PremiumAccount.findOne({ userId });
 
@@ -577,7 +590,7 @@ export const userRepositoryMongoDB = () => {
         throw new Error("Premium account not found");
       }
 
-      return  premiumAccount
+      return premiumAccount;
     } catch (error) {
       console.error("Error in handleDocumentSubmission", error);
       throw new Error("Error in submitting documents");
@@ -622,6 +635,7 @@ export const userRepositoryMongoDB = () => {
     deleteAccount,
     suspendAccount,
     privateAccount,
+    publicAccount,
     getAllUsers,
     getAllUsersForAdmin,
     getAllReportsForAdmin,
@@ -635,7 +649,7 @@ export const userRepositoryMongoDB = () => {
     rejectFriendRequest,
     setPaymentDetails,
     handleDocumentSubmission,
-    premiumUsersProgress
+    premiumUsersProgress,
   };
 };
 //////////////////////////////////////////////////////////

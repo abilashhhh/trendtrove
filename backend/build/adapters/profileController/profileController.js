@@ -72,6 +72,15 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             result,
         });
     }));
+    const publicaccount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id, password } = req.params;
+        const result = yield (0, profileAuthApplication_1.handlePublicAccount)(id, password, dbUserRepository, authService);
+        res.json({
+            status: "success",
+            message: "Account set to public successfully",
+            result,
+        });
+    }));
     const verifyPassword = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id, password } = req.params;
         try {
@@ -175,6 +184,7 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         makeVerifiedAccountPayment,
         setPremiumAccount,
         toverifydocspremium,
+        publicaccount,
         premiumaccountuserprogress
     };
 };

@@ -21,6 +21,7 @@ const END_POINTS = {
   DELETE_ACCOUNT: "/api/profile/deleteaccount/:userId/:password",
   SUSPEND_ACCOUNT: "/api/profile/suspendaccount/:userId/:password",
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
+  PUBLIC_ACCOUNT: "/api/profile/publicaccount/:userId/:password",
   PREMIUM_ACCOUNT: "/api/profile/premiumaccount",
   GET_PREMIUM_USER_PROGRESS: "/api/profile/premiumaccountuserprogress",
   VERIFY_DOCS_PREMIUM: "/api/profile/toverifydocspremium",

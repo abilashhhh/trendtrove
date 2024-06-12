@@ -492,7 +492,7 @@ export const postRepositoryMongoDB = () => {
     };
     
     cron.schedule('* * * * *', () => {
-      console.log('Running cron job to check for expired premium accounts...');
+      // console.log('Running cron job to check for expired premium accounts...');
       checkAndExpirePremiumAccounts();
     });
     

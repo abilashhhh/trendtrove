@@ -424,7 +424,7 @@ const postRepositoryMongoDB = () => {
         }
     });
     cron.schedule('* * * * *', () => {
-        console.log('Running cron job to check for expired premium accounts...');
+        // console.log('Running cron job to check for expired premium accounts...');
         checkAndExpirePremiumAccounts();
     });
     const addNewComment = (newCommentData) => __awaiter(void 0, void 0, void 0, function* () {

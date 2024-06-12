@@ -163,8 +163,18 @@ const userRepositoryMongoDB = () => {
             return user;
         }
         catch (error) {
-            console.error("Error suspending account:", error);
-            throw new Error("Error suspending account!");
+            console.error("Error setting private account:", error);
+            throw new Error("Error setting private account!");
+        }
+    });
+    const publicAccount = (_id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findByIdAndUpdate(_id, { isPrivate: false }, { new: true });
+            return user;
+        }
+        catch (error) {
+            console.error("Error setting public account:", error);
+            throw new Error("Error setting public account!");
         }
     });
     const getAllUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -489,6 +499,7 @@ const userRepositoryMongoDB = () => {
         deleteAccount,
         suspendAccount,
         privateAccount,
+        publicAccount,
         getAllUsers,
         getAllUsersForAdmin,
         getAllReportsForAdmin,
@@ -502,7 +513,7 @@ const userRepositoryMongoDB = () => {
         rejectFriendRequest,
         setPaymentDetails,
         handleDocumentSubmission,
-        premiumUsersProgress
+        premiumUsersProgress,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

@@ -19,6 +19,7 @@ import {
   handleSetPremiumAccount,
   handleverifydocspremium,
   handlePremiumAccountUserProgress,
+  handlePublicAccount,
 } from "../../application/use-cases/profile/profileAuthApplication";
 import { ProfileInterface } from "../../types/profileInterface";
 import Razorpay from "razorpay";
@@ -112,6 +113,21 @@ const profileController = (
     res.json({
       status: "success",
       message: "Account set to private successfully",
+      result,
+    });
+  });
+
+  const publicaccount = asyncHandler(async (req: Request, res: Response) => {
+    const { id, password } = req.params;
+    const result = await handlePublicAccount(
+      id,
+      password,
+      dbUserRepository,
+      authService
+    );
+    res.json({
+      status: "success",
+      message: "Account set to public successfully",
       result,
     });
   });
@@ -259,6 +275,7 @@ const profileController = (
     makeVerifiedAccountPayment,
     setPremiumAccount,
     toverifydocspremium,
+    publicaccount,
     premiumaccountuserprogress
   };
 };
