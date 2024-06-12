@@ -129,16 +129,13 @@ export const setPrivateAccount = async (
   }
 };
 
-export const setPremiumAccount = async (
+export const premiumAccount  = async (
   userId: string,
-  password: string
+  paymentId: string
 ): Promise<PremiumAccountResponse> => {
   try {
-    const response = await axiosUserInstance.patch<PremiumAccountResponse>(
-      `${END_POINTS.PREMIUM_ACCOUNT.replace(":userId", userId).replace(
-        ":password",
-        password
-      )}`
+    const response = await axiosUserInstance.post<PremiumAccountResponse>(
+      END_POINTS.PREMIUM_ACCOUNT , { userId, paymentId }
     );
     return response.data;
   } catch (error) {
@@ -165,10 +162,12 @@ export const passwordCheck = async (
   }
 };
 
+ 
+
 export const makepayment = async (): Promise<PaymentResponse> => {
   try {
     const response = await axiosUserInstance.post<PaymentResponse>(
-      END_POINTS.VERIFY_PASSWORD
+      END_POINTS.MAKE_PAYMENT
     );
     return response.data;
   } catch (error) {

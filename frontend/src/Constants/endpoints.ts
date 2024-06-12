@@ -21,7 +21,7 @@ const END_POINTS = {
   DELETE_ACCOUNT: "/api/profile/deleteaccount/:userId/:password",
   SUSPEND_ACCOUNT: "/api/profile/suspendaccount/:userId/:password",
   PRIVATE_ACCOUNT: "/api/profile/privateaccount/:userId/:password",
-  PREMIUM_ACCOUNT: "/api/profile/premiumaccount/:userId/:password",
+  PREMIUM_ACCOUNT: "/api/profile/premiumaccount",
   VERIFY_PASSWORD: "/api/profile/verifypassword/:userId/:password",
   MAKE_PAYMENT: "/api/profile/makepayment",
   UPLOAD_COVER: 'api/profile/uploadcover',

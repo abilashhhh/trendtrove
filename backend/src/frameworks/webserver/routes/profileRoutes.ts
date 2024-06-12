@@ -23,7 +23,8 @@ const profileRouter = () => {
   router.patch("/suspendaccount/:id/:password", authMiddleware, controller.suspendAccount);
   router.patch("/privateaccount/:id/:password", authMiddleware, controller.privateAccount);
   router.get("/verifypassword/:id/:password", authMiddleware, controller.verifyPassword);
-  router.post("/makepayment", controller.createRazorpayOrder);
+  router.post("/makepayment",  authMiddleware, controller.createRazorpayOrder);
+  router.post("/premiumaccount" ,authMiddleware , controller.setPremiumAccount);
 
   return router;
 };

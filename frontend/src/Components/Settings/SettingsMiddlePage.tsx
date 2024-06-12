@@ -28,10 +28,10 @@ const SettingsMiddlePage = () => {
     <>
       <ToastContainer />
       <main className="flex-1 min-h-full pb-2 lg:pl-2 pt-2 pr-2   bg-gray-800 dark:bg-gray-700 text-black dark:text-white no-scrollbar">
-        <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
-          <div className="flex flex-col md:flex-row gap-4 h-full">
-            <div className="w-full md:w-1/5  rounded-lg flex flex-col text-black dark:text-white text-l">
-              <div className="p-4 space-y-4">
+        <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto overflow-x-auto  no-scrollbar">
+          <div className="flex flex-col md:flex-row gap-4 h-full overflow-x-auto">
+            <div className="w-full md:w-1/5 overflow-x-auto rounded-lg flex flex-col text-black dark:text-white text-l">
+              <div className="p-4 space-y-4 overflow-x-auto">
                 <h1 className="text-xl font-semibold underline text-center mb-4">
                   Settings
                 </h1>
@@ -382,74 +382,108 @@ const PrivateAccount = ({ currentUser }) => {
   );
 };
 
-const PremiumAccount = ({ currentUser }) => {
-  const navigate = useNavigate();
+interface Props {
+  currentUser: { _id: string; name: string; email: string };
+}
 
+const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
+  const navigate = useNavigate();
   const [passwordVerified, setPasswordVerified] = useState(false);
 
   const handlePayment = async () => {
-    const makePayment  = await makepayment();
-    
-    console.log("Handle payment reached: ", makePayment);
+    try {
+      const paymentResponse = await makepayment();
+      if (paymentResponse?.status === 'success') {
+        const options = {
+          key: 'rzp_test_vflODNYZwlJUMg',
+          amount: paymentResponse.order.amount,
+          currency: paymentResponse.order.currency,
+          name: 'TrendTrove',
+          description: 'Premium Account Payment',
+          order_id: paymentResponse.order.id,
+          handler: async (response: any) => {
+            // Handle successful payment here
+            // Update user premium status in your backend
+            try {
+              await premiumAccount(currentUser._id, response.razorpay_payment_id);
+              toast.success('Payment Successful. Your account is now premium.');
+              // navigate('/profile');
+            } catch (error) {
+              toast.error('Failed to update account status. Please contact support.');
+            }
+          },
+          prefill: {
+            name: currentUser.name,
+            email: currentUser.email,
+          },
+          notes: {
+            address: 'TrendTrove',
+          },
+          theme: {
+            color: '#666666',
+          },
+        };
+        const razorpay = new (window as any).Razorpay(options);
+        razorpay.open();
+      } else {
+        toast.error('Failed to initiate payment');
+      }
+    } catch (error) {
+      toast.error('Failed to initiate payment');
+    }
   };
 
   const handlePremiumAccount = async () => {
     const { value: password } = await Swal.fire({
-      title: "Enter your password",
-      input: "password",
+      title: 'Enter your password',
+      input: 'password',
       inputAttributes: {
-        autocapitalize: "off",
-        autocorrect: "off",
-        autocomplete: "off",
-        spellcheck: "false",
+        autocapitalize: 'off',
+        autocorrect: 'off',
+        autocomplete: 'off',
+        spellcheck: 'false',
       },
       showCancelButton: true,
-      confirmButtonText: "Verify Password",
+      confirmButtonText: 'Verify Password',
     });
 
     if (password) {
       try {
-        const verifyPasswordResult = await passwordCheck(
-          currentUser._id,
-          password
-        );
-
-        if (verifyPasswordResult.status === "success") {
-          toast.success("Password verification successful");
-          toast.success("Continue to payment");
-
+        const verifyPasswordResult = await passwordCheck(currentUser._id, password);
+        if (verifyPasswordResult.status === 'success') {
+          toast.success('Password verification successful');
           setPasswordVerified(true);
-        } else if (verifyPasswordResult.status !== "success") {
-          toast.error("Failed to verify password, try again");
+        } else {
+          toast.error('Failed to verify password, try again');
         }
       } catch (error) {
-        toast.error("Failed to verify password. Try again");
+        toast.error('Failed to verify password. Try again');
       }
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-        Set Account to premium
+        Set Account to Premium
       </h2>
-
       {!passwordVerified && (
         <div>
           <p>Are you sure you want to set your account to premium?</p>
           <p>Confirm your password and proceed to payment</p>
           <button
             className="bg-blue-500 dark:bg-blue-700 rounded p-2 mt-4 hover:bg-blue-400 dark:hover:bg-blue-600"
-            onClick={handlePremiumAccount}>
-            Switch to premium account
+            onClick={handlePremiumAccount}
+          >
+            Switch to Premium Account
           </button>
         </div>
       )}
       {passwordVerified && (
         <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Upgrade to a verified account and enjoy exclusive benefits designed
-            to enhance your experience.
+            Upgrade to a verified account and enjoy exclusive benefits designed to enhance your experience.
           </p>
           <ul className="list-disc pl-6 text-gray-600 dark:text-gray-400 mb-4">
             <li>Exclusive access to premium features and tools.</li>
@@ -464,29 +498,11 @@ const PremiumAccount = ({ currentUser }) => {
             </h3>
             <p className="text-gray-600 dark:text-gray-400">Rs500 per month</p>
           </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-              Rules
-            </h3>
-            <ul className="list-disc pl-6 text-gray-600 dark:text-gray-400">
-              <li>
-                Verified status is reviewed periodically and may be revoked if
-                terms are violated.
-              </li>
-              <li>Only one verified account per user.</li>
-              <li>
-                Follow community guidelines and terms of service at all times.
-              </li>
-              <li>
-                Contact support for any issues or questions regarding your
-                verified status.
-              </li>
-            </ul>
-          </div>
           <div>
             <button
               className="bg-blue-500 dark:bg-blue-700 text-white rounded p-2 mt-4 hover:bg-blue-400 dark:hover:bg-blue-600"
-              onClick={handlePayment}>
+              onClick={handlePayment}
+            >
               Proceed to Payment
             </button>
           </div>

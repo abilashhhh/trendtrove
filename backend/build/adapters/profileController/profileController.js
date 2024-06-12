@@ -84,34 +84,51 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
             });
         }
         catch (error) {
+            console.log("error in verify pass");
             res.status(error.statusCode || 500).json({
                 status: "error",
                 message: error.message || "Failed to verify password",
             });
         }
     }));
+    const razorpay = new razorpay_1.default({
+        key_id: process.env.RAZORPAY_ID_KEY,
+        key_secret: process.env.RAZORPAY_SECRET_KEY,
+    });
     const createRazorpayOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const razorPay = new razorpay_1.default({
-                key_id: process.env.RAZORPAY_ID_KEY,
-                key_secret: process.env.RAZORPAY_SECRET_KEY,
-            });
-            const options = req.body;
-            const order = yield razorPay.orders.create(options);
+            const options = {
+                amount: 50000, // 500 INR in paise
+                currency: 'INR',
+                receipt: `receipt_order_${Date.now()}`,
+            };
+            const order = yield razorpay.orders.create(options);
             if (!order) {
-                return res.status(500).send("Error creating order");
+                return res.status(500).send('Error creating order');
             }
-            else {
-                return res.json({
-                    status: "success",
-                    message: "Razorpay order successful",
-                    order,
-                });
-            }
+            return res.json({ status: 'success', order });
         }
         catch (error) {
-            console.error("Error creating Razorpay order:", error);
-            return res.status(500).send("Internal server error");
+            console.error('Error creating Razorpay order:', error);
+            return res.status(500).send('Internal server error');
+        }
+    });
+    const setPremiumAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, paymentId } = req.body;
+        try {
+            console.log("setPremiumAccount reached, ", userId, paymentId);
+            const user = yield User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ status: 'error', message: 'User not found' });
+            }
+            user.isPremium = true;
+            user.premiumPaymentId = paymentId;
+            yield user.save();
+            return res.json({ status: 'success', message: 'User upgraded to premium' });
+        }
+        catch (error) {
+            console.error('Error setting premium account:', error);
+            return res.status(500).json({ status: 'error', message: 'Internal server error' });
         }
     });
     return {
@@ -122,7 +139,8 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
         suspendAccount,
         privateAccount,
         verifyPassword,
-        createRazorpayOrder
+        createRazorpayOrder,
+        setPremiumAccount
     };
 };
 exports.default = profileController;
