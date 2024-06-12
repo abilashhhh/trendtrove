@@ -28,6 +28,8 @@ const adminRouter = () => {
   router.patch("/unblockuser/:id" ,adminMiddleware,controller.unblockAccount);
   router.patch("/blockpost/:postId" ,adminMiddleware,controller.blockPost);
   router.patch("/unblockpost/:postId" ,adminMiddleware,controller.unblockPost);
+  router.patch("/approvepremium/:userId" ,adminMiddleware,controller.approvepremium);
+  router.patch("/removepremium/:userId" ,adminMiddleware,controller.removepremium);
 
  
  

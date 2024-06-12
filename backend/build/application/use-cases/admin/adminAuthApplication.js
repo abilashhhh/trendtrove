@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUnblockPost = exports.handleBlockPost = exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handkeGetPremiumRequests = exports.handkeGetallpostreports = exports.handleGetAllUsersForAdmin = void 0;
+exports.handleRejectPremium = exports.handleApprovePremium = exports.handleUnblockPost = exports.handleBlockPost = exports.handleUnBlockAccount = exports.handleBlockAccount = exports.handkeGetPremiumRequests = exports.handkeGetallpostreports = exports.handleGetAllUsersForAdmin = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleGetAllUsersForAdmin = (dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -108,3 +108,27 @@ const handleUnblockPost = (postId, dbPostRepository) => __awaiter(void 0, void 0
     }
 });
 exports.handleUnblockPost = handleUnblockPost;
+const handleApprovePremium = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("premiumResult details in handleApprovePremium: ", userId);
+        const premiumResult = yield dbPostRepository.approvePremium(userId);
+        return premiumResult;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to approve premium", 401);
+    }
+});
+exports.handleApprovePremium = handleApprovePremium;
+const handleRejectPremium = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("premiumResult details in handleRejectPremium: ", userId);
+        const premiumResult = yield dbPostRepository.rejectPremium(userId);
+        return premiumResult;
+    }
+    catch (err) {
+        console.error("Error: ", err);
+        throw new ErrorInApplication_1.default("Failed to reject premium", 401);
+    }
+});
+exports.handleRejectPremium = handleRejectPremium;

@@ -114,3 +114,35 @@ export const handleUnblockPost = async (
     throw new ErrorInApplication("Failed to unblock post", 401);
   }
 };
+
+export const handleApprovePremium = async (
+  userId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("premiumResult details in handleApprovePremium: ", userId);
+
+    const premiumResult = await dbPostRepository.approvePremium(userId);
+
+    return premiumResult;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to approve premium", 401);
+  }
+};
+
+export const handleRejectPremium = async (
+  userId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("premiumResult details in handleRejectPremium: ", userId);
+
+    const premiumResult = await dbPostRepository.rejectPremium(userId);
+
+    return premiumResult;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new ErrorInApplication("Failed to reject premium", 401);
+  }
+};

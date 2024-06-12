@@ -3,11 +3,13 @@ import axiosAdminInstance, {
 } from "../Axios/axiosAdminInstance";
 import END_POINTS from "../../Constants/endpoints";
 import {
+  ApprovePremiumResponse,
   BlockPostResponse,
   BlockUserResponse,
   GetPostReportsResponse,
   GetPremiumAccountResponse,
   GetUsersResponse,
+  RemovePremiumResponse,
 } from "../../Types/admin";
 import axios, { AxiosError } from "axios";
 
@@ -149,6 +151,39 @@ export const unblockPost = async (
 
     const response = await axiosAdminInstance.patch<BlockPostResponse>(
       `${END_POINTS.UNBLOCK_POST.replace(":postId", postId)}`
+    );
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const approvePremium = async (userId: string): Promise<ApprovePremiumResponse> => {
+  try {
+    console.log(userId, "from approvePremium");
+
+    const response = await axiosAdminInstance.patch<ApprovePremiumResponse>(
+      `${END_POINTS.APPROVE_PREMIUM.replace(":userId", userId)}`
+    );
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const removePremium = async (
+  userId: string
+): Promise<RemovePremiumResponse> => {
+  try {
+    console.log(userId, "from removePremium");
+
+    const response = await axiosAdminInstance.patch<RemovePremiumResponse>(
+      `${END_POINTS.REMOVE_PREMIUM.replace(":userId", userId)}`
     );
     // console.log(response.data);
     return response.data;

@@ -75,6 +75,8 @@ const END_POINTS = {
   UNBLOCK_USER: 'api/admin/unblockuser/:userId',
   BLOCK_POST: 'api/admin/blockpost/:postId',
   UNBLOCK_POST: 'api/admin/unblockpost/:postId',
+  APPROVE_PREMIUM: 'api/admin/approvepremium/:userId',
+  REMOVE_PREMIUM: 'api/admin/removepremium/:userId',
   GET_POST_REPORTS: 'api/admin/getallpostreportsandposts',
   GET_PREMIUM_ACCOUNTS: 'api/admin/getpremiumaccountrequests',
 

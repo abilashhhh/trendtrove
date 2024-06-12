@@ -45,3 +45,13 @@ export interface BlockPostResponse {
     success: boolean;
     message: string;
   }
+
+export interface ApprovePremiumResponse {
+    status: string,
+    message: string,
+}
+
+export interface RemovePremiumResponse {
+    success: boolean;
+    message: string;
+  }

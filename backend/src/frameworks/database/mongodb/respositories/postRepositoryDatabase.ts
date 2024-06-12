@@ -14,6 +14,7 @@ import {
   CommentInterface,
   ReplyInterface,
 } from "../../../../types/commentInterface";
+import PremiumAccount from "../models/premiumAccount";
 
 //////////////////////////////////////////////////////////
 
@@ -415,6 +416,57 @@ export const postRepositoryMongoDB = () => {
     return post;
   };
 
+  const approvePremium = async (userId: string) => {
+    const oneMonthFromNow = new Date();
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+  
+    const premiumDetails = await PremiumAccount.findOneAndUpdate(
+      {userId : userId},
+
+      {
+        'premiumRequest.isAdminApproved': true,
+        premiumExpiresAt: oneMonthFromNow,
+        isPremium: true,
+      },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(userId,
+      {
+        isPremium: true
+      }
+    )
+  
+    if (!premiumDetails) {
+      throw new ErrorInApplication('premiumDetails not found', 404);
+    }
+  
+    return premiumDetails;
+  };
+
+  const rejectPremium = async (userId: string) => {
+    const premiumDetails = await PremiumAccount.findOneAndUpdate(
+      {userId : userId},
+      {
+        'premiumRequest.isAdminApproved': false,
+        premiumExpiresAt: null,
+        isPremium: false,
+
+      },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(userId,
+      {
+        isPremium: false
+      }
+    )
+
+    if (!premiumDetails) {
+      throw new ErrorInApplication("premiumDetails not found", 404);
+    }
+    return premiumDetails;
+  };
+
   const addNewComment = async (newCommentData: CommentInterface) => {
     try {
       const newComment = new Comment(newCommentData);
@@ -608,6 +660,8 @@ export const postRepositoryMongoDB = () => {
     deltePostForUser,
     blockPost,
     unblockPost,
+    approvePremium,
+    rejectPremium,
     addNewComment,
     addNewReply,
     getAllComments,

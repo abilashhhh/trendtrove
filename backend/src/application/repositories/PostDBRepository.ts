@@ -78,6 +78,12 @@ export const postDBRepository = (
   const unblockPost = async (postId: string) =>
     await repository.unblockPost(postId);
 
+  const approvePremium = async (userId: string) =>
+    await repository.approvePremium(userId);
+
+  const rejectPremium = async (userId: string) =>
+    await repository.rejectPremium(userId);
+
   const addNewComment = async (commentData: CommentInterface) => {
     await repository.addNewComment(commentData);
   };
@@ -126,7 +132,9 @@ export const postDBRepository = (
     getAllComments,
     deleteComment,
     editComment,
-    getAllPublicPosts
+    getAllPublicPosts,
+    approvePremium,
+    rejectPremium,
   };
 };
 

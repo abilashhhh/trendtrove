@@ -14,6 +14,8 @@ import {
   handleUnblockPost,
   handkeGetallpostreports,
   handkeGetPremiumRequests,
+  handleApprovePremium,
+  handleRejectPremium,
 } from "../../application/use-cases/admin/adminAuthApplication";
 
 const adminController = (
@@ -110,6 +112,26 @@ const adminController = (
     });
   });
 
+  const approvepremium = asyncHandler(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const result = await handleApprovePremium(userId, dbPostRepository);
+    res.json({
+      status: "success",
+      message: "Premium approved successfully",
+      result,
+    });
+  });
+
+  const removepremium = asyncHandler(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const result = await handleRejectPremium(userId, dbPostRepository);
+    res.json({
+      status: "success",
+      message: "Premium approval rejected",
+      result,
+    });
+  });
+
   return {
     logout,
     getAllUsersForAdmin,
@@ -119,6 +141,8 @@ const adminController = (
     blockPost,
     unblockPost,
     getpremiumaccountrequests,
+    removepremium,
+    approvepremium
   };
 };
 

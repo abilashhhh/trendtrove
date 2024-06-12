@@ -42,6 +42,8 @@ const postDBRepository = (repository) => {
     const deltePostForUser = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deltePostForUser(postId); });
     const blockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.blockPost(postId); });
     const unblockPost = (postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.unblockPost(postId); });
+    const approvePremium = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.approvePremium(userId); });
+    const rejectPremium = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.rejectPremium(userId); });
     const addNewComment = (commentData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewComment(commentData);
     });
@@ -81,7 +83,9 @@ const postDBRepository = (repository) => {
         getAllComments,
         deleteComment,
         editComment,
-        getAllPublicPosts
+        getAllPublicPosts,
+        approvePremium,
+        rejectPremium,
     };
 };
 exports.postDBRepository = postDBRepository;

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
+  approvePremium,
   fetchAllPremiumAccountData,
   getAllUsersForAdmin,
+  removePremium,
 } from "../../API/Admin/admin";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
 import { PremiumAccountInterface } from "../../Types/userProfile";
@@ -77,6 +80,52 @@ const AdminPremiumManagementComponent: React.FC = () => {
       toast.error("User not found");
       setFoundUser(null);
     }
+  };
+
+  const handleApprovePremium = (userId: string) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You are about to approve this user's premium request.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, approve it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await approvePremium(userId);
+          Swal.fire('Approved!', 'The user has been approved as premium.', 'success');
+          getPremiumAccountData();
+          toast.success('User approved as premium successfully.');
+        } catch (error) {
+          toast.error('Failed to approve user as premium.');
+        }
+      }
+    });
+  };
+
+  const handleRemovePremium = (userId: string) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You are about to remove this user's premium status.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, remove it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await removePremium(userId);
+          Swal.fire('Removed!', 'The user\'s premium status has been removed.', 'success');
+          getPremiumAccountData();
+          toast.success('User premium status removed successfully.');
+        } catch (error) {
+          toast.error('Failed to remove user premium status.');
+        }
+      }
+    });
   };
 
   const ImageModal: React.FC<{ imageUrl: string; onClose: () => void }> = ({
@@ -234,12 +283,14 @@ const AdminPremiumManagementComponent: React.FC = () => {
                       {account.premiumRequest.isAdminApproved ? (
                         <div className="bg-slate-200 dark:bg-slate-800 p-2 rounded-md text-center gap-2 flex flex-col">
                           Yes
-                          <button className="bg-red-500">Remove Premium</button>
+                          <button className="bg-red-500 hover:bg-red-600  rounded-md" onClick={() => handleRemovePremium(account.userId)}>
+                            Remove Premium
+                          </button>
                         </div>
                       ) : (
                         <div className="bg-slate-200 dark:bg-slate-800 p-2 rounded-md text-center gap-2 flex flex-col">
                           No
-                          <button className="bg-green-500">
+                          <button className="bg-green-500 hover:bg-green-600  rounded-md" onClick={() => handleApprovePremium(account.userId)}>
                             Approve Premium
                           </button>
                         </div>

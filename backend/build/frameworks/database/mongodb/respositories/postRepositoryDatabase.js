@@ -20,6 +20,7 @@ const likePostModel_1 = __importDefault(require("../models/likePostModel"));
 const dislikePostModel_1 = __importDefault(require("../models/dislikePostModel"));
 const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInApplication"));
 const commentModel_1 = __importDefault(require("../models/commentModel"));
+const premiumAccount_1 = __importDefault(require("../models/premiumAccount"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
@@ -365,6 +366,36 @@ const postRepositoryMongoDB = () => {
         }
         return post;
     });
+    const approvePremium = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        const oneMonthFromNow = new Date();
+        oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+        const premiumDetails = yield premiumAccount_1.default.findOneAndUpdate({ userId: userId }, {
+            'premiumRequest.isAdminApproved': true,
+            premiumExpiresAt: oneMonthFromNow,
+            isPremium: true,
+        }, { new: true });
+        yield userModel_1.default.findByIdAndUpdate(userId, {
+            isPremium: true
+        });
+        if (!premiumDetails) {
+            throw new ErrorInApplication_1.default('premiumDetails not found', 404);
+        }
+        return premiumDetails;
+    });
+    const rejectPremium = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        const premiumDetails = yield premiumAccount_1.default.findOneAndUpdate({ userId: userId }, {
+            'premiumRequest.isAdminApproved': false,
+            premiumExpiresAt: null,
+            isPremium: false,
+        }, { new: true });
+        yield userModel_1.default.findByIdAndUpdate(userId, {
+            isPremium: false
+        });
+        if (!premiumDetails) {
+            throw new ErrorInApplication_1.default("premiumDetails not found", 404);
+        }
+        return premiumDetails;
+    });
     const addNewComment = (newCommentData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const newComment = new commentModel_1.default(newCommentData);
@@ -544,6 +575,8 @@ const postRepositoryMongoDB = () => {
         deltePostForUser,
         blockPost,
         unblockPost,
+        approvePremium,
+        rejectPremium,
         addNewComment,
         addNewReply,
         getAllComments,

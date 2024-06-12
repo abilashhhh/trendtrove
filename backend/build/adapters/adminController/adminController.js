@@ -82,6 +82,24 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
             result,
         });
     }));
+    const approvepremium = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.params;
+        const result = yield (0, adminAuthApplication_1.handleApprovePremium)(userId, dbPostRepository);
+        res.json({
+            status: "success",
+            message: "Premium approved successfully",
+            result,
+        });
+    }));
+    const removepremium = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.params;
+        const result = yield (0, adminAuthApplication_1.handleRejectPremium)(userId, dbPostRepository);
+        res.json({
+            status: "success",
+            message: "Premium approval rejected",
+            result,
+        });
+    }));
     return {
         logout,
         getAllUsersForAdmin,
@@ -91,6 +109,8 @@ const adminController = (userDBRepositoryImplementation, userDBRepositoryInterfa
         blockPost,
         unblockPost,
         getpremiumaccountrequests,
+        removepremium,
+        approvepremium
     };
 };
 exports.default = adminController;

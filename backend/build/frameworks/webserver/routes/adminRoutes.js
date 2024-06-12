@@ -23,6 +23,8 @@ const adminRouter = () => {
     router.patch("/unblockuser/:id", adminMiddleware_1.default, controller.unblockAccount);
     router.patch("/blockpost/:postId", adminMiddleware_1.default, controller.blockPost);
     router.patch("/unblockpost/:postId", adminMiddleware_1.default, controller.unblockPost);
+    router.patch("/approvepremium/:userId", adminMiddleware_1.default, controller.approvepremium);
+    router.patch("/removepremium/:userId", adminMiddleware_1.default, controller.removepremium);
     return router;
 };
 exports.default = adminRouter;
