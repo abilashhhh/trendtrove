@@ -20,6 +20,7 @@ import {
   validateUsername,
 } from "../utils/validations";
 import debounce from "../utils/debouncer";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const SignupPage: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({
     name: "",
@@ -324,14 +327,28 @@ const SignupPage: React.FC = () => {
                 Password
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
-              <input
-                type="password"
+              <div className="relative">
+           <input
+                  type={showPassword ? "text" : "password"}
                 id="password"
                 onChange={handleChange}
                 name="password"
                 required
                 className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                
               />
+               <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="text-gray-500" />
+                  ) : (
+                    <FaEye className="text-gray-500" />
+                  )}
+                </button>
+           </div>
               {validationErrors.password && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
                   {validationErrors.password}
@@ -346,14 +363,27 @@ const SignupPage: React.FC = () => {
                 Confirm Password
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
-              <input
-                type="password"
+              <div className="relative">
+             <input
+                 type={showPassword ? "text" : "password"}
                 id="confirmPassword"
                 name="confirmPassword"
                 onChange={handleChange}
                 required
                 className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
               />
+               <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="text-gray-500" />
+                  ) : (
+                    <FaEye className="text-gray-500" />
+                  )}
+                </button>
+             </div>
               {validationErrors.confirmPassword && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
                   {validationErrors.confirmPassword}
