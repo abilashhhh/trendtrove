@@ -485,7 +485,7 @@ export const postRepositoryMongoDB = () => {
           });
         }
     
-        console.log(`${expiredAccounts.length} premium accounts have been updated as expired.`);
+        // console.log(`${expiredAccounts.length} premium accounts have been updated as expired.`);
       } catch (error) {
         console.error('Error updating expired premium accounts:', error);
       }

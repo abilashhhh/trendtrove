@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../Redux/UserAuthSlice/authSlice";
 import { setAdminCredentials } from "../Redux/AdminSlice/adminSlice";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const SignInPage: React.FC = () => {
   const [formData, setFormData] = useState<SignInUserInterface>({
@@ -16,15 +17,22 @@ const SignInPage: React.FC = () => {
     password: "",
   });
 
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
       [id]: value,
     }));
+  };
+
+  const onChange = (value: string | null) => {
+    console.log("Captcha value:", value);
+    setRecaptchaValue(value);
   };
 
   const forgotPassword = () => {
@@ -36,6 +44,11 @@ const SignInPage: React.FC = () => {
 
     if (!formData.email || !formData.password) {
       toast.error("Empty data. Please fill in all fields.");
+      return;
+    }
+
+    if (!recaptchaValue) {
+      toast.error("Please complete the ReCAPTCHA verification.");
       return;
     }
 
@@ -72,12 +85,14 @@ const SignInPage: React.FC = () => {
       }
     } catch (error: any) {
       console.error("Error during sign-in:", error);
-      toast.error(`Failed to sign in, ${error.response.data.message}`);
+      toast.error(
+        `Failed to sign in, ${error.response?.data?.message || "Unknown error"}`
+      );
     }
   };
 
   return (
-    <div className="min-h-screen   flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <TrendTroveLogo />
       <ToastContainer />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -90,7 +105,8 @@ const SignInPage: React.FC = () => {
               New here?{" "}
               <Link
                 to="/signup"
-                className="font-medium text-blue-400 hover:text-blue-600">
+                className="font-medium text-blue-400 hover:text-blue-600"
+              >
                 Create an account
               </Link>
             </p>
@@ -99,7 +115,8 @@ const SignInPage: React.FC = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <input
@@ -114,7 +131,8 @@ const SignInPage: React.FC = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700">
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -126,24 +144,27 @@ const SignInPage: React.FC = () => {
                 className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
               />
             </div>
-
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              onChange={onChange}
+            />
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none"
+              >
                 Sign in
               </button>
             </div>
-
             <div>
               <button
                 type="button"
                 onClick={forgotPassword}
-                className=" text-center w-full flex justify-center hover:text-blue-600">
+                className="text-center w-full flex justify-center hover:text-blue-600"
+              >
                 Forgot Password
               </button>
             </div>
-
             <Google />
           </form>
         </div>
