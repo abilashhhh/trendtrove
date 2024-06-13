@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaPlusCircle, FaCommentAlt, FaPhoneAlt, FaUserFriends, FaCog, FaUser, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaHome, FaPlusCircle, FaCommentAlt, FaPhoneAlt, FaUserFriends, FaCog, FaUser, FaChevronLeft, FaChevronRight, FaSignOutAlt } from "react-icons/fa";
 import { BsExposure } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -18,7 +18,7 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const buttonClasses = "flex items-center justify-center w-full p-2 rounded transition-colors duration-300 text-gray-800 dark:text-gray-200";
-  const buttonHoverClasses = "hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 dark:hover:text-gray-200";
+  const buttonHoverClasses = "hover:bg-blue-400 hover:text-white dark:hover:bg-blue-500 dark:hover:text-gray-200";
   const activeButtonClasses = "bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-100 shadow-md";
 
 
@@ -70,7 +70,7 @@ const LeftSidebar = ({ isLeftSidebarOpen, toggleDarkMode, isDarkMode, handleLogo
               {!isCollapsed ? (isDarkMode ? "Light Mode" : "Dark Mode") : (isDarkMode ? "🌙" : "☀️")}
             </button>
             <button onClick={handleLogout} className={`${buttonClasses} bg-red-600 hover:bg-red-700`}>
-              <FaUser className="inline-block mr-2" />
+              <FaSignOutAlt className="inline-block mr-2" />
               {!isCollapsed && "Logout"}
             </button>
           </div>

@@ -9,6 +9,7 @@ import LeftSidebar from "./HomePage/HomePageLeftSidebar";
 import BottomNavBar from "./HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "./LoadingSpinner";
 import useUserDetails from "../Hooks/useUserDetails";
+import LoggingOut from "./LoggingOut";  
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +20,9 @@ const Layout: React.FC<Props> = ({ children }) => {
   const [isDarkMode, setDarkMode] = useState(true);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-const userDetails = useUserDetails()
+  const [loggingOut, setLoggingOut] = useState(false); 
+  const userDetails = useUserDetails();
+
   const toggleDarkMode = () => {
     setDarkMode(!isDarkMode);
   };
@@ -29,17 +32,21 @@ const userDetails = useUserDetails()
   };
 
   const handleLogout = async () => {
-    try {
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
-      toast.error("Logging Out");
-      setTimeout(() => {
-        dispatch(logout());
-      }, 3000);
-    } catch (error) {
-      console.error("Logout failed", error);
-      toast.error("Log out failed");
-    }
+    setLoggingOut(true);  
+    setTimeout(async () => {
+      try {
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        toast.error("Logging Out");
+        setTimeout(() => {
+          dispatch(logout());
+        }, 2000);
+      } catch (error) {
+        console.error("Logout failed", error);
+        toast.error("Log out failed");
+        setLoggingOut(false);  
+      }
+    }, 2000);  
   };
 
   useEffect(() => {
@@ -53,9 +60,13 @@ const userDetails = useUserDetails()
     return <LoadingSpinner />;
   }
 
+  if (loggingOut) {
+    return <LoggingOut />;  
+  }
+
   return (
     <>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
         <Header toggleLeftSidebar={toggleLeftSidebar} userDetails={userDetails} />
         <div className="flex flex-1 overflow-hidden">

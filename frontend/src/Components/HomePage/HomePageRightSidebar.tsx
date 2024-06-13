@@ -30,7 +30,7 @@ const RightSidebar = () => {
               isShrunk ? "hidden" : "block"
             }`}
           >
-            Stories
+            Latest Trends
           </h2>
           <div className={`grid ${isShrunk ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-2 w-full`}>
             {[...Array(8)].map((_, index) => (
