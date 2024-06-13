@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import useUserDetails from "../../Hooks/useUserDetails";
 import upload from "../../utils/cloudinary";
 import { DocumentSupportTypes } from "../../Types/userProfile";
-import { FaTicketAlt } from "react-icons/fa";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // Main Settings Page Component
 const SettingsMiddlePage = () => {
@@ -554,9 +554,15 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [progress, setProgress] = useState();
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
   const handlePayment = async () => {
     try {
+      if(!recaptchaValue) {
+        toast.error("Please complete the ReCAPTCHA verification.");
+      return;
+        
+      }
       const paymentResponse = await makepayment();
       console.log("payment resp : ", paymentResponse);
       if (paymentResponse?.status === "success") {
@@ -603,6 +609,10 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
     } catch (error) {
       toast.error("Failed to initiate payment");
     }
+  };
+  const onChange = (value: string | null) => {
+    console.log("Captcha value:", value);
+    setRecaptchaValue(value);
   };
 
   const handlePremiumAccount = async () => {
@@ -781,6 +791,12 @@ const PremiumAccount: React.FC<Props> = ({ currentUser }) => {
             <p className="text-gray-600 dark:text-gray-400">Rs500 per month</p>
           </div>
           <div>
+          </div>
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              onChange={onChange}
+            />
+            <div>
             <button
               className="bg-blue-500 dark:bg-blue-700 text-white rounded p-2 mt-4 hover:bg-blue-400 dark:hover:bg-blue-600"
               onClick={handlePayment}>
