@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,6 +40,7 @@ const MiddleContainer: React.FC = () => {
 
   const currentUser = useSelector((state: StoreType) => state.userAuth.user);
   const [posts, setPosts] = useState<any[]>([]);
+  const [visiblePosts, setVisiblePosts] = useState<any[]>([]);
   const [showOptions, setShowOptions] = useState<string | null>(null);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
   const [dislikedPosts, setDislikedPosts] = useState<{
@@ -54,7 +55,9 @@ const MiddleContainer: React.FC = () => {
     };
   }>({});
 
-  console.log("The likesDislikesData : ", likesDislikesData);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
 
   const fetchLikesDislikesData = async (postId: string) => {
     try {
@@ -77,6 +80,7 @@ const MiddleContainer: React.FC = () => {
         const response = await fetchAllPostsForUser();
         if (response && response.data) {
           setPosts(response.data);
+          setVisiblePosts(response.data.slice(0,start)); // Show first 3 posts initially
         } else {
           console.log("No posts of users");
         }
@@ -191,16 +195,49 @@ const MiddleContainer: React.FC = () => {
     }
   };
 
+
+  const start = 3 + ( page * 3);
+  const end = start + 3 ;
+  const loadMorePosts = useCallback(() => {
+    if (!loading) {
+      setLoading(true);
+      setTimeout(() => {
+        setVisiblePosts(prevVisiblePosts => [
+          ...prevVisiblePosts,
+          ...posts.slice(start,end),
+        ]);
+        setPage(prevPage => prevPage + 1);
+        setLoading(false);
+      }, 1500);
+    }
+  }, [loading, page, posts]);
+
+  const lastPostElementRef = useCallback(
+    node => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && visiblePosts.length < posts.length) {
+          loadMorePosts();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, loadMorePosts, visiblePosts.length, posts.length]
+  );
+
   return (
-    <main className="flex-1 pt-2 p-2 overflow-auto bg-gray-800 dark:bg-gray-700   text-white items-center justify-center">
+    <main className="flex-1 pt-2 p-2 overflow-auto no-scrollbar bg-gray-800 dark:bg-gray-700 text-white items-center justify-center">
       <ToastContainer />
 
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2 sm:pl-4 sm:pr-4 md:pl-12 md:pr-12 lg:pl-36 lg:pr-36 xl:pl-64 xl:pr-64 2xl:pl-96 2xl:pr-96">
-        {posts.length > 0 ? (
-          posts.map(post => (
+        {visiblePosts.length > 0 ? (
+          visiblePosts.map((post, index) => (
             <div
               key={post._id}
-              className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
+              className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800"
+              ref={visiblePosts.length === index + 1 ? lastPostElementRef : null}
+            >
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2 cursor-pointer">
                   <img
@@ -212,7 +249,8 @@ const MiddleContainer: React.FC = () => {
                   <div>
                     <p
                       className="font-bold"
-                      onClick={() => navigate(`/profiles/${post.username}`)}>
+                      onClick={() => navigate(`/profiles/${post.username}`)}
+                    >
                       {post.username}
                     </p>
                     {post.location && (
@@ -231,24 +269,28 @@ const MiddleContainer: React.FC = () => {
                 <div className="relative">
                   <button
                     className="focus:outline-none mr-2"
-                    onClick={() => toggleOptions(post._id)}>
+                    onClick={() => toggleOptions(post._id)}
+                  >
                     <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
                   </button>
                   {showOptions === post._id && (
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                       <p
                         onClick={() => navigate(`/profiles/${post.username}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
                         View Profile
                       </p>
                       <p
                         onClick={() => navigate(`/reportPost/${post._id}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
                         Report Post
                       </p>
                       <p
                         onClick={() => handleSavePost(post._id)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
                         Save Post
                       </p>
                     </div>
@@ -266,7 +308,8 @@ const MiddleContainer: React.FC = () => {
                         ? "text-blue-600"
                         : "text-gray-600 dark:text-gray-400"
                     }`}
-                    onClick={() => handleLike(post._id)}>
+                    onClick={() => handleLike(post._id)}
+                  >
                     {likedPosts[post._id] ? (
                       <AiFillLike
                         title="Like Post"
@@ -285,7 +328,8 @@ const MiddleContainer: React.FC = () => {
                         ? "text-red-600"
                         : "text-gray-600 dark:text-gray-400"
                     }`}
-                    onClick={() => handleDislike(post._id)}>
+                    onClick={() => handleDislike(post._id)}
+                  >
                     {dislikedPosts[post._id] ? (
                       <AiFillDislike
                         title="Disike Post"
@@ -341,7 +385,8 @@ const MiddleContainer: React.FC = () => {
                             ?.likedUsers
                         );
                         setShowingDataLikesDislikes("Liked Users");
-                      }}>
+                      }}
+                    >
                       Likes:{" "}
                       {(likesDislikesData[post._id] &&
                         likesDislikesData[post._id].likesdislikesinfo
@@ -359,7 +404,8 @@ const MiddleContainer: React.FC = () => {
                             ?.dislikedUsers
                         );
                         setShowingDataLikesDislikes("Disliked Users");
-                      }}>
+                      }}
+                    >
                       Dislikes:{" "}
                       {(likesDislikesData[post._id] &&
                         likesDislikesData[post._id].likesdislikesinfo
@@ -375,6 +421,16 @@ const MiddleContainer: React.FC = () => {
           <p>No posts available</p>
         )}
       </div>
+      {loading && (
+  <div className="flex items-center justify-center p-4 bg-slate-300 dark:bg-slate-900">
+    <div className="p-3 animate-spin bg-gradient-to-bl from-slate-400 via-slate-700 to-slate-900 w-10 h-10 rounded-full flex items-center justify-center">
+      <div className="rounded-full h-full w-full flex items-center justify-center">
+      </div>
+    </div>
+    <p className="text-lg text-blue-500 ml-4">Loading posts...</p>
+  </div>
+)}
+
 
       <MentionsHashtagsModal
         isOpen={showModal}
