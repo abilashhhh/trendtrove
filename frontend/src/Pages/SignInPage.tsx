@@ -10,13 +10,14 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../Redux/UserAuthSlice/authSlice";
 import { setAdminCredentials } from "../Redux/AdminSlice/adminSlice";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignInPage: React.FC = () => {
   const [formData, setFormData] = useState<SignInUserInterface>({
     email: "",
     password: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const SignInPage: React.FC = () => {
             accessToken: response.accessToken,
           })
         );
+        navigate("/admin/home");
       } else if (response.status === "success" && !response.user.isAdmin) {
         dispatch(
           setCredentials({
@@ -74,11 +76,7 @@ const SignInPage: React.FC = () => {
         console.log("response.accessToken : ", response.accessToken);
         toast.success("Sign in successful");
         setTimeout(() => {
-          if (response.user.isAdmin) {
-            navigate("/admin/home");
-          } else {
-            navigate("/home");
-          }
+          navigate("/home");
         }, 2000);
       } else {
         toast.error(`Failed to sign in, ${response.message}`);
@@ -135,14 +133,27 @@ const SignInPage: React.FC = () => {
               >
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                onChange={handleChange}
-                name="password"
-                required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  onChange={handleChange}
+                  name="password"
+                  required
+                  className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="text-gray-500" />
+                  ) : (
+                    <FaEye className="text-gray-500" />
+                  )}
+                </button>
+              </div>
             </div>
             <ReCAPTCHA
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
