@@ -42,3 +42,25 @@ export const handleGetMessage = async (
     throw new ErrorInApplication("Failed to get the messages", 500);
   }
 };
+
+
+
+export const handleGetFriendsInfo = async (
+  userId: string,
+  dbMessageRepository: ReturnType<MessageDBInterface>
+) => {
+  try {
+    const getMessage = await dbMessageRepository.getFriendsInfo(
+      userId
+    );
+    return getMessage;
+  } catch (error) {
+    console.error("Error in handleGetFriendsInfo:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get the friends info", 500);
+  }
+};
+
+

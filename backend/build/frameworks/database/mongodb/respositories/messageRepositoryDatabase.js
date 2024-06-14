@@ -13,47 +13,97 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageRepositoryMongoDB = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInApplication"));
 const conversationModel_1 = __importDefault(require("../models/conversationModel"));
 const messageModel_1 = __importDefault(require("../models/messageModel"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 const messageRepositoryMongoDB = () => {
     const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log("send message reached, senderId:", senderId, "receiverId:", receiverId, "message:", message);
             let conversation = yield conversationModel_1.default.findOne({
                 participants: { $all: [senderId, receiverId] },
             });
             if (!conversation) {
-                conversation = yield conversationModel_1.default.create({
+                conversation = new conversationModel_1.default({
                     participants: [senderId, receiverId],
                 });
             }
-            const newMessage = yield messageModel_1.default.create({ senderId, receiverId, message });
-            if (newMessage) {
-                conversation.messages.push(newMessage._id);
-            }
+            const newMessage = new messageModel_1.default({
+                senderId,
+                receiverId,
+                message,
+            });
+            conversation.messages.push(newMessage._id);
             yield Promise.all([conversation.save(), newMessage.save()]);
             return newMessage;
         }
         catch (error) {
-            console.log("Error in send message, messageRepositoryDatabase", error.message);
-            throw new Error("Error in sending message!");
+            console.error("Error in sendMessage:", error.message);
+            throw new ErrorInApplication_1.default("Error in sending message!", error);
         }
     });
     const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const conversation = yield conversationModel_1.default.findOne({
-                participants: { $all: [senderId, receiverId] }
-            }).populate('messages');
-            return conversation ? conversation.messages : [];
+                participants: { $all: [senderId, receiverId] },
+            }).populate("messages");
+            if (!conversation) {
+                return [];
+            }
+            return conversation.messages;
         }
         catch (error) {
-            console.log("Error in get messages, messageRepositoryDatabase", error.message);
-            throw new Error("Error in getting messages!");
+            console.error("Error in getMessages:", error.message);
+            throw new ErrorInApplication_1.default("Error in getting messages!", error);
+        }
+    });
+    const getFriendsInfo = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.aggregate([
+                { $match: { _id: new mongoose_1.default.Types.ObjectId(userId) } },
+                {
+                    $project: {
+                        following: 1,
+                        followers: 1,
+                    },
+                },
+                {
+                    $addFields: {
+                        mutualFriends: {
+                            $setIntersection: ["$following.userId", "$followers.userId"],
+                        },
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "mutualFriends",
+                        foreignField: "_id",
+                        as: "mutualFriendsInfo",
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        mutualFriends: "$mutualFriendsInfo",
+                    },
+                },
+            ]);
+            if (!user.length) {
+                throw new Error("User not found");
+            }
+            return user[0].mutualFriends;
+        }
+        catch (error) {
+            console.error("Error in getFriendsInfo:", error.message);
+            throw new ErrorInApplication_1.default("Error in getting friends info!", error);
         }
     });
     return {
         sendMessage,
         getMessages,
+        getFriendsInfo,
     };
 };
 exports.messageRepositoryMongoDB = messageRepositoryMongoDB;

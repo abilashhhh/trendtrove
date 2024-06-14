@@ -81,7 +81,9 @@ const END_POINTS = {
   REMOVE_PREMIUM: 'api/admin/removepremium/:userId',
   GET_POST_REPORTS: 'api/admin/getallpostreportsandposts',
   GET_PREMIUM_ACCOUNTS: 'api/admin/getpremiumaccountrequests',
-
+  
+  //CHAT
+  GET_FRIENDS_INFO: 'api/message/getfriendsinfo',
   
 };
 

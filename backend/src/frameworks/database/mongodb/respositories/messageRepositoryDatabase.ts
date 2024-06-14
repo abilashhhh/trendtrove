@@ -1,66 +1,107 @@
+import mongoose from "mongoose";
 import ErrorInApplication from "../../../../utils/ErrorInApplication";
 import Conversation from "../models/conversationModel";
 import Message from "../models/messageModel";
+import User from "../models/userModel";
 
 export const messageRepositoryMongoDB = () => {
-
   const sendMessage = async (
     senderId: string,
     receiverId: string,
     message: string
   ) => {
     try {
-      console.log("send message reached, senderId:", senderId, "receiverId:", receiverId, "message:", message);
-
       let conversation = await Conversation.findOne({
         participants: { $all: [senderId, receiverId] },
       });
 
       if (!conversation) {
-        conversation = await Conversation.create({
+        conversation = new Conversation({
           participants: [senderId, receiverId],
         });
       }
 
-      const newMessage = await Message.create({ senderId, receiverId, message });
+      const newMessage = new Message({
+        senderId,
+        receiverId,
+        message,
+      });
 
-      if (newMessage) {
-        conversation.messages.push(newMessage._id);
-      }
+      conversation.messages.push(newMessage._id);
 
       await Promise.all([conversation.save(), newMessage.save()]);
       return newMessage;
     } catch (error: any) {
-      console.log(
-        "Error in send message, messageRepositoryDatabase",
-        error.message
-      );
-      throw new Error("Error in sending message!");
+      console.error("Error in sendMessage:", error.message);
+      throw new ErrorInApplication("Error in sending message!", error);
     }
   };
 
-  const getMessages = async (
-    senderId: string,
-    receiverId: string
-  ) => {
+  const getMessages = async (senderId: string, receiverId: string) => {
     try {
       const conversation = await Conversation.findOne({
-        participants: { $all: [senderId, receiverId] }
-      }).populate('messages');
-      return conversation ? conversation.messages : [];
+        participants: { $all: [senderId, receiverId] },
+      }).populate("messages");
+
+      if (!conversation) {
+        return [];
+      }
+
+      return conversation.messages;
     } catch (error: any) {
-      console.log(
-        "Error in get messages, messageRepositoryDatabase",
-        error.message
-      );
-      throw new Error("Error in getting messages!");
+      console.error("Error in getMessages:", error.message);
+      throw new ErrorInApplication("Error in getting messages!", error);
+    }
+  };
+
+  const getFriendsInfo = async (userId: string) => {
+    try {
+      const user = await User.aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+        {
+          $project: {
+            following: 1,
+            followers: 1,
+          },
+        },
+        {
+          $addFields: {
+            mutualFriends: {
+              $setIntersection: ["$following.userId", "$followers.userId"],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "mutualFriends",
+            foreignField: "_id",
+            as: "mutualFriendsInfo",
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            mutualFriends: "$mutualFriendsInfo",
+          },
+        },
+      ]);
+
+      if (!user.length) {
+        throw new Error("User not found");
+      }
+      return user[0].mutualFriends;
+    } catch (error: any) {
+      console.error("Error in getFriendsInfo:", error.message);
+      throw new ErrorInApplication("Error in getting friends info!", error);
     }
   };
 
   return {
     sendMessage,
     getMessages,
+    getFriendsInfo,
   };
 };
 
-export type MessagesRepositoryMongoDB = typeof messageRepositoryMongoDB
+export type MessagesRepositoryMongoDB = typeof messageRepositoryMongoDB;
