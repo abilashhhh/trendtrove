@@ -3,13 +3,9 @@ import { MesasgeRepositoryMongoDB } from "../../frameworks/database/mongodb/resp
 export const messageDBRepository = (
   repository: ReturnType<MesasgeRepositoryMongoDB>
 ) => {
-  const sendMessage = async (
-    senderId: string,
-    receiverId: string,
-    message: string
-  ) => {
-    await repository.sendMessage(senderId, receiverId, message);
-  };
+  
+  const sendMessage = async (senderId: string,receiverId: string,message: string) => {
+    await repository.sendMessage(senderId, receiverId, message)};
 
   return {
     sendMessage,

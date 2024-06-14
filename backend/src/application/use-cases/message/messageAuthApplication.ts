@@ -4,9 +4,21 @@ import { MessageDBInterface } from "../../repositories/MessageDBRepository";
 export const handleSendMessage = async (
   senderId: string,
   receiverId: string,
-  message:  string,
+  message: string,
   dbMessageRepository: ReturnType<MessageDBInterface>
 ) => {
-  const userId = "213";
-  const user = await dbMessageRepository.sendMessage(senderId , receiverId, message);
+  try {
+    const sendMessage = await dbMessageRepository.sendMessage(
+      senderId,
+      receiverId,
+      message
+    );
+    return sendMessage;
+  } catch (error) {
+    console.error("Error in handleSendMessage:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to send the message", 500);
+  }
 };

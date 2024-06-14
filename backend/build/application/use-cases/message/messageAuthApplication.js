@@ -8,10 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleSendMessage = void 0;
+const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = "213";
-    const user = yield dbMessageRepository.sendMessage(senderId, receiverId, message);
+    try {
+        const sendMessage = yield dbMessageRepository.sendMessage(senderId, receiverId, message);
+        return sendMessage;
+    }
+    catch (error) {
+        console.error("Error in handleSendMessage:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to send the message", 500);
+    }
 });
 exports.handleSendMessage = handleSendMessage;

@@ -34,13 +34,13 @@ const messageController = (
   );
 
   const sendMessage = asyncHandler(async (req: Request, res: Response) => {
-    const message: string = req.body;
+    const message = req.body.message;
     const { receiverId } = req.params;
     const senderId = req.body.userId;
 
-    console.log("REq body, message: ", message);
-    console.log("REq params:, receiverid ", receiverId);
-    console.log(": senderid", senderId);
+    console.log(" message: ", message);
+    console.log("  receiverid ", receiverId);
+    console.log("senderid", senderId);
     const sendMessageResult = await handleSendMessage(
       senderId,
       receiverId,
@@ -49,7 +49,7 @@ const messageController = (
     );
     res.status(201).json({
       status: "success",
-      message: "Post created successfully",
+      message: "Message send successfully",
       data: sendMessageResult,
     });
   });
