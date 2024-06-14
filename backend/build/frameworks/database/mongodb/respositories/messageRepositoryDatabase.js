@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageRepositoryMongoDB = void 0;
 const messageRepositoryMongoDB = () => {
-    const sendMessage = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("send message reached");
-        console.log(userId);
+        console.log("senderId :", senderId, " receiverId:", receiverId, "  message :", message);
     });
     return {
         sendMessage,

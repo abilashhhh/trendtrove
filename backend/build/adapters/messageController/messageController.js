@@ -20,16 +20,21 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
     const authService = authenticationServiceInterface(authServiceImplementation());
     const dbMessageRepository = messageDBRepositoryInterface(messageDBRepositoryImplementation());
     const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const sendData = req.body;
-        const createPost = yield (0, messageAuthApplication_1.handleSendMessage)(dbMessageRepository);
+        const message = req.body;
+        const { receiverId } = req.params;
+        const senderId = req.body.userId;
+        console.log("REq body, message: ", message);
+        console.log("REq params:, receiverid ", receiverId);
+        console.log(": senderid", senderId);
+        const sendMessageResult = yield (0, messageAuthApplication_1.handleSendMessage)(senderId, receiverId, message, dbMessageRepository);
         res.status(201).json({
             status: "success",
             message: "Post created successfully",
-            data: createPost,
+            data: sendMessageResult,
         });
     }));
     return {
-        sendMessage
+        sendMessage,
     };
 };
 exports.default = messageController;

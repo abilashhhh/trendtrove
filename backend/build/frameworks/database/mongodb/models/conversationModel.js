@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const userModel_1 = __importDefault(require("./userModel"));
 const messageModel_1 = __importDefault(require("./messageModel"));
-const communicationSchema = new mongoose_1.Schema({
+const conversationSchema = new mongoose_1.Schema({
     participants: [
         { type: mongoose_1.Schema.Types.ObjectId, ref: userModel_1.default.modelName, required: true },
     ],
@@ -14,5 +14,5 @@ const communicationSchema = new mongoose_1.Schema({
         { type: mongoose_1.Schema.Types.ObjectId, ref: messageModel_1.default.modelName, default: [] },
     ],
 }, { timestamps: true });
-const Communication = (0, mongoose_1.model)("Communication", communicationSchema);
-exports.default = Communication;
+const Conversation = (0, mongoose_1.model)("Conversation", conversationSchema);
+exports.default = Conversation;

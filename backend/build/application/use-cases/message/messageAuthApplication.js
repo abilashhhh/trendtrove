@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleSendMessage = void 0;
-const handleSendMessage = (dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
+const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = "213";
-    const user = yield dbMessageRepository.sendMessage(userId);
+    const user = yield dbMessageRepository.sendMessage(senderId, receiverId, message);
 });
 exports.handleSendMessage = handleSendMessage;

@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageDBRepository = void 0;
 const messageDBRepository = (repository) => {
-    const sendMessage = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-        yield repository.sendMessage(userId);
+    const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.sendMessage(senderId, receiverId, message);
     });
     return {
-        sendMessage
+        sendMessage,
     };
 };
 exports.messageDBRepository = messageDBRepository;

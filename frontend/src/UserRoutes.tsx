@@ -19,6 +19,7 @@ import ReportPost from "./Components/Post/ReportPost";
 import EditPost from "./Pages/EditPost";
 import CommentsPage from "./Components/Comments/CommentsPage";
 import ExplorePageComponent from "./Components/Explore/ExplorePageComponent";
+import ChatPage from "./Pages/ChatPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -41,6 +42,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/explore" element={<ExplorePageComponent/>} />
         <Route path="/addpost" element={<Addpost />} />
+        <Route path="/chats" element={<ChatPage />} />
         <Route path="/editpost/:postId" element={<EditPost />} />
         <Route path="/reportpost/:postId" element={<ReportPost />} />
         <Route path="/post/:postId" element={<CommentsPage />} />

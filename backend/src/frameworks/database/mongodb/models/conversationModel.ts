@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 import userModel from "./userModel";
 import messageModel from "./messageModel";
 
-const communicationSchema = new Schema(
+const conversationSchema = new Schema(
   {
     participants: [
       { type: Schema.Types.ObjectId, ref: userModel.modelName, required: true },
@@ -14,6 +14,6 @@ const communicationSchema = new Schema(
   { timestamps: true }
 );
 
-const Communication = model("Communication", communicationSchema);
+const Conversation = model("Conversation", conversationSchema);
 
-export default Communication;
+export default Conversation;

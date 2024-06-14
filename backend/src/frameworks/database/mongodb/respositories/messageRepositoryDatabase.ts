@@ -1,9 +1,20 @@
 import ErrorInApplication from "../../../../utils/ErrorInApplication";
 
 export const messageRepositoryMongoDB = () => {
-  const sendMessage = async (userId: string) => {
+  const sendMessage = async (
+    senderId: string,
+    receiverId: string,
+    message: string
+  ) => {
     console.log("send message reached");
-    console.log(userId);
+    console.log(
+      "senderId :",
+      senderId,
+      " receiverId:",
+      receiverId,
+      "  message :",
+      message
+    );
   };
 
   return {

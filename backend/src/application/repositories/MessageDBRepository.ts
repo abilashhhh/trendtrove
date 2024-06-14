@@ -1,20 +1,19 @@
-import { MesasgeRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase"
-
-import { MessageDataInterface} from "../../types/messageInterface"
+import { MesasgeRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 
 export const messageDBRepository = (
-    repository : ReturnType<MesasgeRepositoryMongoDB>
+  repository: ReturnType<MesasgeRepositoryMongoDB>
 ) => {
+  const sendMessage = async (
+    senderId: string,
+    receiverId: string,
+    message: string
+  ) => {
+    await repository.sendMessage(senderId, receiverId, message);
+  };
 
-    const sendMessage = async (userId:  string) => {
-        await repository.sendMessage(userId)
-    }
+  return {
+    sendMessage,
+  };
+};
 
-
-    return  {
-        sendMessage
-    }
-
-}
-
-export type MessageDBInterface = typeof messageDBRepository
+export type MessageDBInterface = typeof messageDBRepository;

@@ -25,7 +25,7 @@ const messageRoutes = () => {
 
   );
 
-  router.post("/send/:userId", authMiddleware, controller.sendMessage);
+  router.post("/send/:receiverId", authMiddleware, controller.sendMessage);
 
   return router;
 };

@@ -6,7 +6,6 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { MessageDataInterface } from "../../types/messageInterface";
 import { handleSendMessage } from "../../application/use-cases/message/messageAuthApplication";
 import { MesasgeRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
@@ -18,8 +17,8 @@ const messageController = (
   postDBRepositoryInterface: PostDBInterface,
   authServiceImplementation: AuthService,
   authenticationServiceInterface: AuthServiceInterface,
-  messageDBRepositoryImplementation : MesasgeRepositoryMongoDB,
-  messageDBRepositoryInterface : MessageDBInterface
+  messageDBRepositoryImplementation: MesasgeRepositoryMongoDB,
+  messageDBRepositoryInterface: MessageDBInterface
 ) => {
   const dbUserRepository = userDBRepositoryInterface(
     userDBRepositoryImplementation()
@@ -34,21 +33,29 @@ const messageController = (
     messageDBRepositoryImplementation()
   );
 
-
   const sendMessage = asyncHandler(async (req: Request, res: Response) => {
-    const sendData: MessageDataInterface = req.body;
-    const createPost = await handleSendMessage(
+    const message: string = req.body;
+    const { receiverId } = req.params;
+    const senderId = req.body.userId;
+
+    console.log("REq body, message: ", message);
+    console.log("REq params:, receiverid ", receiverId);
+    console.log(": senderid", senderId);
+    const sendMessageResult = await handleSendMessage(
+      senderId,
+      receiverId,
+      message,
       dbMessageRepository
     );
     res.status(201).json({
       status: "success",
       message: "Post created successfully",
-      data: createPost,
+      data: sendMessageResult,
     });
   });
 
   return {
-    sendMessage
+    sendMessage,
   };
 };
 
