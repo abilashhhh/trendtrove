@@ -22,10 +22,10 @@ const messageRoutes = () => {
     authServiceInterface,
     messageRepositoryMongoDB,
     messageDBRepository
-
   );
 
-  router.post("/send/:receiverId", authMiddleware, controller.sendMessage);
+  router.post("/sendMessages/:receiverId", authMiddleware, controller.sendMessage);
+  router.get("/getMessages/:receiverId", authMiddleware, controller.getMessages);
 
   return router;
 };

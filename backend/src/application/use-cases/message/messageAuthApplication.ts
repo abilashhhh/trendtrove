@@ -22,3 +22,23 @@ export const handleSendMessage = async (
     throw new ErrorInApplication("Failed to send the message", 500);
   }
 };
+
+export const handleGetMessage = async (
+  senderId: string,
+  receiverId: string,
+  dbMessageRepository: ReturnType<MessageDBInterface>
+) => {
+  try {
+    const getMessage = await dbMessageRepository.getMessages(
+      senderId,
+      receiverId
+    );
+    return getMessage;
+  } catch (error) {
+    console.error("Error in handleGetMessage:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get the messages", 500);
+  }
+};

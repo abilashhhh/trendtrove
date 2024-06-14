@@ -6,8 +6,8 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { handleSendMessage } from "../../application/use-cases/message/messageAuthApplication";
-import { MesasgeRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
+import { handleSendMessage, handleGetMessage } from "../../application/use-cases/message/messageAuthApplication";
+import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
 
 const messageController = (
@@ -17,7 +17,7 @@ const messageController = (
   postDBRepositoryInterface: PostDBInterface,
   authServiceImplementation: AuthService,
   authenticationServiceInterface: AuthServiceInterface,
-  messageDBRepositoryImplementation: MesasgeRepositoryMongoDB,
+  messageDBRepositoryImplementation: MessagesRepositoryMongoDB,
   messageDBRepositoryInterface: MessageDBInterface
 ) => {
   const dbUserRepository = userDBRepositoryInterface(
@@ -38,9 +38,9 @@ const messageController = (
     const { receiverId } = req.params;
     const senderId = req.body.userId;
 
-    console.log(" message: ", message);
-    console.log("  receiverid ", receiverId);
-    console.log("senderid", senderId);
+    console.log("message:", message);
+    console.log("receiverId:", receiverId);
+    console.log("senderId:", senderId);
     const sendMessageResult = await handleSendMessage(
       senderId,
       receiverId,
@@ -49,13 +49,29 @@ const messageController = (
     );
     res.status(201).json({
       status: "success",
-      message: "Message send successfully",
+      message: "Message sent successfully",
       data: sendMessageResult,
+    });
+  });
+
+  const getMessages = asyncHandler(async (req: Request, res: Response) => {
+    const { receiverId } = req.params;
+    const senderId = req.body.userId;
+    
+    const getMessageResult = await handleGetMessage(
+      senderId,
+      receiverId,
+      dbMessageRepository
+    );
+    res.status(200).json({
+      status: "success",  message: "Got messages  successfully",
+      data: getMessageResult,
     });
   });
 
   return {
     sendMessage,
+    getMessages,
   };
 };
 

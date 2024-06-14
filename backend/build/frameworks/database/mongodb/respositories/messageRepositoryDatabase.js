@@ -28,12 +28,10 @@ const messageRepositoryMongoDB = () => {
                 });
             }
             const newMessage = yield messageModel_1.default.create({ senderId, receiverId, message });
-            console.log("conversation: ", conversation);
-            console.log("new message: ", newMessage);
             if (newMessage) {
                 conversation.messages.push(newMessage._id);
-                yield conversation.save(); // Save the updated conversation with the new message
             }
+            yield Promise.all([conversation.save(), newMessage.save()]);
             return newMessage;
         }
         catch (error) {
@@ -41,8 +39,21 @@ const messageRepositoryMongoDB = () => {
             throw new Error("Error in sending message!");
         }
     });
+    const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const conversation = yield conversationModel_1.default.findOne({
+                participants: { $all: [senderId, receiverId] }
+            }).populate('messages');
+            return conversation ? conversation.messages : [];
+        }
+        catch (error) {
+            console.log("Error in get messages, messageRepositoryDatabase", error.message);
+            throw new Error("Error in getting messages!");
+        }
+    });
     return {
         sendMessage,
+        getMessages,
     };
 };
 exports.messageRepositoryMongoDB = messageRepositoryMongoDB;

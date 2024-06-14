@@ -17,7 +17,8 @@ const messageRepositoryDatabase_1 = require("../../database/mongodb/respositorie
 const messageRoutes = () => {
     const router = express_1.default.Router();
     const controller = (0, messageController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, postDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface, messageRepositoryDatabase_1.messageRepositoryMongoDB, MessageDBRepository_1.messageDBRepository);
-    router.post("/send/:receiverId", authMiddleware_1.default, controller.sendMessage);
+    router.post("/sendMessages/:receiverId", authMiddleware_1.default, controller.sendMessage);
+    router.get("/getMessages/:receiverId", authMiddleware_1.default, controller.getMessages);
     return router;
 };
 exports.default = messageRoutes;

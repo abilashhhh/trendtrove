@@ -14,8 +14,12 @@ const messageDBRepository = (repository) => {
     const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.sendMessage(senderId, receiverId, message);
     });
+    const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield repository.getMessages(senderId, receiverId);
+    });
     return {
         sendMessage,
+        getMessages,
     };
 };
 exports.messageDBRepository = messageDBRepository;
