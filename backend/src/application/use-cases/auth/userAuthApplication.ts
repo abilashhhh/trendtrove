@@ -9,7 +9,6 @@ import {
 import { OtpDbInterface } from "../../repositories/OTPDBRepository";
 import { MailSenderServiceInterface } from "../../services/mailServiceInterface";
 
-// User Registration
 export const userRegister = async (
   user: UserInterface,
   dbUserRepository: ReturnType<UserDBInterface>,
@@ -20,16 +19,18 @@ export const userRegister = async (
     throw new ErrorInApplication("Email already exists", 401);
   }
 
-  const existingUsername = await dbUserRepository.getUserByUsername(
-    user.username
-  );
+  const existingUsername = await dbUserRepository.getUserByUsername(user.username);
   if (existingUsername) {
     throw new ErrorInApplication("Username already exists!", 401);
   }
 
   user.password = await authService.encryptPassword(user.password);
+
+  user.dp = `https://api.dicebear.com/8.x/thumbs/svg?seed=${user.username}`;
+
   await dbUserRepository.addUser(user);
 };
+
 
 // Handle OTP Sending
 export const handleSendOtp = async (

@@ -11,6 +11,7 @@ const routes = (app: Application) => {
   app.use("/api/user", userRouter());
   app.use("/api/post", postRouter());
   app.use("/api/admin", adminRouter());
+  app.use("/api/message", adminRouter());
 };
 
 export default routes;

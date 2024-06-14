@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userLoginUsingGoogle = exports.userRegisterUsingGoogle = exports.handleGoogleLoginOrSignup = exports.handleLogoutUser = exports.tokenVerification = exports.accessTokenRefresh = exports.login = exports.handleResendOtp = exports.handleOtpVerification = exports.handleForgotPasswordChange = exports.handleSendOtp = exports.userRegister = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const otpGenerator = require("otp-generator");
-// User Registration
 const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     const existingEmail = yield dbUserRepository.getUserByEmail(user.email);
     if (existingEmail) {
@@ -26,6 +25,7 @@ const userRegister = (user, dbUserRepository, authService) => __awaiter(void 0, 
         throw new ErrorInApplication_1.default("Username already exists!", 401);
     }
     user.password = yield authService.encryptPassword(user.password);
+    user.dp = `https://api.dicebear.com/8.x/thumbs/svg?seed=${user.username}`;
     yield dbUserRepository.addUser(user);
 });
 exports.userRegister = userRegister;
