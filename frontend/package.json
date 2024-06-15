@@ -51,7 +51,8 @@
     "react-tooltip": "^5.26.4",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.11.0",
-    "tw-elements-react": "^1.0.0-alpha2"
+    "tw-elements-react": "^1.0.0-alpha2",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.30",

@@ -90,13 +90,13 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <TrendTroveLogo />
       <ToastContainer />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="text-center">
-            <h5 className="mt-6 sm:text-l text-xl font-extrabold text-gray-900">
+            <h5 className="mt-6 text-xl font-extrabold text-gray-900">
               Sign in to your account
             </h5>
             <p className="mt-2 text-sm text-gray-600">
@@ -109,7 +109,11 @@ const SignInPage: React.FC = () => {
               </Link>
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6 text-black"
+            noValidate
+          >
             <div>
               <label
                 htmlFor="email"
@@ -123,7 +127,7 @@ const SignInPage: React.FC = () => {
                 id="email"
                 name="email"
                 required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                className="mt-1 p-3 border border-gray-300 bg-white text-black block w-full shadow-sm sm:text-sm rounded-md"
               />
             </div>
             <div>
@@ -140,7 +144,7 @@ const SignInPage: React.FC = () => {
                   onChange={handleChange}
                   name="password"
                   required
-                  className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                  className="mt-1 p-3 border border-gray-300 bg-white text-black focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
                 />
                 <button
                   type="button"

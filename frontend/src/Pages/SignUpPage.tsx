@@ -199,7 +199,7 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-black">
       <TrendTroveLogo />
       <ToastContainer />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -232,7 +232,7 @@ const SignupPage: React.FC = () => {
                 name="name"
                 onChange={handleChange}
                 required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                className="mt-1 bg-white focus:ring-blue-500 p-3 border border-gray-300 focus:border-blue-500 block w-full shadow-sm sm:text-sm rounded-md"
               />
               {validationErrors.name && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
@@ -253,7 +253,7 @@ const SignupPage: React.FC = () => {
                 name="username"
                 onChange={handleChange}
                 required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                className="mt-1 bg-white focus:ring-blue-500 p-3 border border-gray-300 focus:border-blue-500 block w-full shadow-sm sm:text-sm rounded-md"
               />
               {validationErrors.username && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
@@ -285,7 +285,7 @@ const SignupPage: React.FC = () => {
                 onChange={handleChange}
                 name="email"
                 required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                className="mt-1 bg-white focus:ring-blue-500 p-3 border border-gray-300 focus:border-blue-500 block w-full shadow-sm sm:text-sm rounded-md"
               />
               {validationErrors.email && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
@@ -311,7 +311,7 @@ const SignupPage: React.FC = () => {
                 onChange={handleChange}
                 name="phone"
                 required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
+                className="mt-1 bg-white focus:ring-blue-500 p-3 border border-gray-300 focus:border-blue-500 block w-full shadow-sm sm:text-sm rounded-md"
               />
               {validationErrors.phone && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
@@ -328,16 +328,15 @@ const SignupPage: React.FC = () => {
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
               <div className="relative">
-           <input
+                <input
                   type={showPassword ? "text" : "password"}
-                id="password"
-                onChange={handleChange}
-                name="password"
-                required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
-                
-              />
-               <button
+                  id="password"
+                  onChange={handleChange}
+                  name="password"
+                  required
+                  className="mt-1 bg-white focus:ring-blue-500 p-3 border border-gray-300 focus:border-blue-500 block w-full shadow-sm sm:text-sm rounded-md"
+                />
+                <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
@@ -348,7 +347,7 @@ const SignupPage: React.FC = () => {
                     <FaEye className="text-gray-500" />
                   )}
                 </button>
-           </div>
+              </div>
               {validationErrors.password && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
                   {validationErrors.password}
@@ -364,15 +363,15 @@ const SignupPage: React.FC = () => {
                 <span className="text-red-700 text-bold font-large"> *</span>
               </label>
               <div className="relative">
-             <input
-                 type={showPassword ? "text" : "password"}
-                id="confirmPassword"
-                name="confirmPassword"
-                onChange={handleChange}
-                required
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm rounded-md"
-              />
-               <button
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  onChange={handleChange}
+                  required
+                  className="mt-1 bg-white focus:ring-blue-500 p-3 border border-gray-300 focus:border-blue-500 block w-full shadow-sm sm:text-sm rounded-md"
+                />
+                <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
@@ -383,7 +382,7 @@ const SignupPage: React.FC = () => {
                     <FaEye className="text-gray-500" />
                   )}
                 </button>
-             </div>
+              </div>
               {validationErrors.confirmPassword && (
                 <p className="text-red-500 text-xs font-semibold mt-1">
                   {validationErrors.confirmPassword}
@@ -394,7 +393,7 @@ const SignupPage: React.FC = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-gray-600 hover:bg-gray-800 focus:outline-none">
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-800 focus:outline-none">
                 Sign up
               </button>
             </div>
