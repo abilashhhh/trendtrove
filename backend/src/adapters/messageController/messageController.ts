@@ -57,7 +57,6 @@ const messageController = (
   const getMessages = asyncHandler(async (req: Request, res: Response) => {
     const { receiverId } = req.params;
     const senderId = req.body.userId;
-    
     const getMessageResult = await handleGetMessage(
       senderId,
       receiverId,

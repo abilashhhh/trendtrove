@@ -39,7 +39,7 @@ export const getFriendsUserInfo = async (): Promise<GetUserInfoResponse> => {
 export const sendMessage = async (receiverId: string, message: string): Promise<sendMessageInterface> => {
   try {
     const response = await axiosUserInstance.post<sendMessageInterface>(
-      `${END_POINTS.SEND_MESSAGES}${receiverId}`,
+      `${END_POINTS.SEND_MESSAGES.replace(":receiverId", receiverId)}`,
       { message }
     );
     return response.data;
@@ -52,8 +52,9 @@ export const sendMessage = async (receiverId: string, message: string): Promise<
 export const getMessages = async (receiverId: string): Promise<GetMessageInterface> => {
   try {
     const response = await axiosUserInstance.get<GetMessageInterface>(
-      `${END_POINTS.GET_MESSAGES}${receiverId}`
+      `${END_POINTS.GET_MESSAGES.replace(":receiverId", receiverId)}`
     );
+    console.log("response of getessages" , response.data.data)
     return response.data;
   } catch (error) {
     handleAxiosError(error);

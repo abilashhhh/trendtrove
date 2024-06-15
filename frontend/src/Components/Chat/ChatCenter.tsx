@@ -1,9 +1,15 @@
  
 import React from "react";
 import useConversation from "../../Hooks/useConversations";
+import useUserDetails from "../../Hooks/useUserDetails";
+import { getMessages } from "../../API/Chat/chat";
 
 const ChatCenter: React.FC = () => {
-  const { selectedConversation } = useConversation();
+  const { selectedConversation  } = useConversation();
+  
+  const getMessagesData= getMessages(selectedConversation._id)
+  console.log("get messages of _id: ", getMessagesData)
+  const currentUser= useUserDetails();
 
   if (!selectedConversation) {
     return (
@@ -26,7 +32,7 @@ const ChatCenter: React.FC = () => {
         </div>
         <div>
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Chat with {selectedConversation.username}
+            {selectedConversation.username}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Online</div>
         </div>
@@ -47,7 +53,7 @@ const ChatCenter: React.FC = () => {
             <time className="text-xs opacity-50 ml-2">12:45</time>
           </div>
           <div className="chat-bubble bg-blue-500 text-white">
-            You were the Chosen One!
+            You were the Chosen One! {selectedConversation._id}
           </div>
           <div className="chat-footer opacity-50 text-xs mt-1">Delivered</div>
         </div>
@@ -56,7 +62,7 @@ const ChatCenter: React.FC = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="User avatar"
-                src={selectedConversation.dp}
+                src={currentUser.dp}
               />
             </div>
           </div>

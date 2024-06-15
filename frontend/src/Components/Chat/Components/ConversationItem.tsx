@@ -20,16 +20,19 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   const { selectedConversation, setSelectedConversation } = useConversation();
   const isSelected = selectedConversation?._id === user._id;
 
+  console.log("selectedConversation:", selectedConversation);
+
   return (
     <div
       key={user._id}
-      className={`flex items-center p-2 gap-2 hover:bg-slate-400 cursor-pointer dark:hover:bg-slate-700 bg-slate-200 dark:bg-slate-800 rounded-md ${
-        isSelected ? "bg-sky-400" : ""
+      className={`flex items-center p-2 gap-2 hover:bg-slate-400 cursor-pointer dark:hover:bg-slate-700 bg-slate-200 dark:bg-slate-800 mt-2 rounded-md ${
+        isSelected ? "bg-blue-500 text-white dark:bg-slate-500" : ""
       }`}
       onClick={() => {
         setSelectedConversation(user);
         setChatSelected(true);
-      }}>
+      }}
+    >
       <div className="avatar online">
         <div className="w-10 rounded-full">
           <img
@@ -41,9 +44,13 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       </div>
       <div className="flex-1">
         <div className="flex flex-row items-center">
-          <div className="font-bold text-sm">{user.username}</div>
+          <div className={`font-bold text-sm ${isSelected ? "text-white" : "text-gray-900 dark:text-gray-300"}`}>
+            {user.username}
+          </div>
         </div>
-        <div className="text-sm text-gray-600">{user.name}</div>
+        <div className={`text-sm ${isSelected ? "text-gray-200" : "text-gray-600 dark:text-gray-400"}`}>
+          {user.name}
+        </div>
       </div>
     </div>
   );
