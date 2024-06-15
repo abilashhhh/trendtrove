@@ -11,6 +11,8 @@ const useSendMessages = () => {
     setLoading(true);
     try {
       const data = await sendMessageToUser(selectedConversation?._id, message);
+      if(data.error) throw new Error(data.error);
+
       setMessages([...messages, data]);
     } catch (error) {
       toast.error(error.message);

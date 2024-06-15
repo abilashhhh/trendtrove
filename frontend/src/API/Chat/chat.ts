@@ -49,7 +49,7 @@ export const sendMessageToUser = async (receiverId: string, message: string): Pr
   }
 };
 
-export const getMessages = async (receiverId: string): Promise<GetMessageInterface> => {
+export const getMessagesFromUser = async (receiverId: string): Promise<GetMessageInterface> => {
   try {
     const response = await axiosUserInstance.get<GetMessageInterface>(
       `${END_POINTS.GET_MESSAGES.replace(":receiverId", receiverId)}`

@@ -168,6 +168,7 @@ export interface PremiumAccountProgressInterface {
 
 
 export interface sendMessageInterface {
+  error: any;
   status: string;
   message: string;
 }
@@ -184,6 +185,7 @@ export interface Message {
 }
 
 export interface GetMessageInterface {
+  error: any;
   status: string;
   message: string;
   data: Message[];
