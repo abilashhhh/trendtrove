@@ -26,7 +26,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
     <div
       key={user._id}
       className={`flex items-center p-2 gap-2 hover:bg-slate-400 cursor-pointer dark:hover:bg-slate-700 bg-slate-200 dark:bg-slate-800 mt-2 rounded-md ${
-        isSelected ? "bg-blue-500 text-white dark:bg-slate-500" : ""
+        isSelected ? "bg-slate-400 text-black dark:text-white dark:bg-slate-500" : ""
       }`}
       onClick={() => {
         setSelectedConversation(user);
@@ -44,11 +44,11 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       </div>
       <div className="flex-1">
         <div className="flex flex-row items-center">
-          <div className={`font-bold text-sm ${isSelected ? "text-white" : "text-gray-900 dark:text-gray-300"}`}>
+          <div className={`font-bold text-sm ${isSelected ? "text-black dark:text-white" : "text-gray-900 dark:text-gray-300"}`}>
             {user.username}
           </div>
         </div>
-        <div className={`text-sm ${isSelected ? "text-gray-200" : "text-gray-600 dark:text-gray-400"}`}>
+        <div className={`text-sm ${isSelected ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400"}`}>
           {user.name}
         </div>
       </div>

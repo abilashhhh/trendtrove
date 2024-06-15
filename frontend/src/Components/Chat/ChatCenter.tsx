@@ -7,7 +7,7 @@ import { getMessages } from "../../API/Chat/chat";
 const ChatCenter: React.FC = () => {
   const { selectedConversation  } = useConversation();
   
-  const getMessagesData= getMessages(selectedConversation._id)
+  const getMessagesData= getMessages(selectedConversation?._id)
   console.log("get messages of _id: ", getMessagesData)
   const currentUser= useUserDetails();
 
