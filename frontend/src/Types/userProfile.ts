@@ -164,3 +164,27 @@ export interface PremiumAccountProgressInterface {
   message : string ,
   result : PremiumAccountInterface
 }
+
+
+
+export interface sendMessageInterface {
+  status: string;
+  message: string;
+}
+
+ 
+export interface Message {
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface GetMessageInterface {
+  status: string;
+  message: string;
+  data: Message[];
+}

@@ -1,3 +1,4 @@
+ 
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,9 +12,9 @@ const ChatMiddlePage: React.FC = () => {
 
   const { selectedConversation, setSelectedConversation } = useConversation();
 
-	useEffect(() => {
-		return () => setSelectedConversation(null);
-	}, [setSelectedConversation]);
+  useEffect(() => {
+    return () => setSelectedConversation(null);
+  }, [setSelectedConversation]);
 
   return (
     <>

@@ -1,20 +1,33 @@
+ 
 import React from "react";
+import useConversation from "../../Hooks/useConversations";
 
 const ChatCenter: React.FC = () => {
-  
+  const { selectedConversation } = useConversation();
+
+  if (!selectedConversation) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-600 dark:text-gray-400">
+        No conversation selected
+      </div>
+    );
+  }
+
   return (
     <div className="flex-grow p-4 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
       <div className="h-16 mb-5 -m-3 bg-gray-100 dark:bg-gray-900 rounded-t-lg shadow-sm flex items-center p-4">
         <div className="chat-image avatar mr-3">
           <div className="w-10 rounded-full">
             <img
-              alt="User avatar"
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+              alt={`${selectedConversation.username}'s avatar`}
+              src={selectedConversation.dp}
             />
           </div>
         </div>
         <div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">Chat with Anakin</div>
+          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Chat with {selectedConversation.username}
+          </div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Online</div>
         </div>
       </div>
@@ -24,8 +37,8 @@ const ChatCenter: React.FC = () => {
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
               <img
-                alt="Tailwind CSS chat bubble component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                alt="User avatar"
+                src={selectedConversation.dp}
               />
             </div>
           </div>
@@ -42,8 +55,8 @@ const ChatCenter: React.FC = () => {
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
               <img
-                alt="Tailwind CSS chat bubble component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                alt="User avatar"
+                src={selectedConversation.dp}
               />
             </div>
           </div>

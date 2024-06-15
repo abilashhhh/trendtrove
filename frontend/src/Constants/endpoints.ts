@@ -84,6 +84,8 @@ const END_POINTS = {
   
   //CHAT
   GET_FRIENDS_INFO: 'api/message/getfriendsinfo',
+  SEND_MESSAGES: 'api/message/sendMessages/:receiverId',
+  GET_MESSAGES: 'api/message/getMessages/:receiverId',
   
 };
 

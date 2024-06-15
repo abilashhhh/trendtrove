@@ -1,7 +1,7 @@
 import axiosUserInstance from "../Axios/axiosUserInstance";
 import axios, { AxiosError } from "axios";
 import END_POINTS from "../../Constants/endpoints";
-import { GetUserInfoResponse } from "../../Types/userProfile";
+import { GetMessageInterface, GetUserInfoResponse, sendMessageInterface } from "../../Types/userProfile";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -28,6 +28,31 @@ export const getFriendsUserInfo = async (): Promise<GetUserInfoResponse> => {
   try {
     const response = await axiosUserInstance.get<GetUserInfoResponse>(
       END_POINTS.GET_FRIENDS_INFO
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const sendMessage = async (receiverId: string, message: string): Promise<sendMessageInterface> => {
+  try {
+    const response = await axiosUserInstance.post<sendMessageInterface>(
+      `${END_POINTS.SEND_MESSAGES}${receiverId}`,
+      { message }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getMessages = async (receiverId: string): Promise<GetMessageInterface> => {
+  try {
+    const response = await axiosUserInstance.get<GetMessageInterface>(
+      `${END_POINTS.GET_MESSAGES}${receiverId}`
     );
     return response.data;
   } catch (error) {
