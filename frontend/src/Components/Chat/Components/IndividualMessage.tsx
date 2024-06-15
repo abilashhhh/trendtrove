@@ -1,10 +1,20 @@
 import React from "react";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
+import { Message } from "../../../Types/userProfile";
+ 
+interface IndividualMessageProps {
+  message: Message;
+}
 
-const IndividualMessage = () => {
+const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
+
+  const fromMe = message.senderId === currentUser._id;
+  const chatClassName = fromMe ? 'chat-end' : 'chat-start';
+  const profilePic = fromMe ?  currentUser.dp : selectedConversation?.dp;
+  const bubbleColor = fromMe ?  'bg-slate-300 dark:bg-slate-700' : 'bg-blue-300 dark:bg-blue-700';  
 
   if (!selectedConversation) {
     return (
@@ -13,37 +23,21 @@ const IndividualMessage = () => {
       </div>
     );
   }
-  return (
-    <div className="flex-grow overflow-auto">
-      <div className="chat chat-start mb-4">
-        <div className="chat-image avatar">
-          <div className="w-10 rounded-full">
-            <img alt="User avatar" src={selectedConversation.dp} />
-          </div>
-        </div>
-        <div className="chat-header">
-          Obi-Wan Kenobi
-          <time className="text-xs opacity-50 ml-2">12:45</time>
-        </div>
-        <div className="chat-bubble bg-blue-500 text-white">
-          You were the Chosen One! {selectedConversation._id}
-        </div>
-        <div className="chat-footer opacity-50 text-xs mt-1">Delivered</div>
-      </div>
 
-      <div className="chat chat-end mb-4">
-        <div className="chat-image avatar">
-          <div className="w-10 rounded-full">
-            <img alt="User avatar" src={currentUser.dp} />
-          </div>
+  return (
+    <div className={`chat mb-5   ${chatClassName}`}>
+      <div className="chat-image avatar">
+        <div className="w-10 rounded-full">
+          <img alt="User avatar" src={profilePic} />
         </div>
-        <div className="chat-header">
-          Anakin
-          <time className="text-xs opacity-50 ml-2">12:46</time>
-        </div>
-        <div className="chat-bubble bg-green-500 text-white">I hate you!</div>
-        <div className="chat-footer opacity-50 text-xs mt-1">Seen at 12:46</div>
       </div>
+      <div className="chat-header">
+        <time className="text-xs opacity-50 ml-2">12:45</time>
+      </div>
+      <div className={`chat-bubble text-black dark:text-white ${bubbleColor}`}>
+        {message.message}
+      </div>
+      <div className="chat-footer opacity-50 text-xs mt-1">Delivered</div>
     </div>
   );
 };

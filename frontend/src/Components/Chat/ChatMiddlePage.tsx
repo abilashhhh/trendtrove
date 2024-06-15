@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChatLeftSidebar from "./ChatLeftSidebar";
-import ChatCenter from "./ChatCenter";
+// import ChatCenter from "./ChatCenter";
 import { FaComments } from "react-icons/fa";
 import useConversation from "../../Hooks/useConversations";
+import ChatInnerMain from "./ChatInnerMain";
 
 const ChatMiddlePage: React.FC = () => {
   const [chatSelected, setChatSelected] = useState(false);
@@ -24,7 +25,7 @@ const ChatMiddlePage: React.FC = () => {
           <div className="flex flex-col md:flex-row gap-1 h-full">
             <ChatLeftSidebar setChatSelected={setChatSelected} />
             <div className="flex-grow">
-              {!chatSelected ? <NoChatSelected /> : <ChatCenter />}
+              {!chatSelected ? <NoChatSelected /> : <ChatInnerMain />}
             </div>
           </div>
         </div>
