@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChatLeftSidebar from "./ChatLeftSidebar";
 import ChatCenter from "./ChatCenter";
 import { FaComments } from "react-icons/fa";
+import useConversation from "../../Hooks/useConversations";
 
 const ChatMiddlePage: React.FC = () => {
-  const [chatSelected, setChatSelected ] = useState(true)
+  const [chatSelected, setChatSelected] = useState(false);
+
+  const { selectedConversation, setSelectedConversation } = useConversation();
+
+	useEffect(() => {
+		return () => setSelectedConversation(null);
+	}, [setSelectedConversation]);
+
   return (
     <>
       <ToastContainer />
       <main className="flex-1 pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
         <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
           <div className="flex flex-col md:flex-row gap-1 h-full">
-            <ChatLeftSidebar />
-            <div className="hidden md:block flex-grow">
-              {!chatSelected && <NoChatSelected />}
-              {chatSelected && <ChatCenter />}
+            <ChatLeftSidebar setChatSelected={setChatSelected} />
+            <div className="flex-grow">
+              {!chatSelected ? <NoChatSelected /> : <ChatCenter />}
             </div>
           </div>
         </div>
@@ -26,7 +33,6 @@ const ChatMiddlePage: React.FC = () => {
 };
 
 export default ChatMiddlePage;
-
 
 function NoChatSelected() {
   return (

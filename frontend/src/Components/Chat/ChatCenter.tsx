@@ -1,6 +1,7 @@
 import React from "react";
 
-function ChatCenter() {
+const ChatCenter: React.FC = () => {
+  
   return (
     <div className="flex-grow p-4 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
       <div className="h-16 mb-5 -m-3 bg-gray-100 dark:bg-gray-900 rounded-t-lg shadow-sm flex items-center p-4">
@@ -55,7 +56,6 @@ function ChatCenter() {
         </div>
       </div>
 
-      {/* Message Input */}
       <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-b-lg shadow-sm">
         <form className="flex items-center">
           <input
@@ -70,6 +70,6 @@ function ChatCenter() {
       </div>
     </div>
   );
-}
+};
 
 export default ChatCenter;
