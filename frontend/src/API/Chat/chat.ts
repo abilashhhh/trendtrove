@@ -36,7 +36,7 @@ export const getFriendsUserInfo = async (): Promise<GetUserInfoResponse> => {
   }
 };
 
-export const sendMessage = async (receiverId: string, message: string): Promise<sendMessageInterface> => {
+export const sendMessageToUser = async (receiverId: string, message: string): Promise<sendMessageInterface> => {
   try {
     const response = await axiosUserInstance.post<sendMessageInterface>(
       `${END_POINTS.SEND_MESSAGES.replace(":receiverId", receiverId)}`,

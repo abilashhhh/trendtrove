@@ -1,15 +1,15 @@
- 
-import React from "react";
+import React, { useState } from "react";
 import useConversation from "../../Hooks/useConversations";
 import useUserDetails from "../../Hooks/useUserDetails";
 import { getMessages } from "../../API/Chat/chat";
+import useSendMessages from "../../Hooks/useSendMessages";
 
 const ChatCenter: React.FC = () => {
-  const { selectedConversation  } = useConversation();
-  
-  const getMessagesData= getMessages(selectedConversation?._id)
-  console.log("get messages of _id: ", getMessagesData)
-  const currentUser= useUserDetails();
+  const { selectedConversation } = useConversation();
+
+  const getMessagesData = getMessages(selectedConversation?._id);
+  console.log("get messages of _id: ", getMessagesData);
+  const currentUser = useUserDetails();
 
   if (!selectedConversation) {
     return (
@@ -18,6 +18,17 @@ const ChatCenter: React.FC = () => {
       </div>
     );
   }
+
+  const [message, setMessage] = useState('')
+
+  const {loading, sendMessage} = useSendMessages()
+
+  const handleSubmit = async(e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    if(!message) return
+    await sendMessage(message)
+    setMessage("")
+  };
 
   return (
     <div className="flex-grow p-4 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
@@ -42,10 +53,7 @@ const ChatCenter: React.FC = () => {
         <div className="chat chat-start mb-4">
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
-              <img
-                alt="User avatar"
-                src={selectedConversation.dp}
-              />
+              <img alt="User avatar" src={selectedConversation.dp} />
             </div>
           </div>
           <div className="chat-header">
@@ -60,10 +68,7 @@ const ChatCenter: React.FC = () => {
         <div className="chat chat-end mb-4">
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
-              <img
-                alt="User avatar"
-                src={currentUser.dp}
-              />
+              <img alt="User avatar" src={currentUser.dp} />
             </div>
           </div>
           <div className="chat-header">
@@ -71,7 +76,9 @@ const ChatCenter: React.FC = () => {
             <time className="text-xs opacity-50 ml-2">12:46</time>
           </div>
           <div className="chat-bubble bg-green-500 text-white">I hate you!</div>
-          <div className="chat-footer opacity-50 text-xs mt-1">Seen at 12:46</div>
+          <div className="chat-footer opacity-50 text-xs mt-1">
+            Seen at 12:46
+          </div>
         </div>
       </div>
 
@@ -80,10 +87,15 @@ const ChatCenter: React.FC = () => {
           <input
             type="text"
             placeholder="Type your message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value) }
             className="flex-grow p-2 mr-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           />
-          <button type="button" className="p-2 bg-blue-500 text-white rounded-lg">
-            Send
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="p-2 bg-blue-500 text-white rounded-lg">
+           {loading ? <div className="loading loading-spinner"> </div> : "Send"}
           </button>
         </form>
       </div>
