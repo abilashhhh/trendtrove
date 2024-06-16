@@ -31,13 +31,13 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
           <img alt="User avatar" src={profilePic} />
         </div>
       </div>
-      <div className="chat-header">
+      {/* <div className="chat-header">
         <time className="text-xs opacity-50 ml-2">12:45</time>
-      </div>
+      </div> */}
       <div className={`chat-bubble text-black dark:text-white ${bubbleColor}`}>
         {message.message}
       </div>
-      <div className="chat-footer opacity-50 text-xs mt-1">Delivered</div>
+      <div className="chat-footer opacity-50 text-xs mt-1">{message.createdAt}</div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import IndividualMessage from "./Components/IndividualMessage";
 import useGetMessages from "../../Hooks/useGetMessages";
 import MessageSkeleton from "./Components/MessageSkeleton";
@@ -6,6 +6,11 @@ import MessageSkeleton from "./Components/MessageSkeleton";
 const ChatCenter: React.FC = () => {
   const { messages, loading } = useGetMessages();
   console.log("messages : ", messages);
+
+  const lastMessageRef = useRef()
+  useEffect(() => {
+    lastMessageRef.current?.scrollIntoView({behaior: "smooth"})
+  })
 
   return (
     <div className="flex-grow overflow-y-auto mt-4 h-96 no-scrollbar">  
@@ -26,7 +31,9 @@ const ChatCenter: React.FC = () => {
       {!loading && messages?.data?.length > 0 && (
         <div className="flex-grow overflow-y-auto">
           {messages.data.map(message => (
-            <IndividualMessage key={message._id} message={message} />
+            <div  key={message._id} ref={lastMessageRef}>
+              <IndividualMessage message={message}  />
+            </div>
           ))}
         </div>
       )}
