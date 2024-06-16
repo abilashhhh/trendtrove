@@ -642,7 +642,7 @@ export const postRepositoryMongoDB = () => {
         },
       ]);
 
-      console.log("All posts : ", allPosts);
+      // console.log("All posts : ", allPosts);
 
       return allPosts;
     } catch (error) {

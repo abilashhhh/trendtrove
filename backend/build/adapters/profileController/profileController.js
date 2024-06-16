@@ -19,7 +19,7 @@ const profileController = (userDBRepositoryImplementation, userDBRepositoryInter
     const authService = authServiceInterface(authServiceImplementation());
     const getUserInfo = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.body;
-        console.log("Get user info2 ran : ", userId);
+        // console.log("Get user info2 ran : ", userId);
         const user = yield (0, profileAuthApplication_1.handleUserInfo)(userId, dbUserRepository);
         res.json({
             status: "success",

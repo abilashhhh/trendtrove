@@ -314,7 +314,7 @@ const handleDislikePosts = (userId, postId, dbPostRepository) => __awaiter(void 
 exports.handleDislikePosts = handleDislikePosts;
 const handleGetAllPublicPosts = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("handleGetAllPublicPosts reached");
+        // console.log("handleGetAllPublicPosts reached");
         const getAllPublicPosts = yield dbPostRepository.getAllPublicPosts(id);
         return getAllPublicPosts;
     }

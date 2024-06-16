@@ -1,5 +1,6 @@
 import React from "react";
 import useConversation from "../../../Hooks/useConversations";
+import { useSocketContext } from "../../../Context/SocketContext";
 
 interface User {
   _id: string;
@@ -22,6 +23,10 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
 
   console.log("selectedConversation:", selectedConversation);
 
+
+  const {onlineUsers}  = useSocketContext()
+  const isOnline = onlineUsers.includes(user._id)
+
   return (
     <div
       key={user._id}
@@ -33,7 +38,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         setChatSelected(true);
       }}
     >
-      <div className="avatar online">
+      <div className={`avatar ${isOnline ? "online" : ""}`}>
         <div className="w-10 rounded-full">
           <img
             src={user.dp}

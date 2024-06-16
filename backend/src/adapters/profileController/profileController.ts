@@ -38,7 +38,7 @@ const profileController = (
 
   const getUserInfo = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
-    console.log("Get user info2 ran : ", userId);
+    // console.log("Get user info2 ran : ", userId);
     const user = await handleUserInfo(userId, dbUserRepository);
     res.json({
       status: "success",

@@ -405,7 +405,7 @@ export const handleGetAllPublicPosts = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetAllPublicPosts reached");
+    // console.log("handleGetAllPublicPosts reached");
 
     const getAllPublicPosts = await dbPostRepository.getAllPublicPosts(id);
     return getAllPublicPosts;
