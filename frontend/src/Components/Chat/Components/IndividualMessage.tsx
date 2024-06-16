@@ -2,7 +2,7 @@ import React from "react";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import { Message } from "../../../Types/userProfile";
- 
+
 interface IndividualMessageProps {
   message: Message;
 }
@@ -10,11 +10,6 @@ interface IndividualMessageProps {
 const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
-
-  const fromMe = message.senderId === currentUser._id;
-  const chatClassName = fromMe ? 'chat-end' : 'chat-start';
-  const profilePic = fromMe ?  currentUser.dp : selectedConversation?.dp;
-  const bubbleColor = fromMe ?  'bg-slate-300 dark:bg-slate-700' : 'bg-blue-300 dark:bg-blue-700';  
 
   if (!selectedConversation) {
     return (
@@ -24,8 +19,13 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
     );
   }
 
+  const fromMe = message.senderId === currentUser._id;
+  const chatClassName = fromMe ? 'chat-end' : 'chat-start';
+  const profilePic = fromMe ? currentUser.dp : selectedConversation?.dp;
+  const bubbleColor = fromMe ? 'bg-blue-300 dark:bg-blue-700' : 'bg-slate-300 dark:bg-slate-700';
+
   return (
-    <div className={`chat mb-5   ${chatClassName}`}>
+    <div className={`chat mb-5 ${chatClassName}`}>
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
           <img alt="User avatar" src={profilePic} />
