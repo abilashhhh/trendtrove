@@ -26,15 +26,13 @@
 // };
 
 // export default useSendMessages;
-
-
 import React, { useState } from "react";
 import useConversation from "./useConversations";
 import { toast } from "react-toastify";
 import { sendMessageToUser } from "../API/Chat/chat";
 import { Message } from "../Types/userProfile"; 
 
-const useSendMessages = () => {
+const useSendMessages = (refreshMessages: () => void) => {
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
 
@@ -51,6 +49,7 @@ const useSendMessages = () => {
       if (data.error) throw new Error(data.error);
 
       setMessages((prevMessages: Message[]) => [...prevMessages, data]);
+      refreshMessages(); // Refresh messages after sending a new one
     } catch (error: any) {
       toast.error(error.message);
     } finally {

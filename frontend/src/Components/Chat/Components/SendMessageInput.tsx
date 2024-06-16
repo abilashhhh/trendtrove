@@ -5,8 +5,8 @@ import useGetMessages from "../../../Hooks/useGetMessages";
 const SendMessageInput: React.FC = () => {
   const [message, setMessage] = useState("");
 
-  const { loading, sendMessage } = useSendMessages();
-
+  const { getMessages } = useGetMessages();
+  const { loading, sendMessage } = useSendMessages(getMessages);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

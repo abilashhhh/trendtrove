@@ -1,7 +1,7 @@
  
 import React, { useState } from "react";
 import SearchInput from "./Components/SearchInput";
-import Conversations from "./Components/Coversation";
+import Conversations from "./Components/Conversations";
 
 interface ChatLeftSidebarProps {
   setChatSelected: (value: boolean) => void;
