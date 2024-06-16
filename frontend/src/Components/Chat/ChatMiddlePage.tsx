@@ -10,7 +10,6 @@ import ChatInnerMain from "./ChatInnerMain";
 
 const ChatMiddlePage: React.FC = () => {
   const [chatSelected, setChatSelected] = useState(false);
-
   const { selectedConversation, setSelectedConversation } = useConversation();
 
   useEffect(() => {
