@@ -1,46 +1,4 @@
-// import React, { useState, useEffect } from "react";
-// import ConversationItem from "../Components/ConversationItem";
  
-// import useGetConversations from "../../../Hooks/useGetConversations";
-
-// interface User {
-//   _id: string;
-//   username: string;
-//   name: string;
-//   dp: string;
-// }
-
-// const Conversations: React.FC = () => {
-//   const [chatSelected, setChatSelected] = useState(false);
-//   const { conversationsData, searchQuery } = useGetConversations();
-
-//   useEffect(() => {
-//     console.log("conversations:", conversationsData);
-//     console.log("searchQuery:", searchQuery);
-//   }, [conversationsData, searchQuery]);
-
-//   if (!conversationsData || !searchQuery) {
-//     return <div>Loading...</div>;
-//   }
-
-//   const filteredConversations = conversationsData.filter((user: User) =>
-//     user.username.toLowerCase().includes(searchQuery.toLowerCase())
-//   );
-
-//   return (
-//     <div className="flex-grow p-4 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
-//       <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
-//         conversationsData
-//       </h2>
-//       {filteredConversations.map((user: User) => (
-//         <ConversationItem key={user._id} user={user} setChatSelected={setChatSelected} />
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default Conversations;
-
 import React, { useEffect, useState } from "react";
 import { getFriendsUserInfo } from "../../../API/Chat/chat";
 import { getAllUsers } from "../../../API/User/user";
@@ -98,7 +56,7 @@ const Conversations: React.FC<ConversationsProps> = ({
   );
 
   return (
-    <div className="pt-3 rounded-lg shadow-md flex-grow overflow-auto">
+    <div className="pt-1 rounded-lg shadow-md flex-grow overflow-auto">
       {filteredUsers.length > 0 ? (
         filteredUsers.map(user => (
           <ConversationItem
