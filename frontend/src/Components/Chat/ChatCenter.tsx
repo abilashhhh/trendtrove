@@ -14,6 +14,16 @@ const ChatCenter: React.FC = () => {
 
   return (
     <div className="flex-grow overflow-y-auto mt-4 h-96 no-scrollbar">  
+      {!loading && messages?.data?.length > 0 && (
+        <div className="flex-grow overflow-y-auto">
+          {messages.data.map(message => (
+            <div  key={message._id} ref={lastMessageRef}>
+              <IndividualMessage message={message}  />
+            </div>
+          ))}
+        </div>
+      )} 
+      
       {loading && (
         <div className="flex flex-col gap-4">
           {[...Array(3)].map((_, idx) => (
@@ -28,15 +38,7 @@ const ChatCenter: React.FC = () => {
         </div>
       )}
 
-      {!loading && messages?.data?.length > 0 && (
-        <div className="flex-grow overflow-y-auto">
-          {messages.data.map(message => (
-            <div  key={message._id} ref={lastMessageRef}>
-              <IndividualMessage message={message}  />
-            </div>
-          ))}
-        </div>
-      )}
+    
     </div>
   );
 };
