@@ -9,6 +9,7 @@ const messageSchema = new mongoose_1.Schema({
     senderId: { type: mongoose_1.Schema.Types.ObjectId, ref: userModel_1.default, required: true },
     receiverId: { type: mongoose_1.Schema.Types.ObjectId, ref: userModel_1.default, required: true },
     message: { type: String },
+    media: { type: String },
 }, {
     timestamps: true,
 });
