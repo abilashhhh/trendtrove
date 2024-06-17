@@ -1,6 +1,4 @@
- 
 import React, { useEffect, useState } from "react";
-import { getFriendsUserInfo } from "../../../API/Chat/chat";
 import { getAllUsers } from "../../../API/User/user";
 import ConversationItem from "./ConversationItem";
 
@@ -16,22 +14,13 @@ interface ConversationsProps {
   setSelectedConversation: (user: User | null) => void;
 }
 
-const Conversations: React.FC<ConversationsProps> = ({ searchQuery, setSelectedConversation }) => {
-  const [mutualFriends, setMutualFriends] = useState<User[]>([]);
+const Conversations: React.FC<ConversationsProps> = ({
+  searchQuery,
+  setSelectedConversation,
+}) => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const fetchMutualFriends = async () => {
-      try {
-        const response = await getFriendsUserInfo();
-        if (response && response.data) {
-          setMutualFriends(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching mutual friends:", error);
-      }
-    };
-
     const fetchAllUsers = async () => {
       try {
         const response = await getAllUsers();
@@ -43,20 +32,13 @@ const Conversations: React.FC<ConversationsProps> = ({ searchQuery, setSelectedC
       }
     };
 
-    fetchMutualFriends();
     fetchAllUsers();
   }, []);
 
-  const combinedUsers = [
-    ...mutualFriends,
-    ...allUsers.filter(user => !mutualFriends.some(friend => friend._id === user._id)),
-  ];
-
-  const filteredUsers = combinedUsers.filter(user =>
+  const filteredUsers = allUsers.filter(user =>
     user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  
   return (
     <div className="pt-1 rounded-lg shadow-md flex-grow overflow-auto">
       {filteredUsers.length > 0 ? (
