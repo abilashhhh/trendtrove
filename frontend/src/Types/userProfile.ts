@@ -175,6 +175,7 @@ export interface sendMessageInterface {
 
  
 export interface Message {
+  shouldShake: boolean;
   _id: string;
   senderId: string;
   receiverId: string;

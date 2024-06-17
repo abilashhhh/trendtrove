@@ -43,14 +43,10 @@
 
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
 import useUserDetails from "../Hooks/useUserDetails";
-import { io, Socket } from "socket.io-client";
+import io, { Socket }  from "socket.io-client";
 
-interface SocketContextProps {
-  socket: Socket | null;
-  onlineUsers: string[];
-}
-
-export const SocketContext = createContext<SocketContextProps | undefined>(undefined);
+ 
+export const SocketContext = createContext('');
 
 interface SocketContextProviderProps {
   children: ReactNode;
@@ -68,20 +64,20 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
 
   useEffect(() => {
     if (currentUser) {
-      const socketInstance = io("http://localhost:3000", {
+      const socket = io("http://localhost:3000", {
         query: {
           userId: currentUser?._id,
         },
       });
 
-      setSocket(socketInstance);
+      setSocket(socket);
 
-      socketInstance.on("getOnlineUsers", (users: string[]) => {
+      socket.on("getOnlineUsers", (users: string[]) => {
         setOnlineUsers(users);
       });
 
       return () => {
-        socketInstance.close();
+        socket.close();
       };
     } else {
       if (socket) {
@@ -97,3 +93,4 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
     </SocketContext.Provider>
   );
 };
+ 

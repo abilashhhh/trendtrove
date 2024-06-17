@@ -10,19 +10,12 @@ interface IndividualMessageProps {
 const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
-
-  if (!selectedConversation) {
-    return (
-      <div className="flex items-center justify-center h-full text-gray-600 dark:text-gray-400">
-        No conversation selected
-      </div>
-    );
-  }
-
   const fromMe = message.senderId === currentUser._id;
-  const chatClassName = fromMe ? 'chat-end' : 'chat-start';
+  const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe ? currentUser.dp : selectedConversation?.dp;
-  const bubbleColor = fromMe ? 'bg-blue-300 dark:bg-blue-700' : 'bg-slate-300 dark:bg-slate-700';
+  const bubbleColor = fromMe
+    ? "bg-blue-300 dark:bg-blue-700"
+    : "bg-slate-300 dark:bg-slate-700";
 
   return (
     <div className={`chat mb-5 ${chatClassName}`}>
@@ -37,7 +30,9 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
       <div className={`chat-bubble text-black dark:text-white ${bubbleColor}`}>
         {message.message}
       </div>
-      <div className="chat-footer opacity-50 text-xs mt-1">{message.createdAt}</div>
+      <div className="chat-footer opacity-50 text-xs mt-1">
+        {message.createdAt}
+      </div>
     </div>
   );
 };
