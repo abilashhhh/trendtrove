@@ -11,19 +11,23 @@ const ChatCenter: React.FC = () => {
   const { messages, loading, getMessages } = useGetMessages();
   const { selectedConversation } = useConversation();
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
-
   useListenMessages();
+
+  
 
   useEffect(() => {
     if (selectedConversation?._id) {
       getMessages();
+  
+   
     }
-  }, [selectedConversation?._id]);
+  }, [messages.length]);
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+ 
   const currentUser = useUserDetails();
   const navigate = useNavigate();
 

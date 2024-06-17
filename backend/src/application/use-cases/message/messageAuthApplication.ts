@@ -13,7 +13,7 @@ export const handleSendMessage = async (
       receiverId,
       message
     );
-console.log("sendMessage from msg auth app:" ,sendMessage)
+// console.log("sendMessage from msg auth app:" ,sendMessage)
 
     return sendMessage;
   } catch (error) {

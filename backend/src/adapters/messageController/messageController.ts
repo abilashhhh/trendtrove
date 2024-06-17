@@ -38,16 +38,16 @@ const messageController = (
     const { receiverId } = req.params;
     const senderId = req.body.userId;
 
-    console.log("message:", message);
-    console.log("receiverId:", receiverId);
-    console.log("senderId:", senderId);
+    // console.log("message:", message);
+    // console.log("receiverId:", receiverId);
+    // console.log("senderId:", senderId);
     const sendMessageResult = await handleSendMessage(
       senderId,
       receiverId,
       message,
       dbMessageRepository
     );
-    console.log("sendMessagesResult:",sendMessageResult)
+    // console.log("sendMessagesResult:",sendMessageResult)
       res.status(201).json({
       status: "success",
       message: "Message sent successfully",
