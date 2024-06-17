@@ -25,6 +25,32 @@ console.log("sendMessage from msg auth app:" ,sendMessage)
   }
 };
 
+export const handleEditMessage = async (
+  senderId: string,
+  // receiverId: string,
+  messageId: string,
+  message: string,
+  dbMessageRepository: ReturnType<MessageDBInterface>
+) => {
+  try {
+    const editMessage = await dbMessageRepository.editMessage(
+      senderId,
+      // receiverId,
+      messageId,
+      message
+    );
+console.log("editMessage from msg auth app:" ,editMessage)
+
+    return editMessage;
+  } catch (error) {
+    console.error("Error in handleEditMessage:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to edit the message", 500);
+  }
+};
+
 export const handleGetMessage = async (
   senderId: string,
   receiverId: string,

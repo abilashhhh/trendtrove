@@ -6,7 +6,7 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { handleSendMessage, handleGetMessage, handleGetFriendsInfo } from "../../application/use-cases/message/messageAuthApplication";
+import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage } from "../../application/use-cases/message/messageAuthApplication";
 import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
 
@@ -55,6 +55,30 @@ const messageController = (
     });
   });
 
+  const editMessage = asyncHandler(async (req: Request, res: Response) => {
+    const message = req.body.editedMessage;
+    // const receiverId = req.body.receiverId;
+    const { messageId } = req.params;
+    const senderId = req.body.userId;
+
+    console.log("message:", message);
+    console.log("messageId:", messageId);
+    console.log("senderId:", senderId);
+    const editMessageResult = await handleEditMessage(
+      senderId,
+      // receiverId,
+      messageId,
+      message,
+      dbMessageRepository
+    );
+    console.log("editMessagesResult:",editMessageResult)
+      res.status(201).json({
+      status: "success",
+      message: "Message sent successfully",
+      data: editMessageResult,
+    });
+  });
+
   const getMessages = asyncHandler(async (req: Request, res: Response) => {
     const { receiverId } = req.params;
     const senderId = req.body.userId;
@@ -85,7 +109,8 @@ const messageController = (
   return {
     sendMessage,
     getMessages,
-    getFriendsInfo
+    getFriendsInfo,
+    editMessage
   };
 };
 

@@ -7,6 +7,9 @@ export const messageDBRepository = (
     return  await repository.sendMessage(senderId, receiverId, message);
   };
 
+  const editMessage = async (senderId: string,  messageId: string, message: string) =>  await repository.editMessage(senderId, messageId, message);
+  
+
   const getMessages = async (senderId: string, receiverId: string) => {
     return await repository.getMessages(senderId, receiverId);
   };
@@ -17,7 +20,8 @@ export const messageDBRepository = (
   return {
     sendMessage,
     getMessages,
-    getFriendsInfo
+    getFriendsInfo,
+    editMessage
   };
 };
 

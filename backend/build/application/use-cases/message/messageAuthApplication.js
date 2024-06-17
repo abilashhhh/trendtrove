@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleSendMessage = void 0;
+exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleEditMessage = exports.handleSendMessage = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -29,6 +29,25 @@ const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) =
     }
 });
 exports.handleSendMessage = handleSendMessage;
+const handleEditMessage = (senderId, 
+// receiverId: string,
+messageId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const editMessage = yield dbMessageRepository.editMessage(senderId, 
+        // receiverId,
+        messageId, message);
+        console.log("editMessage from msg auth app:", editMessage);
+        return editMessage;
+    }
+    catch (error) {
+        console.error("Error in handleEditMessage:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to edit the message", 500);
+    }
+});
+exports.handleEditMessage = handleEditMessage;
 const handleGetMessage = (senderId, receiverId, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const getMessage = yield dbMessageRepository.getMessages(senderId, receiverId);

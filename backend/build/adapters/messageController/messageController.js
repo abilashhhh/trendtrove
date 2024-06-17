@@ -34,6 +34,24 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
             data: sendMessageResult,
         });
     }));
+    const editMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const message = req.body.editedMessage;
+        // const receiverId = req.body.receiverId;
+        const { messageId } = req.params;
+        const senderId = req.body.userId;
+        console.log("message:", message);
+        console.log("messageId:", messageId);
+        console.log("senderId:", senderId);
+        const editMessageResult = yield (0, messageAuthApplication_1.handleEditMessage)(senderId, 
+        // receiverId,
+        messageId, message, dbMessageRepository);
+        console.log("editMessagesResult:", editMessageResult);
+        res.status(201).json({
+            status: "success",
+            message: "Message sent successfully",
+            data: editMessageResult,
+        });
+    }));
     const getMessages = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { receiverId } = req.params;
         const senderId = req.body.userId;
@@ -54,7 +72,8 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
     return {
         sendMessage,
         getMessages,
-        getFriendsInfo
+        getFriendsInfo,
+        editMessage
     };
 };
 exports.default = messageController;

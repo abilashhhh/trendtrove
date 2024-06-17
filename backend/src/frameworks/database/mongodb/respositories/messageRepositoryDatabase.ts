@@ -3,7 +3,7 @@ import ErrorInApplication from "../../../../utils/ErrorInApplication";
 import Conversation from "../models/conversationModel";
 import Message from "../models/messageModel";
 import User from "../models/userModel";
-import { getReceiverSocketId  } from "../../../websocket/socket";
+import { getReceiverSocketId } from "../../../websocket/socket";
 import { io } from "../../../../app";
 
 export const messageRepositoryMongoDB = () => {
@@ -34,16 +34,49 @@ export const messageRepositoryMongoDB = () => {
       await Promise.all([conversation.save(), newMessage.save()]);
 
       const receiverSocketId = getReceiverSocketId(receiverId);
-		if (receiverSocketId) {
-			io.to(receiverSocketId).emit("newMessage", newMessage);
-		}
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage", newMessage);
+      }
 
-    console.log("newMessage", newMessage)
+      console.log("newMessage", newMessage);
 
       return newMessage;
     } catch (error: any) {
       console.error("Error in sendMessage:", error.message);
       throw new ErrorInApplication("Error in sending message!", error);
+    }
+  };
+
+  const editMessage = async (
+    senderId: string,
+    messageId: string,
+    newContent: string
+  ) => {
+    try {
+      const message = await Message.findById(messageId);
+
+      if (!message) {
+        throw new Error("Message not found");
+      }
+
+      if (message.senderId.toString() !== senderId) {
+        throw new Error("Unauthorized to edit this message");
+      }
+
+      message.message = newContent;
+      await message.save();
+
+      const receiverSocketId = getReceiverSocketId(message?.receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("updateMessage", message);
+      }
+
+      console.log("Updated Message", message);
+
+      return message;
+    } catch (error: any) {
+      console.error("Error in editMessage:", error.message);
+      throw new ErrorInApplication("Error in editing message!", error);
     }
   };
 
@@ -111,6 +144,7 @@ export const messageRepositoryMongoDB = () => {
     sendMessage,
     getMessages,
     getFriendsInfo,
+    editMessage
   };
 };
 

@@ -50,6 +50,29 @@ const messageRepositoryMongoDB = () => {
             throw new ErrorInApplication_1.default("Error in sending message!", error);
         }
     });
+    const editMessage = (senderId, messageId, newContent) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const message = yield messageModel_1.default.findById(messageId);
+            if (!message) {
+                throw new Error("Message not found");
+            }
+            if (message.senderId.toString() !== senderId) {
+                throw new Error("Unauthorized to edit this message");
+            }
+            message.message = newContent;
+            yield message.save();
+            const receiverSocketId = (0, socket_1.getReceiverSocketId)(message === null || message === void 0 ? void 0 : message.receiverId);
+            if (receiverSocketId) {
+                app_1.io.to(receiverSocketId).emit("updateMessage", message);
+            }
+            console.log("Updated Message", message);
+            return message;
+        }
+        catch (error) {
+            console.error("Error in editMessage:", error.message);
+            throw new ErrorInApplication_1.default("Error in editing message!", error);
+        }
+    });
     const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const conversation = yield conversationModel_1.default.findOne({
@@ -111,6 +134,7 @@ const messageRepositoryMongoDB = () => {
         sendMessage,
         getMessages,
         getFriendsInfo,
+        editMessage
     };
 };
 exports.messageRepositoryMongoDB = messageRepositoryMongoDB;

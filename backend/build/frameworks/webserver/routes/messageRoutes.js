@@ -20,6 +20,7 @@ const messageRoutes = () => {
     router.post("/sendMessages/:receiverId", authMiddleware_1.default, controller.sendMessage);
     router.get("/getMessages/:receiverId", authMiddleware_1.default, controller.getMessages);
     router.get("/getfriendsinfo", authMiddleware_1.default, controller.getFriendsInfo);
+    router.patch("/editmessage/:messageId", authMiddleware_1.default, controller.editMessage);
     return router;
 };
 exports.default = messageRoutes;
