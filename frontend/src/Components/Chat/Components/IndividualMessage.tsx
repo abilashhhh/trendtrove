@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import { Message } from "../../../Types/userProfile";
-import { FaInfoCircle, FaPen, FaTimes } from "react-icons/fa";
+import { FaInfoCircle, FaPen, FaTimes, FaTrash } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { toast } from "react-toastify";
-import { updateMessage } from "../../../API/Chat/chat";  
+import { deleteMessage, updateMessage } from "../../../API/Chat/chat";  
+
 interface IndividualMessageProps {
   message: Message;
 }
@@ -57,6 +58,17 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
     }
   };
 
+  const handleDeleteClick = async () => {
+    try {
+      const response = await deleteMessage(message._id);
+      if (response.error) throw new Error(response.error);
+      message.message = null; 
+      toast.success("Message deleted successfully");
+    } catch (error: any) {
+      toast.error(`Error deleting message: ${error.message}`);
+    }
+  };
+
   const handleCancelClick = () => {
     setIsEditing(false);
     setEditedMessage(message.message); 
@@ -73,33 +85,40 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
         {isEditing ? (
           <input
             type="text"
-            value={editedMessage}
+            value={editedMessage ?? ""}
             onChange={(e) => setEditedMessage(e.target.value)}
             className="bg-transparent border-b border-gray-500 outline-none w-full p-1 text-black dark:text-white"
             autoFocus
           />
         ) : (
-          message.message
+          message.message ? (
+            message.message
+          ) : (
+            <span className="w-full h-full text-black italic font-bold">Message has been deleted</span>
+          )
         )}
       </div>
-      <div className="chat-footer  text-xs mt-1 flex gap-2 items-center">
+      <div className="chat-footer text-xs mt-1 flex gap-2 items-center">
         <FaInfoCircle className="cursor-pointer opacity-35 text-xs" onClick={handleInfoClick} />
         {showTime && (
           <div className="chat-timestamp text-xs mt-1 opacity-50">
             {formatDateTime(message.createdAt)}
           </div>
         )}
-        {fromMe && (
+        {fromMe && message.message && (
           isEditing ? (
             <>
-              <TiTick className="cursor-pointer text-2xl  bg-green-700 rounded-full" onClick={handleSaveClick} />
+              <TiTick className="cursor-pointer text-2xl bg-green-700 rounded-full" onClick={handleSaveClick} />
               <FaTimes className="cursor-pointer text-2xl bg-red-500 rounded-full" onClick={handleCancelClick} />
             </>
           ) : (
-            <FaPen className="cursor-pointer  opacity-35 text-xs" onClick={handleEditClick} />
+            <>
+              <FaPen className="cursor-pointer opacity-35 text-xs" onClick={handleEditClick} />
+              <FaTrash className="cursor-pointer opacity-35 text-xs" onClick={handleDeleteClick} />
+            </>
           )
         )}
-        { message.createdAt !== message.updatedAt && <p className="opacity-35">Edited</p> }
+        {message.createdAt !== message.updatedAt && message.message &&  <p className="opacity-35">Edited</p>}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage } from "../../application/use-cases/message/messageAuthApplication";
+import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage } from "../../application/use-cases/message/messageAuthApplication";
 import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
 
@@ -79,6 +79,23 @@ const messageController = (
     });
   });
 
+  const deleteMessage = asyncHandler(async (req: Request, res: Response) => {
+    const { messageId } = req.params;
+    const senderId = req.body.userId;
+
+    const deleteMessageResult = await handleDeleteMessage(
+      senderId,
+      messageId,
+      dbMessageRepository
+    );
+    console.log("editMessagesResult:",deleteMessageResult)
+      res.status(201).json({
+      status: "success",
+      message: "Message sent successfully",
+      data: deleteMessageResult,
+    });
+  });
+
   const getMessages = asyncHandler(async (req: Request, res: Response) => {
     const { receiverId } = req.params;
     const senderId = req.body.userId;
@@ -110,7 +127,8 @@ const messageController = (
     sendMessage,
     getMessages,
     getFriendsInfo,
-    editMessage
+    editMessage,
+    deleteMessage
   };
 };
 

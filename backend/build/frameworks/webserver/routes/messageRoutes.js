@@ -21,6 +21,7 @@ const messageRoutes = () => {
     router.get("/getMessages/:receiverId", authMiddleware_1.default, controller.getMessages);
     router.get("/getfriendsinfo", authMiddleware_1.default, controller.getFriendsInfo);
     router.patch("/editmessage/:messageId", authMiddleware_1.default, controller.editMessage);
+    router.patch("/deletemessage/:messageId", authMiddleware_1.default, controller.deleteMessage);
     return router;
 };
 exports.default = messageRoutes;

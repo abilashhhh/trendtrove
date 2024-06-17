@@ -73,6 +73,29 @@ const messageRepositoryMongoDB = () => {
             throw new ErrorInApplication_1.default("Error in editing message!", error);
         }
     });
+    const deleteMessage = (senderId, messageId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const message = yield messageModel_1.default.findById(messageId);
+            if (!message) {
+                throw new Error("Message not found");
+            }
+            if (message.senderId.toString() !== senderId) {
+                throw new Error("Unauthorized to delete this message");
+            }
+            message.message = null;
+            yield message.save();
+            const receiverSocketId = (0, socket_1.getReceiverSocketId)(message.receiverId);
+            if (receiverSocketId) {
+                app_1.io.to(receiverSocketId).emit("deleteMessage", { messageId });
+            }
+            console.log("Updated Message", message);
+            return message;
+        }
+        catch (error) {
+            console.error("Error in deleteMessage:", error.message);
+            throw new ErrorInApplication_1.default("Error in deleting message!", error);
+        }
+    });
     const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const conversation = yield conversationModel_1.default.findOne({
@@ -134,7 +157,8 @@ const messageRepositoryMongoDB = () => {
         sendMessage,
         getMessages,
         getFriendsInfo,
-        editMessage
+        editMessage,
+        deleteMessage
     };
 };
 exports.messageRepositoryMongoDB = messageRepositoryMongoDB;

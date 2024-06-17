@@ -15,6 +15,7 @@ const messageDBRepository = (repository) => {
         return yield repository.sendMessage(senderId, receiverId, message);
     });
     const editMessage = (senderId, messageId, message) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.editMessage(senderId, messageId, message); });
+    const deleteMessage = (senderId, messageId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteMessage(senderId, messageId); });
     const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
         return yield repository.getMessages(senderId, receiverId);
     });
@@ -25,7 +26,8 @@ const messageDBRepository = (repository) => {
         sendMessage,
         getMessages,
         getFriendsInfo,
-        editMessage
+        editMessage,
+        deleteMessage
     };
 };
 exports.messageDBRepository = messageDBRepository;

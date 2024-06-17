@@ -87,3 +87,20 @@ export const updateMessage = async (
     throw error;
   }
 };
+
+export const deleteMessage = async (
+  messageId: string
+): Promise<sendMessageInterface> => {
+  try {
+    console.log(messageId)
+
+    const response = await axiosUserInstance.patch<sendMessageInterface>(
+      `${END_POINTS.DELETE_MESSAGES.replace(":messageId", messageId)}`,
+
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};

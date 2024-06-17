@@ -51,6 +51,28 @@ console.log("editMessage from msg auth app:" ,editMessage)
   }
 };
 
+export const handleDeleteMessage = async (
+  senderId: string,
+  messageId: string,
+  dbMessageRepository: ReturnType<MessageDBInterface>
+) => {
+  try {
+    const deleteMessage = await dbMessageRepository.deleteMessage(
+      senderId,
+      messageId,
+    );
+console.log("deleteMessage from msg auth app:" ,deleteMessage)
+
+    return deleteMessage;
+  } catch (error) {
+    console.error("Error in handleDeleteMessage:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to delete the message", 500);
+  }
+};
+
 export const handleGetMessage = async (
   senderId: string,
   receiverId: string,

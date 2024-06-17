@@ -80,6 +80,36 @@ export const messageRepositoryMongoDB = () => {
     }
   };
 
+  const deleteMessage = async (senderId: string, messageId: string) => {
+    try {
+      const message = await Message.findById(messageId);
+  
+      if (!message) {
+        throw new Error("Message not found");
+      }
+  
+      if (message.senderId.toString() !== senderId) {
+        throw new Error("Unauthorized to delete this message");
+      }
+  
+      message.message = null;
+      await message.save();
+  
+      const receiverSocketId = getReceiverSocketId(message.receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("deleteMessage", { messageId });
+      }
+  
+      console.log("Updated Message", message);
+  
+      return message;
+    } catch (error: any) {
+      console.error("Error in deleteMessage:", error.message);
+      throw new ErrorInApplication("Error in deleting message!", error);
+    }
+  };
+  
+
   const getMessages = async (senderId: string, receiverId: string) => {
     try {
       const conversation = await Conversation.findOne({
@@ -144,7 +174,8 @@ export const messageRepositoryMongoDB = () => {
     sendMessage,
     getMessages,
     getFriendsInfo,
-    editMessage
+    editMessage,
+    deleteMessage
   };
 };
 

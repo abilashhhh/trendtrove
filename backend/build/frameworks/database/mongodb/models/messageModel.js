@@ -8,7 +8,7 @@ const userModel_1 = __importDefault(require("./userModel"));
 const messageSchema = new mongoose_1.Schema({
     senderId: { type: mongoose_1.Schema.Types.ObjectId, ref: userModel_1.default, required: true },
     receiverId: { type: mongoose_1.Schema.Types.ObjectId, ref: userModel_1.default, required: true },
-    message: { type: String, required: true },
+    message: { type: String },
 }, {
     timestamps: true,
 });

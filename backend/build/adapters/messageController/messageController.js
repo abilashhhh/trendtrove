@@ -52,6 +52,17 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
             data: editMessageResult,
         });
     }));
+    const deleteMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { messageId } = req.params;
+        const senderId = req.body.userId;
+        const deleteMessageResult = yield (0, messageAuthApplication_1.handleDeleteMessage)(senderId, messageId, dbMessageRepository);
+        console.log("editMessagesResult:", deleteMessageResult);
+        res.status(201).json({
+            status: "success",
+            message: "Message sent successfully",
+            data: deleteMessageResult,
+        });
+    }));
     const getMessages = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { receiverId } = req.params;
         const senderId = req.body.userId;
@@ -73,7 +84,8 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
         sendMessage,
         getMessages,
         getFriendsInfo,
-        editMessage
+        editMessage,
+        deleteMessage
     };
 };
 exports.default = messageController;

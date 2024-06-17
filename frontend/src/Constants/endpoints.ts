@@ -87,6 +87,7 @@ const END_POINTS = {
   SEND_MESSAGES: 'api/message/sendMessages/:receiverId',
   GET_MESSAGES: 'api/message/getMessages/:receiverId',
   EDIT_MESSAGES: 'api/message/editmessage/:messageId',
+  DELETE_MESSAGES: 'api/message/deletemessage/:messageId',
   
 };
 

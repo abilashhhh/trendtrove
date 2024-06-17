@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleEditMessage = exports.handleSendMessage = void 0;
+exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessage = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -48,6 +48,21 @@ messageId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.handleEditMessage = handleEditMessage;
+const handleDeleteMessage = (senderId, messageId, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const deleteMessage = yield dbMessageRepository.deleteMessage(senderId, messageId);
+        console.log("deleteMessage from msg auth app:", deleteMessage);
+        return deleteMessage;
+    }
+    catch (error) {
+        console.error("Error in handleDeleteMessage:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to delete the message", 500);
+    }
+});
+exports.handleDeleteMessage = handleDeleteMessage;
 const handleGetMessage = (senderId, receiverId, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const getMessage = yield dbMessageRepository.getMessages(senderId, receiverId);
