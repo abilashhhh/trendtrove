@@ -99,7 +99,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
           message.message ? (
             message.message
           ) : (
-            <span className="w-full h-full text-red-300 italic font-bold">Message has been deleted</span>
+            <span className="w-full h-full text-red-300 italic font-bold">Message have been deleted</span>
           )
         )}
       </div>

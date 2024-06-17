@@ -5,11 +5,14 @@ import { toast } from "react-toastify";
 import { sendMessageToUser } from "../API/Chat/chat";
 import { Message } from "../Types/userProfile";
 import { useSocketContext } from "../Context/SocketContext";
+import useGetMessages from "./useGetMessages";
 
 const useSendMessages = () => {
+  const { socket } = useSocketContext();
   const [loading, setLoading] = useState(false);
   const { setMessages, selectedConversation } = useConversation();
-  const { socket } = useSocketContext();
+
+  
 
   const sendMessage = async (message: string) => {
     if (!selectedConversation?._id) {
@@ -22,7 +25,6 @@ const useSendMessages = () => {
       const { data } = await sendMessageToUser(selectedConversation._id, message);
       if (data.error) throw new Error(data.error);
 
-      // Emit new message to WebSocket
       socket?.emit("sendMessage", {
         senderId: data.senderId,
         receiverId: selectedConversation._id,

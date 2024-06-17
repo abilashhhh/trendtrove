@@ -1,6 +1,7 @@
  
 import { create } from "zustand";
 import { Message } from "../Types/userProfile";
+import { User } from "firebase/auth";
 
 interface ConversationState {
   selectedConversation: User | null;
