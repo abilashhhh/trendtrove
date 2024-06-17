@@ -5,7 +5,7 @@ import { Message } from "../../../Types/userProfile";
 import { FaInfoCircle, FaPen, FaTimes, FaTrash } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { toast } from "react-toastify";
-import { deleteMessage, updateMessage } from "../../../API/Chat/chat";  
+import { deleteMessage, updateMessage } from "../../../API/Chat/chat";
 
 interface IndividualMessageProps {
   message: Message;
@@ -47,11 +47,16 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   };
 
   const handleSaveClick = async () => {
+    if (!editedMessage.trim()) {
+      toast.error("Message cannot be empty or just whitespace");
+      return;
+    }
+
     try {
       const response = await updateMessage(message._id, editedMessage);
       if (response.error) throw new Error(response.error);
       setIsEditing(false);
-      message.message = editedMessage; 
+      message.message = editedMessage;
       toast.success("Message updated successfully");
     } catch (error: any) {
       toast.error(`Error updating message: ${error.message}`);
@@ -62,7 +67,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
     try {
       const response = await deleteMessage(message._id);
       if (response.error) throw new Error(response.error);
-      message.message = null; 
+      message.message = null;
       toast.success("Message deleted successfully");
     } catch (error: any) {
       toast.error(`Error deleting message: ${error.message}`);
@@ -71,7 +76,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setEditedMessage(message.message); 
+    setEditedMessage(message.message);
   };
 
   return (
@@ -94,7 +99,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
           message.message ? (
             message.message
           ) : (
-            <span className="w-full h-full text-black italic font-bold">Message has been deleted</span>
+            <span className="w-full h-full text-red-300 italic font-bold">Message has been deleted</span>
           )
         )}
       </div>
@@ -118,7 +123,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
             </>
           )
         )}
-        {message.createdAt !== message.updatedAt && message.message &&  <p className="opacity-35">Edited</p>}
+        {message.createdAt !== message.updatedAt && message.message && <p className="opacity-35">Edited</p>}
       </div>
     </div>
   );
