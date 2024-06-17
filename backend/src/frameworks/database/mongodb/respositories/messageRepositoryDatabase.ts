@@ -3,6 +3,8 @@ import ErrorInApplication from "../../../../utils/ErrorInApplication";
 import Conversation from "../models/conversationModel";
 import Message from "../models/messageModel";
 import User from "../models/userModel";
+import { getReceiverSocketId  } from "../../../websocket/socket";
+import { io } from "../../../../app";
 
 export const messageRepositoryMongoDB = () => {
   const sendMessage = async (
@@ -30,6 +32,13 @@ export const messageRepositoryMongoDB = () => {
       conversation.messages.push(newMessage._id);
 
       await Promise.all([conversation.save(), newMessage.save()]);
+
+      const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			io.to(receiverSocketId).emit("newMessage", newMessage);
+		}
+
+
       return newMessage;
     } catch (error: any) {
       console.error("Error in sendMessage:", error.message);

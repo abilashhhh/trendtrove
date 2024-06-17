@@ -25,19 +25,22 @@
 
     // export default socket;
 
-
-    import { Server, Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 interface UserSocketMap {
   [key: string]: string;
 }
 
-const socket = (io: Server<DefaultEventsMap>) => {
-  const userSocketMap: UserSocketMap = {};
+const userSocketMap: UserSocketMap = {};
 
+export const getReceiverSocketId = (receiverId: string): string | undefined => {
+  return userSocketMap[receiverId];
+};
+
+const socket = (io: Server<DefaultEventsMap>) => {
   io.on("connection", (socket: Socket) => {
-    console.log("Connected to socket.io", socket.id);
+    console.log("a user connected", socket.id);
 
     const userId = socket.handshake.query.userId as string;
     if (userId !== "undefined") {
@@ -47,13 +50,16 @@ const socket = (io: Server<DefaultEventsMap>) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
     socket.on("disconnect", () => {
-      console.log("User disconnected from socket.io", socket.id);
+      console.log("user disconnected", socket.id);
       if (userId !== "undefined") {
         delete userSocketMap[userId];
       }
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
+
+    
+
   });
 };
 
-export default socket;
+export { socket };

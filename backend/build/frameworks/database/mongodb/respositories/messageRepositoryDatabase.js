@@ -18,6 +18,8 @@ const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInA
 const conversationModel_1 = __importDefault(require("../models/conversationModel"));
 const messageModel_1 = __importDefault(require("../models/messageModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const socket_1 = require("../../../websocket/socket");
+const app_1 = require("../../../../app");
 const messageRepositoryMongoDB = () => {
     const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -36,6 +38,10 @@ const messageRepositoryMongoDB = () => {
             });
             conversation.messages.push(newMessage._id);
             yield Promise.all([conversation.save(), newMessage.save()]);
+            const receiverSocketId = (0, socket_1.getReceiverSocketId)(receiverId);
+            if (receiverSocketId) {
+                app_1.io.to(receiverSocketId).emit("newMessage", newMessage);
+            }
             return newMessage;
         }
         catch (error) {
