@@ -17,6 +17,7 @@ const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInAppl
 const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sendMessage = yield dbMessageRepository.sendMessage(senderId, receiverId, message);
+        console.log("sendMessage from msg auth app:", sendMessage);
         return sendMessage;
     }
     catch (error) {

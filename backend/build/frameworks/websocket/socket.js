@@ -23,6 +23,13 @@ const socket = (io) => {
             }
             io.emit("getOnlineUsers", Object.keys(userSocketMap));
         });
+        socket.on("sendMessage", (data) => {
+            const { senderId, receiverId, message } = data;
+            const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit("newMessage", { senderId, message });
+            }
+        });
     });
 };
 exports.socket = socket;

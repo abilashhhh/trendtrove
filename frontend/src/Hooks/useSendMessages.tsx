@@ -27,16 +27,17 @@
 
 // export default useSendMessages;
 
-
-import React, { useState } from "react";
+import { useState } from "react";
 import useConversation from "./useConversations";
 import { toast } from "react-toastify";
 import { sendMessageToUser } from "../API/Chat/chat";
-import { Message } from "../Types/userProfile"; 
+import { Message } from "../Types/userProfile";
+import { useSocketContext } from "../Context/SocketContext";
 
-const useSendMessages = (refreshMessages: () => void) => {
+const useSendMessages = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const { setMessages, selectedConversation } = useConversation();
+  const { socket } = useSocketContext();
 
   const sendMessage = async (message: string) => {
     if (!selectedConversation?._id) {
@@ -46,12 +47,17 @@ const useSendMessages = (refreshMessages: () => void) => {
 
     setLoading(true);
     try {
-      console.log("message send:", message);
-      const data = await sendMessageToUser(selectedConversation._id, message);
+      const { data } = await sendMessageToUser(selectedConversation._id, message);
       if (data.error) throw new Error(data.error);
 
+      // Emit new message to WebSocket
+      socket?.emit("sendMessage", {
+        senderId: data.senderId,
+        receiverId: selectedConversation._id,
+        message: data,
+      });
+
       setMessages((prevMessages: Message[]) => [...prevMessages, data]);
-      refreshMessages(); // Refresh messages after sending a new one
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -63,3 +69,4 @@ const useSendMessages = (refreshMessages: () => void) => {
 };
 
 export default useSendMessages;
+

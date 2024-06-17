@@ -31,20 +31,20 @@
 
 // export default useGetMessages;
 
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useConversation from "./useConversations";
-import { toast } from "react-toastify";
 import { getMessagesFromUser } from "../API/Chat/chat";
- 
+import { toast } from "react-toastify";
+
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
 
   const getMessages = async () => {
+    if (!selectedConversation?._id) return;
     setLoading(true);
     try {
-      const data = await getMessagesFromUser(selectedConversation?._id);
+      const { data } = await getMessagesFromUser(selectedConversation._id);
       if (data.error) throw new Error(data.error);
       setMessages(data);
     } catch (error) {

@@ -27,6 +27,7 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
         console.log("receiverId:", receiverId);
         console.log("senderId:", senderId);
         const sendMessageResult = yield (0, messageAuthApplication_1.handleSendMessage)(senderId, receiverId, message, dbMessageRepository);
+        console.log("sendMessagesResult:", sendMessageResult);
         res.status(201).json({
             status: "success",
             message: "Message sent successfully",

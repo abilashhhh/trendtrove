@@ -39,23 +39,24 @@
 //   );
 // };
 
-
-
 import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
+import io, { Socket } from "socket.io-client";
 import useUserDetails from "../Hooks/useUserDetails";
-import io, { Socket }  from "socket.io-client";
 
- 
-export const SocketContext = createContext('');
+interface SocketContextProps {
+  socket: Socket | null;
+  onlineUsers: string[];
+}
+
+export const SocketContext = createContext<SocketContextProps>({ socket: null, onlineUsers: [] });
 
 interface SocketContextProviderProps {
   children: ReactNode;
 }
 
 export const useSocketContext = () => {
-  return useContext(SocketContext)
-}
-
+  return useContext(SocketContext);
+};
 
 export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -66,7 +67,7 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
     if (currentUser) {
       const socket = io("http://localhost:3000", {
         query: {
-          userId: currentUser?._id,
+          userId: currentUser._id,
         },
       });
 
@@ -93,4 +94,3 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
     </SocketContext.Provider>
   );
 };
- 

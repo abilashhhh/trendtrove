@@ -4,7 +4,7 @@ export const messageDBRepository = (
   repository: ReturnType<MessagesRepositoryMongoDB>
 ) => {
   const sendMessage = async (senderId: string, receiverId: string, message: string) => {
-    await repository.sendMessage(senderId, receiverId, message);
+    return  await repository.sendMessage(senderId, receiverId, message);
   };
 
   const getMessages = async (senderId: string, receiverId: string) => {

@@ -38,6 +38,7 @@ export const messageRepositoryMongoDB = () => {
 			io.to(receiverSocketId).emit("newMessage", newMessage);
 		}
 
+    console.log("newMessage", newMessage)
 
       return newMessage;
     } catch (error: any) {

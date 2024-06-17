@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import useSendMessages from "../../../Hooks/useSendMessages";
-import useGetMessages from "../../../Hooks/useGetMessages";
 
 const SendMessageInput: React.FC = () => {
   const [message, setMessage] = useState("");
-
-  const { getMessages } = useGetMessages();
-  const { loading, sendMessage } = useSendMessages(getMessages);
+  const { loading, sendMessage } = useSendMessages();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

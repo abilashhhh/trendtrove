@@ -47,7 +47,8 @@ const messageController = (
       message,
       dbMessageRepository
     );
-    res.status(201).json({
+    console.log("sendMessagesResult:",sendMessageResult)
+      res.status(201).json({
       status: "success",
       message: "Message sent successfully",
       data: sendMessageResult,

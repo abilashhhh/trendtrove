@@ -42,6 +42,7 @@ const messageRepositoryMongoDB = () => {
             if (receiverSocketId) {
                 app_1.io.to(receiverSocketId).emit("newMessage", newMessage);
             }
+            console.log("newMessage", newMessage);
             return newMessage;
         }
         catch (error) {
