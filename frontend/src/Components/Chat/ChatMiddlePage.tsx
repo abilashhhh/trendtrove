@@ -12,10 +12,10 @@ const ChatMiddlePage: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 768); // Example breakpoint for small screens
+      setIsSmallScreen(window.innerWidth < 768);
     };
 
-    handleResize(); // Check on initial render
+    handleResize();
 
     window.addEventListener("resize", handleResize);
 
@@ -35,13 +35,19 @@ const ChatMiddlePage: React.FC = () => {
   return (
     <>
       <ToastContainer />
-      <main className="flex-1 pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
+      <main className="flex-1 pt-1 pr-2 sm:pl-2 pb-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
         <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
           <div className="flex flex-col md:flex-row gap-1 h-full">
-            <div className={`w-full md:w-1/3 lg:w-1/4 ${showChatInnerMain && "hidden md:block"}`}>
+            <div
+              className={`w-full md:w-1/3 lg:w-1/4 ${
+                showChatInnerMain && "hidden md:block"
+              }`}>
               <ChatLeftSidebar />
             </div>
-            <div className={`w-full md:w-2/3 lg:w-3/4 flex-grow ${!showChatInnerMain && "hidden md:block"}`}>
+            <div
+              className={`w-full md:w-2/3 lg:w-3/4 flex-grow ${
+                !showChatInnerMain && "hidden md:block"
+              }`}>
               {!selectedConversation ? <NoChatSelected /> : <ChatInnerMain />}
             </div>
           </div>

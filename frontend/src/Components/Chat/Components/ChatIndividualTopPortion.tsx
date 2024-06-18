@@ -1,5 +1,5 @@
 import React from "react";
-import { FaArrowLeft } from "react-icons/fa"; // Import the back icon
+import { FaArrowLeft } from "react-icons/fa";
 import useConversation from "../../../Hooks/useConversations";
 
 const ChatIndividualTopPortion = () => {
