@@ -97,7 +97,7 @@ export const messageRepositoryMongoDB = () => {
   
       const receiverSocketId = getReceiverSocketId(message.receiverId);
       if (receiverSocketId) {
-        io.to(receiverSocketId).emit("deleteMessage", { messageId });
+        io.to(receiverSocketId).emit("deleteMessage", message );
       }
   
       console.log("Updated Message", message);

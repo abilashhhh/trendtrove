@@ -86,7 +86,7 @@ const messageRepositoryMongoDB = () => {
             yield message.save();
             const receiverSocketId = (0, socket_1.getReceiverSocketId)(message.receiverId);
             if (receiverSocketId) {
-                app_1.io.to(receiverSocketId).emit("deleteMessage", { messageId });
+                app_1.io.to(receiverSocketId).emit("deleteMessage", message);
             }
             console.log("Updated Message", message);
             return message;
