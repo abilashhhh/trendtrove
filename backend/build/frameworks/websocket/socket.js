@@ -1,6 +1,4 @@
 "use strict";
-// import { Server, Socket } from "socket.io";
-// import { DefaultEventsMap } from "socket.io/dist/typed-events";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.socket = exports.getReceiverSocketId = void 0;
 const userSocketMap = {};

@@ -20,6 +20,7 @@ import EditPost from "./Pages/EditPost";
 import CommentsPage from "./Components/Comments/CommentsPage";
 import ExplorePageComponent from "./Components/Explore/ExplorePageComponent";
 import ChatPage from "./Pages/ChatPage";
+import NotificationsPage from "./Pages/NotificationsPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -41,6 +42,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/explore" element={<ExplorePageComponent/>} />
+        <Route path="/notifications" element={<NotificationsPage/>} />
         <Route path="/addpost" element={<Addpost />} />
         <Route path="/chats" element={<ChatPage />} />
         <Route path="/editpost/:postId" element={<EditPost />} />
