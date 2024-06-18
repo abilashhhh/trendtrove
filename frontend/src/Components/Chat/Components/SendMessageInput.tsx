@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { FaPaperPlane, FaSmile, FaImage, FaVideo, FaFileAudio } from "react-icons/fa";
+import {
+  FaPaperPlane,
+  FaSmile,
+  FaImage,
+  FaVideo,
+  FaFileAudio,
+} from "react-icons/fa";
 import useSendMessages from "../../../Hooks/useSendMessages";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import { FiPaperclip } from "react-icons/fi";
-import useGetMessages from "../../../Hooks/useGetMessages";
 
 const SendMessageInput: React.FC = () => {
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showFileIcons, setShowFileIcons] = useState(false) 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);  
+  const [showFileIcons, setShowFileIcons] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { sendMessage } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
-  const {  getMessages } = useGetMessages();
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,24 +29,22 @@ const SendMessageInput: React.FC = () => {
       toast.error("Message or file cannot be empty.");
       return;
     }
-    setLoading(true);  
+    setLoading(true);
 
     try {
       await sendMessage(message, selectedFile);
       toast.success("Message sent successfully!");
       setMessage("");
       setSelectedFile(null);
-      getMessages()
-    } catch (error) {
+    } catch (error: any) {
       toast.error(`Error sending message: ${error.message}`);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setMessage((prevMessage) => prevMessage + emojiData.emoji);
-    // setShowEmojiPicker(false);
+    setMessage(prevMessage => prevMessage + emojiData.emoji);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,36 +55,14 @@ const SendMessageInput: React.FC = () => {
   };
 
   const toggleFileIcons = () => {
-    setShowFileIcons((prev) => !prev);
+    setShowFileIcons(prev => !prev);
   };
-  const handleImageClick = () => {
-    document.getElementById("fileInput")?.click();
-    setSelectedFile((prevFile) => {
-      if (prevFile?.type.includes("image")) {
-        return prevFile;
-      }
-      return null;
-    });
-  };
-  
-  const handleVideoClick = () => {
-    document.getElementById("fileInput")?.click();
-    setSelectedFile((prevFile) => {
-      if (prevFile?.type.includes("video")) {
-        return prevFile;
-      }
-      return null;
-    });
-  };
-  
-  const handleAudioClick = () => {
-    document.getElementById("fileInput")?.click();
-    setSelectedFile((prevFile) => {
-      if (prevFile?.type.includes("audio")) {
-        return prevFile;
-      }
-      return null;
-    });
+
+  const handleFileInputClick = (fileType: string) => {
+    const input = document.getElementById(`${fileType}Input`);
+    if (input) {
+      (input as HTMLInputElement).click();
+    }
   };
 
   const canChat =
@@ -93,37 +72,36 @@ const SendMessageInput: React.FC = () => {
     );
 
   return (
-    <div className=" bg-gray-100  dark:bg-gray-800 shadow-sm sticky bottom-0">
+    <div className="bg-gray-100 dark:bg-gray-800 shadow-sm sticky bottom-0 p-4">
       {canChat && (
         <>
           <form className="flex items-center w-full" onSubmit={handleSubmit}>
-           
             <input
               type="text"
               placeholder="Type your message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="flex-grow p-2 mr-2 rounded-lg border border-gray-700 dark:border-gray-700 bg-white  dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              onChange={e => setMessage(e.target.value)}
+              className="flex-grow p-2 mr-2 rounded-lg border border-gray-700 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
-             <button
+            <button
               type="button"
+              aria-label="Toggle Emoji Picker"
               className="p-2 bg-gray-300 dark:bg-gray-700 text-yellow-500 rounded-lg mr-2"
-              onClick={() => setShowEmojiPicker((prev) => !prev)}
-            >
+              onClick={() => setShowEmojiPicker(prev => !prev)}>
               <FaSmile />
             </button>
             <button
               type="button"
+              aria-label="Attach File"
               className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg mr-2"
-              onClick={toggleFileIcons} 
-            >
+              onClick={toggleFileIcons}>
               <FiPaperclip />
             </button>
             <button
               type="submit"
+              aria-label="Send Message"
               className="p-2 bg-blue-500 text-white rounded-lg"
-              disabled={loading}
-            >
+              disabled={loading}>
               {loading ? (
                 <div className="loading loading-spinner"></div>
               ) : (
@@ -131,38 +109,51 @@ const SendMessageInput: React.FC = () => {
               )}
             </button>
           </form>
-          
+
           {showEmojiPicker && (
             <div className="absolute bottom-16 right-4">
               <EmojiPicker onEmojiClick={handleEmojiClick} />
             </div>
           )}
           {showFileIcons && (
-            <div className="absolute bottom-16 right-4 flex bg-slate-900 p-2 rounded-lg">
+            <div className="absolute bottom-16 right-4 flex  rounded-lg">
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer"
-                onClick={handleImageClick}
-              >
+                onClick={() => handleFileInputClick('image')}>
                 <FaImage />
               </div>
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer ml-2"
-                onClick={handleVideoClick}
-              >
+                onClick={() => handleFileInputClick('video')}>
                 <FaVideo />
               </div>
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer ml-2"
-                onClick={handleAudioClick}
-              >
+                onClick={() => handleFileInputClick('audio')}>
                 <FaFileAudio />
               </div>
+
               <input
                 type="file"
-                accept="image/*, video/*, audio/*"
+                accept="image/*"
                 onChange={handleFileChange}
                 className="hidden"
-                id="fileInput"
+                id="imageInput"
+              />
+
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="videoInput"
+              />
+              <input
+                type="file"
+                accept="audio/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="audioInput"
               />
             </div>
           )}
