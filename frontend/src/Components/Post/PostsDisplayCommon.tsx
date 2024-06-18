@@ -111,7 +111,7 @@ const PostsDisplayCommon: React.FC<PostsDisplayCommonProps> = ({ post }) => {
         <p></p>
       )}
     </div>
-      <p className="mt-4 ">{post.captions}</p>
+      <p className="mt-4  break-all">{post.captions}</p>
     </div>
   );
 };

@@ -86,7 +86,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
           <img alt="User avatar" src={profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-black dark:text-white ${bubbleColor}`}>
+      <div className={`chat-bubble text-black dark:text-white break-all ${bubbleColor}`}>
         {isEditing ? (
           <input
             type="text"
