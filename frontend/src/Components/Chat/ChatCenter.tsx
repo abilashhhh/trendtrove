@@ -10,24 +10,26 @@ import useUserDetails from "../../Hooks/useUserDetails";
 const ChatCenter: React.FC = () => {
   const { messages, loading, getMessages } = useGetMessages();
   const { selectedConversation } = useConversation();
-  const lastMessageRef = useRef<HTMLDivElement | null>(null);
   useListenMessages();
 
-  
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, selectedConversation?._id , getMessages]);
 
   useEffect(() => {
     if (selectedConversation?._id) {
       getMessages();
-  
-   
     }
   }, [messages.length]);
 
-  useEffect(() => {
-    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
- 
   const currentUser = useUserDetails();
   const navigate = useNavigate();
 
@@ -73,12 +75,11 @@ const ChatCenter: React.FC = () => {
           {Array.isArray(messages) && messages.length > 0 ? (
             <div className="flex-grow overflow-y-auto">
               {messages.map((message, index) => (
-                <div
-                  key={message._id}
-                  ref={index === messages.length - 1 ? lastMessageRef : null}>
+                <div key={message._id}>
                   <IndividualMessage message={message} />
                 </div>
               ))}
+               <div ref={chatEndRef} />
             </div>
           ) : (
             <div className="flex items-center justify-center text-gray-500 dark:text-gray-400 h-full">
