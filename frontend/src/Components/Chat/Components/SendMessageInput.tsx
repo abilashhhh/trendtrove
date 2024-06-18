@@ -43,7 +43,7 @@ const SendMessageInput: React.FC = () => {
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setMessage((prevMessage) => prevMessage + emojiData.emoji);
-    setShowEmojiPicker(false);
+    // setShowEmojiPicker(false);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +115,7 @@ const SendMessageInput: React.FC = () => {
             <button
               type="button"
               className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg mr-2"
-              onClick={toggleFileIcons} // Toggle visibility of file icons
+              onClick={toggleFileIcons} 
             >
               <FiPaperclip />
             </button>

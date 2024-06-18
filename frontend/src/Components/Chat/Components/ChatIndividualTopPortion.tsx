@@ -1,6 +1,7 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import useConversation from "../../../Hooks/useConversations";
+import { useSocketContext } from "../../../Context/SocketContext";
 
 const ChatIndividualTopPortion = () => {
   const { selectedConversation, setSelectedConversation } = useConversation();
@@ -16,6 +17,9 @@ const ChatIndividualTopPortion = () => {
       </div>
     );
   }
+
+  const { onlineUsers } = useSocketContext();
+  const isOnline = onlineUsers.includes(selectedConversation._id);
 
   return (
     <div className="h-16 mb-5 -m-3 bg-gray-300 dark:bg-gray-900 rounded-t-lg shadow-sm flex items-center p-4">
@@ -35,7 +39,7 @@ const ChatIndividualTopPortion = () => {
         <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           {selectedConversation.username}
         </div>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Online</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{isOnline ?"Online" : "Offline"}</div>
       </div>
     </div>
   );
