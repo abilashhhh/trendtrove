@@ -91,6 +91,14 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
     setShowConfirmDelete(false);
   };
 
+  const createdWithin15Mins = (message : Message) => {
+    const createdAt = new Date(message.createdAt);
+    const currentTime = new Date();
+    const timeDifference = (currentTime - createdAt) / (1000 * 60);
+
+    return timeDifference <= 15;
+  };
+
   return (
     <div className={`chat mb-5 ${chatClassName}`}>
       <div className="chat-image avatar">
@@ -113,18 +121,15 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
             {message.fileType === "video" && (
               <video
                 controls
-      
                 className="rounded-lg max-w-full h-auto"
                 src={message.mediaUrl}></video>
             )}
             {message.fileType === "audio" && (
               <audio
                 controls
-      
                 className="rounded-lg max-w-full h-auto"
                 src={message.mediaUrl}></audio>
             )}
-             
           </div>
         )}
         {isEditing ? (
@@ -168,14 +173,17 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
             </>
           ) : (
             <>
-              <FaPen
-                className="cursor-pointer opacity-35 text-xs"
-                onClick={handleEditClick}
-              />
-              <FaTrash
+              {createdWithin15Mins(message) && (
+                <FaPen
+                  className="cursor-pointer opacity-35 text-xs"
+                  onClick={handleEditClick}
+                />
+              )}
+
+            {createdWithin15Mins(message) &&  <FaTrash
                 className="cursor-pointer opacity-35 text-xs"
                 onClick={handleConfirmDelete}
-              />
+              />}
             </>
           ))}
         {message.createdAt !== message.updatedAt && message.message && (
