@@ -93,7 +93,7 @@ const SendMessageInput: React.FC = () => {
     );
 
   return (
-    <div className="p-4 bg-gray-100  dark:bg-gray-800 shadow-sm sticky bottom-0">
+    <div className=" bg-gray-100  dark:bg-gray-800 shadow-sm sticky bottom-0">
       {canChat && (
         <>
           <form className="flex items-center w-full" onSubmit={handleSubmit}>

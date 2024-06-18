@@ -5,7 +5,7 @@ import ChatCenter from "./ChatCenter";
 
 const ChatInnerMain: React.FC = () => {
   return (
-    <div className="flex-grow p-4 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
+    <div className="flex-grow p-1 lg:p-2 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
       <ChatIndividualTopPortion />
       <ChatCenter />
       <SendMessageInput />
