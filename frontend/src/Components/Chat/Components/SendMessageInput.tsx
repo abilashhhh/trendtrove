@@ -10,10 +10,10 @@ import useGetMessages from "../../../Hooks/useGetMessages";
 
 const SendMessageInput: React.FC = () => {
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false); // Dummy state for loading, replace with your actual loading state
+  const [loading, setLoading] = useState(false);  
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showFileIcons, setShowFileIcons] = useState(false); // State to manage visibility of file icons
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // State to hold the selected file
+  const [showFileIcons, setShowFileIcons] = useState(false) 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);  
   const { sendMessage } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
@@ -26,10 +26,9 @@ const SendMessageInput: React.FC = () => {
       toast.error("Message or file cannot be empty.");
       return;
     }
-    setLoading(true); // Set loading state while sending message or file
+    setLoading(true);  
 
     try {
-      // Dummy function, replace with your actual send message function
       await sendMessage(message, selectedFile);
       toast.success("Message sent successfully!");
       setMessage("");
@@ -38,7 +37,7 @@ const SendMessageInput: React.FC = () => {
     } catch (error) {
       toast.error(`Error sending message: ${error.message}`);
     } finally {
-      setLoading(false); // Reset loading state after send operation
+      setLoading(false); 
     }
   };
 
@@ -94,7 +93,7 @@ const SendMessageInput: React.FC = () => {
     );
 
   return (
-    <div className="p-4 bg-gray-100 dark:bg-gray-800 shadow-sm sticky bottom-0">
+    <div className="p-4 bg-gray-100  dark:bg-gray-800 shadow-sm sticky bottom-0">
       {canChat && (
         <>
           <form className="flex items-center w-full" onSubmit={handleSubmit}>
@@ -104,7 +103,7 @@ const SendMessageInput: React.FC = () => {
               placeholder="Type your message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="flex-grow p-2 mr-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="flex-grow p-2 mr-2 rounded-lg border border-gray-700 dark:border-gray-700 bg-white  dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
              <button
               type="button"

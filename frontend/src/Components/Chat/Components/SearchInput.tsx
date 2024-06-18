@@ -11,7 +11,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   setSearchQuery,
 }) => {
   return (
-    <div className="bg-slate-300 dark:bg-slate-900">
+    <div className="bg-slate-100 dark:bg-slate-900">
       <form
         action=""
         className="flex items-center bg-white dark:bg-slate-800 pl-2 rounded-full shadow-md">

@@ -18,7 +18,7 @@ const ChatIndividualTopPortion = () => {
   }
 
   return (
-    <div className="h-16 mb-5 -m-3 bg-gray-100 dark:bg-gray-900 rounded-t-lg shadow-sm flex items-center p-4">
+    <div className="h-16 mb-5 -m-3 bg-gray-300 dark:bg-gray-900 rounded-t-lg shadow-sm flex items-center p-4">
       <FaArrowLeft
         className="text-xl cursor-pointer mr-4 text-gray-900 dark:text-gray-100 md:hidden" // Hide on medium and larger screens
         onClick={handleBackClick}

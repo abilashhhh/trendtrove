@@ -8,7 +8,7 @@ const ChatLeftSidebar: React.FC = () => {
   const { setSelectedConversation } = useConversation();
 
   return (
-    <div className="bg-slate-300 rounded-lg dark:bg-slate-900 w-full  p-2 h-full flex flex-col overflow-auto no-scrollbar">
+    <div className="bg-slate-100 rounded-lg dark:bg-slate-900 w-full  p-2 h-full flex flex-col overflow-auto no-scrollbar">
       <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <div className="flex-1">
         <Conversations searchQuery={searchQuery} setSelectedConversation={setSelectedConversation} />
