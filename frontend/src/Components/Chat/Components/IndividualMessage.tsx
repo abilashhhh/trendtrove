@@ -69,6 +69,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
       const response = await deleteMessage(message._id);
       if (response.error) throw new Error(response.error);
       message.message = null;
+      message.mediaUrl = null;
       toast.success("Message deleted successfully");
       setShowConfirmDelete(false);
     } catch (error: any) {
