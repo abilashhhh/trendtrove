@@ -37,7 +37,7 @@ const ChatMiddlePage: React.FC = () => {
       <ToastContainer />
       <main className="flex-1 pt-1 pr-2 lg:pl-2 pb-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
         <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
-          <div className="flex flex-col md:flex-row gap-1 h-full">
+          <div className="flex flex-col md:flex-row gap-1 h-full overflow-auto no-scrollbar">
             <div
               className={`w-full md:w-1/3 lg:w-1/4 ${
                 showChatInnerMain && "hidden md:block"
