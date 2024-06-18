@@ -114,6 +114,8 @@ const messageRepositoryMongoDB = () => {
                 throw new Error("Unauthorized to delete this message");
             }
             message.message = null;
+            message.fileType = null;
+            message.mediaUrl = null;
             yield message.save();
             const receiverSocketId = (0, socket_1.getReceiverSocketId)(message.receiverId);
             if (receiverSocketId) {

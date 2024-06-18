@@ -9,10 +9,10 @@ import {
   FaFileAudio,
   FaTimes,
 } from "react-icons/fa";
+import { FiPaperclip } from "react-icons/fi";
 import useSendMessages from "../../../Hooks/useSendMessages";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
-import { FiPaperclip } from "react-icons/fi";
 import upload from "../../../utils/cloudinary";
 
 const SendMessageInput: React.FC = () => {

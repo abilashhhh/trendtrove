@@ -138,6 +138,8 @@ export const messageRepositoryMongoDB = () => {
       }
   
       message.message = null;
+      message.fileType = null;
+      message.mediaUrl = null;
       await message.save();
   
       const receiverSocketId = getReceiverSocketId(message.receiverId);

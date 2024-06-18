@@ -70,6 +70,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
       if (response.error) throw new Error(response.error);
       message.message = null;
       message.mediaUrl = null;
+      message.fileType = null;
       toast.success("Message deleted successfully");
       setShowConfirmDelete(false);
     } catch (error: any) {
@@ -112,21 +113,18 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
             {message.fileType === "video" && (
               <video
                 controls
-                loop
-                autoPlay
+      
                 className="rounded-lg max-w-full h-auto"
                 src={message.mediaUrl}></video>
             )}
             {message.fileType === "audio" && (
-              <audio controls className="rounded-lg max-w-full h-auto">
-                <source src={message.mediaUrl} type="audio/mp3" />
-                <source src={message.mediaUrl} type="audio/mp4" />
-                <source src={message.mediaUrl} type="audio/mp4" />
-                <source src={message.mediaUrl} type="audio/m4a" />
-                <source src={message.mediaUrl} type="audio/wav" />
-                Your browser does not support the audio element.
-              </audio>
+              <audio
+                controls
+      
+                className="rounded-lg max-w-full h-auto"
+                src={message.mediaUrl}></audio>
             )}
+             
           </div>
         )}
         {isEditing ? (
