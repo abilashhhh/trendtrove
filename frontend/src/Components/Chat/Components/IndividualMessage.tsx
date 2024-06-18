@@ -31,6 +31,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   const [showTime, setShowTime] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedMessage, setEditedMessage] = useState(message.message);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe ? currentUser.dp : selectedConversation?.dp;
@@ -69,6 +70,7 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
       if (response.error) throw new Error(response.error);
       message.message = null;
       toast.success("Message deleted successfully");
+      setShowConfirmDelete(false);
     } catch (error: any) {
       toast.error(`Error deleting message: ${error.message}`);
     }
@@ -77,6 +79,14 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   const handleCancelClick = () => {
     setIsEditing(false);
     setEditedMessage(message.message);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowConfirmDelete(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirmDelete(false);
   };
 
   return (
@@ -119,12 +129,36 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
           ) : (
             <>
               <FaPen className="cursor-pointer opacity-35 text-xs" onClick={handleEditClick} />
-              <FaTrash className="cursor-pointer opacity-35 text-xs" onClick={handleDeleteClick} />
+              <FaTrash className="cursor-pointer opacity-35 text-xs" onClick={handleConfirmDelete} />
             </>
           )
         )}
         {message.createdAt !== message.updatedAt && message.message && <p className="opacity-35">Edited</p>}
       </div>
+
+      {showConfirmDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm mx-auto">
+            <p className="text-center mb-4 text-black dark:text-white">
+              Are you sure you want to delete this message?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleDeleteClick}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+              >
+                Delete
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
