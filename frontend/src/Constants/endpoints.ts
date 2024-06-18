@@ -85,6 +85,7 @@ const END_POINTS = {
   //CHAT
   GET_FRIENDS_INFO: 'api/message/getfriendsinfo',
   SEND_MESSAGES: 'api/message/sendMessages/:receiverId',
+  SEND_MESSAGES_ONLY: 'api/message/sendMessagesOnly/:receiverId',
   GET_MESSAGES: 'api/message/getMessages/:receiverId',
   EDIT_MESSAGES: 'api/message/editmessage/:messageId',
   DELETE_MESSAGES: 'api/message/deletemessage/:messageId',

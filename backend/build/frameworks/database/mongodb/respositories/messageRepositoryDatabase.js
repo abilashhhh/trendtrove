@@ -21,7 +21,7 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const socket_1 = require("../../../websocket/socket");
 const app_1 = require("../../../../app");
 const messageRepositoryMongoDB = () => {
-    const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
+    const sendMessage = (senderId, receiverId, message, mediaUrl, fileType) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             let conversation = yield conversationModel_1.default.findOne({
                 participants: { $all: [senderId, receiverId] },
@@ -35,6 +35,37 @@ const messageRepositoryMongoDB = () => {
                 senderId,
                 receiverId,
                 message,
+                mediaUrl,
+                fileType
+            });
+            conversation.messages.push(newMessage._id);
+            yield Promise.all([conversation.save(), newMessage.save()]);
+            const receiverSocketId = (0, socket_1.getReceiverSocketId)(receiverId);
+            if (receiverSocketId) {
+                app_1.io.to(receiverSocketId).emit("newMessage", newMessage);
+            }
+            // console.log("newMessage", newMessage);
+            return newMessage;
+        }
+        catch (error) {
+            console.error("Error in sendMessage:", error.message);
+            throw new ErrorInApplication_1.default("Error in sending message!", error);
+        }
+    });
+    const sendMessageOnly = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            let conversation = yield conversationModel_1.default.findOne({
+                participants: { $all: [senderId, receiverId] },
+            });
+            if (!conversation) {
+                conversation = new conversationModel_1.default({
+                    participants: [senderId, receiverId],
+                });
+            }
+            const newMessage = new messageModel_1.default({
+                senderId,
+                receiverId,
+                message
             });
             conversation.messages.push(newMessage._id);
             yield Promise.all([conversation.save(), newMessage.save()]);
@@ -104,6 +135,7 @@ const messageRepositoryMongoDB = () => {
             if (!conversation) {
                 return [];
             }
+            console.log(conversation.messages);
             return conversation.messages;
         }
         catch (error) {
@@ -155,6 +187,7 @@ const messageRepositoryMongoDB = () => {
     });
     return {
         sendMessage,
+        sendMessageOnly,
         getMessages,
         getFriendsInfo,
         editMessage,

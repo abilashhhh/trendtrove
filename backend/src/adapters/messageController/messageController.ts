@@ -6,7 +6,7 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage } from "../../application/use-cases/message/messageAuthApplication";
+import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage, handleSendMessageOnly } from "../../application/use-cases/message/messageAuthApplication";
 import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
 
@@ -35,13 +35,33 @@ const messageController = (
 
   const sendMessage = asyncHandler(async (req: Request, res: Response) => {
     const message = req.body.message;
+    const mediaUrl = req.body.mediaUrl;
+    const fileType = req.body.fileType;
     const { receiverId } = req.params;
     const senderId = req.body.userId;
 
-    // console.log("message:", message);
-    // console.log("receiverId:", receiverId);
-    // console.log("senderId:", senderId);
     const sendMessageResult = await handleSendMessage(
+      senderId,
+      receiverId,
+      message,
+      mediaUrl,
+      fileType,
+      dbMessageRepository
+    );
+    // console.log("sendMessagesResult:",sendMessageResult)
+      res.status(201).json({
+      status: "success",
+      message: "Message sent successfully",
+      data: sendMessageResult,
+    });
+  });
+
+  const sendMessageOnly = asyncHandler(async (req: Request, res: Response) => {
+    const message = req.body.message;
+    const { receiverId } = req.params;
+    const senderId = req.body.userId;
+
+    const sendMessageResult = await handleSendMessageOnly(
       senderId,
       receiverId,
       message,
@@ -125,6 +145,7 @@ const messageController = (
 
   return {
     sendMessage,
+    sendMessageOnly,
     getMessages,
     getFriendsInfo,
     editMessage,

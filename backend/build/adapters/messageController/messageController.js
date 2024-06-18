@@ -21,12 +21,23 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
     const dbMessageRepository = messageDBRepositoryInterface(messageDBRepositoryImplementation());
     const sendMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const message = req.body.message;
+        const mediaUrl = req.body.mediaUrl;
+        const fileType = req.body.fileType;
         const { receiverId } = req.params;
         const senderId = req.body.userId;
-        // console.log("message:", message);
-        // console.log("receiverId:", receiverId);
-        // console.log("senderId:", senderId);
-        const sendMessageResult = yield (0, messageAuthApplication_1.handleSendMessage)(senderId, receiverId, message, dbMessageRepository);
+        const sendMessageResult = yield (0, messageAuthApplication_1.handleSendMessage)(senderId, receiverId, message, mediaUrl, fileType, dbMessageRepository);
+        // console.log("sendMessagesResult:",sendMessageResult)
+        res.status(201).json({
+            status: "success",
+            message: "Message sent successfully",
+            data: sendMessageResult,
+        });
+    }));
+    const sendMessageOnly = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const message = req.body.message;
+        const { receiverId } = req.params;
+        const senderId = req.body.userId;
+        const sendMessageResult = yield (0, messageAuthApplication_1.handleSendMessageOnly)(senderId, receiverId, message, dbMessageRepository);
         // console.log("sendMessagesResult:",sendMessageResult)
         res.status(201).json({
             status: "success",
@@ -82,6 +93,7 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
     }));
     return {
         sendMessage,
+        sendMessageOnly,
         getMessages,
         getFriendsInfo,
         editMessage,

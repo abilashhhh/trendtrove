@@ -7,11 +7,13 @@ import {
   FaImage,
   FaVideo,
   FaFileAudio,
+  FaTimes,
 } from "react-icons/fa";
 import useSendMessages from "../../../Hooks/useSendMessages";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import { FiPaperclip } from "react-icons/fi";
+import upload from "../../../utils/cloudinary";
 
 const SendMessageInput: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -19,7 +21,7 @@ const SendMessageInput: React.FC = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showFileIcons, setShowFileIcons] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { sendMessage } = useSendMessages();
+  const { sendMessage, sendMessageOnly } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
 
@@ -32,13 +34,40 @@ const SendMessageInput: React.FC = () => {
     setLoading(true);
 
     try {
-      await sendMessage(message, selectedFile);
-      toast.success("Message sent successfully!");
-      setMessage("");
-      setSelectedFile(null);
+      let mediaUrl = "";
+      if (selectedFile) {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(selectedFile);
+        fileReader.onloadend = async () => {
+          const fileType = selectedFile.type.startsWith("image")
+            ? "image"
+            : selectedFile.type.startsWith("video")
+            ? "video"
+            : "audio";
+          const response = await upload(
+            fileReader.result as string,
+            err => toast.error(err),
+            "chatMessages",
+            fileType
+          );
+          if (response?.url) {
+            mediaUrl = response.url;
+          }
+          const messageToSend = message.trim() || selectedFile.name;
+          await sendMessage(messageToSend, mediaUrl, fileType);
+          toast.success("Message sent successfully!");
+          setMessage("");
+          setSelectedFile(null);
+          setLoading(false);
+        };
+      } else {
+        await sendMessageOnly(message.trim());
+        toast.success("Message sent successfully!");
+        setMessage("");
+        setLoading(false);
+      }
     } catch (error: any) {
       toast.error(`Error sending message: ${error.message}`);
-    } finally {
       setLoading(false);
     }
   };
@@ -65,6 +94,10 @@ const SendMessageInput: React.FC = () => {
     }
   };
 
+  const removeSelectedFile = () => {
+    setSelectedFile(null);
+  };
+
   const canChat =
     !selectedConversation?.isPrivate ||
     selectedConversation?.followers.some(
@@ -75,6 +108,19 @@ const SendMessageInput: React.FC = () => {
     <div className="bg-gray-100 dark:bg-gray-800 shadow-sm sticky bottom-0 p-4">
       {canChat && (
         <>
+          {selectedFile && (
+            <div className="mt-2 text-gray-700 dark:text-gray-300 flex items-center">
+              <span>Selected file: {selectedFile.name}</span>
+              <button
+                className="ml-2 text-red-500"
+                onClick={removeSelectedFile}
+                aria-label="Remove selected file"
+                title="Remove file"
+              >
+                <FaTimes />
+              </button>
+            </div>
+          )}
           <form className="flex items-center w-full" onSubmit={handleSubmit}>
             <input
               type="text"
@@ -87,21 +133,24 @@ const SendMessageInput: React.FC = () => {
               type="button"
               aria-label="Toggle Emoji Picker"
               className="p-2 bg-gray-300 dark:bg-gray-700 text-yellow-500 rounded-lg mr-2"
-              onClick={() => setShowEmojiPicker(prev => !prev)}>
+              onClick={() => setShowEmojiPicker(prev => !prev)}
+            >
               <FaSmile />
             </button>
             <button
               type="button"
               aria-label="Attach File"
               className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg mr-2"
-              onClick={toggleFileIcons}>
+              onClick={toggleFileIcons}
+            >
               <FiPaperclip />
             </button>
             <button
               type="submit"
               aria-label="Send Message"
               className="p-2 bg-blue-500 text-white rounded-lg"
-              disabled={loading}>
+              disabled={loading}
+            >
               {loading ? (
                 <div className="loading loading-spinner"></div>
               ) : (
@@ -116,20 +165,23 @@ const SendMessageInput: React.FC = () => {
             </div>
           )}
           {showFileIcons && (
-            <div className="absolute bottom-16 right-4 flex  rounded-lg">
+            <div className="absolute bottom-16 right-4 flex rounded-lg">
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer"
-                onClick={() => handleFileInputClick('image')}>
+                onClick={() => handleFileInputClick("image")}
+              >
                 <FaImage />
               </div>
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer ml-2"
-                onClick={() => handleFileInputClick('video')}>
+                onClick={() => handleFileInputClick("video")}
+              >
                 <FaVideo />
               </div>
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer ml-2"
-                onClick={() => handleFileInputClick('audio')}>
+                onClick={() => handleFileInputClick("audio")}
+              >
                 <FaFileAudio />
               </div>
 
@@ -140,7 +192,6 @@ const SendMessageInput: React.FC = () => {
                 className="hidden"
                 id="imageInput"
               />
-
               <input
                 type="file"
                 accept="video/*"

@@ -42,12 +42,30 @@ export const getFriendsUserInfo = async (): Promise<GetUserInfoResponse> => {
 
 export const sendMessageToUser = async (
   receiverId: string,
-  message: string
+  message: string,
+  mediaUrl: string,
+  fileType: string,
 ): Promise<sendMessageInterface> => {
   try {
     const response = await axiosUserInstance.post<sendMessageInterface>(
       `${END_POINTS.SEND_MESSAGES.replace(":receiverId", receiverId)}`,
-      { message }
+      { message , mediaUrl, fileType }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const sendMessageOnlyToUser = async (
+  receiverId: string,
+  message: string,
+): Promise<sendMessageInterface> => {
+  try {
+    const response = await axiosUserInstance.post<sendMessageInterface>(
+      `${END_POINTS.SEND_MESSAGES_ONLY.replace(":receiverId", receiverId)}`,
+      { message  }
     );
     return response.data;
   } catch (error) {

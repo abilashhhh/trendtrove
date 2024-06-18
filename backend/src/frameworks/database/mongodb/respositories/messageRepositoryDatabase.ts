@@ -7,10 +7,13 @@ import { getReceiverSocketId } from "../../../websocket/socket";
 import { io } from "../../../../app";
 
 export const messageRepositoryMongoDB = () => {
+  
   const sendMessage = async (
     senderId: string,
     receiverId: string,
-    message: string
+    message: string,
+    mediaUrl: string,
+    fileType: string,
   ) => {
     try {
       let conversation = await Conversation.findOne({
@@ -27,6 +30,48 @@ export const messageRepositoryMongoDB = () => {
         senderId,
         receiverId,
         message,
+        mediaUrl,
+        fileType
+      });
+
+      conversation.messages.push(newMessage._id);
+
+      await Promise.all([conversation.save(), newMessage.save()]);
+
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage", newMessage);
+      }
+
+      // console.log("newMessage", newMessage);
+
+      return newMessage;
+    } catch (error: any) {
+      console.error("Error in sendMessage:", error.message);
+      throw new ErrorInApplication("Error in sending message!", error);
+    }
+  };
+
+  const sendMessageOnly = async (
+    senderId: string,
+    receiverId: string,
+    message: string,
+  ) => {
+    try {
+      let conversation = await Conversation.findOne({
+        participants: { $all: [senderId, receiverId] },
+      });
+
+      if (!conversation) {
+        conversation = new Conversation({
+          participants: [senderId, receiverId],
+        });
+      }
+
+      const newMessage = new Message({
+        senderId,
+        receiverId,
+        message
       });
 
       conversation.messages.push(newMessage._id);
@@ -120,12 +165,16 @@ export const messageRepositoryMongoDB = () => {
         return [];
       }
 
+      console.log(conversation.messages)
+
       return conversation.messages;
     } catch (error: any) {
       console.error("Error in getMessages:", error.message);
       throw new ErrorInApplication("Error in getting messages!", error);
     }
   };
+
+
 
   const getFriendsInfo = async (userId: string) => {
     try {
@@ -172,6 +221,7 @@ export const messageRepositoryMongoDB = () => {
 
   return {
     sendMessage,
+    sendMessageOnly,
     getMessages,
     getFriendsInfo,
     editMessage,

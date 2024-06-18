@@ -11,8 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageDBRepository = void 0;
 const messageDBRepository = (repository) => {
-    const sendMessage = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
-        return yield repository.sendMessage(senderId, receiverId, message);
+    const sendMessage = (senderId, receiverId, message, mediaUrl, fileType) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield repository.sendMessage(senderId, receiverId, message, mediaUrl, fileType);
+    });
+    const sendMessageOnly = (senderId, receiverId, message) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield repository.sendMessageOnly(senderId, receiverId, message);
     });
     const editMessage = (senderId, messageId, message) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.editMessage(senderId, messageId, message); });
     const deleteMessage = (senderId, messageId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteMessage(senderId, messageId); });
@@ -24,6 +27,7 @@ const messageDBRepository = (repository) => {
     });
     return {
         sendMessage,
+        sendMessageOnly,
         getMessages,
         getFriendsInfo,
         editMessage,

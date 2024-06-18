@@ -18,6 +18,7 @@ const messageRoutes = () => {
     const router = express_1.default.Router();
     const controller = (0, messageController_1.default)(userRepositoryDatabase_1.userRepositoryMongoDB, userDBRepository_1.userDBRepository, postRepositoryDatabase_1.postRepositoryMongoDB, postDBRepository_1.postDBRepository, authenticationService_1.authService, authenticationServiceInterface_1.authServiceInterface, messageRepositoryDatabase_1.messageRepositoryMongoDB, MessageDBRepository_1.messageDBRepository);
     router.post("/sendMessages/:receiverId", authMiddleware_1.default, controller.sendMessage);
+    router.post("/sendMessagesOnly/:receiverId", authMiddleware_1.default, controller.sendMessageOnly);
     router.get("/getMessages/:receiverId", authMiddleware_1.default, controller.getMessages);
     router.get("/getfriendsinfo", authMiddleware_1.default, controller.getFriendsInfo);
     router.patch("/editmessage/:messageId", authMiddleware_1.default, controller.editMessage);

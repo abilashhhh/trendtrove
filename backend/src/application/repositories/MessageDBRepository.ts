@@ -3,8 +3,13 @@ import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/res
 export const messageDBRepository = (
   repository: ReturnType<MessagesRepositoryMongoDB>
 ) => {
-  const sendMessage = async (senderId: string, receiverId: string, message: string) => {
-    return  await repository.sendMessage(senderId, receiverId, message);
+  const sendMessage = async (senderId: string, receiverId: string, message: string,  mediaUrl: string,
+    fileType: string,) => {
+    return  await repository.sendMessage(senderId, receiverId, message, mediaUrl, fileType);
+  };
+
+  const sendMessageOnly = async (senderId: string, receiverId: string, message: string) => {
+    return  await repository.sendMessageOnly(senderId, receiverId, message);
   };
 
   const editMessage = async (senderId: string,  messageId: string, message: string) =>  await repository.editMessage(senderId, messageId, message);
@@ -21,6 +26,7 @@ export const messageDBRepository = (
 
   return {
     sendMessage,
+    sendMessageOnly,
     getMessages,
     getFriendsInfo,
     editMessage,

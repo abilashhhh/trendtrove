@@ -175,6 +175,8 @@ export interface sendMessageInterface {
 
  
 export interface Message {
+  fileType: string;
+  mediaUrl: string;
   shouldShake: boolean;
   _id: string;
   senderId: string;

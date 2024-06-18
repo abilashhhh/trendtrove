@@ -92,48 +92,96 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
   return (
     <div className={`chat mb-5 ${chatClassName}`}>
       <div className="chat-image avatar">
-        <div className="w-10 rounded-full">
+        <div className="w-6 rounded-full">
           <img alt="User avatar" src={profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-black dark:text-white break-all ${bubbleColor}`}>
+
+      <div
+        className={`chat-bubble text-black dark:text-white break-all ${bubbleColor} p-3 rounded-lg max-w-xs md:max-w-md lg:max-w-lg`}>
+        {message.mediaUrl !== null && (
+          <div className="mt-2">
+            {message.fileType === "image" && (
+              <img
+                src={message.mediaUrl}
+                alt="Attached media"
+                className="rounded-lg max-w-full h-auto"
+              />
+            )}
+            {message.fileType === "video" && (
+              <video
+                controls
+                loop
+                autoPlay
+                className="rounded-lg max-w-full h-auto"
+                src={message.mediaUrl}></video>
+            )}
+            {message.fileType === "audio" && (
+              <audio controls className="rounded-lg max-w-full h-auto">
+                <source src={message.mediaUrl} type="audio/mp3" />
+                <source src={message.mediaUrl} type="audio/mp4" />
+                <source src={message.mediaUrl} type="audio/mp4" />
+                <source src={message.mediaUrl} type="audio/m4a" />
+                <source src={message.mediaUrl} type="audio/wav" />
+                Your browser does not support the audio element.
+              </audio>
+            )}
+          </div>
+        )}
         {isEditing ? (
           <input
             type="text"
             value={editedMessage ?? ""}
-            onChange={(e) => setEditedMessage(e.target.value)}
+            onChange={e => setEditedMessage(e.target.value)}
             className="bg-transparent border-b border-gray-500 outline-none w-full p-1 text-black dark:text-white"
             autoFocus
           />
+        ) : message.message ? (
+          message.message
         ) : (
-          message.message ? (
-            message.message
-          ) : (
-            <span className="w-full h-full text-red-300 italic font-bold">Message have been deleted</span>
-          )
+          <span className="w-full h-full text-red-300 italic font-bold">
+            Message has been deleted
+          </span>
         )}
       </div>
       <div className="chat-footer text-xs mt-1 flex gap-2 items-center">
-        <FaInfoCircle className="cursor-pointer opacity-35 text-xs" onClick={handleInfoClick} />
+        <FaInfoCircle
+          className="cursor-pointer opacity-35 text-xs"
+          onClick={handleInfoClick}
+        />
         {showTime && (
           <div className="chat-timestamp text-xs mt-1 opacity-50">
             {formatDateTime(message.createdAt)}
           </div>
         )}
-        {fromMe && message.message && (
-          isEditing ? (
+        {fromMe &&
+          message.message &&
+          (isEditing ? (
             <>
-              <TiTick className="cursor-pointer text-2xl bg-green-700 rounded-full" onClick={handleSaveClick} />
-              <FaTimes className="cursor-pointer text-2xl bg-red-500 rounded-full" onClick={handleCancelClick} />
+              <TiTick
+                className="cursor-pointer text-2xl bg-green-700 rounded-full"
+                onClick={handleSaveClick}
+              />
+              <FaTimes
+                className="cursor-pointer text-2xl bg-red-500 rounded-full"
+                onClick={handleCancelClick}
+              />
             </>
           ) : (
             <>
-              <FaPen className="cursor-pointer opacity-35 text-xs" onClick={handleEditClick} />
-              <FaTrash className="cursor-pointer opacity-35 text-xs" onClick={handleConfirmDelete} />
+              <FaPen
+                className="cursor-pointer opacity-35 text-xs"
+                onClick={handleEditClick}
+              />
+              <FaTrash
+                className="cursor-pointer opacity-35 text-xs"
+                onClick={handleConfirmDelete}
+              />
             </>
-          )
+          ))}
+        {message.createdAt !== message.updatedAt && message.message && (
+          <p className="opacity-35">Edited</p>
         )}
-        {message.createdAt !== message.updatedAt && message.message && <p className="opacity-35">Edited</p>}
       </div>
 
       {showConfirmDelete && (
@@ -145,14 +193,12 @@ const IndividualMessage: React.FC<IndividualMessageProps> = ({ message }) => {
             <div className="flex justify-center gap-4">
               <button
                 onClick={handleDeleteClick}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
-              >
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
                 Delete
               </button>
               <button
                 onClick={handleCancelDelete}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
-              >
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700">
                 Cancel
               </button>
             </div>

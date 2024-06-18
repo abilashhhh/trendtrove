@@ -6,11 +6,11 @@ const messageSchema = new Schema(
     senderId: { type: Schema.Types.ObjectId, ref: User, required: true },
     receiverId: { type: Schema.Types.ObjectId, ref: User, required: true },
     message: { type: String },
-    mediaType: {
+    fileType: {
       type: String,
-      enum: [ "image", "video", "voice", "file"],
+      enum: [ "image", "video", "audio"],
     },
-    media: { type: String },
+    mediaUrl: { type: String },
   },
   {
     timestamps: true,

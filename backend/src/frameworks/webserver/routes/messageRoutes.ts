@@ -25,6 +25,7 @@ const messageRoutes = () => {
   );
 
   router.post("/sendMessages/:receiverId", authMiddleware, controller.sendMessage);
+  router.post("/sendMessagesOnly/:receiverId", authMiddleware, controller.sendMessageOnly);
   router.get("/getMessages/:receiverId", authMiddleware, controller.getMessages);
   router.get("/getfriendsinfo", authMiddleware, controller.getFriendsInfo);
   router.patch("/editmessage/:messageId", authMiddleware, controller.editMessage);

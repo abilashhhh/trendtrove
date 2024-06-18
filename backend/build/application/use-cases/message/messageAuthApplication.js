@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessage = void 0;
+exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessageOnly = exports.handleSendMessage = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
-const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
+const handleSendMessage = (senderId, receiverId, message, mediaUrl, fileType, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sendMessage = yield dbMessageRepository.sendMessage(senderId, receiverId, message);
+        const sendMessage = yield dbMessageRepository.sendMessage(senderId, receiverId, message, mediaUrl, fileType);
         // console.log("sendMessage from msg auth app:" ,sendMessage)
         return sendMessage;
     }
@@ -29,6 +29,21 @@ const handleSendMessage = (senderId, receiverId, message, dbMessageRepository) =
     }
 });
 exports.handleSendMessage = handleSendMessage;
+const handleSendMessageOnly = (senderId, receiverId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sendMessage = yield dbMessageRepository.sendMessageOnly(senderId, receiverId, message);
+        // console.log("sendMessage from msg auth app:" ,sendMessage)
+        return sendMessage;
+    }
+    catch (error) {
+        console.error("Error in handleSendMessage:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to send the message", 500);
+    }
+});
+exports.handleSendMessageOnly = handleSendMessageOnly;
 const handleEditMessage = (senderId, 
 // receiverId: string,
 messageId, message, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
