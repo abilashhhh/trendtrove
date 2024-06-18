@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChatLeftSidebar from "./ChatLeftSidebar";
@@ -8,6 +8,21 @@ import ChatInnerMain from "./ChatInnerMain";
 
 const ChatMiddlePage: React.FC = () => {
   const { selectedConversation, setSelectedConversation } = useConversation();
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 768); // Example breakpoint for small screens
+    };
+
+    handleResize(); // Check on initial render
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -15,14 +30,18 @@ const ChatMiddlePage: React.FC = () => {
     };
   }, [setSelectedConversation]);
 
+  const showChatInnerMain = isSmallScreen && selectedConversation;
+
   return (
     <>
       <ToastContainer />
       <main className="flex-1 pt-2 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
         <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
           <div className="flex flex-col md:flex-row gap-1 h-full">
-            <ChatLeftSidebar />
-            <div className="flex-grow">
+            <div className={`w-full md:w-1/3 lg:w-1/4 ${showChatInnerMain && "hidden md:block"}`}>
+              <ChatLeftSidebar />
+            </div>
+            <div className={`w-full md:w-2/3 lg:w-3/4 flex-grow ${!showChatInnerMain && "hidden md:block"}`}>
               {!selectedConversation ? <NoChatSelected /> : <ChatInnerMain />}
             </div>
           </div>

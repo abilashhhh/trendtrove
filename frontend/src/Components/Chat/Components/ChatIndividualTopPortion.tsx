@@ -1,8 +1,13 @@
 import React from "react";
+import { FaArrowLeft } from "react-icons/fa"; // Import the back icon
 import useConversation from "../../../Hooks/useConversations";
 
 const ChatIndividualTopPortion = () => {
-  const { selectedConversation } = useConversation();
+  const { selectedConversation, setSelectedConversation } = useConversation();
+
+  const handleBackClick = () => {
+    setSelectedConversation(null);
+  };
 
   if (!selectedConversation) {
     return (
@@ -11,8 +16,13 @@ const ChatIndividualTopPortion = () => {
       </div>
     );
   }
+
   return (
     <div className="h-16 mb-5 -m-3 bg-gray-100 dark:bg-gray-900 rounded-t-lg shadow-sm flex items-center p-4">
+      <FaArrowLeft
+        className="text-xl cursor-pointer mr-4 text-gray-900 dark:text-gray-100 md:hidden" // Hide on medium and larger screens
+        onClick={handleBackClick}
+      />
       <div className="chat-image avatar mr-3">
         <div className="w-10 rounded-full">
           <img
