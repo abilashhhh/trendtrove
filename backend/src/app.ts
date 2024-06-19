@@ -7,7 +7,7 @@ import routes from "./frameworks/webserver/routes";
 import errorHandlingMiddleware from "./frameworks/webserver/middlewares/errorHandlingMiddleware";
 import serverConfigurations from "./frameworks/webserver/server";
 import ErrorInApplication from "./utils/ErrorInApplication";
-import {socket} from "./frameworks/websocket/socket";
+import { socket } from "./frameworks/websocket/socket";
 import configurationKeys from "./config";
 
 const app: Application = express();
@@ -37,5 +37,5 @@ socket(io);
 
 serverConfigurations(server).startServer();
 
-export {io}
+export { io };
 export default app;

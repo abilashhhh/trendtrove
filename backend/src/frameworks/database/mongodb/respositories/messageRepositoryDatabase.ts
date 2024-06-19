@@ -178,20 +178,18 @@ export const messageRepositoryMongoDB = () => {
       const conversations = await Conversation.find({
         participants: senderId,
       }).populate("messages");
-  
+
       if (!conversations || conversations.length === 0) {
         return [];
       }
-  
-      console.log("getAllConversations: ", conversations)
-      return conversations
-   
+
+      console.log("getAllConversations: ", conversations);
+      return conversations;
     } catch (error: any) {
       console.error("Error in getAllConversations:", error.message);
       throw new Error(error);
     }
   };
-  
 
   const getFriendsInfo = async (userId: string) => {
     try {

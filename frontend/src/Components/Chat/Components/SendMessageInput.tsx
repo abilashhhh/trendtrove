@@ -64,6 +64,7 @@ const SendMessageInput: React.FC = () => {
         await sendMessageOnly(message.trim());
         toast.success("Message sent successfully!");
         setMessage("");
+        setSelectedFile(null);
         setLoading(false);
       }
     } catch (error: any) {
