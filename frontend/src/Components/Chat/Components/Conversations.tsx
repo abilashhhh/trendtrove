@@ -4,7 +4,7 @@ import ConversationItem from "./ConversationItem";
 import { getAllConversations } from "../../../API/Chat/chat";
 import { Message } from "../../../Types/userProfile";
 import useConversation from "../../../Hooks/useConversations";
-
+ 
 interface User {
   _id: string;
   username: string;
@@ -33,6 +33,7 @@ const Conversations: React.FC<ConversationsProps> = ({
   const { selectedConversation } = useConversation(); 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
+
 
   useEffect(() => {
     const fetchAllUsers = async () => {

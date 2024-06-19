@@ -14,6 +14,7 @@ import useSendMessages from "../../../Hooks/useSendMessages";
 import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import upload from "../../../utils/cloudinary";
+import { useSocketContext } from "../../../Context/SocketContext";
 
 const SendMessageInput: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -24,15 +25,19 @@ const SendMessageInput: React.FC = () => {
   const { sendMessage, sendMessageOnly } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
+  const {markSpecificUserNotificationAsRead, notifications} = useSocketContext();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    markSpecificUserNotificationAsRead(notifications , selectedConversation?._id);
+
     if (!message.trim() && !selectedFile) {
       toast.error("Message or file cannot be empty.");
       return;
     }
     setLoading(true);
-
+     
     try {
       let mediaUrl = "";
       if (selectedFile) {

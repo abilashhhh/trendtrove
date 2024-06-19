@@ -8,6 +8,7 @@ interface SocketContextProps {
   onlineUsers: string[];
   notifications: any[];
   markAllNotificationAsRead: (notifications: any[]) => void;
+  markSpecificUserNotificationAsRead: (notifications: any[], userId : string) => void;
 }
 
 export const SocketContext = createContext<SocketContextProps>({
@@ -15,6 +16,7 @@ export const SocketContext = createContext<SocketContextProps>({
   onlineUsers: [],
   notifications: [],
   markAllNotificationAsRead: () => {},
+  markSpecificUserNotificationAsRead: () => {},
 });
 
 interface SocketContextProviderProps {
@@ -77,30 +79,17 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
     setNotifications(mNotifications);
   }, []);
 
-//   const markNotificationAsRead = useCallback((n: { senderId: any; }, userChats: any[] , user: { _id: any; } ,notifications: any[]) => {
-//     //find chat to open
-//     const desiredChat = userChats.find(chat => {
-//       const chatMembers = [user._id , n.senderId]
-//       const isDesiredChat = chat?.members.every((member) => {
-//         return chatMembers.includes(member)
-//       })
+  const markSpecificUserNotificationAsRead = useCallback((notifications: any[], userId: string) => {
+    const mNotifications = notifications.map((n) => 
+      n.senderId === userId ? { ...n, isRead: true } : n
+    );
+    setNotifications(mNotifications);
+  }, []);
+  
 
-//       return isDesiredChat
-//     })
-// // mark notification as read
-// const mNotifications =notifications.map(el => {
-//   if(n.senderId === el.senderId){
-//     return {...n, isRead : true}
-//   }else{
-//     return el
-//   }
-// })
-//     updateCurrentChat(desiredChat)
-//     setNotifications(mNotifications)
-//   })
 
   return (
-    <SocketContext.Provider value={{ socket, onlineUsers, notifications, markAllNotificationAsRead  }}>
+    <SocketContext.Provider value={{ socket, onlineUsers, notifications, markAllNotificationAsRead ,markSpecificUserNotificationAsRead }}>
       {children}
     </SocketContext.Provider>
   );

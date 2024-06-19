@@ -33,8 +33,13 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   const { selectedConversation } = useConversation();
   const isSelected = selectedConversation?._id === user._id;
 
-  const { onlineUsers } = useSocketContext();
+  const { onlineUsers, notifications } = useSocketContext();
   const isOnline = onlineUsers.includes(user._id);
+
+  const isReadFalseNotifications = notifications.filter(
+    (notification) => !notification.isRead && notification.senderId === user._id
+  );
+  const numberOfIsReadFalse = isReadFalseNotifications.length;
 
   return (
     <div
@@ -46,7 +51,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       }`}
       onClick={() => {
         setSelectedConversation(user);
-      }}>
+      }}
+    >
       <div className={`avatar ${isOnline ? "online" : ""}`}>
         <div className="w-10 rounded-full">
           <img
@@ -63,7 +69,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               isSelected
                 ? "text-black dark:text-white"
                 : "text-gray-900 dark:text-gray-300"
-            } flex gap-1 items-center`}>
+            } flex gap-1 items-center`}
+          >
             {user.username}
             {user.isPremium && (
               <FontAwesomeIcon icon={faCheckCircle} className="text-blue-500" />
@@ -79,10 +86,23 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             isSelected
               ? "text-black dark:text-white"
               : "text-gray-600 dark:text-gray-400"
-          }`}>
+          }`}
+        >
           {lastMessage ? lastMessage.text : ""}
         </div>
       </div>
+
+      {numberOfIsReadFalse > 0 && (
+        <div
+          className={`font-bold text-sm ${
+            isSelected
+              ? "text-black dark:text-white"
+              : "text-gray-900 dark:text-gray-300"
+          } flex gap-1 items-center bg-green-500 p-2 rounded-full`}
+        >
+          <p>{numberOfIsReadFalse}</p>
+        </div>
+      )}
 
       <div>
         <div
@@ -90,7 +110,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             isSelected
               ? "text-black dark:text-white"
               : "text-gray-600 dark:text-gray-400"
-          }`}>
+          }`}
+        >
           {lastMessage
             ? getTimeDifference(new Date(lastMessage.timestamp))
             : ""}
@@ -100,7 +121,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             isSelected
               ? "text-black dark:text-white"
               : "text-gray-600 dark:text-gray-400"
-          }`}>
+          }`}
+        >
           {isOnline ? <p className="text-green-500 text-center">Online</p> : ""}
         </div>
       </div>
