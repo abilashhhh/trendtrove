@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetFriendsInfo = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessageOnly = exports.handleSendMessage = void 0;
+exports.handleGetFriendsInfo = exports.handleGetAllConverations = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessageOnly = exports.handleSendMessage = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleSendMessage = (senderId, receiverId, message, mediaUrl, fileType, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -92,6 +92,20 @@ const handleGetMessage = (senderId, receiverId, dbMessageRepository) => __awaite
     }
 });
 exports.handleGetMessage = handleGetMessage;
+const handleGetAllConverations = (senderId, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const getMessage = yield dbMessageRepository.getAllConversations(senderId);
+        return getMessage;
+    }
+    catch (error) {
+        console.error("Error in handleGetAllConverations:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get the conversations", 500);
+    }
+});
+exports.handleGetAllConverations = handleGetAllConverations;
 const handleGetFriendsInfo = (userId, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const getMessage = yield dbMessageRepository.getFriendsInfo(userId);

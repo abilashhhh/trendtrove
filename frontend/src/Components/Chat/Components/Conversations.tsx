@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers } from "../../../API/User/user";
 import ConversationItem from "./ConversationItem";
+import { getAllConversations } from "../../../API/Chat/chat";
 
 interface User {
   _id: string;
@@ -12,13 +13,16 @@ interface User {
 interface ConversationsProps {
   searchQuery: string;
   setSelectedConversation: (user: User | null) => void;
+  activeTab: string; 
 }
 
 const Conversations: React.FC<ConversationsProps> = ({
   searchQuery,
   setSelectedConversation,
+  activeTab,
 }) => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [usersWithConversations, setUsersWithConversations] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -35,9 +39,38 @@ const Conversations: React.FC<ConversationsProps> = ({
     fetchAllUsers();
   }, []);
 
-  const filteredUsers = allUsers.filter(user =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchUsersWithConversations = async () => {
+      try {
+        const response = await getAllConversations();
+        if (response.data) {
+          // Extract user IDs from conversations
+          const participantIds = new Set<string>();
+          response.data.forEach(conversation => {
+            conversation.participants.forEach(participant => participantIds.add(participant));
+          });
+          setUsersWithConversations(Array.from(participantIds));
+        }
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+      }
+    };
+
+    fetchUsersWithConversations();
+  }, []);
+
+  console.log("usersWithConversations:", usersWithConversations);
+
+  const filteredUsers = allUsers
+    .filter(user => {
+      if (activeTab === "chats") {
+        return usersWithConversations.includes(user._id);
+      } else if (activeTab === "newChat") {
+        return !usersWithConversations.includes(user._id);
+      }
+      return true;
+    })
+    .filter(user => user.username.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <div className="pt-1 rounded-lg shadow-md flex-grow overflow-auto no-scrollbar">

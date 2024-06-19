@@ -6,7 +6,7 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage, handleSendMessageOnly } from "../../application/use-cases/message/messageAuthApplication";
+import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage, handleSendMessageOnly, handleGetAllConverations } from "../../application/use-cases/message/messageAuthApplication";
 import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
 
@@ -130,6 +130,18 @@ const messageController = (
     });
   });
 
+  const getAllConverations = asyncHandler(async (req: Request, res: Response) => {
+     const senderId = req.body.userId;
+    const getAllConverationsResult  = await handleGetAllConverations(
+      senderId,
+      dbMessageRepository
+    );
+    res.status(200).json({
+      status: "success",  message: "Got all converations successfully",
+      data: getAllConverationsResult ,
+    });
+  });
+
 
   const getFriendsInfo = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;    
@@ -147,6 +159,7 @@ const messageController = (
     sendMessage,
     sendMessageOnly,
     getMessages,
+    getAllConverations,
     getFriendsInfo,
     editMessage,
     deleteMessage

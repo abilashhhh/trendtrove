@@ -7,13 +7,12 @@ import { getReceiverSocketId } from "../../../websocket/socket";
 import { io } from "../../../../app";
 
 export const messageRepositoryMongoDB = () => {
-  
   const sendMessage = async (
     senderId: string,
     receiverId: string,
     message: string,
     mediaUrl: string,
-    fileType: string,
+    fileType: string
   ) => {
     try {
       let conversation = await Conversation.findOne({
@@ -31,13 +30,12 @@ export const messageRepositoryMongoDB = () => {
         receiverId,
         message,
         mediaUrl,
-        fileType
+        fileType,
       });
 
       conversation.messages.push(newMessage._id);
 
       await Promise.all([conversation.save(), newMessage.save()]);
-
       const receiverSocketId = getReceiverSocketId(receiverId);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -55,7 +53,7 @@ export const messageRepositoryMongoDB = () => {
   const sendMessageOnly = async (
     senderId: string,
     receiverId: string,
-    message: string,
+    message: string
   ) => {
     try {
       let conversation = await Conversation.findOne({
@@ -71,7 +69,7 @@ export const messageRepositoryMongoDB = () => {
       const newMessage = new Message({
         senderId,
         receiverId,
-        message
+        message,
       });
 
       conversation.messages.push(newMessage._id);
@@ -128,34 +126,33 @@ export const messageRepositoryMongoDB = () => {
   const deleteMessage = async (senderId: string, messageId: string) => {
     try {
       const message = await Message.findById(messageId);
-  
+
       if (!message) {
         throw new Error("Message not found");
       }
-  
+
       if (message.senderId.toString() !== senderId) {
         throw new Error("Unauthorized to delete this message");
       }
-  
+
       message.message = null;
       message.fileType = null;
       message.mediaUrl = null;
       await message.save();
-  
+
       const receiverSocketId = getReceiverSocketId(message.receiverId);
       if (receiverSocketId) {
-        io.to(receiverSocketId).emit("deleteMessage", message );
+        io.to(receiverSocketId).emit("deleteMessage", message);
       }
-  
+
       console.log("Updated Message", message);
-  
+
       return message;
     } catch (error: any) {
       console.error("Error in deleteMessage:", error.message);
       throw new ErrorInApplication("Error in deleting message!", error);
     }
   };
-  
 
   const getMessages = async (senderId: string, receiverId: string) => {
     try {
@@ -167,7 +164,7 @@ export const messageRepositoryMongoDB = () => {
         return [];
       }
 
-      console.log(conversation.messages)
+      console.log(conversation.messages);
 
       return conversation.messages;
     } catch (error: any) {
@@ -176,7 +173,25 @@ export const messageRepositoryMongoDB = () => {
     }
   };
 
-
+  const getAllConversations = async (senderId: string) => {
+    try {
+      const conversations = await Conversation.find({
+        participants: senderId,
+      }).populate("messages");
+  
+      if (!conversations || conversations.length === 0) {
+        return [];
+      }
+  
+      console.log("getAllConversations: ", conversations)
+      return conversations
+   
+    } catch (error: any) {
+      console.error("Error in getAllConversations:", error.message);
+      throw new Error(error);
+    }
+  };
+  
 
   const getFriendsInfo = async (userId: string) => {
     try {
@@ -225,9 +240,10 @@ export const messageRepositoryMongoDB = () => {
     sendMessage,
     sendMessageOnly,
     getMessages,
+    getAllConversations,
     getFriendsInfo,
     editMessage,
-    deleteMessage
+    deleteMessage,
   };
 };
 

@@ -22,6 +22,9 @@ const messageDBRepository = (repository) => {
     const getMessages = (senderId, receiverId) => __awaiter(void 0, void 0, void 0, function* () {
         return yield repository.getMessages(senderId, receiverId);
     });
+    const getAllConversations = (senderId) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield repository.getAllConversations(senderId);
+    });
     const getFriendsInfo = (userId) => __awaiter(void 0, void 0, void 0, function* () {
         return yield repository.getFriendsInfo(userId);
     });
@@ -29,9 +32,10 @@ const messageDBRepository = (repository) => {
         sendMessage,
         sendMessageOnly,
         getMessages,
+        getAllConversations,
         getFriendsInfo,
         editMessage,
-        deleteMessage
+        deleteMessage,
     };
 };
 exports.messageDBRepository = messageDBRepository;

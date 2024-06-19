@@ -122,6 +122,25 @@ export const handleGetMessage = async (
 };
 
 
+export const handleGetAllConverations = async (
+  senderId: string,
+  dbMessageRepository: ReturnType<MessageDBInterface>
+) => {
+  try {
+    const getMessage = await dbMessageRepository.getAllConversations(
+      senderId,
+    );
+    return getMessage;
+  } catch (error) {
+    console.error("Error in handleGetAllConverations:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get the conversations", 500);
+  }
+};
+
+
 
 export const handleGetFriendsInfo = async (
   userId: string,

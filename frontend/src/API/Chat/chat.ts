@@ -44,12 +44,12 @@ export const sendMessageToUser = async (
   receiverId: string,
   message: string,
   mediaUrl: string,
-  fileType: string,
+  fileType: string
 ): Promise<sendMessageInterface> => {
   try {
     const response = await axiosUserInstance.post<sendMessageInterface>(
       `${END_POINTS.SEND_MESSAGES.replace(":receiverId", receiverId)}`,
-      { message , mediaUrl, fileType }
+      { message, mediaUrl, fileType }
     );
     return response.data;
   } catch (error) {
@@ -60,12 +60,12 @@ export const sendMessageToUser = async (
 
 export const sendMessageOnlyToUser = async (
   receiverId: string,
-  message: string,
+  message: string
 ): Promise<sendMessageInterface> => {
   try {
     const response = await axiosUserInstance.post<sendMessageInterface>(
       `${END_POINTS.SEND_MESSAGES_ONLY.replace(":receiverId", receiverId)}`,
-      { message  }
+      { message }
     );
     return response.data;
   } catch (error) {
@@ -89,12 +89,28 @@ export const getMessagesFromUser = async (
   }
 };
 
+
+
+export const getAllConversations = async (
+): Promise<GetMessageInterface> => {
+  try {
+    const response = await axiosUserInstance.get<GetMessageInterface>(END_POINTS.GET_ALL_CONVERSATIONS);
+    console.log("response of getAllConversations", response.data.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+ 
+
 export const updateMessage = async (
   messageId: string,
   editedMessage: string
 ): Promise<sendMessageInterface> => {
   try {
-    console.log(messageId, editedMessage)
+    console.log(messageId, editedMessage);
     const response = await axiosUserInstance.patch<sendMessageInterface>(
       `${END_POINTS.EDIT_MESSAGES.replace(":messageId", messageId)}`,
       { editedMessage }
@@ -110,11 +126,10 @@ export const deleteMessage = async (
   messageId: string
 ): Promise<sendMessageInterface> => {
   try {
-    console.log(messageId)
+    console.log(messageId);
 
     const response = await axiosUserInstance.patch<sendMessageInterface>(
-      `${END_POINTS.DELETE_MESSAGES.replace(":messageId", messageId)}`,
-
+      `${END_POINTS.DELETE_MESSAGES.replace(":messageId", messageId)}`
     );
     return response.data;
   } catch (error) {

@@ -36,7 +36,7 @@ const messageRepositoryMongoDB = () => {
                 receiverId,
                 message,
                 mediaUrl,
-                fileType
+                fileType,
             });
             conversation.messages.push(newMessage._id);
             yield Promise.all([conversation.save(), newMessage.save()]);
@@ -65,7 +65,7 @@ const messageRepositoryMongoDB = () => {
             const newMessage = new messageModel_1.default({
                 senderId,
                 receiverId,
-                message
+                message,
             });
             conversation.messages.push(newMessage._id);
             yield Promise.all([conversation.save(), newMessage.save()]);
@@ -145,6 +145,22 @@ const messageRepositoryMongoDB = () => {
             throw new ErrorInApplication_1.default("Error in getting messages!", error);
         }
     });
+    const getAllConversations = (senderId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const conversations = yield conversationModel_1.default.find({
+                participants: senderId,
+            }).populate("messages");
+            if (!conversations || conversations.length === 0) {
+                return [];
+            }
+            console.log("getAllConversations: ", conversations);
+            return conversations;
+        }
+        catch (error) {
+            console.error("Error in getAllConversations:", error.message);
+            throw new Error(error);
+        }
+    });
     const getFriendsInfo = (userId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const user = yield userModel_1.default.aggregate([
@@ -191,9 +207,10 @@ const messageRepositoryMongoDB = () => {
         sendMessage,
         sendMessageOnly,
         getMessages,
+        getAllConversations,
         getFriendsInfo,
         editMessage,
-        deleteMessage
+        deleteMessage,
     };
 };
 exports.messageRepositoryMongoDB = messageRepositoryMongoDB;

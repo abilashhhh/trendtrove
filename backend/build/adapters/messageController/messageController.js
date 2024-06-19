@@ -83,6 +83,14 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
             data: getMessageResult,
         });
     }));
+    const getAllConverations = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const senderId = req.body.userId;
+        const getAllConverationsResult = yield (0, messageAuthApplication_1.handleGetAllConverations)(senderId, dbMessageRepository);
+        res.status(200).json({
+            status: "success", message: "Got all converations successfully",
+            data: getAllConverationsResult,
+        });
+    }));
     const getFriendsInfo = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.body;
         const getMessageResult = yield (0, messageAuthApplication_1.handleGetFriendsInfo)(userId, dbMessageRepository);
@@ -95,6 +103,7 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
         sendMessage,
         sendMessageOnly,
         getMessages,
+        getAllConverations,
         getFriendsInfo,
         editMessage,
         deleteMessage
