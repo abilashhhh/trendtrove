@@ -25,19 +25,18 @@ const SendMessageInput: React.FC = () => {
   const { sendMessage, sendMessageOnly } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
-  const {markSpecificUserNotificationAsRead, notifications} = useSocketContext();
-
+  const { markSpecificUserNotificationAsRead, notifications, typingHandler, isTyping } = useSocketContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    markSpecificUserNotificationAsRead(notifications , selectedConversation?._id);
+    markSpecificUserNotificationAsRead(notifications, selectedConversation?._id);
 
     if (!message.trim() && !selectedFile) {
       toast.error("Message or file cannot be empty.");
       return;
     }
     setLoading(true);
-     
+
     try {
       let mediaUrl = "";
       if (selectedFile) {
@@ -47,8 +46,8 @@ const SendMessageInput: React.FC = () => {
           const fileType = selectedFile.type.startsWith("image")
             ? "image"
             : selectedFile.type.startsWith("video")
-            ? "video"
-            : "audio";
+              ? "video"
+              : "audio";
           const response = await upload(
             fileReader.result as string,
             err => toast.error(err),
@@ -128,11 +127,12 @@ const SendMessageInput: React.FC = () => {
             </div>
           )}
           <form className="flex items-center w-full" onSubmit={handleSubmit}>
+            {isTyping && <div>Typing...</div>}
             <input
               type="text"
               placeholder="Type your message"
               value={message}
-              onChange={e => setMessage(e.target.value)}
+              onChange={e => { setMessage(e.target.value); typingHandler(e); }}
               className="flex-grow p-2 mr-2 rounded-lg border border-gray-700 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
             <button

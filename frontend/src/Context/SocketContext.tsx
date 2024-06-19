@@ -8,7 +8,9 @@ interface SocketContextProps {
   onlineUsers: string[];
   notifications: any[];
   markAllNotificationAsRead: (notifications: any[]) => void;
-  markSpecificUserNotificationAsRead: (notifications: any[], userId : string) => void;
+  typingHandler: (e: any) => void;
+  markSpecificUserNotificationAsRead: (notifications: any[], userId: string) => void;
+  isTyping: boolean;
 }
 
 export const SocketContext = createContext<SocketContextProps>({
@@ -16,7 +18,9 @@ export const SocketContext = createContext<SocketContextProps>({
   onlineUsers: [],
   notifications: [],
   markAllNotificationAsRead: () => {},
+  typingHandler: () => {},
   markSpecificUserNotificationAsRead: () => {},
+  isTyping: false,
 });
 
 interface SocketContextProviderProps {
@@ -33,6 +37,8 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
   const [notifications, setNotifications] = useState<any[]>([]);
   const currentUser = useUserDetails();
   const { selectedConversation } = useConversation();
+  const [typing, setTyping] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   console.log("Notifications: ", notifications);
 
@@ -48,6 +54,14 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
 
       socket.on("getOnlineUsers", (users: string[]) => {
         setOnlineUsers(users);
+      });
+
+      socket.on("typing", () => {
+        setIsTyping(true);
+      });
+
+      socket.on("stoptyping", () => {
+        setIsTyping(false);
       });
 
       socket.on("getNotification", (res) => {
@@ -72,6 +86,25 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
     }
   }, [currentUser, selectedConversation]);
 
+  const typingHandler = (e) => {
+    if (!typing && socket) {
+      setTyping(true);
+      socket.emit('typing', selectedConversation._id);
+    }
+
+    let lastTypingTime = new Date().getTime();
+    const timerLength = 3000;
+
+    setTimeout(() => {
+      const timeNow = new Date().getTime();
+      const timeDifference = timeNow - lastTypingTime;
+      if (timeDifference >= timerLength && typing) {
+        socket?.emit("stoptyping", selectedConversation._id);
+        setTyping(false);
+      }
+    }, timerLength);
+  };
+
   const markAllNotificationAsRead = useCallback((notifications: any[]) => {
     const mNotifications = notifications.map((n) => {
       return { ...n, isRead: true };
@@ -80,16 +113,14 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
   }, []);
 
   const markSpecificUserNotificationAsRead = useCallback((notifications: any[], userId: string) => {
-    const mNotifications = notifications.map((n) => 
+    const mNotifications = notifications.map((n) =>
       n.senderId === userId ? { ...n, isRead: true } : n
     );
     setNotifications(mNotifications);
   }, []);
-  
-
 
   return (
-    <SocketContext.Provider value={{ socket, onlineUsers, notifications, markAllNotificationAsRead ,markSpecificUserNotificationAsRead }}>
+    <SocketContext.Provider value={{ socket, onlineUsers, notifications, markAllNotificationAsRead, markSpecificUserNotificationAsRead, typingHandler, isTyping }}>
       {children}
     </SocketContext.Provider>
   );

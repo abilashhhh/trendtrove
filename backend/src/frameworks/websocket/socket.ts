@@ -30,12 +30,27 @@ const socket = (io: Server<DefaultEventsMap>) => {
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
 
+    socket.on("typing", receiverId => {
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("typing", { senderId: userId });
+      }
+    });
+
+    socket.on("stoptyping", receiverId => {
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("stoptyping", { senderId: userId });
+      }
+    });
+
     socket.on("sendMessage", data => {
       const { senderId, receiverId, message } = data;
       const receiverSocketId = getReceiverSocketId(receiverId);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newMessage", { senderId, message });
         io.to(receiverSocketId).emit("getNotification", { senderId,isRead:false,date: new Date() ,message});
+        
       }
     });
   });

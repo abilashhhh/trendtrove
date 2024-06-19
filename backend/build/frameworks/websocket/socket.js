@@ -21,6 +21,18 @@ const socket = (io) => {
             }
             io.emit("getOnlineUsers", Object.keys(userSocketMap));
         });
+        socket.on("typing", receiverId => {
+            const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit("typing", { senderId: userId });
+            }
+        });
+        socket.on("stoptyping", receiverId => {
+            const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit("stoptyping", { senderId: userId });
+            }
+        });
         socket.on("sendMessage", data => {
             const { senderId, receiverId, message } = data;
             const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
