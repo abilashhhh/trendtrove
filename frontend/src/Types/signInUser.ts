@@ -23,6 +23,7 @@ export interface User {
     requestedByMe?: string[];
     savedPosts?: string[];
     taggedPosts?: string[];
+    blockedUsers?: string[]; 
     isVerifiedAccount?: boolean;
     isGoogleSignedIn?: boolean;
     isBlocked?: boolean;

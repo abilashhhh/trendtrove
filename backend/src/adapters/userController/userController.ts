@@ -8,10 +8,12 @@ import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/resposi
 
 import {
   handleAcceptFollowUserRequest,
+  handleBlockUser,
   handleCancelFollowUserRequest,
   handleFollowUserRequest,
   handleGetAllUsers,
   handleRejectFollowUserRequest,
+  handleUnBlockUser,
   handleUnFollowUserRequest,
   handleUserInfo,
   handleUserbyUsername,
@@ -128,6 +130,30 @@ const userController = (
     }
   );
 
+  const blockUser = asyncHandler(async (req: Request, res: Response) => {
+    const { userId, blockUserId } = req.body;
+    const result = await handleBlockUser(userId, blockUserId, dbUserRepository);
+    res.json({
+      status: "success",
+      message: result.message,
+      user: result.user,
+    });
+  });
+
+  const unblockUser = asyncHandler(async (req: Request, res: Response) => {
+    const { userId, unblockUserId } = req.body;
+    const result = await handleUnBlockUser(
+      userId,
+      unblockUserId,
+      dbUserRepository
+    );
+    res.json({
+      status: "success",
+      message: result.message,
+      user: result.user,
+    });
+  });
+
   return {
     getAllUsers,
     getuserprofile,
@@ -136,6 +162,8 @@ const userController = (
     acceptfollowUserRequest,
     unfollowUserRequest,
     rejectfollowUserRequest,
+    blockUser,
+    unblockUser,
   };
 };
 

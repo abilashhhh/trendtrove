@@ -18,6 +18,8 @@ export interface PostDataInterface {
   comments?: string[];
   createdAt: Date;
   updatedAt: Date;
+
+
 }
 
 export interface ReportPostInterface {

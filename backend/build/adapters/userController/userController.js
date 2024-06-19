@@ -80,6 +80,24 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             user: result.user,
         });
     }));
+    const blockUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, blockUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleBlockUser)(userId, blockUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
+    const unblockUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId, unblockUserId } = req.body;
+        const result = yield (0, profileAuthApplication_1.handleUnBlockUser)(userId, unblockUserId, dbUserRepository);
+        res.json({
+            status: "success",
+            message: result.message,
+            user: result.user,
+        });
+    }));
     return {
         getAllUsers,
         getuserprofile,
@@ -88,6 +106,8 @@ const userController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         acceptfollowUserRequest,
         unfollowUserRequest,
         rejectfollowUserRequest,
+        blockUser,
+        unblockUser,
     };
 };
 exports.default = userController;

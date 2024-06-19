@@ -23,6 +23,8 @@ const userRouter = () => {
   router.post("/cancelrequest" ,authMiddleware, controller.cancelfollowUserRequest);
   router.post("/acceptrequest" ,authMiddleware,controller.acceptfollowUserRequest);
   router.post("/rejectrequest" , authMiddleware,controller.rejectfollowUserRequest);
+  router.post("/blockuserbyuser" , authMiddleware,controller.blockUser);
+  router.post("/unblockuserbyuser" , authMiddleware,controller.unblockUser);
 
   return router;
 };

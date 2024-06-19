@@ -25,6 +25,7 @@ export interface ProfileInterface {
   isGoogleSignedIn?: boolean;
   isBlocked?: boolean;
   isPrivate?: boolean;
+  blockedUsers?: string[];
   isPremium?: boolean;
   createdAt?: string;
 }

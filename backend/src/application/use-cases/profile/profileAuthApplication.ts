@@ -33,6 +33,7 @@ export const handleUserInfo = async (
       isVerifiedAccount: userData.isVerifiedAccount,
       notifications: userData.notifications,
       savedPosts: userData.savedPosts,
+      blockedUsers: userData.blockedUsers,
       taggedPosts: userData?.taggedPosts,
       isGoogleSignedIn: userData.isGoogleSignedIn,
       isBlocked: userData.isBlocked,
@@ -404,6 +405,64 @@ export const handleRejectFollowUserRequest = async (
       throw err;
     }
     throw new ErrorInApplication("Failed to reject friend request", 401);
+  }
+};
+
+export const handleBlockUser = async (
+  userId: string,
+  blockUserId: string,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    const mainUser = await dbUserRepository.getUserById(userId);
+    const targetUser = await dbUserRepository.getUserById(blockUserId);
+
+    if (!mainUser || !targetUser) {
+      throw new ErrorInApplication("User doesn't exist", 401);
+    }
+
+    let newResult = await dbUserRepository.blockOtherUser(
+      userId,
+      blockUserId
+    );
+    return {
+      message: newResult.message,
+      user: targetUser,
+    };
+  } catch (err: any) {
+    if (err instanceof ErrorInApplication) {
+      throw err;
+    }
+    throw new ErrorInApplication("Failed to block user", 401);
+  }
+};
+
+export const handleUnBlockUser = async (
+  userId: string,
+  unblockUserId: string,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    const mainUser = await dbUserRepository.getUserById(userId);
+    const targetUser = await dbUserRepository.getUserById(unblockUserId);
+
+    if (!mainUser || !targetUser) {
+      throw new ErrorInApplication("User doesn't exist", 401);
+    }
+
+    let newResult = await dbUserRepository.unblockOtherUser(
+      userId,
+      unblockUserId
+    );
+    return {
+      message: newResult.message,
+      user: targetUser,
+    };
+  } catch (err: any) {
+    if (err instanceof ErrorInApplication) {
+      throw err;
+    }
+    throw new ErrorInApplication("Failed to block user", 401);
   }
 };
 

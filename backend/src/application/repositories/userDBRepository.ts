@@ -90,6 +90,11 @@ export const userDBRepository = (
   const setPaymentDetails = async (userId: string, paymentId: string) =>
     await repository.setPaymentDetails(userId, paymentId);
 
+  const blockOtherUser = async (userId: string, blockUserId: string) =>
+    await repository.blockOtherUser(userId, blockUserId);
+  const unblockOtherUser = async (userId: string, unblockUserId: string) =>
+    await repository.unblockOtherUser(userId, unblockUserId);
+
   const premiumUsersProgress = async (userId: string) =>
     await repository.premiumUsersProgress(userId);
 
@@ -128,6 +133,8 @@ export const userDBRepository = (
     setPaymentDetails,
     handleDocumentSubmission,
     premiumUsersProgress,
+    blockOtherUser,
+    unblockOtherUser
   };
 };
 

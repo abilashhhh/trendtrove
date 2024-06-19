@@ -6,6 +6,7 @@ import {
   FriendRequestSentResponse,
   GetRestOfUsersResponse,
   UserInfo,
+  blockUserResponse,
 } from "../../Types/userProfile";
 
 // Utility function for handling Axios errors
@@ -138,6 +139,42 @@ export const sendRejectFollowRequest = async (
     const response = await axiosUserInstance.post<FriendRequestSentResponse>(
       `${END_POINTS.REJECT_FOLLOW_REQ_FOR_PVT_ACC}`,
       { userId, targetUserId }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const blockOtherUser = async (
+  userId: string,
+  blockUserId: string
+): Promise<blockUserResponse> => {
+  try {
+    console.log("Current users id: ", userId);
+    console.log("blockUserId users id: ", blockUserId);
+    const response = await axiosUserInstance.post<blockUserResponse>(
+      `${END_POINTS.BLOCK_USER_USER}`,
+      { userId, blockUserId }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const unblockOtherUser = async (
+  userId: string,
+  unblockUserId: string
+): Promise<blockUserResponse> => {
+  try {
+    console.log("Current users id: ", userId);
+    console.log("unblockUserId users id: ", unblockUserId);
+    const response = await axiosUserInstance.post<blockUserResponse>(
+      `${END_POINTS.UNBLOCK_USER_USER}`,
+      { userId, unblockUserId }
     );
     return response.data;
   } catch (error) {

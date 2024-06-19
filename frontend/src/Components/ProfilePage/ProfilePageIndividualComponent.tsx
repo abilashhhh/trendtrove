@@ -11,7 +11,7 @@ import {
   rejectFollowRequests,
 } from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
-import { getUserProfile } from "../../API/User/user";
+import { blockOtherUser, getUserProfile, unblockOtherUser } from "../../API/User/user";
 import { getPostsLengthOfTheUser } from "../../API/Post/post";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -301,13 +301,71 @@ const ProfilePageIndividualComponent: React.FC = () => {
     fetchPostCount();
   }, [username]);
 
+  const handleBlockUser = async (userId: string) => {
+    const confirmed = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to block this user.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, block it!'
+    });
+  
+    if (confirmed.isConfirmed) {
+      try {
+        const block = await blockOtherUser(currentUser._id, userId);
+        console.log("User blocked successfully:", block);
+        Swal.fire({
+          icon: 'success',
+          title: 'User Blocked!',
+          text: 'You have successfully blocked the user.',
+        });
+        window.location.reload()
+      } catch (error) {
+        console.error('Error blocking user:', error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to block user. Please try again later.',
+        });
+      }
+    }
+  };
+  
+  const handleUnBlockUser = async (userId: string) => {
+    const confirmed = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to unblock this user.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, unblock it!'
+    });
+  
+    if (confirmed.isConfirmed) {
+      try {
+        const unblock = await unblockOtherUser(currentUser._id, userId);
+        console.log("User unblocked successfully:", unblock);
+        Swal.fire({
+          icon: 'success',
+          title: 'User Unblocked!',
+          text: 'You have successfully unblocked the user.',
+        });
+        window.location.reload()
 
-  const handleBlockUser = () => {
-    console.log("handleBlockUser, " , currentUser._id, username)
-  }
-  const handleReportUser = () => {
-    console.log("handleReportUser ",  currentUser._id, username)
-  }
+      } catch (error) {
+        console.error('Error unblocking user:', error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to unblock user. Please try again later.',
+        });
+      }
+    }
+  };
+  
 
   const fetchUserPosts = async (username: string | undefined) => {
     try {
@@ -660,12 +718,24 @@ const ProfilePageIndividualComponent: React.FC = () => {
       </button>
       {showMoreOptions && (
         <div className="absolute mt-4 right-0 p-1 w-40 bg-slate-200 dark:bg-slate-800 rounded-lg shadow-lg z-10">
-          <button onClick={handleBlockUser} className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
-            Block User
-          </button>
-          <button  onClick={handleReportUser}  className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
-            Report User
-          </button>
+          
+    {currentUser.blockedUsers?.includes(userDetails._id) ? (
+  <button
+    onClick={() => handleUnBlockUser(userDetails._id)}
+    className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2"
+  >
+    Unblock User
+  </button>
+) : (
+  <button
+    onClick={() => handleBlockUser(userDetails._id)}
+    className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2"
+  >
+    Block User
+  </button>
+)}
+
+       
           <button  className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
             Share Profile
           </button>
@@ -677,6 +747,8 @@ const ProfilePageIndividualComponent: React.FC = () => {
     </div>
           </div>
         </div>
+
+        {!currentUser.blockedUsers?.includes(userDetails._id)  ? 
 
         <div className="p-2">
           {!userDetails.isPrivate ||
@@ -815,8 +887,8 @@ const ProfilePageIndividualComponent: React.FC = () => {
               profile
             </div>
           )}
-        </div>
-
+         </div>
+  : <h1 className="p-3 text-center">You have blocked the user, Unblock to view profile</h1> }
         <Modal
           isOpen={showFollowersModal}
           onClose={handleCloseFollowersModal}
@@ -829,6 +901,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
           title="Following"
           users={userDetails.following}
         />
+
       </div>
     </main>
   );

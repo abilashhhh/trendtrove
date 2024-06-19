@@ -39,6 +39,8 @@ const END_POINTS = {
   CANCEL_FOLLOW_REQ_FOR_PVT_ACC :'api/user/cancelrequest',
   ACCEPT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/acceptrequest',
   REJECT_FOLLOW_REQ_FOR_PVT_ACC :'api/user/rejectrequest',
+  BLOCK_USER_USER :'api/user/blockuserbyuser',
+  UNBLOCK_USER_USER :'api/user/unblockuserbyuser',
   
   // POST
   ADD_POST :'api/post/addpost',

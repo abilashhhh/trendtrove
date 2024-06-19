@@ -14,6 +14,7 @@ export interface UserInterface {
   followers?: string[];
   following?: string[];
   savedPosts?: string[];
+  blockedUsers?: string[];
   isVerifiedAccount?: boolean;
   isGoogleSignedIn?: boolean;
   isBlocked?: boolean;
@@ -38,6 +39,7 @@ export interface GoogleUserInterface {
   following?: string[];
   requestsForMe?: string[];
   requestedByMe?: string[];
+  blockedUsers?: string[];
   savedPosts?: string[];
   isVerifiedAccount?: boolean;
   isBlocked?: boolean;
@@ -62,6 +64,7 @@ export interface UserDataInterface {
   requestedByMe?: string[];
   followers?: string[];
   following?: string[];
+  blockedUsers?: string[];
   savedPosts?: string[];
   isVerifiedAccount?: boolean;
   isGoogleSignedIn?: boolean;

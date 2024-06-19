@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handlePremiumAccountUserProgress = exports.handleVerifyPassword = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePublicAccount = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handlePasswordChange2 = exports.handleEditProfile = exports.handleUserInfo = void 0;
+exports.handleverifydocspremium = exports.handleSetPremiumAccount = exports.handleVerifiedAccountPayment = exports.handlePremiumAccountUserProgress = exports.handleVerifyPassword = exports.handleUnBlockUser = exports.handleBlockUser = exports.handleRejectFollowUserRequest = exports.handleAcceptFollowUserRequest = exports.handleCancelFollowUserRequest = exports.handleUnFollowUserRequest = exports.handleFollowUserRequest = exports.handleUserbyUsername = exports.handleGetAllUsers = exports.handlePublicAccount = exports.handlePrivateAccount = exports.handleSuspendAccount = exports.handleDeleteAccount = exports.handlePasswordChange = exports.handlePasswordChange2 = exports.handleEditProfile = exports.handleUserInfo = void 0;
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const razorpay_1 = __importDefault(require("razorpay"));
 // import Razorpay from "razorpay";
@@ -39,6 +39,7 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             isVerifiedAccount: userData.isVerifiedAccount,
             notifications: userData.notifications,
             savedPosts: userData.savedPosts,
+            blockedUsers: userData.blockedUsers,
             taggedPosts: userData === null || userData === void 0 ? void 0 : userData.taggedPosts,
             isGoogleSignedIn: userData.isGoogleSignedIn,
             isBlocked: userData.isBlocked,
@@ -312,6 +313,48 @@ const handleRejectFollowUserRequest = (userId, targetUserId, dbUserRepository) =
     }
 });
 exports.handleRejectFollowUserRequest = handleRejectFollowUserRequest;
+const handleBlockUser = (userId, blockUserId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const mainUser = yield dbUserRepository.getUserById(userId);
+        const targetUser = yield dbUserRepository.getUserById(blockUserId);
+        if (!mainUser || !targetUser) {
+            throw new ErrorInApplication_1.default("User doesn't exist", 401);
+        }
+        let newResult = yield dbUserRepository.blockOtherUser(userId, blockUserId);
+        return {
+            message: newResult.message,
+            user: targetUser,
+        };
+    }
+    catch (err) {
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
+        throw new ErrorInApplication_1.default("Failed to block user", 401);
+    }
+});
+exports.handleBlockUser = handleBlockUser;
+const handleUnBlockUser = (userId, unblockUserId, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const mainUser = yield dbUserRepository.getUserById(userId);
+        const targetUser = yield dbUserRepository.getUserById(unblockUserId);
+        if (!mainUser || !targetUser) {
+            throw new ErrorInApplication_1.default("User doesn't exist", 401);
+        }
+        let newResult = yield dbUserRepository.unblockOtherUser(userId, unblockUserId);
+        return {
+            message: newResult.message,
+            user: targetUser,
+        };
+    }
+    catch (err) {
+        if (err instanceof ErrorInApplication_1.default) {
+            throw err;
+        }
+        throw new ErrorInApplication_1.default("Failed to block user", 401);
+    }
+});
+exports.handleUnBlockUser = handleUnBlockUser;
 const handleVerifyPassword = (userId, password, dbUserRepository, authService) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userExists = yield dbUserRepository.getUserById(userId);

@@ -184,7 +184,7 @@ const userRepositoryMongoDB = () => {
                 isAdmin: { $ne: true },
                 isBlocked: { $ne: true },
                 isSuspended: { $ne: true },
-            }, "username dp email name bio isPrivate isPremium followers following requestedByMe requestsForMe createdAt posts coverPhoto").exec();
+            }, "username dp email name bio isPrivate isPremium followers following requestedByMe requestsForMe createdAt posts blockedUsers coverPhoto").exec();
             // console.log(users);
             return users;
         }
@@ -467,6 +467,44 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in submitting documents");
         }
     });
+    const blockOtherUser = (currentUserId, blockUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const currentUser = yield userModel_1.default.findById(currentUserId);
+            const blockUser = yield userModel_1.default.findById(blockUserId);
+            if (!currentUser || !blockUser) {
+                throw new Error("User not found");
+            }
+            if (currentUser.blockedUsers.includes(blockUserId)) {
+                return { message: "User is already blocked" };
+            }
+            currentUser.blockedUsers.push(blockUserId);
+            yield currentUser.save();
+            return { message: "You have blocked the user" };
+        }
+        catch (error) {
+            console.error("Error in blockOtherUser", error);
+            throw new Error("Error in blocking the user");
+        }
+    });
+    const unblockOtherUser = (currentUserId, unblockUserId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const currentUser = yield userModel_1.default.findById(currentUserId);
+            const blockUser = yield userModel_1.default.findById(unblockUserId);
+            if (!currentUser || !blockUser) {
+                throw new Error("User not found");
+            }
+            if (!currentUser.blockedUsers.includes(unblockUserId)) {
+                return { message: "User is not blocked" };
+            }
+            currentUser.blockedUsers.pull(unblockUserId);
+            yield currentUser.save();
+            return { message: "You have unblocked the user" };
+        }
+        catch (error) {
+            console.error("Error in unblockOtherUser", error);
+            throw new Error("Error in unblocking the user");
+        }
+    });
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {
@@ -514,6 +552,8 @@ const userRepositoryMongoDB = () => {
         setPaymentDetails,
         handleDocumentSubmission,
         premiumUsersProgress,
+        blockOtherUser,
+        unblockOtherUser,
     };
 };
 exports.userRepositoryMongoDB = userRepositoryMongoDB;

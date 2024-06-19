@@ -120,6 +120,11 @@ export interface FriendRequestSentResponse {
   message: string,
 }
 
+export interface blockUserResponse {
+  status: string, 
+  message: string,
+}
+
 export interface UploadCoverResponse {
   status : string, 
   message : string ,

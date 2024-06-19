@@ -182,7 +182,7 @@ const SendMessageInput: React.FC = () => {
             </div>
           )}
           {showFileIcons && (
-            <div className="absolute bottom-16 right-4 flex rounded-lg">
+            <div className="absolute bottom-12 right-0 flex rounded-lg">
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer"
                 onClick={() => handleFileInputClick("image")}>

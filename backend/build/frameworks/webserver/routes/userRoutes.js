@@ -20,6 +20,8 @@ const userRouter = () => {
     router.post("/cancelrequest", authMiddleware_1.default, controller.cancelfollowUserRequest);
     router.post("/acceptrequest", authMiddleware_1.default, controller.acceptfollowUserRequest);
     router.post("/rejectrequest", authMiddleware_1.default, controller.rejectfollowUserRequest);
+    router.post("/blockuserbyuser", authMiddleware_1.default, controller.blockUser);
+    router.post("/unblockuserbyuser", authMiddleware_1.default, controller.unblockUser);
     return router;
 };
 exports.default = userRouter;

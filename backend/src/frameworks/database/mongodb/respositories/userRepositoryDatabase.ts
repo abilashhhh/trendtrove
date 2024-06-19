@@ -232,7 +232,7 @@ export const userRepositoryMongoDB = () => {
           isBlocked: { $ne: true },
           isSuspended: { $ne: true },
         },
-        "username dp email name bio isPrivate isPremium followers following requestedByMe requestsForMe createdAt posts coverPhoto"
+        "username dp email name bio isPrivate isPremium followers following requestedByMe requestsForMe createdAt posts blockedUsers coverPhoto"
       ).exec();
       // console.log(users);
       return users;
@@ -597,6 +597,57 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const blockOtherUser = async (currentUserId: string, blockUserId: string) => {
+    try {
+      const currentUser = await User.findById(currentUserId);
+      const blockUser = await User.findById(blockUserId);
+
+      if (!currentUser || !blockUser) {
+        throw new Error("User not found");
+      }
+
+      if (currentUser.blockedUsers.includes(blockUserId)) {
+        return { message: "User is already blocked" };
+      }
+
+      currentUser.blockedUsers.push(blockUserId);
+
+      await currentUser.save();
+
+      return { message: "You have blocked the user" };
+    } catch (error) {
+      console.error("Error in blockOtherUser", error);
+      throw new Error("Error in blocking the user");
+    }
+  };
+
+  const unblockOtherUser = async (
+    currentUserId: string,
+    unblockUserId: string
+  ) => {
+    try {
+      const currentUser = await User.findById(currentUserId);
+      const blockUser = await User.findById(unblockUserId);
+
+      if (!currentUser || !blockUser) {
+        throw new Error("User not found");
+      }
+
+      if (!currentUser.blockedUsers.includes(unblockUserId)) {
+        return { message: "User is not blocked" };
+      }
+
+      currentUser.blockedUsers.pull(unblockUserId);
+
+      await currentUser.save();
+
+      return { message: "You have unblocked the user" };
+    } catch (error) {
+      console.error("Error in unblockOtherUser", error);
+      throw new Error("Error in unblocking the user");
+    }
+  };
+
   const clearAll = async () => {
     try {
       const result = await User.updateMany(
@@ -650,6 +701,8 @@ export const userRepositoryMongoDB = () => {
     setPaymentDetails,
     handleDocumentSubmission,
     premiumUsersProgress,
+    blockOtherUser,
+    unblockOtherUser,
   };
 };
 //////////////////////////////////////////////////////////
