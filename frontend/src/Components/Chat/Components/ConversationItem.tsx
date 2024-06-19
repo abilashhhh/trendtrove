@@ -75,7 +75,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         </div>
 
         <div
-          className={`text-sm ${
+          className={`text-sm break-all ${
             isSelected
               ? "text-black dark:text-white"
               : "text-gray-600 dark:text-gray-400"

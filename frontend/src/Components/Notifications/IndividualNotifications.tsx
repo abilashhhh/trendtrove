@@ -128,8 +128,12 @@
 
 
 
+
 import React, { useEffect, useState } from 'react';
-import { FaEnvelope, FaThumbsUp, FaThumbsDown, FaComment, FaUserPlus, FaUserCheck, FaUserTimes, FaUsers, FaUserMinus, FaPhoneSlash } from 'react-icons/fa';
+import {
+  FaEnvelope, FaThumbsUp, FaThumbsDown, FaComment, FaUserPlus,
+  FaUserCheck, FaUserTimes, FaUsers, FaUserMinus, FaPhoneSlash
+} from 'react-icons/fa';
 import { useSocketContext } from "../../Context/SocketContext";
 import useUserDetails from '../../Hooks/useUserDetails';
 import useGetMessages from '../../Hooks/useGetMessages';
@@ -193,7 +197,7 @@ const getNotificationMsg = (msg) => {
 
 const IndividualNotifications = () => {
   const [allUsers, setAllUsers] = useState(null);
-  const { notifications } = useSocketContext();
+  const { notifications, markAllNotificationAsRead } = useSocketContext();
   const currentUser = useUserDetails();
   const { getMessages } = useGetMessages();
 
@@ -212,7 +216,14 @@ const IndividualNotifications = () => {
 
   const modifiedNotifications = notifications.map((n) => {
     const sender = allUsers?.find(user => user._id === n.senderId);
-    return { ...n, senderName: sender?.username, userDp: sender?.dp , type:"message" ,msg:"message", time: getTimeDifference( new Date())};
+    return {
+      ...n,
+      senderName: sender?.username,
+      userDp: sender?.dp,
+      type: "message",
+      msg: "message",
+      time: getTimeDifference(new Date())
+    };
   });
 
   const [viewedNotifications, setViewedNotifications] = useState([]);
@@ -222,40 +233,38 @@ const IndividualNotifications = () => {
   };
 
   const markAllAsViewed = () => {
-    setViewedNotifications(notifications.map((notification) => notification.id));
+    markAllNotificationAsRead(notifications);
+    setViewedNotifications(notifications.map((notification) => notification._id));
   };
 
   return (
     <div className="flex flex-col w-full p-4 space-y-4">
-      {unreadNotifications?.length >= 1 && (
-        <button className="p-2 w-2/6 bg-slate-700 text-white rounded-lg mb-4">
-          <h1>{unreadNotifications.length}</h1>
-        </button>
-      )}
-      <button onClick={markAllAsViewed} className="p-2 w-2/6 bg-slate-700 text-white rounded-lg mb-4">
+
+      <button onClick={markAllAsViewed} className="p-2  bg-slate-700 text-white rounded-lg mb-4">
         Mark all as viewed
       </button>
 
       {modifiedNotifications && modifiedNotifications.map((notification) => (
         <div
-          key={notification.id}
-          className={`flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md ${
-            viewedNotifications.includes(notification.id) || notification.isRead ? 'opacity-50' : ''
-          }`}
+          key={notification._id}
+          className={`flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg ${viewedNotifications.includes(notification._id) ? 'opacity-50' : ''}`}
         >
           <img src={notification.userDp} alt="User DP" className="w-10 h-10 rounded-full mr-4" />
-          <div className="mr-4">{getNotificationIcon(notification.type)}</div>
-          <div className="flex-1">
-            <div className="text-gray-900 dark:text-gray-100">
-              <span className="font-bold">{notification.senderName}</span> {getNotificationMsg(notification.msg)}
-            </div>
-            <div className="text-gray-500 dark:text-gray-400 text-sm">{notification.time}</div>
+          <div className="mr-4">
+            {getNotificationIcon(notification.type)}
           </div>
-          <button onClick={() => markAsViewed(notification.id)} className="text-sm text-blue-500">
-            Mark as Viewed
-          </button>
+          <div>
+            <span className="font-bold">{notification.senderName}</span> {" "}
+            {getNotificationMsg(notification.msg)}
+            <div className="text-xs text-gray-500">{notification.time}</div>
+          </div>
+         
         </div>
+        
       ))}
+
+{modifiedNotifications?.length <= 0 &&  <><p>
+  No notifications</p></> }
     </div>
   );
 };

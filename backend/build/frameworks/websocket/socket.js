@@ -26,7 +26,7 @@ const socket = (io) => {
             const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit("newMessage", { senderId, message });
-                io.to(receiverSocketId).emit("getNotification", { senderId, isRead: false, date: new Date() });
+                io.to(receiverSocketId).emit("getNotification", { senderId, isRead: false, date: new Date(), message });
             }
         });
     });

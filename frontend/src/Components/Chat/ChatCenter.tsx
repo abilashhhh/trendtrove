@@ -16,7 +16,7 @@ const ChatCenter: React.FC = () => {
 
   const scrollToBottom = () => {
     if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+      chatEndRef.current.scrollIntoView({ behavior: "instant" });
     }
   };
 

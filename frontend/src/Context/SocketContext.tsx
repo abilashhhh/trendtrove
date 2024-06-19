@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
+import React, { createContext, useEffect, useState, ReactNode, useContext, useCallback } from "react";
 import io, { Socket } from "socket.io-client";
 import useUserDetails from "../Hooks/useUserDetails";
 import useConversation from "../Hooks/useConversations";
@@ -7,12 +7,14 @@ interface SocketContextProps {
   socket: Socket | null;
   onlineUsers: string[];
   notifications: any[];
+  markAllNotificationAsRead: (notifications: any[]) => void;
 }
 
 export const SocketContext = createContext<SocketContextProps>({
   socket: null,
   onlineUsers: [],
   notifications: [],
+  markAllNotificationAsRead: () => {},
 });
 
 interface SocketContextProviderProps {
@@ -30,8 +32,8 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
   const currentUser = useUserDetails();
   const { selectedConversation } = useConversation();
 
-  console.log("Notifications: ", notifications)
-  
+  console.log("Notifications: ", notifications);
+
   useEffect(() => {
     if (currentUser) {
       const socket = io("http://localhost:3000", {
@@ -68,8 +70,37 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
     }
   }, [currentUser, selectedConversation]);
 
+  const markAllNotificationAsRead = useCallback((notifications: any[]) => {
+    const mNotifications = notifications.map((n) => {
+      return { ...n, isRead: true };
+    });
+    setNotifications(mNotifications);
+  }, []);
+
+//   const markNotificationAsRead = useCallback((n: { senderId: any; }, userChats: any[] , user: { _id: any; } ,notifications: any[]) => {
+//     //find chat to open
+//     const desiredChat = userChats.find(chat => {
+//       const chatMembers = [user._id , n.senderId]
+//       const isDesiredChat = chat?.members.every((member) => {
+//         return chatMembers.includes(member)
+//       })
+
+//       return isDesiredChat
+//     })
+// // mark notification as read
+// const mNotifications =notifications.map(el => {
+//   if(n.senderId === el.senderId){
+//     return {...n, isRead : true}
+//   }else{
+//     return el
+//   }
+// })
+//     updateCurrentChat(desiredChat)
+//     setNotifications(mNotifications)
+//   })
+
   return (
-    <SocketContext.Provider value={{ socket, onlineUsers, notifications }}>
+    <SocketContext.Provider value={{ socket, onlineUsers, notifications, markAllNotificationAsRead  }}>
       {children}
     </SocketContext.Provider>
   );

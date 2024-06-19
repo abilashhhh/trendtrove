@@ -1,14 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSocketContext } from "../../Context/SocketContext";
+import unReadNotificationsFunction from "../../utils/unReadNotificationsFunction";
 
 interface HeaderProps {
   toggleLeftSidebar: () => void;
-  userDetails: any; // Adjust the type accordingly
+  userDetails: any;
 }
 
 const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
   const currentUser: any = userDetails;
   const location = useLocation();
+  const { notifications } = useSocketContext();
+  const unreadNotifications = unReadNotificationsFunction(notifications);
+
+  const [bellShake, setBellShake] = useState(false);
+
+  useEffect(() => {
+    if (unreadNotifications.length > 0) {
+      setBellShake(true);
+      const timer = setTimeout(() => setBellShake(false), 3000);  
+      return () => clearTimeout(timer);
+    }
+  }, [unreadNotifications.length]);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -37,9 +51,9 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
                 isActive("/notifications") ? "dark:bg-slate-700 bg-slate-500" : ""
               }`}
             >
-              <div className="relative flex items-center justify-center p-[15px] rounded-full cursor-pointer transition duration-300 bg-transparent border-none hover:bg-[rgba(170,170,170,0.062)] notification">
+              <div className={`relative flex items-center justify-center p-[15px] rounded-full cursor-pointer transition duration-300 bg-transparent border-none hover:bg-[rgba(170,170,170,0.062)] notification ${bellShake ? 'shake' : ''}`}>
                 <div className="absolute top-[8px] right-[8px] z-[1000] flex p-2 items-center justify-center w-[12px] h-[12px] text-white text-[10px] bg-red-500 rounded-full">
-                  11
+                  {unreadNotifications.length}
                 </div>
                 <div className="bell-container relative">
                   <div className="bell relative w-[20px] h-[20px] border-[2.17px] border-white border-t-white border-l-white border-r-white border-b-transparent rounded-t-[10px] rounded-b-none top-[-3px]"></div>
@@ -80,7 +94,8 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
             width: 7px;
           }
           /* Container animations */
-          .notification:hover > .bell-container {
+          .notification:hover > .bell-container,
+          .notification.shake > .bell-container {
             animation: bell-animation 650ms ease-out 0s 1 normal both;
           }
           /* Bell ring and scale animation */

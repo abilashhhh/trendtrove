@@ -35,7 +35,7 @@ const socket = (io: Server<DefaultEventsMap>) => {
       const receiverSocketId = getReceiverSocketId(receiverId);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newMessage", { senderId, message });
-        io.to(receiverSocketId).emit("getNotification", { senderId,isRead:false,date: new Date() });
+        io.to(receiverSocketId).emit("getNotification", { senderId,isRead:false,date: new Date() ,message});
       }
     });
   });
