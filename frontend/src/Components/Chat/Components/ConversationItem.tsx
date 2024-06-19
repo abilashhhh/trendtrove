@@ -2,9 +2,8 @@ import React from "react";
 import useConversation from "../../../Hooks/useConversations";
 import { useSocketContext } from "../../../Context/SocketContext";
 import { getTimeDifference } from "../../../utils/timeAgo";
-import { FaCrown, FaLock } from "react-icons/fa";
-import { faCheckCircle, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faLock } from "@fortawesome/free-solid-svg-icons";
 
 interface User {
   isPrivate: string;
@@ -65,27 +64,16 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
                 ? "text-black dark:text-white"
                 : "text-gray-900 dark:text-gray-300"
             } flex gap-1 items-center`}>
-            {user.username}{" "}
-            {user.isPremium ? (
+            {user.username}
+            {user.isPremium && (
               <FontAwesomeIcon icon={faCheckCircle} className="text-blue-500" />
-            ) : ("")}
-            {user.isPrivate ? (
+            )}
+            {user.isPrivate && (
               <FontAwesomeIcon icon={faLock} className="text-green-500" />
-            ) : ("")}
-          </div>
-          <div
-            className={`text-xs ${
-              isSelected
-                ? "text-black dark:text-white"
-                : "text-gray-600 dark:text-gray-400"
-            }`}>
-            {lastMessage
-              ? getTimeDifference(
-                  new Date(lastMessage.timestamp).toLocaleString()
-                )
-              : ""}
+            )}
           </div>
         </div>
+
         <div
           className={`text-sm ${
             isSelected
@@ -93,6 +81,27 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               : "text-gray-600 dark:text-gray-400"
           }`}>
           {lastMessage ? lastMessage.text : ""}
+        </div>
+      </div>
+
+      <div>
+        <div
+          className={`text-xs ${
+            isSelected
+              ? "text-black dark:text-white"
+              : "text-gray-600 dark:text-gray-400"
+          }`}>
+          {lastMessage
+            ? getTimeDifference(new Date(lastMessage.timestamp))
+            : ""}
+        </div>
+        <div
+          className={`text-xs ${
+            isSelected
+              ? "text-black dark:text-white"
+              : "text-gray-600 dark:text-gray-400"
+          }`}>
+          {isOnline ? <p className="text-green-500 text-center">Online</p> : ""}
         </div>
       </div>
     </div>
