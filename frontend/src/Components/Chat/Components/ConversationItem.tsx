@@ -1,6 +1,7 @@
 import React from "react";
 import useConversation from "../../../Hooks/useConversations";
 import { useSocketContext } from "../../../Context/SocketContext";
+import { getTimeDifference } from "../../../utils/timeAgo";
 
 interface User {
   _id: string;
@@ -48,7 +49,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({ user, setSelectedCo
             {user.username}
           </div>
           <div className={`text-xs ${isSelected ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400"}`}>
-            {lastMessage ? new Date(lastMessage.timestamp).toLocaleString() : ""}
+            {lastMessage ? getTimeDifference(new Date(lastMessage.timestamp).toLocaleString())  : ""}
           </div>
         </div>
         <div className={`text-sm ${isSelected ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400"}`}>

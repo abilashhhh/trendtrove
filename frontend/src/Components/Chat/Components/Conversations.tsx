@@ -3,6 +3,7 @@ import { getAllUsers } from "../../../API/User/user";
 import ConversationItem from "./ConversationItem";
 import { getAllConversations } from "../../../API/Chat/chat";
 import { Message } from "../../../Types/userProfile";
+import useConversation from "../../../Hooks/useConversations";
 
 interface User {
   _id: string;
@@ -29,6 +30,7 @@ const Conversations: React.FC<ConversationsProps> = ({
   setSelectedConversation,
   activeTab,
 }) => {
+  const { selectedConversation } = useConversation(); 
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
 
@@ -60,7 +62,7 @@ const Conversations: React.FC<ConversationsProps> = ({
     };
 
     fetchConversations();
-  });
+  }, [selectedConversation?._id]); 
 
   const usersWithConversations = new Set(
     conversations.map(conv => conv.participants).flat()
