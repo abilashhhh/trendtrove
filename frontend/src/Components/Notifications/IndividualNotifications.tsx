@@ -69,12 +69,11 @@
 // },[])
 
 // const getAllUsersData = async () => {
-//   const allUsersData = await getAllUsers();  
+//   const allUsersData = await getAllUsers();
 //   if (allUsersData) {
 //     setAllUsers(allUsersData);
 //   }
 // };
-
 
 //   const [viewedNotifications, setViewedNotifications] = useState<number[]>([]);
 
@@ -88,14 +87,13 @@
 
 //   return (
 //     <div className="flex flex-col w-full p-4 space-y-4">
-   
+
 //    {unreadNotifications?.length >= 1 && (
 //   <button className="p-2 w-2/6 bg-slate-700 text-white rounded-lg mb-4">
 //     <h1>{unreadNotifications.length}</h1>
 //   </button>
 // )}
 
- 
 //       <button onClick={markAllAsViewed} className=" p-2 w-2/6 bg-slate-700 text-white rounded-lg mb-4">
 //         Mark all as viewed
 //       </button>
@@ -116,7 +114,7 @@
 //             <div className="text-gray-500 dark:text-gray-400 text-sm">{notification.time}</div>
 //           </div>
 //           <button onClick={() => markAsViewed(notification.id)} className="text-sm text-blue-500">
-//             Mark as Viewed 
+//             Mark as Viewed
 //           </button>
 //         </div>
 //       ))}
@@ -126,69 +124,74 @@
 
 // export default IndividualNotifications;
 
-
-
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
-  FaEnvelope, FaThumbsUp, FaThumbsDown, FaComment, FaUserPlus,
-  FaUserCheck, FaUserTimes, FaUsers, FaUserMinus, FaPhoneSlash
-} from 'react-icons/fa';
+  FaEnvelope,
+  FaThumbsUp,
+  FaThumbsDown,
+  FaComment,
+  FaUserPlus,
+  FaUserCheck,
+  FaUserTimes,
+  FaUsers,
+  FaUserMinus,
+  FaPhoneSlash,
+} from "react-icons/fa";
 import { useSocketContext } from "../../Context/SocketContext";
-import useUserDetails from '../../Hooks/useUserDetails';
-import useGetMessages from '../../Hooks/useGetMessages';
-import unReadNotificationsFunction from '../../utils/unReadNotificationsFunction';
-import { getAllUsers } from '../../API/User/user';
-import { getTimeDifference } from '../../utils/timeAgo';
+import useUserDetails from "../../Hooks/useUserDetails";
+import useGetMessages from "../../Hooks/useGetMessages";
+import unReadNotificationsFunction from "../../utils/unReadNotificationsFunction";
+import { getAllUsers } from "../../API/User/user";
+import { getTimeDifference } from "../../utils/timeAgo";
 
-const getNotificationIcon = (type) => {
+const getNotificationIcon = type => {
   switch (type) {
-    case 'message':
+    case "message":
       return <FaEnvelope className="text-blue-500" />;
-    case 'like':
+    case "like":
       return <FaThumbsUp className="text-green-500" />;
-    case 'dislike':
+    case "dislike":
       return <FaThumbsDown className="text-red-500" />;
-    case 'comment':
+    case "comment":
       return <FaComment className="text-purple-500" />;
-    case 'follow':
+    case "follow":
       return <FaUserPlus className="text-yellow-500" />;
-    case 'accept':
+    case "accept":
       return <FaUserCheck className="text-green-500" />;
-    case 'reject':
+    case "reject":
       return <FaUserTimes className="text-red-500" />;
-    case 'groupAdd':
+    case "groupAdd":
       return <FaUsers className="text-blue-500" />;
-    case 'groupRemove':
+    case "groupRemove":
       return <FaUserMinus className="text-red-500" />;
-    case 'missedCall':
+    case "missedCall":
       return <FaPhoneSlash className="text-orange-500" />;
     default:
       return null;
   }
 };
 
-const getNotificationMsg = (msg) => {
+const getNotificationMsg = msg => {
   switch (msg) {
-    case 'message':
+    case "message":
       return "sent you a message";
-    case 'like':
+    case "like":
       return "liked your post";
-    case 'dislike':
+    case "dislike":
       return "disliked your post";
-    case 'comment':
+    case "comment":
       return "commented on your post";
-    case 'follow':
+    case "follow":
       return "sent you a follow request";
-    case 'accept':
+    case "accept":
       return "accepted your friend request";
-    case 'reject':
+    case "reject":
       return "rejected your follow request";
-    case 'groupAdd':
+    case "groupAdd":
       return "added you to the group";
-    case 'groupRemove':
+    case "groupRemove":
       return "removed you from the group";
-    case 'missedCall':
+    case "missedCall":
       return "tried calling you earlier.";
     default:
       return null;
@@ -198,8 +201,6 @@ const getNotificationMsg = (msg) => {
 const IndividualNotifications = () => {
   const [allUsers, setAllUsers] = useState(null);
   const { notifications, markAllNotificationAsRead } = useSocketContext();
-  const currentUser = useUserDetails();
-  const { getMessages } = useGetMessages();
 
   useEffect(() => {
     getAllUsersData();
@@ -214,7 +215,7 @@ const IndividualNotifications = () => {
 
   const unreadNotifications = unReadNotificationsFunction(notifications);
 
-  const modifiedNotifications = notifications.map((n) => {
+  const modifiedNotifications = unreadNotifications.map(n => {
     const sender = allUsers?.find(user => user._id === n.senderId);
     return {
       ...n,
@@ -222,49 +223,54 @@ const IndividualNotifications = () => {
       userDp: sender?.dp,
       type: "message",
       msg: "message",
-      time: getTimeDifference(new Date())
+      time: getTimeDifference(new Date()),
     };
   });
 
   const [viewedNotifications, setViewedNotifications] = useState([]);
 
-  const markAsViewed = (id) => {
-    setViewedNotifications((prev) => [...prev, id]);
-  };
-
   const markAllAsViewed = () => {
     markAllNotificationAsRead(notifications);
-    setViewedNotifications(notifications.map((notification) => notification._id));
+    setViewedNotifications(notifications.map(notification => notification._id));
   };
 
   return (
     <div className="flex flex-col w-full p-4 space-y-4">
-
-      <button onClick={markAllAsViewed} className="p-2  bg-slate-700 text-white rounded-lg mb-4">
+      <button
+        onClick={markAllAsViewed}
+        className="p-2  bg-slate-700 text-white rounded-lg mb-4">
         Mark all as viewed
       </button>
 
-      {modifiedNotifications && modifiedNotifications.map((notification) => (
-        <div
-          key={notification._id}
-          className={`flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg ${viewedNotifications.includes(notification._id) ? 'opacity-50' : ''}`}
-        >
-          <img src={notification.userDp} alt="User DP" className="w-10 h-10 rounded-full mr-4" />
-          <div className="mr-4">
-            {getNotificationIcon(notification.type)}
-          </div>
-          <div>
-            <span className="font-bold">{notification.senderName}</span> {" "}
-            {getNotificationMsg(notification.msg)}
-            <div className="text-xs text-gray-500">{notification.time}</div>
-          </div>
+      {modifiedNotifications &&
+        modifiedNotifications.map(notification => (
+          <div
+            key={notification._id}
+            className={`flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg ${
+              viewedNotifications.includes(notification._id) ? "opacity-50" : ""
+            }`}>
+            <img
+              src={notification.userDp}
+              alt="User DP"
+              className="w-10 h-10 rounded-full mr-4"
+            />
+            <div className="mr-4">{getNotificationIcon(notification.type)}</div>
+            <div>
+              <span className="font-bold">{notification.senderName}</span>{" "}
+              {getNotificationMsg(notification.msg)}
          
-        </div>
-        
-      ))}
 
-{modifiedNotifications?.length <= 0 &&  <><p>
-  No notifications</p></> }
+              <div className="text-xs text-gray-500">{notification?.message.message}</div>
+              <div className="text-xs text-gray-500">{notification.time}</div>
+            </div>
+          </div>
+        ))}
+
+      {modifiedNotifications?.length <= 0 && (
+        <>
+          <p>No notifications</p>
+        </>
+      )}
     </div>
   );
 };

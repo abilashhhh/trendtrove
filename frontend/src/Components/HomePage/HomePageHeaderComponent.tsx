@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
             >
               <div className={`relative flex items-center justify-center p-[15px] rounded-full cursor-pointer transition duration-300 bg-transparent border-none hover:bg-[rgba(170,170,170,0.062)] notification ${bellShake ? 'shake' : ''}`}>
                 <div className="absolute top-[8px] right-[8px] z-[1000] flex p-2 items-center justify-center w-[12px] h-[12px] text-white text-[10px] bg-red-500 rounded-full">
-                  {unreadNotifications.length}
+                  {unreadNotifications.length} 
                 </div>
                 <div className="bell-container relative">
                   <div className="bell relative w-[20px] h-[20px] border-[2.17px] border-white border-t-white border-l-white border-r-white border-b-transparent rounded-t-[10px] rounded-b-none top-[-3px]"></div>
