@@ -25,11 +25,19 @@ const SendMessageInput: React.FC = () => {
   const { sendMessage, sendMessageOnly } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
-  const { markSpecificUserNotificationAsRead, notifications, typingHandler, isTyping } = useSocketContext();
+  const {
+    markSpecificUserNotificationAsRead,
+    notifications,
+    typingHandler,
+    isTyping,
+  } = useSocketContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    markSpecificUserNotificationAsRead(notifications, selectedConversation?._id);
+    markSpecificUserNotificationAsRead(
+      notifications,
+      selectedConversation?._id
+    );
 
     if (!message.trim() && !selectedFile) {
       toast.error("Message or file cannot be empty.");
@@ -46,8 +54,8 @@ const SendMessageInput: React.FC = () => {
           const fileType = selectedFile.type.startsWith("image")
             ? "image"
             : selectedFile.type.startsWith("video")
-              ? "video"
-              : "audio";
+            ? "video"
+            : "audio";
           const response = await upload(
             fileReader.result as string,
             err => toast.error(err),
@@ -110,7 +118,7 @@ const SendMessageInput: React.FC = () => {
     );
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 shadow-sm sticky bottom-0 p-4">
+    <div className="bg-gray-100 dark:bg-gray-800 shadow-sm sticky bottom-0 ml-1 mr-1">
       {canChat && (
         <>
           {selectedFile && (
@@ -120,43 +128,46 @@ const SendMessageInput: React.FC = () => {
                 className="ml-2 text-red-500"
                 onClick={removeSelectedFile}
                 aria-label="Remove selected file"
-                title="Remove file"
-              >
+                title="Remove file">
                 <FaTimes />
               </button>
             </div>
           )}
           <form className="flex items-center w-full" onSubmit={handleSubmit}>
-            {isTyping && <div>Typing...</div>}
+            {isTyping && (
+              <div className="typing-indicator-container bg-green-700 text-white p-2 rounded-lg mr-1 animate-bounce transition-all duration-300 ease-in-out transform-gpu">
+                Typing..
+              </div>
+            )}
             <input
               type="text"
               placeholder="Type your message"
               value={message}
-              onChange={e => { setMessage(e.target.value); typingHandler(e); }}
+              onChange={e => {
+                setMessage(e.target.value);
+                typingHandler(e);
+              }}
               className="flex-grow p-2 mr-2 rounded-lg border border-gray-700 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
             <button
               type="button"
               aria-label="Toggle Emoji Picker"
               className="p-2 bg-gray-300 dark:bg-gray-700 text-yellow-500 rounded-lg mr-2"
-              onClick={() => setShowEmojiPicker(prev => !prev)}
-            >
+              onClick={() => setShowEmojiPicker(prev => !prev)}>
               <FaSmile />
             </button>
             <button
               type="button"
               aria-label="Attach File"
               className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg mr-2"
-              onClick={toggleFileIcons}
-            >
+              onClick={toggleFileIcons}>
               <FiPaperclip />
             </button>
             <button
               type="submit"
               aria-label="Send Message"
               className="p-2 bg-blue-500 text-white rounded-lg"
-              disabled={loading}
-            >
+              disabled={loading}>
               {loading ? (
                 <div className="loading loading-spinner"></div>
               ) : (
@@ -174,20 +185,17 @@ const SendMessageInput: React.FC = () => {
             <div className="absolute bottom-16 right-4 flex rounded-lg">
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer"
-                onClick={() => handleFileInputClick("image")}
-              >
+                onClick={() => handleFileInputClick("image")}>
                 <FaImage />
               </div>
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer ml-2"
-                onClick={() => handleFileInputClick("video")}
-              >
+                onClick={() => handleFileInputClick("video")}>
                 <FaVideo />
               </div>
               <div
                 className="p-2 bg-gray-300 dark:bg-gray-700 rounded-lg cursor-pointer ml-2"
-                onClick={() => handleFileInputClick("audio")}
-              >
+                onClick={() => handleFileInputClick("audio")}>
                 <FaFileAudio />
               </div>
 
@@ -216,6 +224,21 @@ const SendMessageInput: React.FC = () => {
           )}
         </>
       )}
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .typing-indicator-container {
+            font-size: 0.75rem;
+            padding: 0.5rem;
+          }
+        }
+        .typing-indicator-container {
+          display: inline-block;
+          transition: transform 0.3s ease-in-out;
+        }
+        .typing-indicator-container:hover {
+          transform: scale(1.1);
+        }
+      `}</style>
     </div>
   );
 };
