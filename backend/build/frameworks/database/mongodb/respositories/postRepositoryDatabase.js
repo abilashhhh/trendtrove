@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postRepositoryMongoDB = void 0;
-const cron = require('node-cron');
+const cron = require("node-cron");
 const postModel_1 = __importDefault(require("../models/postModel"));
 const reportPostModel_1 = __importDefault(require("../models/reportPostModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
@@ -153,10 +153,12 @@ const postRepositoryMongoDB = () => {
             if (!savedPostIds || savedPostIds.length === 0) {
                 return [];
             }
-            const savedPosts = yield postModel_1.default.find({ _id: { $in: savedPostIds } }).sort({
+            const savedPosts = yield postModel_1.default.find({
+                _id: { $in: savedPostIds },
+                isBlocked: false,
+            }).sort({
                 createdAt: -1,
             });
-            // console.log("savedposts: ", savedPosts);
             return savedPosts;
         }
         catch (error) {
@@ -173,13 +175,16 @@ const postRepositoryMongoDB = () => {
             if (!user) {
                 throw new Error("User not found");
             }
-            // console.log("user: ", user  )
             const taggedPostIds = user.taggedPosts;
-            // console.log("taggedPostIds:", taggedPostIds);
-            const taggedPosts = yield postModel_1.default.find({ _id: { $in: taggedPostIds } }).sort({
+            if (!taggedPostIds || taggedPostIds.length === 0) {
+                return [];
+            }
+            const taggedPosts = yield postModel_1.default.find({
+                _id: { $in: taggedPostIds },
+                isBlocked: false,
+            }).sort({
                 createdAt: -1,
             });
-            // console.log("taggedPosts:", taggedPosts);
             return taggedPosts;
         }
         catch (error) {
@@ -420,10 +425,10 @@ const postRepositoryMongoDB = () => {
             // console.log(`${expiredAccounts.length} premium accounts have been updated as expired.`);
         }
         catch (error) {
-            console.error('Error updating expired premium accounts:', error);
+            console.error("Error updating expired premium accounts:", error);
         }
     });
-    cron.schedule('* * * * *', () => {
+    cron.schedule("* * * * *", () => {
         // console.log('Running cron job to check for expired premium accounts...');
         checkAndExpirePremiumAccounts();
     });

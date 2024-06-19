@@ -21,7 +21,7 @@ const useSendMessages = () => {
       const { data } = await sendMessageToUser(selectedConversation._id, message, mediaUrl, fileType);
       if (data.error) throw new Error(data.error);
 
-      socket?.emit("sendMessage", {
+      socket?.  emit("sendMessage", {
         senderId: data.senderId,
         receiverId: selectedConversation._id,
         message: data,

@@ -2,7 +2,7 @@ import {
   PostDataInterface,
   ReportPostInterface,
 } from "../../../../types/postsInterface";
-const cron = require('node-cron');
+const cron = require("node-cron");
 import Post from "../models/postModel";
 import ReportPost from "../models/reportPostModel";
 import User from "../models/userModel";
@@ -178,10 +178,14 @@ export const postRepositoryMongoDB = () => {
       if (!savedPostIds || savedPostIds.length === 0) {
         return [];
       }
-      const savedPosts = await Post.find({ _id: { $in: savedPostIds } }).sort({
+
+      const savedPosts = await Post.find({
+        _id: { $in: savedPostIds },
+        isBlocked: false,
+      }).sort({
         createdAt: -1,
       });
-      // console.log("savedposts: ", savedPosts);
+
       return savedPosts;
     } catch (error: any) {
       console.error(error.message);
@@ -199,17 +203,19 @@ export const postRepositoryMongoDB = () => {
       if (!user) {
         throw new Error("User not found");
       }
-      // console.log("user: ", user  )
 
       const taggedPostIds = user.taggedPosts;
-      // console.log("taggedPostIds:", taggedPostIds);
 
-      const taggedPosts = await Post.find({ _id: { $in: taggedPostIds } }).sort(
-        {
-          createdAt: -1,
-        }
-      );
-      // console.log("taggedPosts:", taggedPosts);
+      if (!taggedPostIds || taggedPostIds.length === 0) {
+        return [];
+      }
+
+      const taggedPosts = await Post.find({
+        _id: { $in: taggedPostIds },
+        isBlocked: false,
+      }).sort({
+        createdAt: -1,
+      });
 
       return taggedPosts;
     } catch (error: any) {
@@ -217,7 +223,6 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting tagged posts of current user!");
     }
   };
-
   const getParticularPostsForCurrentUser = async (id: string) => {
     try {
       if (!id) {
@@ -416,86 +421,85 @@ export const postRepositoryMongoDB = () => {
     return post;
   };
 
-    const approvePremium = async (userId: string) => {
-      const oneMonthFromNow = new Date();
-      oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+  const approvePremium = async (userId: string) => {
+    const oneMonthFromNow = new Date();
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
 
-      const premiumDetails = await PremiumAccount.findOneAndUpdate(
-        { userId: userId },
+    const premiumDetails = await PremiumAccount.findOneAndUpdate(
+      { userId: userId },
 
-        {
-          "premiumRequest.isAdminApproved": true,
-          premiumExpiresAt: oneMonthFromNow,
-          isPremium: true,
-          hasExpired: false,
-        },
-        { new: true }
-      );
-      await User.findByIdAndUpdate(userId, {
+      {
+        "premiumRequest.isAdminApproved": true,
+        premiumExpiresAt: oneMonthFromNow,
         isPremium: true,
+        hasExpired: false,
+      },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(userId, {
+      isPremium: true,
+    });
+
+    if (!premiumDetails) {
+      throw new ErrorInApplication("premiumDetails not found", 404);
+    }
+
+    return premiumDetails;
+  };
+
+  const rejectPremium = async (userId: string) => {
+    const premiumDetails = await PremiumAccount.findOneAndUpdate(
+      { userId: userId },
+      {
+        "premiumRequest.isAdminApproved": false,
+        premiumExpiresAt: null,
+        isPremium: false,
+      },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(userId, {
+      isPremium: false,
+    });
+
+    if (!premiumDetails) {
+      throw new ErrorInApplication("premiumDetails not found", 404);
+    }
+    return premiumDetails;
+  };
+
+  const checkAndExpirePremiumAccounts = async () => {
+    try {
+      const now = new Date();
+      const expiredAccounts = await PremiumAccount.find({
+        premiumExpiresAt: { $lte: now },
+        hasExpired: false,
       });
 
-      if (!premiumDetails) {
-        throw new ErrorInApplication("premiumDetails not found", 404);
-      }
-
-      return premiumDetails;
-    };
-
-    const rejectPremium = async (userId: string) => {
-      const premiumDetails = await PremiumAccount.findOneAndUpdate(
-        { userId: userId },
-        {
-          "premiumRequest.isAdminApproved": false,
+      for (const account of expiredAccounts) {
+        await PremiumAccount.findByIdAndUpdate(account._id, {
           premiumExpiresAt: null,
           isPremium: false,
-        },
-        { new: true }
-      );
-
-      await User.findByIdAndUpdate(userId, {
-        isPremium: false,
-      });
-
-      if (!premiumDetails) {
-        throw new ErrorInApplication("premiumDetails not found", 404);
-      }
-      return premiumDetails;
-    };
-
-    const checkAndExpirePremiumAccounts = async () => {
-      try {
-        const now = new Date();
-        const expiredAccounts = await PremiumAccount.find({
-          premiumExpiresAt: { $lte: now },
-          hasExpired: false,
+          hasExpired: true,
+          paymentDetails: null,
+          "premiumRequest.isAdminApproved": false,
         });
-    
-        for (const account of expiredAccounts) {
-          await PremiumAccount.findByIdAndUpdate(account._id, {
-            premiumExpiresAt: null,
-            isPremium: false,
-            hasExpired: true,
-            paymentDetails: null,
-            "premiumRequest.isAdminApproved": false,
-          });
-    
-          await User.findByIdAndUpdate(account.userId, {
-            isPremium: false,
-          });
-        }
-    
-        // console.log(`${expiredAccounts.length} premium accounts have been updated as expired.`);
-      } catch (error) {
-        console.error('Error updating expired premium accounts:', error);
+
+        await User.findByIdAndUpdate(account.userId, {
+          isPremium: false,
+        });
       }
-    };
-    
-    cron.schedule('* * * * *', () => {
-      // console.log('Running cron job to check for expired premium accounts...');
-      checkAndExpirePremiumAccounts();
-    });
-    
+
+      // console.log(`${expiredAccounts.length} premium accounts have been updated as expired.`);
+    } catch (error) {
+      console.error("Error updating expired premium accounts:", error);
+    }
+  };
+
+  cron.schedule("* * * * *", () => {
+    // console.log('Running cron job to check for expired premium accounts...');
+    checkAndExpirePremiumAccounts();
+  });
 
   const addNewComment = async (newCommentData: CommentInterface) => {
     try {

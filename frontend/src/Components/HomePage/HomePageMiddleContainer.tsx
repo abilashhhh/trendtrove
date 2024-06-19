@@ -100,8 +100,8 @@ const MiddleContainer: React.FC = () => {
           getDislikedPosts(userId),
         ]);
 
-        console.log("Liked posts:", likedResponse);
-        console.log("Disliked posts:", dislikedResponse);
+        // console.log("Liked posts:", likedResponse);
+        // console.log("Disliked posts:", dislikedResponse);getAllPublicPostsForExplore 
 
         if (likedResponse) {
           const likedPostsData = likedResponse.likedPosts.reduce(

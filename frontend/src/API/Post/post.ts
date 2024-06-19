@@ -475,11 +475,11 @@ export const handleAddReplyToComment = async (
 
 export const getAllPublicPostsForExplore = async () => {
   try {
-    console.log("getAllPublicPostsForExplore ");
+    // console.log("getAllPublicPostsForExplore ");
     const response = await axiosUserInstance.get<GetAllPostsForExploreResponse>(
       END_POINTS.GET_ALL_POSTS_FOR_EXPLORE
     );
-    console.log("getAllPublicPostsForExplore response:", response.data.allPosts);
+    // console.log("getAllPublicPostsForExplore response:", response.data.allPosts);
     return response.data.allPosts;
   } catch (error) {
     handleAxiosError(error);

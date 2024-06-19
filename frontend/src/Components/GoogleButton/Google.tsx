@@ -38,7 +38,7 @@ const Google: React.FC = () => {
               accessToken: response.accessToken,
             })
           );
-          console.log("response.user : ", response.user);
+          // console.log("response.user : ", response.user);
           console.log("response.accessToken : ", response.accessToken);
           toast.success("Sign in successful");
           toast.success("Navigating to homepage...");

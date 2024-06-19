@@ -13,7 +13,7 @@ export const getReceiverSocketId = (receiverId: string): string | undefined => {
 
 const socket = (io: Server<DefaultEventsMap>) => {
   io.on("connection", (socket: Socket) => {
-    console.log("a user connected", socket.id);
+    console.log("New connection: ", socket.id);
 
     const userId = socket.handshake.query.userId as string;
     if (userId !== "undefined") {
@@ -35,6 +35,7 @@ const socket = (io: Server<DefaultEventsMap>) => {
       const receiverSocketId = getReceiverSocketId(receiverId);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newMessage", { senderId, message });
+        io.to(receiverSocketId).emit("getNotification", { senderId,isRead:false,date: new Date() });
       }
     });
   });

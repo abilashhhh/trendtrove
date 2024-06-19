@@ -31,8 +31,8 @@ const Conversations: React.FC<ConversationsProps> = ({
   activeTab,
 }) => {
   const { selectedConversation } = useConversation(); 
-  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {

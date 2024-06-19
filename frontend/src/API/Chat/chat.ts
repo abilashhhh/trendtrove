@@ -81,7 +81,7 @@ export const getMessagesFromUser = async (
     const response = await axiosUserInstance.get<GetMessageInterface>(
       `${END_POINTS.GET_MESSAGES.replace(":receiverId", receiverId)}`
     );
-    console.log("response of getessages", response.data.data);
+    // console.log("response of getessages", response.data.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -110,7 +110,7 @@ export const updateMessage = async (
   editedMessage: string
 ): Promise<sendMessageInterface> => {
   try {
-    console.log(messageId, editedMessage);
+    // console.log(messageId, editedMessage);
     const response = await axiosUserInstance.patch<sendMessageInterface>(
       `${END_POINTS.EDIT_MESSAGES.replace(":messageId", messageId)}`,
       { editedMessage }
@@ -126,7 +126,7 @@ export const deleteMessage = async (
   messageId: string
 ): Promise<sendMessageInterface> => {
   try {
-    console.log(messageId);
+    // console.log(messageId);
 
     const response = await axiosUserInstance.patch<sendMessageInterface>(
       `${END_POINTS.DELETE_MESSAGES.replace(":messageId", messageId)}`

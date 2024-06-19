@@ -9,15 +9,11 @@ const useListenMessages = () => {
   useEffect(() => {
     const handleNewMessage = (newMessage: any) => {
       newMessage.shouldShake = true;
-      // const sound = new Audio(notificationSound);
-      // sound.play();
       setMessages(prevMessages => [...prevMessages, newMessage]);
     };
 
     const handleUpdateMessage = (updatedMessage: any) => {
       updatedMessage.shouldShake = true;
-      // const sound = new Audio(notificationSound);
-      // sound.play();
       setMessages(prevMessages =>
         prevMessages.map(message =>
           message._id === updatedMessage._id ? updatedMessage : message
@@ -27,8 +23,6 @@ const useListenMessages = () => {
 
     const handleDeleteMessage = (deleteMessage: any) => {
       deleteMessage.shouldShake = true;
-      // const sound = new Audio(notificationSound);
-      // sound.play();
       setMessages(prevMessages =>
         prevMessages.map(message =>
           message._id === deleteMessage._id ? deleteMessage : message

@@ -53,7 +53,7 @@ const SignInPage: React.FC = () => {
       return;
     }
 
-    console.log("Sign in form submitted:", formData);
+    // console.log("Sign in form submitted:", formData);
 
     try {
       const response = await signin(formData);
@@ -72,7 +72,7 @@ const SignInPage: React.FC = () => {
             accessToken: response.accessToken,
           })
         );
-        console.log("response.user : ", response.user);
+        // console.log("response.user : ", response.user);
         console.log("response.accessToken : ", response.accessToken);
         toast.success("Sign in successful");
         setTimeout(() => {

@@ -8,7 +8,7 @@ const getReceiverSocketId = (receiverId) => {
 exports.getReceiverSocketId = getReceiverSocketId;
 const socket = (io) => {
     io.on("connection", (socket) => {
-        console.log("a user connected", socket.id);
+        console.log("New connection: ", socket.id);
         const userId = socket.handshake.query.userId;
         if (userId !== "undefined") {
             userSocketMap[userId] = socket.id;
@@ -26,6 +26,7 @@ const socket = (io) => {
             const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit("newMessage", { senderId, message });
+                io.to(receiverSocketId).emit("getNotification", { senderId, isRead: false, date: new Date() });
             }
         });
     });

@@ -1,15 +1,16 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { StoreType } from "../../Redux/Store/reduxStore";
-import { FaBell } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
 
 interface HeaderProps {
   toggleLeftSidebar: () => void;
+  userDetails: any; // Adjust the type accordingly
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar , userDetails}) => {
-  const currentUser: any = userDetails
+const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
+  const currentUser: any = userDetails;
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2">
@@ -30,8 +31,20 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar , userDetails}) => {
 
         <div className="flex items-center space-x-4">
           {currentUser && currentUser.dp && (
-            <Link to="/notifications" className="relative p-2 text-gray-600 dark:text-gray-400">
-              <FaBell className="text-lg" />
+            <Link
+              to="/notifications"
+              className={`relative p-1 text-gray-900 dark:text-gray-400 rounded-full ${
+                isActive("/notifications") ? "dark:bg-slate-700 bg-slate-500" : ""
+              }`}
+            >
+              <div className="relative flex items-center justify-center p-[15px] rounded-full cursor-pointer transition duration-300 bg-transparent border-none hover:bg-[rgba(170,170,170,0.062)] notification">
+                <div className="absolute top-[8px] right-[8px] z-[1000] flex p-2 items-center justify-center w-[12px] h-[12px] text-white text-[10px] bg-red-500 rounded-full">
+                  11
+                </div>
+                <div className="bell-container relative">
+                  <div className="bell relative w-[20px] h-[20px] border-[2.17px] border-white border-t-white border-l-white border-r-white border-b-transparent rounded-t-[10px] rounded-b-none top-[-3px]"></div>
+                </div>
+              </div>
             </Link>
           )}
           {currentUser && currentUser.dp && (
@@ -45,6 +58,54 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar , userDetails}) => {
           )}
         </div>
       </div>
+      <style>
+        {`
+          /* Bell shape with one div */
+          .bell::before,
+          .bell::after {
+            content: "";
+            background: white;
+            display: block;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 2.17px;
+          }
+          .bell::before {
+            top: 100%;
+            width: 20px;
+          }
+          .bell::after {
+            top: calc(100% + 4px);
+            width: 7px;
+          }
+          /* Container animations */
+          .notification:hover > .bell-container {
+            animation: bell-animation 650ms ease-out 0s 1 normal both;
+          }
+          /* Bell ring and scale animation */
+          @keyframes bell-animation {
+            20% {
+              transform: rotate(15deg);
+            }
+            40% {
+              transform: rotate(-15deg);
+              scale: 1.1;
+            }
+            60% {
+              transform: rotate(10deg);
+              scale: 1.1;
+            }
+            80% {
+              transform: rotate(-10deg);
+            }
+            0%,
+            100% {
+              transform: rotate(0deg);
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };
