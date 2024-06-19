@@ -25,12 +25,12 @@ const ChatLeftSidebar: React.FC = () => {
           >
             New Chat
           </button>
-          <button
+          {/* <button
             className={`flex-1 p-2 rounded-lg text-center ${activeTab === "groupChat" ? "bg-blue-400 dark:bg-blue-900" : "bg-slate-300 dark:bg-slate-700"} text-slate-900 dark:text-white`}
             onClick={() => setActiveTab("groupChat")}
           >
             Group Chat
-          </button>
+          </button> */}
         </div>
         <Conversations
           searchQuery={searchQuery}

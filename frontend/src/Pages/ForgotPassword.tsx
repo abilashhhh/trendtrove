@@ -149,7 +149,7 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-100">
       <TrendTroveLogo />
       <ToastContainer />
       <div className="w-full max-w-4xl mx-auto mt-10 p-10 border rounded-lg bg-white">
@@ -171,7 +171,7 @@ const ForgotPassword: React.FC = () => {
                   name="email"
                   required
                   value={state.formData.email}
-                  className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
+                  className="focus:ring-gray-500 p-4 border text-black bg-slate-50 border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
                 />
                 {state.errors.email && (
                   <p className="text-red-500 text-sm">{state.errors.email}</p>
@@ -206,7 +206,7 @@ const ForgotPassword: React.FC = () => {
                     name="otp"
                     required
                     value={state.formData.otp}
-                    className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
+                    className="focus:ring-gray-500 p-4  text-black bg-slate-50 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
                   />
                 </div>
                 <div className="ml-2">
@@ -237,7 +237,7 @@ const ForgotPassword: React.FC = () => {
                 name="password"
                 required
                 value={state.formData.password}
-                className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
+                className="focus:ring-gray-500 p-4 border  text-black bg-slate-50 border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
               />
               {state.errors.password && (
                 <p className="text-red-500 text-sm">{state.errors.password}</p>
@@ -256,7 +256,7 @@ const ForgotPassword: React.FC = () => {
                 name="confirmPassword"
                 required
                 value={state.formData.confirmPassword}
-                className="focus:ring-gray-500 p-4 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
+                className="focus:ring-gray-500 p-4 border border-gray-500  text-black bg-slate-50 focus:border-gray-500 block w-full shadow-sm sm:text-lg rounded-md"
               />
               {state.errors.confirmPassword && (
                 <p className="text-red-500 text-sm">

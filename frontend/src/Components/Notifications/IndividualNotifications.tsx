@@ -14,7 +14,7 @@ import {
 import { useSocketContext } from "../../Context/SocketContext";
 import unReadNotificationsFunction from "../../utils/unReadNotificationsFunction";
 import { getAllUsers } from "../../API/User/user";
-import { getTimeDifference } from "../../utils/timeAgo";
+import { formatDateTime } from "../../utils/timeAgo";
 
 const getNotificationIcon = type => {
   switch (type) {
@@ -95,7 +95,7 @@ const IndividualNotifications = () => {
       userDp: sender?.dp,
       type: "message",
       msg: "message",
-      time: getTimeDifference(new Date()),
+      time: formatDateTime(new Date()),
     };
   });
 

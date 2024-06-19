@@ -98,9 +98,9 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             isSelected
               ? "text-black dark:text-white"
               : "text-gray-900 dark:text-gray-300"
-          } flex gap-1 items-center bg-green-500 p-2 rounded-full`}
+          } flex gap-1 items-center bg-blue-800 p-2 rounded-full`}
         >
-          <p>{numberOfIsReadFalse}</p>
+          {numberOfIsReadFalse}
         </div>
       )}
 
