@@ -46,9 +46,9 @@ function useUserDetails() {
     const fetchUserInfo = async () => {
       if (!userId) return;
       try {
-        console.log("userId: ", userId);
+        // console.log("userId: ", userId);
         const userDetailsFromDB: any = await getUserInfo();  
-        console.log("userDetailsFromDB: ", userDetailsFromDB.user);
+        // console.log("userDetailsFromDB: ", userDetailsFromDB.user);
         setUserDetails(userDetailsFromDB.user);
       } catch (error) {
         console.error("Failed to fetch user info", error);

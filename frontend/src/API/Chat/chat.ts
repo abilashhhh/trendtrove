@@ -95,7 +95,7 @@ export const getAllConversations = async (
 ): Promise<GetMessageInterface> => {
   try {
     const response = await axiosUserInstance.get<GetMessageInterface>(END_POINTS.GET_ALL_CONVERSATIONS);
-    console.log("response of getAllConversations", response.data.data);
+    // console.log("response of getAllConversations", response.data.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

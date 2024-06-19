@@ -1,4 +1,3 @@
- 
 import React from "react";
 import useConversation from "../../../Hooks/useConversations";
 import { useSocketContext } from "../../../Context/SocketContext";
@@ -10,12 +9,18 @@ interface User {
   dp: string;
 }
 
+interface LastMessage {
+  text: string;
+  timestamp: string;
+}
+
 interface ConversationItemProps {
   user: User;
   setSelectedConversation: (user: User) => void;
+  lastMessage: LastMessage | null;
 }
 
-const ConversationItem: React.FC<ConversationItemProps> = ({ user, setSelectedConversation }) => {
+const ConversationItem: React.FC<ConversationItemProps> = ({ user, setSelectedConversation, lastMessage }) => {
   const { selectedConversation } = useConversation();
   const isSelected = selectedConversation?._id === user._id;
 
@@ -38,13 +43,16 @@ const ConversationItem: React.FC<ConversationItemProps> = ({ user, setSelectedCo
         </div>
       </div>
       <div className="flex-1">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center justify-between">
           <div className={`font-bold text-sm ${isSelected ? "text-black dark:text-white" : "text-gray-900 dark:text-gray-300"}`}>
             {user.username}
           </div>
+          <div className={`text-xs ${isSelected ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400"}`}>
+            {lastMessage ? new Date(lastMessage.timestamp).toLocaleString() : ""}
+          </div>
         </div>
         <div className={`text-sm ${isSelected ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400"}`}>
-          {user.name}
+          {lastMessage ? lastMessage.text : ""}
         </div>
       </div>
     </div>

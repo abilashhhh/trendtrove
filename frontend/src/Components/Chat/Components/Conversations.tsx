@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAllUsers } from "../../../API/User/user";
 import ConversationItem from "./ConversationItem";
 import { getAllConversations } from "../../../API/Chat/chat";
+import { Message } from "../../../Types/userProfile";
 
 interface User {
   _id: string;
@@ -10,10 +11,17 @@ interface User {
   dp: string;
 }
 
+interface Conversation {
+  participants: string[];
+  messages: Message[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface ConversationsProps {
   searchQuery: string;
   setSelectedConversation: (user: User | null) => void;
-  activeTab: string; 
+  activeTab: string;
 }
 
 const Conversations: React.FC<ConversationsProps> = ({
@@ -22,7 +30,7 @@ const Conversations: React.FC<ConversationsProps> = ({
   activeTab,
 }) => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [usersWithConversations, setUsersWithConversations] = useState<string[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -40,46 +48,75 @@ const Conversations: React.FC<ConversationsProps> = ({
   }, []);
 
   useEffect(() => {
-    const fetchUsersWithConversations = async () => {
+    const fetchConversations = async () => {
       try {
         const response = await getAllConversations();
         if (response.data) {
-          // Extract user IDs from conversations
-          const participantIds = new Set<string>();
-          response.data.forEach(conversation => {
-            conversation.participants.forEach(participant => participantIds.add(participant));
-          });
-          setUsersWithConversations(Array.from(participantIds));
+          setConversations(response.data);
         }
       } catch (error) {
         console.error("Error fetching conversations:", error);
       }
     };
 
-    fetchUsersWithConversations();
-  }, []);
+    fetchConversations();
+  });
 
-  console.log("usersWithConversations:", usersWithConversations);
+  const usersWithConversations = new Set(
+    conversations.map(conv => conv.participants).flat()
+  );
 
   const filteredUsers = allUsers
     .filter(user => {
       if (activeTab === "chats") {
-        return usersWithConversations.includes(user._id);
+        return usersWithConversations.has(user._id);
       } else if (activeTab === "newChat") {
-        return !usersWithConversations.includes(user._id);
+        return !usersWithConversations.has(user._id);
       }
       return true;
     })
-    .filter(user => user.username.toLowerCase().includes(searchQuery.toLowerCase()));
+    .filter(user =>
+      user.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  const sortedConversations = filteredUsers
+    .map(user => {
+      const conversation = conversations.find(conv =>
+        conv.participants.includes(user._id)
+      );
+      const lastMessage = conversation
+        ? conversation.messages.reduce((latest, current) => {
+            return new Date(latest.createdAt) > new Date(current.createdAt)
+              ? latest
+              : current;
+          }, conversation.messages[0])
+        : null;
+      return {
+        ...user,
+        lastMessage: lastMessage
+          ? { text: lastMessage.message, timestamp: lastMessage.createdAt }
+          : null,
+      };
+    })
+    .sort((a, b) => {
+      if (a.lastMessage && b.lastMessage) {
+        return (
+          new Date(b.lastMessage.timestamp).getTime() -
+          new Date(a.lastMessage.timestamp).getTime()
+        );
+      }
+      return 0;
+    });
 
   return (
     <div className="pt-1 rounded-lg shadow-md flex-grow overflow-auto no-scrollbar">
-      {filteredUsers.length > 0 ? (
-        filteredUsers.map(user => (
+      {sortedConversations.length > 0 ? (
+        sortedConversations.map(user => (
           <ConversationItem
             key={user._id}
             user={user}
             setSelectedConversation={setSelectedConversation}
+            lastMessage={user.lastMessage}
           />
         ))
       ) : (
