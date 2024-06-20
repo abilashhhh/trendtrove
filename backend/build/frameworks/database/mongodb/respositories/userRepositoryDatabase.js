@@ -505,6 +505,31 @@ const userRepositoryMongoDB = () => {
             throw new Error("Error in unblocking the user");
         }
     });
+    const updateFollowSchemaDps = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const users = yield userModel_1.default.find({});
+            for (const user of users) {
+                const updateDpInArray = (arrayName) => __awaiter(void 0, void 0, void 0, function* () {
+                    for (const followEntry of user[arrayName]) {
+                        const followedUser = yield userModel_1.default.findById(followEntry.userId, 'dp');
+                        if (followedUser) {
+                            followEntry.dp = followedUser.dp;
+                        }
+                    }
+                });
+                yield updateDpInArray('requestsForMe');
+                yield updateDpInArray('requestedByMe');
+                yield updateDpInArray('followers');
+                yield updateDpInArray('following');
+                yield user.save();
+            }
+            console.log('Profile pictures updated successfully.');
+        }
+        catch (error) {
+            console.error('Error updating profile pictures:', error);
+        }
+    });
+    // updateFollowSchemaDps(); //
     const clearAll = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield userModel_1.default.updateMany({}, {

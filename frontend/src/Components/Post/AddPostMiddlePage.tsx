@@ -34,14 +34,14 @@ const formatDate = (date: any) => {
 };
 
 const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
-  const [captionsData, setCaptions] = useState('');
+  const [captionsData, setCaptions] = useState("");
 
-  console.log('captions data: ', captionsData)
+  console.log("captions data: ", captionsData);
 
   const [postData, setPostData] = useState<Partial<Post>>({
     userId: userDetails._id,
     isArchived: false,
-    captions: captionsData,
+    captions: "",
     location: "",
     images: [],
     videos: [],
@@ -270,17 +270,14 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     }));
   };
 
-  const handleGenerateCaptionFunction = async(imageUrl:string) => {
-    console.log("handle generate cap fun called: ", imageUrl)
-   const captionResult = await handleGenerateCaption(imageUrl)
-   if(captionResult){
-    console.log("Caption res:", captionResult)
-    setCaptions(captionResult?.caption?.caption)
-   }
-  }
-
-  
- 
+  const handleGenerateCaptionFunction = async (imageUrl: string) => {
+    console.log("handle generate cap fun called: ", imageUrl);
+    const captionResult = await handleGenerateCaption(imageUrl);
+    if (captionResult) {
+      console.log("Caption res:", captionResult);
+      setCaptions(captionResult?.caption?.caption);
+    }
+  };
 
   const handleSubmit = async () => {
     const validMentions = mentionStatuses
@@ -334,7 +331,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
               {userDetails.username}
             </h2>
             <p className="text-sm md:text-base text-gray-500">
-              {formatDate(Date.now() )}
+              {formatDate(Date.now())}
             </p>
           </div>
         </div>
@@ -348,7 +345,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
           name="captions"
           rows={4}
           placeholder="Add your caption here..."
-          value={postData.captions || captionsData}
+          value={postData.captions}
           onChange={handleInputChange}
         />
         <div className="flex items-center justify-start gap-8 mb-4">
@@ -411,9 +408,19 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             </div>
           ))}
         </div>
-{postData?.images && postData.images.length>0 &&        
-<button onClick={() => handleGenerateCaptionFunction(postData?.images[0] ) } className="bg-slate-700 p-2 rounded-lg ml-2 hover:bg-slate-800">Generate caption</button>}
+     <div className="flex"> 
+     {postData?.images && postData.images.length > 0 && (
+          <button
+            onClick={() => handleGenerateCaptionFunction(postData?.images[0])}
+            className="bg-slate-700 p-3 rounded-lg m-2 hover:bg-slate-800">
+            Generate caption
+          </button>
+        )}
+        {captionsData && (
+          <div className="bg-slate-700 rounded-lg p-3 m-2">{captionsData}</div>
+        )}
 
+     </div>
         <div className="s:flex-col lg:flex lg:flex-row gap-5 justify-evenly">
           <div>
             <div className="flex items-center justify-start gap-3 mb-4 mt-4">

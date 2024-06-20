@@ -648,6 +648,37 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
+  const updateFollowSchemaDps = async () => {
+    try {
+      const users = await User.find({});
+
+      for (const user of users) {
+       
+        const updateDpInArray = async (arrayName) => {
+          for (const followEntry of user[arrayName]) {
+            const followedUser = await User.findById(followEntry.userId, 'dp');
+            if (followedUser) {
+              followEntry.dp = followedUser.dp;
+            }
+          }
+        };
+  
+        await updateDpInArray('requestsForMe');
+        await updateDpInArray('requestedByMe');
+        await updateDpInArray('followers');
+        await updateDpInArray('following');
+  
+        await user.save();
+      }
+  
+      console.log('Profile pictures updated successfully.');
+    } catch (error) {
+      console.error('Error updating profile pictures:', error);
+    }
+  };
+
+  // updateFollowSchemaDps(); //
+  
   const clearAll = async () => {
     try {
       const result = await User.updateMany(
