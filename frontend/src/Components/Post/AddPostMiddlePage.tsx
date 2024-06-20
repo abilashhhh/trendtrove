@@ -408,19 +408,29 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             </div>
           ))}
         </div>
-     <div className="flex"> 
-     {postData?.images && postData.images.length > 0 && (
-          <button
-            onClick={() => handleGenerateCaptionFunction(postData?.images[0])}
-            className="bg-slate-700 p-3 rounded-lg m-2 hover:bg-slate-800">
-            Generate caption
-          </button>
-        )}
-        {captionsData && (
-          <div className="bg-slate-700 rounded-lg p-3 m-2">{captionsData}</div>
-        )}
-
-     </div>
+        <div className="flex">
+          {postData?.images && postData.images.length > 0 && (
+            <button
+              onClick={() => handleGenerateCaptionFunction(postData?.images[0])}
+              className="bg-slate-700 p-3 rounded-lg m-2 hover:bg-slate-800">
+              Generate caption
+            </button>
+          )}
+          {captionsData && (
+            <div className="bg-slate-700 rounded-lg p-3 m-2">
+              {captionsData}{" "}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(captionsData).then(() => {
+                    toast("Text copied to clipboard!");
+                  });
+                }}
+                className="ml-2 p-2 bg-blue-500 text-white rounded-lg">
+                Copy to Clipboard
+              </button>
+            </div>
+          )}
+        </div>
         <div className="s:flex-col lg:flex lg:flex-row gap-5 justify-evenly">
           <div>
             <div className="flex items-center justify-start gap-3 mb-4 mt-4">
