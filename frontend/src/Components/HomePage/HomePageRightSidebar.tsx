@@ -13,7 +13,7 @@ const RightSidebar = () => {
       <aside
         className={`${
           isShrunk ? "w-16" : "md:w-64 w-full"
-        } md:block hidden bg-gray-800 dark:bg-gray-700 pt-2 pb-2 transition-width duration-300 ease-in-out h-full`}
+        } md:block hidden bg-gray-800 dark:bg-gray-700 pt-2  pb-2 pl-2 transition-width duration-300 ease-in-out h-full`}
       >
         <div className="p-2 rounded-lg bg-gray-200 dark:bg-gray-900 mr-2 text-black dark:text-white h-full overflow-y-auto no-scrollbar flex flex-col items-center">
           <div className="flex mb-2 w-full justify-center">

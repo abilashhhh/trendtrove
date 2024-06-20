@@ -82,7 +82,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           toggleLeftSidebar={toggleLeftSidebar}
           userDetails={currentUser}
         />
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden ">
           <LeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}
             toggleDarkMode={toggleDarkMode}

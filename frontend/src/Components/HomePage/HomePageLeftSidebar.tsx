@@ -60,7 +60,7 @@ const LeftSidebar = ({
     <aside className="h-full flex pl-2 pt-2 pb-2 bg-slate-800 dark:bg-slate-700 shadow-lg ">
       <div
         className={`bg-gray-800 rounded-lg dark:bg-slate-800 ${
-          isOpen ? "w-52" : "w-16"
+          isOpen ? "w-44" : "w-16"
         } ${
           isLeftSidebarOpen ? "block" : "hidden"
         } lg:block transition-all duration-300`}>
