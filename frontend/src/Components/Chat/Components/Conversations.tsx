@@ -112,7 +112,7 @@ const Conversations: React.FC<ConversationsProps> = ({
     });
 
   return (
-    <div className="pt-1 rounded-lg shadow-md flex-grow overflow-auto no-scrollbar">
+    <div className="pt-1 rounded-lg shadow-md flex-grow  overflow-auto no-scrollbar">
       {sortedConversations.length > 0 ? (
         sortedConversations.map(user => (
           <ConversationItem

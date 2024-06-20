@@ -27,13 +27,13 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2">
-      <div className="bg-gray-200 dark:bg-gray-900 text-black dark:text-white p-4 flex justify-between items-center rounded-lg">
+    <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2 items-center">
+      <div className="bg-gray-200 dark:bg-gray-900 text-black dark:text-white p-1 flex justify-between items-center rounded-lg">
         <div className="flex gap-3">
-          <div className="space-x-4 lg:hidden flex">
+          <div className="space-x-4 lg:hidden flex ml-2">
             <button onClick={toggleLeftSidebar}>☰</button>
           </div>
-          <h1 className="text-2xl flex items-center">
+          <h1 className="text-2xl flex items-center  lg:ml-2">
             <span className="text-gray-500 dark:text-slate-300 text-2xl sm:text-3xl lg:text-4xl font-extrabold">
               Trend
             </span>
@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
           </h1>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center lg:space-x-4">
           {currentUser && currentUser.dp && (
             <Link
               to="/notifications"

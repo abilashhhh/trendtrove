@@ -44,7 +44,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   return (
     <div
       key={user._id}
-      className={`flex items-center p-2 gap-2 hover:bg-slate-400 cursor-pointer dark:hover:bg-slate-700 bg-slate-200 dark:bg-slate-800 mt-2 rounded-md ${
+      className={`flex items-center p-2 gap-2 hover:bg-slate-400 cursor-pointer dark:hover:bg-slate-700 bg-slate-300 dark:bg-slate-800 mt-2 rounded-md ${
         isSelected
           ? "bg-slate-400 text-black dark:text-white dark:bg-slate-900 border"
           : ""
