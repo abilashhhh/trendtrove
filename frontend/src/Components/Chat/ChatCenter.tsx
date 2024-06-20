@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import IndividualMessage from "./Components/IndividualMessage";
 import useGetMessages from "../../Hooks/useGetMessages";
 import MessageSkeleton from "./Components/MessageSkeleton";
@@ -6,10 +6,12 @@ import useListenMessages from "../../Hooks/useListenMessages";
 import useConversation from "../../Hooks/useConversations";
 import { useNavigate } from "react-router-dom";
 import useUserDetails from "../../Hooks/useUserDetails";
+ 
 
 const ChatCenter: React.FC = () => {
   const { messages, loading, getMessages } = useGetMessages();
   const { selectedConversation } = useConversation();
+
   useListenMessages();
 
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -29,6 +31,9 @@ const ChatCenter: React.FC = () => {
       getMessages();
     }
   }, [messages.length]);
+ 
+
+ 
 
   const currentUser = useUserDetails();
   const navigate = useNavigate();
@@ -45,12 +50,37 @@ const ChatCenter: React.FC = () => {
       (follower: { userId: string }) => follower.userId === currentUser._id
     );
 
+    const isUserInBlockedList = currentUser?.blockedUsers.includes(selectedConversation._id)
+ 
   return (
     <div className="flex-grow overflow-y-auto mt-4 h-96 no-scrollbar">
-      {!loading && isPrivateAndNotAFollower && (
+      {!loading && isPrivateAndNotAFollower  && (
         <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 h-full">
           <div>
             Please send a request to chat with{" "}
+            <span
+              className="cursor-pointer"
+              onClick={() => {
+                navigate(`/profiles/${selectedConversation.username}`);
+              }}>
+              {" "}
+              @{selectedConversation.username}{" "}
+            </span>
+          </div>
+          <div
+            className="cursor-pointer font-bold text-red-600"
+            onClick={() => {
+              navigate(`/profiles/${selectedConversation.username}`);
+            }}>
+            View Profile
+          </div>
+        </div>
+      )}
+
+      {!loading &&  isUserInBlockedList && (
+        <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 h-full">
+          <div>
+           You have blocked this user, Unblock user to chat{" "}
             <span
               className="cursor-pointer"
               onClick={() => {

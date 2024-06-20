@@ -69,40 +69,44 @@ const postRepositoryMongoDB = () => {
             const followingOfRequestedUser = yield userModel_1.default.findById(id, {
                 following: 1,
             }).exec();
-            // // console.log("followingOfRequestedUser: ", followingOfRequestedUser)
             if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
                 throw new Error("User not following anyone");
             }
             const followingUsersId = followingOfRequestedUser.following.map(follow => follow.userId);
-            // // console.log("followingUsersId Id s : ", followingUsersId)
             const userIdsToFetch = [...followingUsersId, id];
-            // console.log("User ids to fetch posts for:", userIdsToFetch);
+            // Fetch blocked users for the current user
+            const currentUser = yield userModel_1.default.findById(id);
+            const blockedUsers = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.blockedUsers) || [];
+            // Fetch posts excluding users in blockedUsers list
             const gettingPosts = yield postModel_1.default.find({
-                userId: { $in: userIdsToFetch },
+                userId: { $in: userIdsToFetch, $nin: blockedUsers }, // Exclude blockedUsers
             }).sort({ createdAt: -1 });
-            // console.log("Getting posts beefore returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
-            // console.log(error);
+            console.error("Error getting all posts for user:", error);
             throw new Error("Error getting all posts for user!");
         }
     });
     const getAllPostsForUserUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const requesterUser = yield userModel_1.default.findOne({ username: username });
+            // Find the user by username
+            const requesterUser = yield userModel_1.default.findOne({ username });
             if (!requesterUser) {
                 throw new Error("User not found");
             }
-            const currentuserId = requesterUser._id;
+            const currentUserId = requesterUser._id;
+            // Fetch blocked users for the current user
+            const currentUser = yield userModel_1.default.findById(currentUserId);
+            const blockedUsers = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.blockedUsers) || [];
+            // Fetch posts excluding users in blockedUsers list
             const gettingPosts = yield postModel_1.default.find({
-                userId: currentuserId,
+                userId: { $in: [...blockedUsers, currentUserId] }, // Include currentUserId to fetch user's own posts
             }).sort({ createdAt: -1 });
-            // console.log("Getting posts before returning:", gettingPosts);
             return gettingPosts;
         }
         catch (error) {
-            // console.log(error);
+            console.error("Error getting all posts for user:", error);
             throw new Error("Error getting all posts for user!");
         }
     });

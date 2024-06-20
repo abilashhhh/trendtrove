@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import {
@@ -25,6 +25,7 @@ const SendMessageInput: React.FC = () => {
   const { sendMessage, sendMessageOnly } = useSendMessages();
   const { selectedConversation } = useConversation();
   const currentUser = useUserDetails();
+
   const {
     markSpecificUserNotificationAsRead,
     notifications,
@@ -115,11 +116,14 @@ const SendMessageInput: React.FC = () => {
     !selectedConversation?.isPrivate ||
     selectedConversation?.followers.some(
       (follower: { userId: string }) => follower.userId === currentUser._id
-    );
+    ); 
 
-  return (
+    const isUserInBlockedList = currentUser?.blockedUsers.includes(selectedConversation._id) 
+    
+
+    return (
     <div className="bg-gray-100 dark:bg-gray-800 shadow-sm sticky bottom-0 ml-1 mr-1">
-      {canChat && (
+      {canChat && !isUserInBlockedList && (
         <>
           {selectedFile && (
             <div className="mt-2 text-gray-700 dark:text-gray-300 flex items-center">
