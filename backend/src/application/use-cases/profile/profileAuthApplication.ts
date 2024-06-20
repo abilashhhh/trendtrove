@@ -41,6 +41,10 @@ export const handleUserInfo = async (
       isPremium: userData.isPremium,
       createdAt: userData.createdAt,
       updatedAt: userData.updatedAt,
+      isDarkMode: userData.isDarkMode,
+      isLeftSidebarOpen: userData.isLeftSidebarOpen,
+      isRightSidebarOpen: userData.isRightSidebarOpen,
+      
     };
     return user;
   } catch (err: any) {

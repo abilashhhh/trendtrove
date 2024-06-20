@@ -22,6 +22,9 @@ function useUserDetails() {
     isPrivate: false,
     isVerifiedAccount: false,
     isGoogleSignedIn: false,
+    isDarkMode: true,
+    isLeftSidebarOpen: false,
+    isRightSidebarOpen: false,
     isPremium: false,
     refreshToken: null,
     refreshTokenExpiresAt: null,
@@ -58,7 +61,7 @@ function useUserDetails() {
 
     fetchUserInfo();
   }, [userId]);
-// console.log("Userdetials :", userDetails)
+console.log("userDetails :", userDetails)
   return userDetails;
 }
 

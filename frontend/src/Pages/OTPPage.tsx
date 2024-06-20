@@ -88,7 +88,7 @@ const OTPPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-100  flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <TrendTroveLogo />
       <ToastContainer />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -142,7 +142,7 @@ const OTPPage: React.FC = () => {
                 name="otp"
                 required
                 onChange={handleChange}
-                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm  rounded-md"
+                className="mt-1 focus:ring-gray-500 p-3 border border-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm  rounded-md  bg-slate-100" 
               />
             </div>
 

@@ -377,7 +377,7 @@ const ProfileSectionFriendsPage: React.FC<ProfileProps> = ({
                 </>
               )}
             </>
-          ) : (
+          ) : ( 
             <>
               {!isFollower && (
                 <button

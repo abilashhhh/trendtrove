@@ -47,6 +47,9 @@ const handleUserInfo = (userId, dbUserRepository) => __awaiter(void 0, void 0, v
             isPremium: userData.isPremium,
             createdAt: userData.createdAt,
             updatedAt: userData.updatedAt,
+            isDarkMode: userData.isDarkMode,
+            isLeftSidebarOpen: userData.isLeftSidebarOpen,
+            isRightSidebarOpen: userData.isRightSidebarOpen,
         };
         return user;
     }

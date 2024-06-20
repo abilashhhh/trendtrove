@@ -9,30 +9,43 @@ import LeftSidebar from "./HomePage/HomePageLeftSidebar";
 import BottomNavBar from "./HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "./LoadingSpinner";
 import useUserDetails from "../Hooks/useUserDetails";
-import LoggingOut from "./LoggingOut";  
+import LoggingOut from "./LoggingOut";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
-  const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
-  const [isDarkMode, setDarkMode] = useState(true);
-  const dispatch = useDispatch();
+  const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(true);
+  const [isDarkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [loggingOut, setLoggingOut] = useState(false); 
-  const userDetails = useUserDetails();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const currentUser = useUserDetails();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUser.isDarkMode !== undefined) {
+      setDarkMode(currentUser.isDarkMode);
+    }
+  }, [currentUser.isDarkMode]);
+
+  useEffect(() => {
+    if (currentUser.isLeftSidebarOpen !== undefined) {
+      setLeftSidebarOpen(currentUser.isLeftSidebarOpen);
+    }
+  }, [currentUser.isLeftSidebarOpen]);
 
   const toggleDarkMode = () => {
-    setDarkMode(!isDarkMode);
+    setDarkMode(prevMode => !prevMode);
   };
 
   const toggleLeftSidebar = () => {
-    setLeftSidebarOpen(!isLeftSidebarOpen);
+    setLeftSidebarOpen(prevState => !prevState);
   };
 
   const handleLogout = async () => {
-    setLoggingOut(true);  
+    setLoggingOut(true);
     setTimeout(async () => {
       try {
         Cookies.remove("accessToken");
@@ -44,9 +57,9 @@ const Layout: React.FC<Props> = ({ children }) => {
       } catch (error) {
         console.error("Logout failed", error);
         toast.error("Log out failed");
-        setLoggingOut(false);  
+        setLoggingOut(false);
       }
-    }, 2000);  
+    }, 2000);
   };
 
   useEffect(() => {
@@ -61,14 +74,17 @@ const Layout: React.FC<Props> = ({ children }) => {
   }
 
   if (loggingOut) {
-    return <LoggingOut />;  
+    return <LoggingOut />;
   }
 
   return (
     <>
       <ToastContainer />
       <div className={`flex flex-col h-screen ${isDarkMode ? "dark" : ""}`}>
-        <Header toggleLeftSidebar={toggleLeftSidebar} userDetails={userDetails} />
+        <Header
+          toggleLeftSidebar={toggleLeftSidebar}
+          userDetails={currentUser}
+        />
         <div className="flex flex-1 overflow-hidden">
           <LeftSidebar
             isLeftSidebarOpen={isLeftSidebarOpen}

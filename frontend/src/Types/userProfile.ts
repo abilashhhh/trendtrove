@@ -20,6 +20,9 @@ export interface UserInfo {
   address?: string;
   isBlocked?: boolean;
   isPrivate?: boolean;
+  isDarkMode?: boolean,
+  isLeftSidebarOpen?: boolean,
+  isRightSidebarOpen?: boolean,
   isVerifiedAccount?: boolean;
   isGoogleSignedIn?: boolean;
   isPremium?: boolean;
