@@ -102,6 +102,15 @@ export const postDBRepository = (
   
   const getAllPublicPosts = async (id:string) =>
     await repository.getAllPublicPosts(id);
+  
+  const darkMode = async (userId:string) =>
+    await repository.darkMode(userId);
+
+  const leftSidebar = async (userId:string) =>
+    await repository.leftSidebar(userId);
+  
+  const rightSidebar = async (userId:string) =>
+    await repository.rightSidebar(userId);
 
   return {
     addNewPost,
@@ -135,6 +144,10 @@ export const postDBRepository = (
     getAllPublicPosts,
     approvePremium,
     rejectPremium,
+    darkMode,
+    leftSidebar,
+    rightSidebar
+
   };
 };
 

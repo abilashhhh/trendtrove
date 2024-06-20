@@ -261,6 +261,54 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     }));
+    const darkmode = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        try {
+            const modesResult = yield (0, postAuthApplications_1.handleDarkMode)(userId, dbPostRepository);
+            res.status(201).json({
+                status: "success",
+                message: "Dark mode set successfully",
+            });
+        }
+        catch (error) {
+            res.status(error.status || 500).json({
+                status: "error",
+                message: error.message || "Failed to set dark mode",
+            });
+        }
+    }));
+    const leftsidebar = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        try {
+            const modesResult = yield (0, postAuthApplications_1.handleLeftSidebar)(userId, dbPostRepository);
+            res.status(201).json({
+                status: "success",
+                message: "handleLeftSidebar updated successfully",
+            });
+        }
+        catch (error) {
+            res.status(error.status || 500).json({
+                status: "error",
+                message: error.message || "Failed to handleLeftSidebar",
+            });
+        }
+    }));
+    const rightsidebar = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        try {
+            const modesResult = yield (0, postAuthApplications_1.handleRightSidebar)(userId, dbPostRepository);
+            res.status(201).json({
+                status: "success",
+                message: "handleRightSidebar updated successfully",
+            });
+        }
+        catch (error) {
+            res.status(error.status || 500).json({
+                status: "error",
+                message: error.message || "Failed to handleRightSidebar",
+            });
+        }
+    }));
     return {
         addPost,
         updatepost,
@@ -288,7 +336,10 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getallcomments,
         deleteComment,
         editComment,
-        replytocomment
+        replytocomment,
+        darkmode,
+        leftsidebar,
+        rightsidebar
     };
 };
 exports.default = postController;

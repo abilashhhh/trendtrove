@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
 const clarifai_1 = __importDefault(require("clarifai"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
@@ -524,3 +524,48 @@ const handleEditComments = (commentId, updatedText, dbPostRepository) => __await
     }
 });
 exports.handleEditComments = handleEditComments;
+const handleDarkMode = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handleDarkModeResult reached");
+        const handleDarkModeResult = yield dbPostRepository.darkMode(userId);
+        return handleDarkModeResult;
+    }
+    catch (error) {
+        // console.log("Error in handleDarkModeResult");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to set to darkMode", 500);
+    }
+});
+exports.handleDarkMode = handleDarkMode;
+const handleLeftSidebar = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handleDarkModeResult reached");
+        const handleDarkModeResult = yield dbPostRepository.leftSidebar(userId);
+        return handleDarkModeResult;
+    }
+    catch (error) {
+        // console.log("Error in handleDarkModeResult");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to set to darkMode", 500);
+    }
+});
+exports.handleLeftSidebar = handleLeftSidebar;
+const handleRightSidebar = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handleDarkModeResult reached");
+        const handleDarkModeResult = yield dbPostRepository.rightSidebar(userId);
+        return handleDarkModeResult;
+    }
+    catch (error) {
+        // console.log("Error in handleDarkModeResult");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to set to darkMode", 500);
+    }
+});
+exports.handleRightSidebar = handleRightSidebar;

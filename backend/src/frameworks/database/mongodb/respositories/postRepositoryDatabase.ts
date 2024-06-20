@@ -590,6 +590,61 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+
+  const darkMode = async (userId: string) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { isDarkMode: !user.isDarkMode },
+        { new: true }
+      );
+      return updatedUser;
+    } catch (error:any) {
+      throw new Error("Error updating dark mode: " + error.message);
+    }
+  };
+
+  const leftSidebar = async (userId: string) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { isLeftSidebarOpen: !user.isLeftSidebarOpen },
+        { new: true }
+      );
+      return updatedUser;
+    } catch (error:any) {
+      throw new Error("Error updating isLeftSidebarOpen " + error.message);
+    }
+  };
+  
+  const rightSidebar = async (userId: string) => {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { isRightSidebarOpen: !user.isRightSidebarOpen },
+        { new: true }
+      );
+      return updatedUser;
+    } catch (error:any) {
+      throw new Error("Error updating isRightSidebarOpen " + error.message);
+    }
+  };
+  
+
+
+
   const getAllPublicPosts = async (id: string) => {
     try {
       const currentUser = await User.findById(id);
@@ -711,6 +766,9 @@ export const postRepositoryMongoDB = () => {
     deleteComment,
     editComment,
     getAllPublicPosts,
+    rightSidebar,
+    leftSidebar,
+    darkMode
   };
 };
 //////////////////////////////////////////////////////////

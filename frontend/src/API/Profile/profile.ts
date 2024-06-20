@@ -11,12 +11,13 @@ import {
   EditProfileResponse,
   GetUserInfoResponse,
   PasswordCheckResponse,
-  PremiumAccountInterface,
   PremiumAccountProgressInterface,
   PremiumAccountResponse,
   SuspendAccountResponse,
   UserInfo,
+  modesChangingInterface,
 } from "../../Types/userProfile";
+import { useState } from "react";
 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
@@ -37,6 +38,8 @@ const handleAxiosError = (error: any) => {
     console.error("An error occurred:", error.message);
   }
 };
+
+ 
 
 export const getUserInfo = async (): Promise<GetUserInfoResponse> => {
   try {
@@ -243,3 +246,45 @@ export const makepayment = async (): Promise<PaymentResponse> => {
     throw error;
   }
 };
+
+
+export const darkMode = async (): Promise<modesChangingInterface> => {
+  try {
+    const response = await axiosUserInstance.patch<modesChangingInterface>(
+      END_POINTS.DARK_MODE
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const leftSidebar = async (): Promise<modesChangingInterface> => {
+  try {
+    const response = await axiosUserInstance.patch<modesChangingInterface>(
+      END_POINTS.LEFT_SIDEBAR
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const rightSidebar = async (): Promise<modesChangingInterface> => {
+  try {
+    const response = await axiosUserInstance.patch<modesChangingInterface>(
+      END_POINTS.RIGHT_SIDEBAR
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+ 

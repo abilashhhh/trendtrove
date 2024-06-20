@@ -1,10 +1,8 @@
-
 export interface GetUserInfoResponse {
   status: string;
   message: string;
   user: UserInfo;
 }
-
 
 export interface UserInfo {
   // userId:string
@@ -20,9 +18,9 @@ export interface UserInfo {
   address?: string;
   isBlocked?: boolean;
   isPrivate?: boolean;
-  isDarkMode?: boolean,
-  isLeftSidebarOpen?: boolean,
-  isRightSidebarOpen?: boolean,
+  isDarkMode?: boolean;
+  isLeftSidebarOpen?: boolean;
+  isRightSidebarOpen?: boolean;
   isVerifiedAccount?: boolean;
   isGoogleSignedIn?: boolean;
   isPremium?: boolean;
@@ -41,45 +39,44 @@ export interface UserInfo {
   updatedAt?: Date;
 }
 
-
 export interface EditProfileResponse {
-  status: string,
-  message: string,
-  user: UserInfo
+  status: string;
+  message: string;
+  user: UserInfo;
 }
 
 export interface ChangePasswordResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface ChangePasswordInterface {
-  _id: string, 
-  currentPassword: string,
-  newPassword: string, 
+  _id: string;
+  currentPassword: string;
+  newPassword: string;
 }
 export interface ChangePasswordInterface2 {
-  _id: string, 
-  newPassword: string, 
+  _id: string;
+  newPassword: string;
 }
 
 export interface DeleteAccountResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface SuspendAccountResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 export interface PremiumAccountResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface PasswordCheckResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface DocumentSupportTypes {
@@ -94,55 +91,50 @@ export interface DocsSubmittedkResponse {
 }
 
 export interface PaymentResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface GetOtherUserInfoResponse {
-  status: string,
-  message: string,
-  otherUser: UserInfo,
+  status: string;
+  message: string;
+  otherUser: UserInfo;
 }
 
 export interface GetProfileResponse {
-  status: string,
-  message: string,
-  user: UserInfo,
+  status: string;
+  message: string;
+  user: UserInfo;
 }
-
 
 export interface GetRestOfUsersResponse {
-  status: string,
-  message: string,
-  users: UserInfo[]
+  status: string;
+  message: string;
+  users: UserInfo[];
 }
 
- 
 export interface FriendRequestSentResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface blockUserResponse {
-  status: string, 
-  message: string,
+  status: string;
+  message: string;
 }
 
 export interface UploadCoverResponse {
-  status : string, 
-  message : string ,
-  coverPhoto : string
+  status: string;
+  message: string;
+  coverPhoto: string;
 }
 
 export interface UploadDpResponse {
   url: string | undefined;
-  status : string, 
-  message : string ,
-  dp : string
+  status: string;
+  message: string;
+  dp: string;
 }
-
-
-
 
 interface DocumentSchema {
   type: string;
@@ -166,14 +158,11 @@ export interface PremiumAccountInterface extends Document {
   updatedAt: Date;
 }
 
-
 export interface PremiumAccountProgressInterface {
-  status : string, 
-  message : string ,
-  result : PremiumAccountInterface
+  status: string;
+  message: string;
+  result: PremiumAccountInterface;
 }
-
-
 
 export interface sendMessageInterface {
   error: any;
@@ -181,7 +170,6 @@ export interface sendMessageInterface {
   message: string;
 }
 
- 
 export interface Message {
   fileType: string;
   mediaUrl: string;
@@ -200,4 +188,10 @@ export interface GetMessageInterface {
   status: string;
   message: string;
   data: Message[];
+}
+
+
+export interface modesChangingInterface {
+  status: string;
+  message: string;
 }

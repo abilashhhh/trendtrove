@@ -665,3 +665,62 @@ export const handleEditComments = async (
     throw new ErrorInApplication("Failed to delete posts", 500);
   }
 };
+
+export const handleDarkMode = async (
+  userId: string, 
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleDarkModeResult reached");
+    const handleDarkModeResult = await dbPostRepository.darkMode(
+      userId
+    );
+    return handleDarkModeResult;
+  } catch (error) {
+    // console.log("Error in handleDarkModeResult");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to set to darkMode", 500);
+  }
+};
+
+export const handleLeftSidebar = async (
+  userId: string, 
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleDarkModeResult reached");
+
+    const handleDarkModeResult = await dbPostRepository.leftSidebar(
+      userId
+    );
+    return handleDarkModeResult;
+  } catch (error) {
+    // console.log("Error in handleDarkModeResult");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to set to darkMode", 500);
+  }
+};
+
+export const handleRightSidebar = async (
+  userId: string, 
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleDarkModeResult reached");
+
+    const handleDarkModeResult = await dbPostRepository.rightSidebar(
+      userId
+    );
+    return handleDarkModeResult;
+  } catch (error) {
+    // console.log("Error in handleDarkModeResult");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to set to darkMode", 500);
+  }
+};

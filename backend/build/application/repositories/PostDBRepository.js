@@ -54,6 +54,9 @@ const postDBRepository = (repository) => {
     const deleteComment = (commentId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteComment(commentId); });
     const editComment = (commentId, updatedText) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.editComment(commentId, updatedText); });
     const getAllPublicPosts = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPublicPosts(id); });
+    const darkMode = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.darkMode(userId); });
+    const leftSidebar = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.leftSidebar(userId); });
+    const rightSidebar = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.rightSidebar(userId); });
     return {
         addNewPost,
         taggedDataFromPosts,
@@ -86,6 +89,9 @@ const postDBRepository = (repository) => {
         getAllPublicPosts,
         approvePremium,
         rejectPremium,
+        darkMode,
+        leftSidebar,
+        rightSidebar
     };
 };
 exports.postDBRepository = postDBRepository;

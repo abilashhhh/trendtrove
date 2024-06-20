@@ -510,6 +510,45 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error updating comment");
         }
     });
+    const darkMode = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const updatedUser = yield userModel_1.default.findByIdAndUpdate(userId, { isDarkMode: !user.isDarkMode }, { new: true });
+            return updatedUser;
+        }
+        catch (error) {
+            throw new Error("Error updating dark mode: " + error.message);
+        }
+    });
+    const leftSidebar = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const updatedUser = yield userModel_1.default.findByIdAndUpdate(userId, { isLeftSidebarOpen: !user.isLeftSidebarOpen }, { new: true });
+            return updatedUser;
+        }
+        catch (error) {
+            throw new Error("Error updating isLeftSidebarOpen " + error.message);
+        }
+    });
+    const rightSidebar = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userModel_1.default.findById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const updatedUser = yield userModel_1.default.findByIdAndUpdate(userId, { isRightSidebarOpen: !user.isRightSidebarOpen }, { new: true });
+            return updatedUser;
+        }
+        catch (error) {
+            throw new Error("Error updating isRightSidebarOpen " + error.message);
+        }
+    });
     const getAllPublicPosts = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const currentUser = yield userModel_1.default.findById(id);
@@ -623,6 +662,9 @@ const postRepositoryMongoDB = () => {
         deleteComment,
         editComment,
         getAllPublicPosts,
+        rightSidebar,
+        leftSidebar,
+        darkMode
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

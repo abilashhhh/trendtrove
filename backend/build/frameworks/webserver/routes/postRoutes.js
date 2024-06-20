@@ -37,6 +37,9 @@ const postRouter = () => {
     router.delete("/deletepost/:postId", authMiddleware_1.default, controller.deletepost);
     router.get("/getallpublicpostsforexplore", authMiddleware_1.default, controller.getallpublicpostsforexplore);
     router.post("/generatecaption", authMiddleware_1.default, controller.generatecaption);
+    router.patch("/darkmode", authMiddleware_1.default, controller.darkmode);
+    router.patch("/leftsidebar", authMiddleware_1.default, controller.leftsidebar);
+    router.patch("/rightsidebar", authMiddleware_1.default, controller.rightsidebar);
     // COMMENT
     router.post("/addcomment", authMiddleware_1.default, controller.addComment);
     router.get("/getallcomments/:postId", authMiddleware_1.default, controller.getallcomments);

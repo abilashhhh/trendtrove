@@ -8,6 +8,7 @@ import { PostDataInterface,  ReportPostInterface } from "../../types/postsInterf
 import {
   handleCreateComment,
   handleCreatePost,
+  handleDarkMode,
   handleDelteComment,
   handleDeltePosts,
   handleDislikePosts,
@@ -25,11 +26,13 @@ import {
   handleGetSavedPostsOfCurrentUser,
   handleGetTaggedPostsOfCurrentUser,
   handleGetlikesdislikesinfo,
+  handleLeftSidebar,
   handleLikePosts,
   handleRemoveSavePosts,
   handleRemoveTaggedPosts,
   handleReplyToComment,
   handleReportPosts,
+  handleRightSidebar,
   handleSavePosts,
   handleupdatepost,
 } from "../../application/use-cases/post/postAuthApplications";
@@ -395,6 +398,55 @@ const postController = (
       });
     }
   });
+
+  const darkmode = asyncHandler(async (req: Request, res: Response) => {
+       const { userId }: { userId: string } = req.body;
+    try {
+      const modesResult = await handleDarkMode(userId,dbPostRepository);
+      res.status(201).json({
+        status: "success",
+        message: "Dark mode set successfully",
+      });
+    } catch (error : any) {
+      res.status(error.status || 500).json({
+        status: "error",
+        message: error.message || "Failed to set dark mode",
+      });
+    }
+  });
+
+
+  const leftsidebar = asyncHandler(async (req: Request, res: Response) => {
+       const { userId }: { userId: string } = req.body;
+    try {
+      const modesResult = await handleLeftSidebar(userId, dbPostRepository );
+      res.status(201).json({
+        status: "success",
+        message: "handleLeftSidebar updated successfully",
+      });
+    } catch (error : any) {
+      res.status(error.status || 500).json({
+        status: "error",
+        message: error.message || "Failed to handleLeftSidebar",
+      });
+    }
+  });
+  
+  const rightsidebar = asyncHandler(async (req: Request, res: Response) => {
+       const { userId }: { userId: string } = req.body;
+    try {
+      const modesResult = await handleRightSidebar(userId, dbPostRepository);
+      res.status(201).json({
+        status: "success",
+        message: "handleRightSidebar updated successfully",
+      });
+    } catch (error : any) {
+      res.status(error.status || 500).json({
+        status: "error",
+        message: error.message || "Failed to handleRightSidebar",
+      });
+    }
+  });
   
   
 
@@ -425,7 +477,10 @@ const postController = (
     getallcomments,
     deleteComment,
     editComment,
-    replytocomment
+    replytocomment,
+    darkmode,
+    leftsidebar,
+    rightsidebar
   };
 };
 

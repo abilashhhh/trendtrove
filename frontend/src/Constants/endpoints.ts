@@ -30,6 +30,9 @@ const END_POINTS = {
   MAKE_PAYMENT: "/api/profile/makepayment",
   UPLOAD_COVER: 'api/profile/uploadcover',
   UPLOAD_DP: 'api/profile/uploaddp',
+  DARK_MODE: 'api/profile/darkmode',
+  LEFT_SIDEBAR: 'api/profile/leftsiderbar',
+  RIGHT_SIDEBAR: 'api/profile/rightsidebar',
 
   // USER
   GET_ALL_USERS : '/api/user/getallusers',
