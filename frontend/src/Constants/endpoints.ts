@@ -30,9 +30,7 @@ const END_POINTS = {
   MAKE_PAYMENT: "/api/profile/makepayment",
   UPLOAD_COVER: 'api/profile/uploadcover',
   UPLOAD_DP: 'api/profile/uploaddp',
-  DARK_MODE: 'api/profile/darkmode',
-  LEFT_SIDEBAR: 'api/profile/leftsiderbar',
-  RIGHT_SIDEBAR: 'api/profile/rightsidebar',
+
 
   // USER
   GET_ALL_USERS : '/api/user/getallusers',
@@ -68,6 +66,9 @@ const END_POINTS = {
   GET_LIKES_DISLIKES_INFO : '/api/post/getlikesdislikesinfo/:postId',
   GET_ALL_POSTS_FOR_EXPLORE : '/api/post/getallpublicpostsforexplore',
   GENERATE_CAPTION : '/api/post/generatecaption',
+  DARK_MODE: 'api/post/darkmode',
+  LEFT_SIDEBAR: 'api/post/leftsidebar',
+  RIGHT_SIDEBAR: 'api/post/rightsidebar',
   // COMMENT
   ADD_COMMENT: 'api/post/addcomment',
   ADD_REPLY_FOR_COMMENT: 'api/post/replytocomment',

@@ -10,14 +10,15 @@ import BottomNavBar from "./HomePage/HomePageLeftSidebarMobileView";
 import LoadingSpinner from "./LoadingSpinner";
 import useUserDetails from "../Hooks/useUserDetails";
 import LoggingOut from "./LoggingOut";
+import { darkMode, leftSidebar } from "../API/Profile/profile";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
-  const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(true);
-  const [isDarkMode, setDarkMode] = useState(false);
+  const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
+  const [isDarkMode, setDarkMode] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -30,17 +31,13 @@ const Layout: React.FC<Props> = ({ children }) => {
     }
   }, [currentUser.isDarkMode]);
 
-  useEffect(() => {
-    if (currentUser.isLeftSidebarOpen !== undefined) {
-      setLeftSidebarOpen(currentUser.isLeftSidebarOpen);
-    }
-  }, [currentUser.isLeftSidebarOpen]);
-
-  const toggleDarkMode = () => {
+ 
+  const toggleDarkMode = async() => {
     setDarkMode(prevMode => !prevMode);
+    await darkMode()
   };
 
-  const toggleLeftSidebar = () => {
+  const toggleLeftSidebar = async () => {
     setLeftSidebarOpen(prevState => !prevState);
   };
 

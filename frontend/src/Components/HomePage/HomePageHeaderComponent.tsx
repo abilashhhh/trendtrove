@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
           {currentUser && currentUser.dp && (
             <Link to="/profile">
               <img
-                className="rounded-full h-8 w-8 object-cover"
+                className="rounded-full h-8 w-8 object-cover mr-2"
                 src={currentUser.dp}
                 alt="User Profile"
               />
