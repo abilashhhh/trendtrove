@@ -172,6 +172,22 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             res.status(500).json({ message: "Failed to fetch public posts", error });
         }
     }));
+    const generatecaption = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            console.log("reached generate caption");
+            const { imageurl } = req.body;
+            const { userId } = req.body;
+            console.log("Image URL in backend:", imageurl);
+            console.log("User ID:", userId);
+            const caption = yield (0, postAuthApplications_1.handleGenerateCaption)(imageurl, userId);
+            console.log("Caption:", caption);
+            res.status(200).json({ caption });
+        }
+        catch (error) {
+            console.error("Error generating caption:", error);
+            res.status(500).json({ message: "Failed to generate caption for post", error });
+        }
+    }));
     const getlikedposts = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.params;
         const likedPosts = yield (0, postAuthApplications_1.handleGetLikedPosts)(userId, dbPostRepository);
@@ -256,6 +272,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         gettaggedpostofcurrentuser,
         getparticularpostofcurrentuser,
         getPostUsingPostId,
+        generatecaption,
         reportPost,
         savePost,
         removesavePost,

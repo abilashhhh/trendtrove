@@ -36,6 +36,7 @@ const postRouter = () => {
     router.get("/getlikesdislikesinfo/:postId", authMiddleware_1.default, controller.getlikesdislikesinfo);
     router.delete("/deletepost/:postId", authMiddleware_1.default, controller.deletepost);
     router.get("/getallpublicpostsforexplore", authMiddleware_1.default, controller.getallpublicpostsforexplore);
+    router.post("/generatecaption", authMiddleware_1.default, controller.generatecaption);
     // COMMENT
     router.post("/addcomment", authMiddleware_1.default, controller.addComment);
     router.get("/getallcomments/:postId", authMiddleware_1.default, controller.getallcomments);

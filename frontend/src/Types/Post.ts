@@ -134,6 +134,11 @@ export interface GetAllPostsForExploreResponse {
   message: string;
   data: Post;
 }
+export interface GenerateCaptionResponse {
+  status: string;
+  message: string;
+  caption: string;
+}
 
 export interface EditCommentResponse {
   status: string;

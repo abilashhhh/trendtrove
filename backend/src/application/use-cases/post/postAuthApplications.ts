@@ -1,10 +1,11 @@
 import { Comment, CommentInterface, ReplyInterface } from "../../../types/commentInterface";
+import Clarifai from 'clarifai';
 import { PostDataInterface, ReportPost } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 
-export const handleCreatePost = async (
+export const handleCreatePost = async ( 
   postData: PostDataInterface,
   dbPostRepository: ReturnType<PostDBInterface>,
   dbUserRepository: ReturnType<UserDBInterface>
@@ -418,6 +419,35 @@ export const handleGetAllPublicPosts = async (
   }
 };
 
+const clarifaiApp = new Clarifai.App({
+  // apiKey: 'x63of8rtn18z',
+  apiKey: 'a893b94727a54b0abb11b87b5cf35212',
+  // apiKey: '09de53abfe904096935624c270d6b21b',
+});
+
+
+
+export const handleGenerateCaption = async (imageUrl: string, userId: string) => {
+  try {
+    console.log("handleGenerateCaption reached: ", imageUrl , userId);
+
+    const response = await clarifaiApp.models.predict(Clarifai.GENERAL_MODEL, imageUrl);
+    console.log("response: ", response);
+
+    if (response && response.outputs && response.outputs.length > 0) {
+      const concepts = response.outputs[0].data.concepts;
+      const descriptions = concepts.map((concept: { name: string }) => concept.name);
+      console.log("captions:", descriptions.join(', '));
+      return { caption: descriptions.join(', ') };
+    } else {
+      console.error("No outputs in response");
+      throw new Error("No outputs in response");
+    }
+  } catch (error) {
+    console.error('Error generating caption:', error);
+    throw new Error('Failed to generate caption');
+  }
+};
 
 export const handleGetLikedPosts = async (
   userId: string,

@@ -64,6 +64,7 @@ const END_POINTS = {
   GET_DISLIKED_POSTS : '/api/post/getdislikedposts/:userId',
   GET_LIKES_DISLIKES_INFO : '/api/post/getlikesdislikesinfo/:postId',
   GET_ALL_POSTS_FOR_EXPLORE : '/api/post/getallpublicpostsforexplore',
+  GENERATE_CAPTION : '/api/post/generatecaption',
   // COMMENT
   ADD_COMMENT: 'api/post/addcomment',
   ADD_REPLY_FOR_COMMENT: 'api/post/replytocomment',

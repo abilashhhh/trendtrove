@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import upload from "../../utils/cloudinary";
 import { Oval } from "react-loader-spinner";
-import { uploadPost } from "../../API/Post/post";
+import { handleGenerateCaption, uploadPost } from "../../API/Post/post";
 import { useNavigate } from "react-router-dom";
 import debounce from "../../utils/debouncer";
 import { usernameAvailability } from "../../API/Auth/auth";
@@ -34,10 +34,14 @@ const formatDate = (date: any) => {
 };
 
 const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
+  const [captionsData, setCaptions] = useState('');
+
+  console.log('captions data: ', captionsData)
+
   const [postData, setPostData] = useState<Partial<Post>>({
     userId: userDetails._id,
     isArchived: false,
-    captions: "",
+    captions: captionsData,
     location: "",
     images: [],
     videos: [],
@@ -266,6 +270,18 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
     }));
   };
 
+  const handleGenerateCaptionFunction = async(imageUrl:string) => {
+    console.log("handle generate cap fun called: ", imageUrl)
+   const captionResult = await handleGenerateCaption(imageUrl)
+   if(captionResult){
+    console.log("Caption res:", captionResult)
+    setCaptions(captionResult?.caption?.caption)
+   }
+  }
+
+  
+ 
+
   const handleSubmit = async () => {
     const validMentions = mentionStatuses
       .filter(mention => mention.available === false)
@@ -332,7 +348,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
           name="captions"
           rows={4}
           placeholder="Add your caption here..."
-          value={postData.captions}
+          value={postData.captions || captionsData}
           onChange={handleInputChange}
         />
         <div className="flex items-center justify-start gap-8 mb-4">
@@ -395,6 +411,8 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
             </div>
           ))}
         </div>
+{postData?.images && postData.images.length>0 &&        
+<button onClick={() => handleGenerateCaptionFunction(postData?.images[0] ) } className="bg-slate-700 p-2 rounded-lg ml-2 hover:bg-slate-800">Generate caption</button>}
 
         <div className="s:flex-col lg:flex lg:flex-row gap-5 justify-evenly">
           <div>

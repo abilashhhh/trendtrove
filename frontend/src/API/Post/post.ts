@@ -8,6 +8,7 @@ import {
   DeletePostResponse,
   DislikePostResponse,
   EditCommentResponse,
+  GenerateCaptionResponse,
   GetAllCommentsResponse,
   GetAllPostsForExploreResponse,
   GetAllPostsForUser,
@@ -233,7 +234,6 @@ export const savePost = async (
 };
 
 export const removeSavedPostForUser = async (
-  userId: string,
   postId: string
 ): Promise<SavePostResponse> => {
   try {
@@ -451,6 +451,23 @@ export const editComment = async (
     throw error;
   }
 };
+ 
+export const handleGenerateCaption = async (
+  imageurl: string
+): Promise<GenerateCaptionResponse> => {
+  try {
+    console.log("Image url:", imageurl)
+    const response = await axiosUserInstance.post<GenerateCaptionResponse>(
+      END_POINTS.GENERATE_CAPTION,
+      { imageurl }
+    );
+    console.log("response: ", response.data)
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
 
 
 export const handleAddReplyToComment = async (
@@ -488,4 +505,5 @@ export const getAllPublicPostsForExplore = async () => {
 };
 
 
-getAllPublicPostsForExplore()
+ 
+

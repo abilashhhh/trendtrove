@@ -12,7 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+const clarifai_1 = __importDefault(require("clarifai"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -327,6 +328,33 @@ const handleGetAllPublicPosts = (id, dbPostRepository) => __awaiter(void 0, void
     }
 });
 exports.handleGetAllPublicPosts = handleGetAllPublicPosts;
+const clarifaiApp = new clarifai_1.default.App({
+    // apiKey: 'x63of8rtn18z',
+    apiKey: 'a893b94727a54b0abb11b87b5cf35212',
+    // apiKey: '09de53abfe904096935624c270d6b21b',
+});
+const handleGenerateCaption = (imageUrl, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("handleGenerateCaption reached: ", imageUrl, userId);
+        const response = yield clarifaiApp.models.predict(clarifai_1.default.GENERAL_MODEL, imageUrl);
+        console.log("response: ", response);
+        if (response && response.outputs && response.outputs.length > 0) {
+            const concepts = response.outputs[0].data.concepts;
+            const descriptions = concepts.map((concept) => concept.name);
+            console.log("captions:", descriptions.join(', '));
+            return { caption: descriptions.join(', ') };
+        }
+        else {
+            console.error("No outputs in response");
+            throw new Error("No outputs in response");
+        }
+    }
+    catch (error) {
+        console.error('Error generating caption:', error);
+        throw new Error('Failed to generate caption');
+    }
+});
+exports.handleGenerateCaption = handleGenerateCaption;
 const handleGetLikedPosts = (userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("handleGetLikedPosts reached");

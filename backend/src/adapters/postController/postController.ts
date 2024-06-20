@@ -12,6 +12,7 @@ import {
   handleDeltePosts,
   handleDislikePosts,
   handleEditComments,
+  handleGenerateCaption,
   handleGetAllComments,
   handleGetAllPublicPosts,
   handleGetDislikedPosts,
@@ -269,6 +270,30 @@ const postController = (
       res.status(500).json({ message: "Failed to fetch public posts", error });
     }
   });
+
+ const generatecaption = asyncHandler(async (req: Request, res: Response) => {
+    try {
+
+      console.log("reached generate caption")
+      const { imageurl } = req.body;
+      const { userId } = req.body;
+  
+      console.log("Image URL in backend:", imageurl);
+      console.log("User ID:", userId);
+  
+      const caption = await handleGenerateCaption(imageurl, userId);
+      console.log("Caption:", caption);
+  
+      res.status(200).json({ caption });
+    } catch (error) {
+      console.error("Error generating caption:", error);
+      res.status(500).json({ message: "Failed to generate caption for post", error });
+    }
+  });
+  
+ 
+
+
   const getlikedposts = asyncHandler(async (req: Request, res: Response) => {
     const { userId } = req.params;
     const likedPosts = await handleGetLikedPosts(userId, dbPostRepository);
@@ -384,6 +409,7 @@ const postController = (
     gettaggedpostofcurrentuser,
     getparticularpostofcurrentuser,
     getPostUsingPostId,
+    generatecaption,
     reportPost,
     savePost,
     removesavePost,

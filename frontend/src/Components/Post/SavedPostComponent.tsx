@@ -189,7 +189,7 @@ const SavedPostComponent = () => {
     }).then(async result => {
       if (result.isConfirmed) {
         // console.log("removing post, postId:", postId);
-        await removeSavedPostForUser(currentUser._id, postId);
+        await removeSavedPostForUser( postId);
 
         Swal.fire(
           "Removed!",
