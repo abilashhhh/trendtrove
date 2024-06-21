@@ -46,7 +46,6 @@ const ExplorePageComponent = () => {
     fetchAllPosts();
   }, []);
 
-  // Extract unique hashtags from allPosts
   const allAvailableHashtags = [...new Set(
     allPosts
       .filter(post => post.hashtags)
