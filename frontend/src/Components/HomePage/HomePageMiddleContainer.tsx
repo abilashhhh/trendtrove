@@ -227,7 +227,7 @@ const MiddleContainer: React.FC = () => {
   );
 
   return (
-    <main className="flex-1 pt-2 lg:pl-2 lg:pr-0  md:pr-0 sm:pr-2 overflow-auto no-scrollbar bg-gray-800 dark:bg-gray-700 text-white items-center justify-center">
+    <main className="flex-1 pt-2 lg:pl-2 lg:pr-0 pb-2  md:pr-0 sm:pr-2 overflow-auto no-scrollbar bg-gray-800 dark:bg-gray-700 text-white items-center justify-center">
       <ToastContainer />
 
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2 sm:pl-4 sm:pr-4 md:pl-12 md:pr-12 lg:pl-36 lg:pr-36 xl:pl-64 xl:pr-64 2xl:pl-96 2xl:pr-96">

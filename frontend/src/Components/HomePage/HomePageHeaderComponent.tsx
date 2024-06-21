@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="bg-gray-800 dark:bg-gray-700 pl-2 pr-2 pt-2 items-center">
+    <div className="bg-gray-800 dark:bg-gray-700 pl-2 lg:pr-2 pt-1 items-center">
       <div className="bg-gray-200 dark:bg-gray-900 text-black dark:text-white p-1 flex justify-between items-center rounded-lg">
         <div className="flex gap-3">
           <div className="space-x-4 lg:hidden flex ml-2">
@@ -51,12 +51,12 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
                 isActive("/notifications") ? "dark:bg-slate-700 bg-slate-500" : ""
               }`}
             >
-              <div className={`relative flex items-center justify-center p-[15px] rounded-full cursor-pointer transition duration-300 bg-transparent border-none hover:bg-[rgba(170,170,170,0.062)] notification ${bellShake ? 'shake' : ''}`}>
-                <div className="absolute top-[8px] right-[8px] z-[1000] flex p-2 items-center justify-center w-[12px] h-[12px] text-white text-[10px] bg-red-500 rounded-full">
+              <div className={`relative  flex items-center justify-center p-[15px] rounded-full cursor-pointer transition duration-300 bg-black dark:bg-slate-700 border-none hover:bg-[rgba(170,170,170,0.062)] notification ${bellShake ? 'shake' : ''}`}>
+                <div className="absolute top-[6px] right-[6px] z-[1000] flex p-2 items-center justify-center w-[12px] h-[12px] text-white text-[10px] bg-red-500 rounded-full">
                   {unreadNotifications.length} 
                 </div>
                 <div className="bell-container relative">
-                  <div className="bell relative w-[20px] h-[20px] border-[2.17px] border-white border-t-white border-l-white border-r-white border-b-transparent rounded-t-[10px] rounded-b-none top-[-3px]"></div>
+                  <div className="bell relative w-[15px] h-[15px] border-[2.17px] border-white border-t-white border-l-white border-r-white border-b-transparent rounded-t-[8px] rounded-b-none top-[-3px]"></div>
                 </div>
               </div>
             </Link>
@@ -64,10 +64,11 @@ const Header: React.FC<HeaderProps> = ({ toggleLeftSidebar, userDetails }) => {
           {currentUser && currentUser.dp && (
             <Link to="/profile">
               <img
-                className="rounded-full h-8 w-8 object-cover mr-2"
-                src={currentUser.dp}
-                alt="User Profile"
-              />
+  className="rounded-full h-12 w-12 sm:h-6 sm:w-6 md:h-8 md:w-8 lg:h-12 lg:w-12 object-cover mr-2"
+  src={currentUser.dp}
+  alt="User Profile"
+/>
+
             </Link>
           )}
         </div>

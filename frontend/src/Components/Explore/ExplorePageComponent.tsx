@@ -74,7 +74,7 @@ const ExplorePageComponent = () => {
 
   return (
     <Layout>
-      <main className="bg-gray-800 min-h-screen dark:bg-gray-700 text-black dark:text-white gap-2 pt-2 pr-2 lg:p-2 w-full   overflow-y-auto no-scrollbar">
+      <main className="bg-gray-800 min-h-screen dark:bg-gray-700 text-black dark:text-white gap-2 pt-2 pr-2~ lg:p-2 w-full   overflow-y-auto no-scrollbar">
         <div className="flex flex-col gap-2">
           <div className="pl-2 rounded-lg w-full bg-gray-200 dark:bg-gray-800 flex items-center">
             <FaSearch
