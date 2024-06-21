@@ -314,7 +314,7 @@ const AddPostMiddlePage: React.FC<AddPostProps> = ({ userDetails }) => {
   };
 
   return (
-    <main className="flex-1 p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white ">
+    <main className="flex-1  p-2 bg-gray-800 dark:bg-gray-700 text-black dark:text-white ">
       <ToastContainer />
       <div className="p-2 lg:p-58 rounded-lg bg-gray-100 dark:bg-gray-900 h-full  overflow-auto ">
         <div className="flex flex-row md:flex-row items-center md:items-start bg-slate-200 dark:bg-gray-800 rounded-lg p-2">

@@ -213,7 +213,7 @@ const MiddleContainer: React.FC = () => {
   }, [loading, page, posts]);
 
   const lastPostElementRef = useCallback(
-    node => {
+    (    node: Element) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
@@ -420,7 +420,7 @@ const MiddleContainer: React.FC = () => {
         ) : (
           <p>No posts available</p>
         )}
-      </div>
+      </div>  
       {loading && (
   <div className="flex items-center justify-center p-4 bg-slate-300 dark:bg-slate-900">
     <div className="p-3 animate-spin bg-gradient-to-bl from-slate-400 via-slate-700 to-slate-900 w-10 h-10 rounded-full flex items-center justify-center">

@@ -53,8 +53,8 @@ const RightSidebar = () => {
             onClick={toggleSidebar}
             className="p-2 bg-gray-800 text-white rounded-full"
           >
-            <FaChevronRight className={`${isOpen ? "hidden" : "block"}`} />
-            <FaChevronLeft className={`${isOpen ? "block" : "hidden"}`} />
+            <FaChevronLeft className={`${isOpen ? "hidden" : "block"}`} />
+            < FaChevronRight className={`${isOpen ? "block" : "hidden"}`} />
           </button>
         </div>
         {isOpen && (
