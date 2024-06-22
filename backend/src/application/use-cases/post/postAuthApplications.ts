@@ -1,11 +1,19 @@
-import { Comment, CommentInterface, ReplyInterface } from "../../../types/commentInterface";
-import Clarifai from 'clarifai';
-import { PostDataInterface, ReportPost } from "../../../types/postsInterface";
+import {
+  Comment,
+  CommentInterface,
+  ReplyInterface,
+} from "../../../types/commentInterface";
+import Clarifai from "clarifai";
+import {
+  PostDataInterface,
+  ReportPost,
+  StoryInterface,
+} from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
 
-export const handleCreatePost = async ( 
+export const handleCreatePost = async (
   postData: PostDataInterface,
   dbPostRepository: ReturnType<PostDBInterface>,
   dbUserRepository: ReturnType<UserDBInterface>
@@ -37,6 +45,36 @@ export const handleCreatePost = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to create post", 500);
+  }
+};
+
+export const handleCreateStory = async (
+  storyData: StoryInterface,
+  dbPostRepository: ReturnType<PostDBInterface>,
+  dbUserRepository: ReturnType<UserDBInterface>
+) => {
+  try {
+    console.log("Post data in handleCreateStory :", storyData);
+
+    if (!storyData.userId) {
+      throw new ErrorInApplication(
+        "User ID is required to create a story",
+        400
+      );
+    }
+    const userData = await dbUserRepository.getUserById(storyData.userId);
+    if (!userData) {
+      throw new ErrorInApplication("User not found", 404);
+    }
+
+    const newPost = await dbPostRepository.addNewStory(storyData);
+    return newPost;
+  } catch (error) {
+    console.error("Error in handleCreateStory:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to create story", 500);
   }
 };
 
@@ -399,10 +437,8 @@ export const handleDislikePosts = async (
   }
 };
 
-
-
 export const handleGetAllPublicPosts = async (
-  id:string,
+  id: string,
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
@@ -415,37 +451,46 @@ export const handleGetAllPublicPosts = async (
     if (error instanceof ErrorInApplication) {
       throw error;
     }
-    throw new ErrorInApplication("Failed to get all public  posts for explore", 500);
+    throw new ErrorInApplication(
+      "Failed to get all public  posts for explore",
+      500
+    );
   }
 };
 
 const clarifaiApp = new Clarifai.App({
   // apiKey: 'x63of8rtn18z',
-  apiKey: 'a893b94727a54b0abb11b87b5cf35212',
+  apiKey: "a893b94727a54b0abb11b87b5cf35212",
   // apiKey: '09de53abfe904096935624c270d6b21b',
 });
 
-
-
-export const handleGenerateCaption = async (imageUrl: string, userId: string) => {
+export const handleGenerateCaption = async (
+  imageUrl: string,
+  userId: string
+) => {
   try {
-    console.log("handleGenerateCaption reached: ", imageUrl , userId);
+    console.log("handleGenerateCaption reached: ", imageUrl, userId);
 
-    const response = await clarifaiApp.models.predict(Clarifai.GENERAL_MODEL, imageUrl);
+    const response = await clarifaiApp.models.predict(
+      Clarifai.GENERAL_MODEL,
+      imageUrl
+    );
     console.log("response: ", response);
 
     if (response && response.outputs && response.outputs.length > 0) {
       const concepts = response.outputs[0].data.concepts;
-      const descriptions = concepts.map((concept: { name: string }) => concept.name);
-      console.log("captions:", descriptions.join(', '));
-      return { caption: descriptions.join(', ') };
+      const descriptions = concepts.map(
+        (concept: { name: string }) => concept.name
+      );
+      console.log("captions:", descriptions.join(", "));
+      return { caption: descriptions.join(", ") };
     } else {
       console.error("No outputs in response");
       throw new Error("No outputs in response");
     }
   } catch (error) {
-    console.error('Error generating caption:', error);
-    throw new Error('Failed to generate caption');
+    console.error("Error generating caption:", error);
+    throw new Error("Failed to generate caption");
   }
 };
 
@@ -573,13 +618,22 @@ export const handleReplyToComment = async (
 
     // Validate required fields
     if (!replyData.userId) {
-      throw new ErrorInApplication("User ID is required to create a reply", 400);
+      throw new ErrorInApplication(
+        "User ID is required to create a reply",
+        400
+      );
     }
     if (!replyData.postId) {
-      throw new ErrorInApplication("Post ID is required to create a reply", 400);
+      throw new ErrorInApplication(
+        "Post ID is required to create a reply",
+        400
+      );
     }
     if (!replyData.commentId) {
-      throw new ErrorInApplication("Comment ID is required to create a reply", 400);
+      throw new ErrorInApplication(
+        "Comment ID is required to create a reply",
+        400
+      );
     }
 
     // Get user data from the repository
@@ -622,9 +676,6 @@ export const handleGetAllComments = async (
   }
 };
 
-
-
-
 export const handleDelteComment = async (
   commentId: string,
   dbPostRepository: ReturnType<PostDBInterface>
@@ -632,9 +683,7 @@ export const handleDelteComment = async (
   try {
     // console.log("handleDelteComment reached");
 
-    const handleDelteComment = await dbPostRepository.deleteComment(
-      commentId
-    );
+    const handleDelteComment = await dbPostRepository.deleteComment(commentId);
     return handleDelteComment;
   } catch (error) {
     // console.log("Error in handleDelteComment");
@@ -646,15 +695,16 @@ export const handleDelteComment = async (
 };
 
 export const handleEditComments = async (
-  commentId: string, 
-  updatedText: string, 
+  commentId: string,
+  updatedText: string,
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("handleEditComments reached");
 
     const handleEditComments = await dbPostRepository.editComment(
-      commentId, updatedText
+      commentId,
+      updatedText
     );
     return handleEditComments;
   } catch (error) {
@@ -667,14 +717,12 @@ export const handleEditComments = async (
 };
 
 export const handleDarkMode = async (
-  userId: string, 
+  userId: string,
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("handleDarkModeResult reached");
-    const handleDarkModeResult = await dbPostRepository.darkMode(
-      userId
-    );
+    const handleDarkModeResult = await dbPostRepository.darkMode(userId);
     return handleDarkModeResult;
   } catch (error) {
     // console.log("Error in handleDarkModeResult");
@@ -686,15 +734,13 @@ export const handleDarkMode = async (
 };
 
 export const handleLeftSidebar = async (
-  userId: string, 
+  userId: string,
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("handleDarkModeResult reached");
 
-    const handleDarkModeResult = await dbPostRepository.leftSidebar(
-      userId
-    );
+    const handleDarkModeResult = await dbPostRepository.leftSidebar(userId);
     return handleDarkModeResult;
   } catch (error) {
     // console.log("Error in handleDarkModeResult");
@@ -706,15 +752,13 @@ export const handleLeftSidebar = async (
 };
 
 export const handleRightSidebar = async (
-  userId: string, 
+  userId: string,
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
     // console.log("handleDarkModeResult reached");
 
-    const handleDarkModeResult = await dbPostRepository.rightSidebar(
-      userId
-    );
+    const handleDarkModeResult = await dbPostRepository.rightSidebar(userId);
     return handleDarkModeResult;
   } catch (error) {
     // console.log("Error in handleDarkModeResult");
@@ -722,5 +766,26 @@ export const handleRightSidebar = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to set to darkMode", 500);
+  }
+};
+
+export const handleGetStoriesForUser = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleGetStoriesForUser reached");
+    if (!id) {
+      throw new ErrorInApplication("User ID is required to get all stories", 400);
+    }
+    const allStoriesForUser = await dbPostRepository.getAllStoriesForUser(id);
+    
+    return allStoriesForUser;
+  } catch (error) {
+    // console.log("Error in handleGetStoriesForUser");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all stories", 500);
   }
 };

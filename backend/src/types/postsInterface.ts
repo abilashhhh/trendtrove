@@ -29,3 +29,24 @@ export interface ReportPostInterface {
   reporterId: string;
   reporterUsername: string;
 }
+
+export interface StoryReaction {
+  userId: string;
+  type: "like" | "love" | "haha" | "sad" | "angry";
+}
+
+export interface StoryInterface  {
+  userId: string;
+  isHighlighted: boolean;
+  captions?: string;
+  username?: string;
+  dp?: string;
+  mediaUrl: string;
+  mediaType: "image" | "video" | "text";
+  viewers: string[];
+  viewCount: number;
+  reactions: StoryReaction[];
+  hiddenFrom: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}

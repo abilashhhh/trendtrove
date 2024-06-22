@@ -6,12 +6,18 @@ import getCroppedImg from "../utils/cropImage";
 
 interface ImageCropperProps {
   imageSrc: string;
+  
+  aspect1:any;
+  aspect2:any;
+
   onCropComplete: (croppedImageUrl: string) => void;
   onClose: () => void;
 }
 
 const ImageCropper: React.FC<ImageCropperProps> = ({
   imageSrc,
+  aspect1,
+  aspect2,
   onCropComplete,
   onClose,
 }) => {
@@ -33,18 +39,18 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-24 bg-black bg-opacity-75">
       <div className="relative w-full h-full max-w-4xl max-h-full">
         <Cropper
           image={imageSrc}
           crop={crop}
           zoom={zoom}
-          aspect={4 / 4}
+          aspect={ aspect1 / aspect2}
           onCropChange={setCrop}
           onZoomChange={setZoom}
           onCropComplete={onCropCompleteCallback}
         />
-        <div className="absolute bottom-10 left-0 right-0 flex flex-col items-center justify-center p-4 bg-black bg-opacity-50">
+        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center p-4 bg-black bg-opacity-50">
           <Slider
             value={zoom}
             min={1}

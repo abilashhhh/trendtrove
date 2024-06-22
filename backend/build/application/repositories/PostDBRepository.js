@@ -14,6 +14,9 @@ const postDBRepository = (repository) => {
     const addNewPost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.addNewPost(postData);
     });
+    const addNewStory = (storyData) => __awaiter(void 0, void 0, void 0, function* () {
+        yield repository.addNewStory(storyData);
+    });
     const taggedDataFromPosts = (usernames, postId) => __awaiter(void 0, void 0, void 0, function* () {
         yield repository.taggedDataFromPosts(usernames, postId);
     });
@@ -30,7 +33,7 @@ const postDBRepository = (repository) => {
     const getAllSavedPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllSavedPostsForCurrentUser(id); });
     const getAllTaggedPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllTaggedPostsForCurrentUser(id); });
     const getParticularPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getParticularPostsForCurrentUser(id); });
-    const reportPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(id); });
+    const reportPostsForUser = (data) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.reportPostsForUser(data); });
     const savePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.savePostsForUser(userId, postId); });
     const removeSavePostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.removeSavePostsForUser(userId, postId); });
     const removeTaggedPostsForUser = (userId, postId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.removeTaggedPostsForUser(userId, postId); });
@@ -57,8 +60,10 @@ const postDBRepository = (repository) => {
     const darkMode = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.darkMode(userId); });
     const leftSidebar = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.leftSidebar(userId); });
     const rightSidebar = (userId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.rightSidebar(userId); });
+    const getAllStoriesForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllStoriesForUser(id); });
     return {
         addNewPost,
+        addNewStory,
         taggedDataFromPosts,
         updatePost,
         getPostById,
@@ -91,7 +96,8 @@ const postDBRepository = (repository) => {
         rejectPremium,
         darkMode,
         leftSidebar,
-        rightSidebar
+        rightSidebar,
+        getAllStoriesForUser,
     };
 };
 exports.postDBRepository = postDBRepository;

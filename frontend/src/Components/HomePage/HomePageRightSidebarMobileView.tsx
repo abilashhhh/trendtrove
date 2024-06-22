@@ -6,7 +6,7 @@ import { rightSidebar } from "../../API/Profile/profile";
 import upload from "../../utils/cloudinary";
 import ImageCropper from "../ImageCropper";
 import { toast } from "react-toastify";
-import { getAllStories, handleAddNewStory } from "../../API/Post/post";
+import { handleAddNewStory } from "../../API/Post/post";
 
 interface Story {
   userId: string;
@@ -34,23 +34,6 @@ const RightSidebar = () => {
   const [isCropping, setIsCropping] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [allStories, setAllStories] = useState<Story[] | null>(null);
-
-  useEffect(() => {
-    const fetchAllStories = async () => {
-      try {
-        const response = await getAllStories();
-        if (response && response.data) {
-          setAllStories(response.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch stories:", error);
-      }
-    };
-
-    fetchAllStories();
-  }, [isOpen,loading,showAddStory ]);
 
   useEffect(() => {
     if (currentUser.isRightSidebarOpen !== undefined) {
@@ -59,14 +42,13 @@ const RightSidebar = () => {
   }, [currentUser.isRightSidebarOpen]);
 
   const toggleSidebar = useCallback(async () => {
-    setIsOpen(prevIsOpen => !prevIsOpen);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
     await rightSidebar();
   }, []);
 
   const handleAddStory = async () => {
-    setLoading(true);
     if (mediaFile) {
-      let mediaUrlToUpload: string | File = mediaFile;
+      let mediaUrlToUpload = mediaFile;
 
       if (croppedImageUrl && mediaFile.type.startsWith("image")) {
         mediaUrlToUpload = croppedImageUrl;
@@ -74,44 +56,38 @@ const RightSidebar = () => {
         mediaUrlToUpload = videoUrl;
       }
 
-      try {
-        const response = await upload(
-          mediaUrlToUpload,
-          err => console.error(err),
-          "stories",
-          mediaFile.type.startsWith("image") ? "image" : "video"
-        );
+      const response = await upload(
+        mediaUrlToUpload,
+        (err) => console.error(err),
+        "stories",
+        mediaFile.type.startsWith("image") ? "image" : "video"
+      );
 
-        if (response) {
-          const newStory: Story = {
-            userId: currentUser.id,
-            isHighlighted: false,
-            captions: caption,
-            mediaUrl: response.secure_url,
-            mediaType: mediaFile.type.startsWith("image") ? "image" : "video",
-            viewers: [],
-            viewCount: 0,
-            hiddenFrom: [],
-          };
+      if (response) {
+        const newStory: Story = {
+          userId: currentUser.id,
+          isHighlighted: false,
+          captions: caption,
+          mediaUrl: response.secure_url,
+          mediaType: mediaFile.type.startsWith("image") ? "image" : "video",
+          viewers: [],
+          viewCount: 0,
+          hiddenFrom: [],
+        };
 
-          const addedStory = await handleAddNewStory(newStory);
-          if (addedStory.status === "success") {
-            toast.success("Story added successfully");
-          } else {
-            toast.error("Error in adding story");
-          }
+        const addedStory = await handleAddNewStory(newStory);
+        if (addedStory.result === "success") {
+          toast.success("Story added successfully");
+        } else {
+          toast.error("Error in adding story");
         }
-      } catch (error) {
-        toast.error("Error in uploading media");
-        console.error(error);
-      } finally {
-        setLoading(false);
-        setShowAddStory(false);
-        setMediaFile(null);
-        setMediaUrl(null);
-        setCaption("");
       }
     }
+
+    setShowAddStory(false);
+    setMediaFile(null);
+    setMediaUrl(null);
+    setCaption("");
   };
 
   const handleCancelStory = () => {
@@ -121,7 +97,7 @@ const RightSidebar = () => {
     setCaption("");
   };
 
-  const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMediaChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setMediaFile(file);
 
@@ -145,37 +121,24 @@ const RightSidebar = () => {
 
   const items = useMemo(
     () =>
-      allStories?.map((story, index) => (
+      [...Array(18)].map((_, index) => (
         <div
           key={index}
-          className={`relative overflow-hidden rounded-lg ${
-            isOpen ? "h-60" : "w-full h-24"
-          }`}>
-          {story.mediaType === "image" && (
-            <img
-              src={story.mediaUrl}
-              alt="Story"
-              className="object-cover w-full h-full"
-            />
-          )}
-          {story.mediaType === "video" && (
-            <video
-              src={story.mediaUrl}
-              controls
-              autoPlay
-              muted
-              className="object-cover w-full h-full"
-            />
-          )}
+          className={`relative overflow-hidden rounded-lg ${isOpen ? "h-60" : "w-full h-24"}`}>
+          <img
+            src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Story"
+            className="object-cover w-full h-full"
+          />
           <div
             className={`absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center ${
               isOpen ? "text-sm" : "text-xs"
             } font-semibold`}>
-            {story.username || "sampleUser"}
+            sampleUser
           </div>
         </div>
       )),
-    [isOpen, allStories]
+    [isOpen]
   );
 
   return (
@@ -185,22 +148,15 @@ const RightSidebar = () => {
       } md:block p-2 hidden bg-gray-800 dark:bg-gray-700 transition-width duration-300 ease-in-out h-full`}>
       <div className="flex flex-col items-center p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
         <div className="flex justify-center mb-2 w-full">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 bg-gray-800 text-white rounded-full">
+          <button onClick={toggleSidebar} className="p-2 bg-gray-800 text-white rounded-full">
             <FaChevronLeft className={`${isOpen ? "hidden" : "block"}`} />
             <FaChevronRight className={`${isOpen ? "block" : "hidden"}`} />
           </button>
         </div>
         {isOpen && (
-          <h2 className="text-lg font-semibold underline text-center">
-            Latest Trends
-          </h2>
+          <h2 className="text-lg font-semibold underline text-center">Latest Trends</h2>
         )}
-        <div
-          className={`grid gap-2 w-full ${
-            isOpen ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
-          }`}>
+        <div className={`grid gap-2 w-full ${isOpen ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
           <div
             onClick={() => setShowAddStory(true)}
             className={`relative overflow-hidden rounded-lg transition-all flex flex-col duration-300 ${
@@ -225,9 +181,7 @@ const RightSidebar = () => {
         {showAddStory && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm mx-auto">
-              <p className="text-center mb-4 text-black dark:text-white">
-                Add a new story
-              </p>
+              <p className="text-center mb-4 text-black dark:text-white">Add a new story</p>
               <div className="grid w-full max-w-xs items-center gap-1.5 p-4">
                 <label
                   htmlFor="media"
@@ -244,11 +198,7 @@ const RightSidebar = () => {
                 {mediaUrl && !isCropping && (
                   <div className="mt-2">
                     {mediaFile?.type.startsWith("video") ? (
-                      <video
-                        src={mediaUrl}
-                        controls
-                        className="w-full rounded-md"
-                      />
+                      <video src={mediaUrl} controls className="w-full rounded-md"></video>
                     ) : (
                       <img
                         src={croppedImageUrl || mediaUrl}
@@ -264,22 +214,16 @@ const RightSidebar = () => {
                   name="caption"
                   id="caption"
                   value={caption}
-                  onChange={e => setCaption(e.target.value)}
+                  onChange={(e) => setCaption(e.target.value)}
                 ></textarea>
               </div>
 
               <div className="flex justify-center gap-4 mt-4">
-                {loading ? (
-                  <button className="px-4 py-2 bg-red-500 text-white rounded-lg">
-                    Uploading...
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleAddStory}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
-                    Add Story
-                  </button>
-                )}
+                <button
+                  onClick={handleAddStory}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
+                  Add Story
+                </button>
                 <button
                   onClick={handleCancelStory}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700">

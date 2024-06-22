@@ -1,12 +1,24 @@
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
-import { Comment, CommentInterface, ReplyInterface } from "../../types/commentInterface";
-import { PostDataInterface } from "../../types/postsInterface";
+import {
+  Comment,
+  CommentInterface,
+  ReplyInterface,
+} from "../../types/commentInterface";
+import {
+  PostDataInterface,
+  ReportPostInterface,
+  StoryInterface,
+} from "../../types/postsInterface";
 
 export const postDBRepository = (
   repository: ReturnType<PostRepositoryMongoDB>
 ) => {
   const addNewPost = async (postData: PostDataInterface) => {
     await repository.addNewPost(postData);
+  };
+
+  const addNewStory = async (storyData: StoryInterface) => {
+    await repository.addNewStory(storyData);
   };
 
   const taggedDataFromPosts = async (usernames: string[], postId: string) => {
@@ -42,8 +54,8 @@ export const postDBRepository = (
   const getParticularPostsForCurrentUser = async (id: string) =>
     await repository.getParticularPostsForCurrentUser(id);
 
-  const reportPostsForUser = async (id: string) =>
-    await repository.reportPostsForUser(id);
+  const reportPostsForUser = async (data: ReportPostInterface) =>
+    await repository.reportPostsForUser(data);
 
   const savePostsForUser = async (userId: string, postId: string) =>
     await repository.savePostsForUser(userId, postId);
@@ -89,31 +101,34 @@ export const postDBRepository = (
   };
   const addNewReply = async (replyData: ReplyInterface) => {
     await repository.addNewReply(replyData);
-  }
+  };
 
   const getAllComments = async (postId: string) =>
     await repository.getAllComments(postId);
-  
+
   const deleteComment = async (commentId: string) =>
     await repository.deleteComment(commentId);
-  
+
   const editComment = async (commentId: string, updatedText: string) =>
     await repository.editComment(commentId, updatedText);
-  
-  const getAllPublicPosts = async (id:string) =>
-    await repository.getAllPublicPosts(id);
-  
-  const darkMode = async (userId:string) =>
-    await repository.darkMode(userId);
 
-  const leftSidebar = async (userId:string) =>
+  const getAllPublicPosts = async (id: string) =>
+    await repository.getAllPublicPosts(id);
+
+  const darkMode = async (userId: string) => await repository.darkMode(userId);
+
+  const leftSidebar = async (userId: string) =>
     await repository.leftSidebar(userId);
-  
-  const rightSidebar = async (userId:string) =>
+
+  const rightSidebar = async (userId: string) =>
     await repository.rightSidebar(userId);
+
+  const getAllStoriesForUser = async (id: string) =>
+    await repository.getAllStoriesForUser(id);
 
   return {
     addNewPost,
+    addNewStory,
     taggedDataFromPosts,
     updatePost,
     getPostById,
@@ -146,8 +161,8 @@ export const postDBRepository = (
     rejectPremium,
     darkMode,
     leftSidebar,
-    rightSidebar
-
+    rightSidebar,
+    getAllStoriesForUser,
   };
 };
 

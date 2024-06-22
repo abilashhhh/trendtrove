@@ -17,8 +17,7 @@ import {
   UserInfo,
   modesChangingInterface,
 } from "../../Types/userProfile";
-import { useState } from "react";
-
+ 
 // Utility function for handling Axios errors
 const handleAxiosError = (error: any) => {
   if (axios.isAxiosError(error)) {

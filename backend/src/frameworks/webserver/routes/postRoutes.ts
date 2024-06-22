@@ -45,6 +45,8 @@ const postRouter = () => {
   router.patch("/darkmode", authMiddleware, controller.darkmode);
   router.patch("/leftsidebar", authMiddleware, controller.leftsidebar);
   router.patch("/rightsidebar", authMiddleware, controller.rightsidebar);
+  router.post("/addstory", authMiddleware, controller.addStory);
+  router.get("/getstories", authMiddleware, controller.getstories);
   // COMMENT
   router.post("/addcomment", authMiddleware , controller.addComment)
   router.get("/getallcomments/:postId", authMiddleware, controller.getallcomments);

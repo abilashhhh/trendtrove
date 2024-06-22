@@ -46,6 +46,8 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
   const [isCropping, setIsCropping] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [isDpCrop, setIsDpCrop] = useState(true);
+  const aspect1 = isDpCrop ? 4 : 6;
+  const aspect2 = isDpCrop ? 4 : 3;
   
 
   const handleDp = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -442,11 +444,15 @@ const EditProfile: React.FC<ProfileProps> = ({ userDetails }) => {
             </label>
           </form> )}
           {isCropping && imageToCrop && (
-        <ImageCropper
-          imageSrc={imageToCrop}
-          onCropComplete={handleCropComplete}
-          onClose={() => setIsCropping(false)}
-        />
+
+      <ImageCropper
+        imageSrc={imageToCrop}
+        aspect1={aspect1}
+        aspect2={aspect2}
+        onCropComplete={handleCropComplete}
+        onClose={() => setIsCropping(false)}
+      />
+      
       )}
         </div>
       </main>

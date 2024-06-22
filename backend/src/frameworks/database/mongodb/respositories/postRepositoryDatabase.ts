@@ -1,6 +1,7 @@
 import {
   PostDataInterface,
   ReportPostInterface,
+  StoryInterface,
 } from "../../../../types/postsInterface";
 const cron = require("node-cron");
 import Post from "../models/postModel";
@@ -15,6 +16,7 @@ import {
   ReplyInterface,
 } from "../../../../types/commentInterface";
 import PremiumAccount from "../models/premiumAccount";
+import Story from "../models/storyModel";
 
 //////////////////////////////////////////////////////////
 
@@ -33,6 +35,19 @@ export const postRepositoryMongoDB = () => {
     } catch (error) {
       // console.log(error);
       throw new Error("Error adding new post!");
+    }
+  };
+
+  const addNewStory = async (storyData: StoryInterface) => {
+
+    try {
+      const newStory = new Story(storyData);
+      const newStoryData = await newStory.save();
+   
+      return newStoryData;
+    } catch (error) {
+      // console.log(error);
+      throw new Error("Error adding new story!");
     }
   };
 
@@ -68,6 +83,7 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error updating post - adding tags!");
     }
   };
+
   const getAllPostsForUser = async (id: string) => {
     try {
       const requesterUser = await User.findById(id);
@@ -642,9 +658,6 @@ export const postRepositoryMongoDB = () => {
     }
   };
   
-
-
-
   const getAllPublicPosts = async (id: string) => {
     try {
       const currentUser = await User.findById(id);
@@ -718,6 +731,44 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+   const getAllStoriesForUser = async (id: string) => {
+    try {
+      const requesterUser = await User.findById(id);
+      if (!requesterUser) {
+        throw new Error("User not found");
+      }
+  
+      const followingOfRequestedUser = await User.findById(id, {
+        following: 1,
+      }).exec();
+  
+      if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
+        throw new Error("User not following anyone");
+      }
+  
+      const followingUsersId = followingOfRequestedUser.following.map(
+        follow => follow.userId
+      );
+  
+      const userIdsToFetch = [...followingUsersId, id];
+  
+      const currentUser = await User.findById(id);
+      const blockedUsers = currentUser?.blockedUsers || [];
+  
+      // Fetch stories excluding users in blockedUsers list
+      const gettingStories = await Story.find({
+        userId: { $in: userIdsToFetch, $nin: blockedUsers }, 
+      }).sort({ createdAt: -1 });
+  
+      console.log("Getting stories from repo: ", gettingStories)
+
+      return gettingStories;
+    } catch (error) {
+      console.error("Error getting all stories for user:", error);
+      throw new Error("Error getting all stories for user!");
+    }
+  };
+
   ////////////////////////////////////////////////
 
   const removeAllTaggedPostsForAllUsers = async () => {
@@ -768,7 +819,9 @@ export const postRepositoryMongoDB = () => {
     getAllPublicPosts,
     rightSidebar,
     leftSidebar,
-    darkMode
+    darkMode,
+    addNewStory,
+    getAllStoriesForUser
   };
 };
 //////////////////////////////////////////////////////////

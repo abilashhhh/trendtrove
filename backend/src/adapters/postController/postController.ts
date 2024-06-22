@@ -4,10 +4,11 @@ import { AuthService } from "../../frameworks/services/authenticationService";
 import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-import { PostDataInterface,  ReportPostInterface } from "../../types/postsInterface";
+import { PostDataInterface,  ReportPostInterface, StoryInterface } from "../../types/postsInterface";
 import {
   handleCreateComment,
   handleCreatePost,
+  handleCreateStory,
   handleDarkMode,
   handleDelteComment,
   handleDeltePosts,
@@ -24,6 +25,7 @@ import {
   handleGetPostsForUserUsername,
   handleGetPostsOfCurrentUser,
   handleGetSavedPostsOfCurrentUser,
+  handleGetStoriesForUser,
   handleGetTaggedPostsOfCurrentUser,
   handleGetlikesdislikesinfo,
   handleLeftSidebar,
@@ -72,6 +74,22 @@ const postController = (
     });
   });
 
+  const addStory = asyncHandler(async (req: Request, res: Response) => {
+    const storyData: StoryInterface = req.body;
+    console.log("story data: ", storyData)
+    const createStory = await handleCreateStory(
+      storyData,
+      dbPostRepository,
+      dbUserRepository
+    );
+    console.log("createStory: ", createStory)
+    res.status(201).json({
+      status: "success",
+      message: "Story created successfully",
+      data: createStory,
+    });
+  });
+
   const updatepost = asyncHandler(async (req: Request, res: Response) => {
     const postData: PostDataInterface = req.body;
     const createPost = await handleupdatepost(
@@ -95,6 +113,8 @@ const postController = (
       data: getPosts,
     });
   });
+
+ 
 
   const getpostforuserusername = asyncHandler(
     async (req: Request, res: Response) => {
@@ -449,9 +469,20 @@ const postController = (
   });
   
   
+  const getstories = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const getStoriesData = await handleGetStoriesForUser(userId, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Stories fetched for user",
+      data: getStoriesData,
+    });
+  });
+
 
   return {
     addPost,
+    addStory,
     updatepost,
     getpostforuser,
     getpostforuserusername,
@@ -480,7 +511,8 @@ const postController = (
     replytocomment,
     darkmode,
     leftsidebar,
-    rightsidebar
+    rightsidebar,
+    getstories
   };
 };
 

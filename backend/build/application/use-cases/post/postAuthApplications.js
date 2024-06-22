@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreatePost = void 0;
+exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
 const clarifai_1 = __importDefault(require("clarifai"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,6 +40,28 @@ const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awa
     }
 });
 exports.handleCreatePost = handleCreatePost;
+const handleCreateStory = (storyData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Post data in handleCreateStory :", storyData);
+        if (!storyData.userId) {
+            throw new ErrorInApplication_1.default("User ID is required to create a story", 400);
+        }
+        const userData = yield dbUserRepository.getUserById(storyData.userId);
+        if (!userData) {
+            throw new ErrorInApplication_1.default("User not found", 404);
+        }
+        const newPost = yield dbPostRepository.addNewStory(storyData);
+        return newPost;
+    }
+    catch (error) {
+        console.error("Error in handleCreateStory:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to create story", 500);
+    }
+});
+exports.handleCreateStory = handleCreateStory;
 const handleupdatepost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("Post data in handleupdatepost:", postData);
@@ -330,7 +352,7 @@ const handleGetAllPublicPosts = (id, dbPostRepository) => __awaiter(void 0, void
 exports.handleGetAllPublicPosts = handleGetAllPublicPosts;
 const clarifaiApp = new clarifai_1.default.App({
     // apiKey: 'x63of8rtn18z',
-    apiKey: 'a893b94727a54b0abb11b87b5cf35212',
+    apiKey: "a893b94727a54b0abb11b87b5cf35212",
     // apiKey: '09de53abfe904096935624c270d6b21b',
 });
 const handleGenerateCaption = (imageUrl, userId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -341,8 +363,8 @@ const handleGenerateCaption = (imageUrl, userId) => __awaiter(void 0, void 0, vo
         if (response && response.outputs && response.outputs.length > 0) {
             const concepts = response.outputs[0].data.concepts;
             const descriptions = concepts.map((concept) => concept.name);
-            console.log("captions:", descriptions.join(', '));
-            return { caption: descriptions.join(', ') };
+            console.log("captions:", descriptions.join(", "));
+            return { caption: descriptions.join(", ") };
         }
         else {
             console.error("No outputs in response");
@@ -350,8 +372,8 @@ const handleGenerateCaption = (imageUrl, userId) => __awaiter(void 0, void 0, vo
         }
     }
     catch (error) {
-        console.error('Error generating caption:', error);
-        throw new Error('Failed to generate caption');
+        console.error("Error generating caption:", error);
+        throw new Error("Failed to generate caption");
     }
 });
 exports.handleGenerateCaption = handleGenerateCaption;
@@ -569,3 +591,21 @@ const handleRightSidebar = (userId, dbPostRepository) => __awaiter(void 0, void 
     }
 });
 exports.handleRightSidebar = handleRightSidebar;
+const handleGetStoriesForUser = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log("handleGetStoriesForUser reached");
+        if (!id) {
+            throw new ErrorInApplication_1.default("User ID is required to get all stories", 400);
+        }
+        const allStoriesForUser = yield dbPostRepository.getAllStoriesForUser(id);
+        return allStoriesForUser;
+    }
+    catch (error) {
+        // console.log("Error in handleGetStoriesForUser");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to get all stories", 500);
+    }
+});
+exports.handleGetStoriesForUser = handleGetStoriesForUser;

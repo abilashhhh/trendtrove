@@ -22,6 +22,7 @@ const dislikePostModel_1 = __importDefault(require("../models/dislikePostModel")
 const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInApplication"));
 const commentModel_1 = __importDefault(require("../models/commentModel"));
 const premiumAccount_1 = __importDefault(require("../models/premiumAccount"));
+const storyModel_1 = __importDefault(require("../models/storyModel"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
@@ -36,6 +37,17 @@ const postRepositoryMongoDB = () => {
         catch (error) {
             // console.log(error);
             throw new Error("Error adding new post!");
+        }
+    });
+    const addNewStory = (storyData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const newStory = new storyModel_1.default(storyData);
+            const newStoryData = yield newStory.save();
+            return newStoryData;
+        }
+        catch (error) {
+            // console.log(error);
+            throw new Error("Error adding new story!");
         }
     });
     const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -617,6 +629,34 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error fetching public posts!");
         }
     });
+    const getAllStoriesForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const requesterUser = yield userModel_1.default.findById(id);
+            if (!requesterUser) {
+                throw new Error("User not found");
+            }
+            const followingOfRequestedUser = yield userModel_1.default.findById(id, {
+                following: 1,
+            }).exec();
+            if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
+                throw new Error("User not following anyone");
+            }
+            const followingUsersId = followingOfRequestedUser.following.map(follow => follow.userId);
+            const userIdsToFetch = [...followingUsersId, id];
+            const currentUser = yield userModel_1.default.findById(id);
+            const blockedUsers = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.blockedUsers) || [];
+            // Fetch stories excluding users in blockedUsers list
+            const gettingStories = yield storyModel_1.default.find({
+                userId: { $in: userIdsToFetch, $nin: blockedUsers },
+            }).sort({ createdAt: -1 });
+            console.log("Getting stories from repo: ", gettingStories);
+            return gettingStories;
+        }
+        catch (error) {
+            console.error("Error getting all stories for user:", error);
+            throw new Error("Error getting all stories for user!");
+        }
+    });
     ////////////////////////////////////////////////
     const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -664,7 +704,9 @@ const postRepositoryMongoDB = () => {
         getAllPublicPosts,
         rightSidebar,
         leftSidebar,
-        darkMode
+        darkMode,
+        addNewStory,
+        getAllStoriesForUser
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

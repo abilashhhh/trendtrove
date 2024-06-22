@@ -46,6 +46,8 @@ const END_POINTS = {
   // POST
   ADD_POST :'api/post/addpost',
   UPDATE_POST :'api/post/updatepost',
+  ADD_STORY :'api/post/addstory',
+  GET_ALL_STORIES :'api/post/getstories',
   GET_POSTS_FOR_USER:'api/post/getpostforuser',
   GET_POSTS_FOR_USER_USERNAME:'api/post/getpostforuserusername',
   GET_POSTS_USING_POST_ID:'api/post/getpostusingpostId',

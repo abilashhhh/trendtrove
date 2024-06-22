@@ -4,6 +4,7 @@ import END_POINTS from "../../Constants/endpoints";
 import {
   AddCommentResponse,
   AddReplyResponse,
+  AddStoryResponse,
   Comment,
   DeletePostResponse,
   DislikePostResponse,
@@ -13,6 +14,7 @@ import {
   GetAllPostsForExploreResponse,
   GetAllPostsForUser,
   GetAllPostsOfCurrentUser,
+  GetAllStories,
   GetDislikedPostsResponse,
   GetLikedPostsResponse,
   GetLikesDislikesInfoResponse,
@@ -24,6 +26,7 @@ import {
   ReportPostData,
   ReportPostResponse,
   SavePostResponse,
+  Story,
 } from "../../Types/Post";
 
 // Utility function for handling Axios errors
@@ -487,6 +490,36 @@ export const handleAddReplyToComment = async (
   }
 };
 
+export const handleAddNewStory = async (
+  payload: Partial<Story>
+): Promise<AddStoryResponse> => {
+  try {
+    console.log("handleAddNewStory function, payload: ", payload);
+    const response = await axiosUserInstance.post<AddStoryResponse>(
+      END_POINTS.ADD_STORY,
+      payload
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getAllStories = async () => {
+  try {
+    // console.log("getAllStories ");
+    const response = await axiosUserInstance.get<GetAllStories>(
+      END_POINTS.GET_ALL_STORIES
+    );
+    // console.log("getAllStories response:", response.data.allPosts);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
 
 
 

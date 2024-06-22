@@ -27,6 +27,17 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: createPost,
         });
     }));
+    const addStory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const storyData = req.body;
+        console.log("story data: ", storyData);
+        const createStory = yield (0, postAuthApplications_1.handleCreateStory)(storyData, dbPostRepository, dbUserRepository);
+        console.log("createStory: ", createStory);
+        res.status(201).json({
+            status: "success",
+            message: "Story created successfully",
+            data: createStory,
+        });
+    }));
     const updatepost = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const postData = req.body;
         const createPost = yield (0, postAuthApplications_1.handleupdatepost)(postData, dbPostRepository, dbUserRepository);
@@ -309,8 +320,18 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             });
         }
     }));
+    const getstories = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const getStoriesData = yield (0, postAuthApplications_1.handleGetStoriesForUser)(userId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Stories fetched for user",
+            data: getStoriesData,
+        });
+    }));
     return {
         addPost,
+        addStory,
         updatepost,
         getpostforuser,
         getpostforuserusername,
@@ -339,7 +360,8 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         replytocomment,
         darkmode,
         leftsidebar,
-        rightsidebar
+        rightsidebar,
+        getstories
     };
 };
 exports.default = postController;

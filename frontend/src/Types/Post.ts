@@ -42,6 +42,26 @@ export interface Reply {
   updatedAt: Date;
 }
 
+interface IReaction {
+  userId: string;
+  type: "like" | "love" | "haha" | "sad" | "angry";
+}
+
+export interface Story {
+  userId: string;
+  isHighlighted: boolean;
+  captions?: string;
+  username?: string;
+  dp?: string;
+  mediaUrl: string;
+  mediaType: "image" | "video" | "text";
+  viewers: string[];
+  viewCount: number;
+  reactions: IReaction[];
+  hiddenFrom: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 export interface PostResponse {
   status: string;
@@ -99,6 +119,10 @@ export interface AddReplyResponse {
   status: string;
   message: string;
 }
+export interface AddStoryResponse {
+  status: string;
+  message: string;
+}
 
 export interface ReportPostData {
   postId: string;
@@ -129,11 +153,19 @@ export interface GetAllCommentsResponse {
   message: string;
   data: Comment;
 }
+
 export interface GetAllPostsForExploreResponse {
   status: string;
   message: string;
   data: Post;
 }
+
+export interface GetAllStories {
+  status: string;
+  message: string;
+  data: Story;
+}
+
 export interface GenerateCaptionResponse {
   status: string;
   message: string;
@@ -144,4 +176,3 @@ export interface EditCommentResponse {
   status: string;
   message: string;
 }
-
