@@ -46,6 +46,7 @@ const postRouter = () => {
     router.delete("/deletecomment/:commentId", authMiddleware_1.default, controller.deleteComment);
     router.put("/editcomment", authMiddleware_1.default, controller.editComment);
     router.post("/replytocomment", authMiddleware_1.default, controller.replytocomment);
+    // STORIES 
     return router;
 };
 exports.default = postRouter;

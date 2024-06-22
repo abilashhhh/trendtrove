@@ -45,13 +45,13 @@ const postRouter = () => {
   router.patch("/darkmode", authMiddleware, controller.darkmode);
   router.patch("/leftsidebar", authMiddleware, controller.leftsidebar);
   router.patch("/rightsidebar", authMiddleware, controller.rightsidebar);
-  
   // COMMENT
   router.post("/addcomment", authMiddleware , controller.addComment)
   router.get("/getallcomments/:postId", authMiddleware, controller.getallcomments);
   router.delete("/deletecomment/:commentId", authMiddleware, controller.deleteComment);
   router.put("/editcomment", authMiddleware, controller.editComment);
   router.post("/replytocomment", authMiddleware , controller.replytocomment)
+  // STORIES 
 
 
 

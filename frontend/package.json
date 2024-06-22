@@ -17,6 +17,8 @@
     "@fortawesome/react-fontawesome": "^0.2.1",
     "@material-tailwind/react": "^2.1.9",
     "@mui/material": "^5.15.20",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-icons": "^1.3.0",
     "@reduxjs/toolkit": "^2.2.4",
     "axios": "^1.6.8",
     "cloudinary": "^2.2.0",
@@ -55,6 +57,7 @@
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.11.0",
     "tw-elements-react": "^1.0.0-alpha2",
+    "vaul": "^0.9.1",
     "yup": "^1.4.0",
     "zustand": "^4.5.2"
   },
