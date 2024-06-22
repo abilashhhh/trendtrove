@@ -645,10 +645,12 @@ const postRepositoryMongoDB = () => {
             const userIdsToFetch = [...followingUsersId, id];
             const currentUser = yield userModel_1.default.findById(id);
             const blockedUsers = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.blockedUsers) || [];
-            // Fetch stories excluding users in blockedUsers list
+            // Fetch stories excluding users in blockedUsers list and populate the username and dp fields
             const gettingStories = yield storyModel_1.default.find({
                 userId: { $in: userIdsToFetch, $nin: blockedUsers },
-            }).sort({ createdAt: -1 });
+            })
+                .sort({ createdAt: -1 })
+                .populate('userId', 'username dp');
             console.log("Getting stories from repo: ", gettingStories);
             return gettingStories;
         }
@@ -706,7 +708,7 @@ const postRepositoryMongoDB = () => {
         leftSidebar,
         darkMode,
         addNewStory,
-        getAllStoriesForUser
+        getAllStoriesForUser,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

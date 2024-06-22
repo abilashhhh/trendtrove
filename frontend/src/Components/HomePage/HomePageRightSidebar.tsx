@@ -168,10 +168,11 @@ const RightSidebar = () => {
             />
           )}
           <div
-            className={`absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center ${
+            className={`absolute flex items-center justify-center gap-1 bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center ${
               isOpen ? "text-sm" : "text-xs"
             } font-semibold`}>
-            {story.username || "sampleUser"}
+              <img src={story.userId.dp}  className="w-6 h-6 rounded-full" alt="DP" />
+            {story?.userId?.username || "Sample User"}
           </div>
         </div>
       )),

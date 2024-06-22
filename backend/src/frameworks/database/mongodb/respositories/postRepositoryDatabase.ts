@@ -39,11 +39,10 @@ export const postRepositoryMongoDB = () => {
   };
 
   const addNewStory = async (storyData: StoryInterface) => {
-
     try {
       const newStory = new Story(storyData);
       const newStoryData = await newStory.save();
-   
+
       return newStoryData;
     } catch (error) {
       // console.log(error);
@@ -90,37 +89,37 @@ export const postRepositoryMongoDB = () => {
       if (!requesterUser) {
         throw new Error("User not found");
       }
-  
+
       const followingOfRequestedUser = await User.findById(id, {
         following: 1,
       }).exec();
-  
+
       if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
         throw new Error("User not following anyone");
       }
-  
+
       const followingUsersId = followingOfRequestedUser.following.map(
         follow => follow.userId
       );
-  
+
       const userIdsToFetch = [...followingUsersId, id];
-  
+
       // Fetch blocked users for the current user
       const currentUser = await User.findById(id);
       const blockedUsers = currentUser?.blockedUsers || [];
-  
+
       // Fetch posts excluding users in blockedUsers list
       const gettingPosts = await Post.find({
         userId: { $in: userIdsToFetch, $nin: blockedUsers }, // Exclude blockedUsers
       }).sort({ createdAt: -1 });
-  
+
       return gettingPosts;
     } catch (error) {
       console.error("Error getting all posts for user:", error);
       throw new Error("Error getting all posts for user!");
     }
   };
-  
+
   const getAllPostsForUserUsername = async (username: string) => {
     try {
       // Find the user by username
@@ -128,26 +127,24 @@ export const postRepositoryMongoDB = () => {
       if (!requesterUser) {
         throw new Error("User not found");
       }
-  
+
       const currentUserId = requesterUser._id;
-  
+
       // Fetch blocked users for the current user
       const currentUser = await User.findById(currentUserId);
       const blockedUsers = currentUser?.blockedUsers || [];
-  
+
       // Fetch posts excluding users in blockedUsers list
       const gettingPosts = await Post.find({
         userId: { $in: [...blockedUsers, currentUserId] }, // Include currentUserId to fetch user's own posts
       }).sort({ createdAt: -1 });
-  
+
       return gettingPosts;
     } catch (error) {
       console.error("Error getting all posts for user:", error);
       throw new Error("Error getting all posts for user!");
     }
   };
-  
-  
 
   const lengthofPostsForUser = async (username: string) => {
     try {
@@ -606,7 +603,6 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-
   const darkMode = async (userId: string) => {
     try {
       const user = await User.findById(userId);
@@ -619,7 +615,7 @@ export const postRepositoryMongoDB = () => {
         { new: true }
       );
       return updatedUser;
-    } catch (error:any) {
+    } catch (error: any) {
       throw new Error("Error updating dark mode: " + error.message);
     }
   };
@@ -636,11 +632,11 @@ export const postRepositoryMongoDB = () => {
         { new: true }
       );
       return updatedUser;
-    } catch (error:any) {
+    } catch (error: any) {
       throw new Error("Error updating isLeftSidebarOpen " + error.message);
     }
   };
-  
+
   const rightSidebar = async (userId: string) => {
     try {
       const user = await User.findById(userId);
@@ -653,11 +649,11 @@ export const postRepositoryMongoDB = () => {
         { new: true }
       );
       return updatedUser;
-    } catch (error:any) {
+    } catch (error: any) {
       throw new Error("Error updating isRightSidebarOpen " + error.message);
     }
   };
-  
+
   const getAllPublicPosts = async (id: string) => {
     try {
       const currentUser = await User.findById(id);
@@ -731,7 +727,7 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-   const getAllStoriesForUser = async (id: string) => {
+  const getAllStoriesForUser = async (id: string) => {
     try {
       const requesterUser = await User.findById(id);
       if (!requesterUser) {
@@ -755,13 +751,15 @@ export const postRepositoryMongoDB = () => {
       const currentUser = await User.findById(id);
       const blockedUsers = currentUser?.blockedUsers || [];
   
-      // Fetch stories excluding users in blockedUsers list
+      // Fetch stories excluding users in blockedUsers list and populate the username and dp fields
       const gettingStories = await Story.find({
-        userId: { $in: userIdsToFetch, $nin: blockedUsers }, 
-      }).sort({ createdAt: -1 });
+        userId: { $in: userIdsToFetch, $nin: blockedUsers },
+      })
+        .sort({ createdAt: -1 })
+        .populate('userId', 'username dp');
   
-      console.log("Getting stories from repo: ", gettingStories)
-
+      console.log("Getting stories from repo: ", gettingStories);
+  
       return gettingStories;
     } catch (error) {
       console.error("Error getting all stories for user:", error);
@@ -821,7 +819,7 @@ export const postRepositoryMongoDB = () => {
     leftSidebar,
     darkMode,
     addNewStory,
-    getAllStoriesForUser
+    getAllStoriesForUser,
   };
 };
 //////////////////////////////////////////////////////////
