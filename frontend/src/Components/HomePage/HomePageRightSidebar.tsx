@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import { IoAddCircleSharp } from "react-icons/io5";
 import useUserDetails from "../../Hooks/useUserDetails";
 import { rightSidebar } from "../../API/Profile/profile";
@@ -33,9 +33,11 @@ const RightSidebar = () => {
   const [caption, setCaption] = useState<string>("");
   const [isCropping, setIsCropping] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
+  const [selectedStoryIndex, setSelectedStoryIndex] = useState<number>(0);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [allStories, setAllStories] = useState<Story[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [storyLargeScreen, setStoryLargeScreen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAllStories = async () => {
@@ -50,7 +52,7 @@ const RightSidebar = () => {
     };
 
     fetchAllStories();
-  }, [isOpen,loading,showAddStory ]);
+  }, [isOpen, loading, showAddStory]);
 
   useEffect(() => {
     if (currentUser.isRightSidebarOpen !== undefined) {
@@ -148,6 +150,10 @@ const RightSidebar = () => {
       allStories?.map((story, index) => (
         <div
           key={index}
+          onClick={() => {
+            setStoryLargeScreen(true);
+            setSelectedStoryIndex(index);
+          }}
           className={`relative overflow-hidden rounded-lg ${
             isOpen ? "h-60" : "w-full h-24"
           }`}>
@@ -171,13 +177,29 @@ const RightSidebar = () => {
             className={`absolute flex items-center justify-center gap-1 bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center ${
               isOpen ? "text-sm" : "text-xs"
             } font-semibold`}>
-              <img src={story.userId.dp}  className="w-6 h-6 rounded-full" alt="DP" />
+            <img
+              src={story.userId.dp}
+              className="w-6 h-6 rounded-full"
+              alt="DP"
+            />
             {story?.userId?.username || "Sample User"}
           </div>
         </div>
       )),
     [isOpen, allStories]
   );
+
+  const handlePrevStory = () => {
+    setSelectedStoryIndex(prevIndex =>
+      prevIndex === 0 ? (allStories?.length || 1) - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNextStory = () => {
+    setSelectedStoryIndex(prevIndex =>
+      prevIndex === (allStories?.length || 1) - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   return (
     <aside
@@ -193,11 +215,7 @@ const RightSidebar = () => {
             <FaChevronRight className={`${isOpen ? "block" : "hidden"}`} />
           </button>
         </div>
-        {isOpen && (
-          <h2 className="text-lg font-semibold underline text-center">
-            Latest Trends
-          </h2>
-        )}
+
         <div
           className={`grid gap-2 w-full ${
             isOpen ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
@@ -222,6 +240,62 @@ const RightSidebar = () => {
           </div>
           {items}
         </div>
+
+        {storyLargeScreen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-lg mx-auto">
+              <div className="relative rounded-lg transition-all duration-300 h-[calc(100vh-16rem)] w-full">
+                {allStories?.[selectedStoryIndex].mediaType === "image" ? (
+                  <img
+                    src={allStories[selectedStoryIndex].mediaUrl}
+                    alt="Story"
+                    className="object-cover w-full h-full "
+                  />
+                ) : (
+                  <video
+                    src={allStories[selectedStoryIndex].mediaUrl}
+                    controls
+                    autoPlay
+                    muted
+                    className="object-cover w-full h-full"
+                  />
+                )}
+
+                <div className="absolute flex items-center justify-center gap-1 top-0 left-0   bg-gray-900   p-2 text-white text-center text-xs font-semibold">
+                  <img
+                    src={allStories[selectedStoryIndex].userId.dp}
+                    className="w-6 h-6 rounded-full"
+                    alt="DP"
+                  />
+                  {allStories[selectedStoryIndex]?.userId?.username ||
+                    "Sample User"}
+                </div>
+                {allStories[selectedStoryIndex].captions && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-slate-900  p-2 text-white text-center break-all  ">
+                    {allStories[selectedStoryIndex]?.captions}
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-between m-2">
+                <button
+                  onClick={handlePrevStory}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                  Prev
+                </button>
+                <button
+                  onClick={() => setStoryLargeScreen(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                  Close
+                </button>
+                <button
+                  onClick={handleNextStory}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {showAddStory && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
@@ -265,8 +339,7 @@ const RightSidebar = () => {
                   name="caption"
                   id="caption"
                   value={caption}
-                  onChange={e => setCaption(e.target.value)}
-                ></textarea>
+                  onChange={e => setCaption(e.target.value)}></textarea>
               </div>
 
               <div className="flex justify-center gap-4 mt-4">
