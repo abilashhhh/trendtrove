@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { IoAddCircleSharp } from "react-icons/io5";
 import useUserDetails from "../../Hooks/useUserDetails";
-import { rightSidebar } from "../../API/Profile/profile";
 import upload from "../../utils/cloudinary";
 import ImageCropper from "../ImageCropper";
 import { toast } from "react-toastify";
-import { handleAddNewStory } from "../../API/Post/post";
+import { getAllStories, handleAddNewStory } from "../../API/Post/post";
 
 interface Story {
   userId: string;
@@ -23,8 +21,7 @@ interface Story {
   updatedAt?: Date;
 }
 
-const RightSidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+const HomePageRightSidebarMobileView = () => {
   const currentUser = useUserDetails();
   const [showAddStory, setShowAddStory] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -33,32 +30,47 @@ const RightSidebar = () => {
   const [caption, setCaption] = useState<string>("");
   const [isCropping, setIsCropping] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
+  const [selectedStoryIndex, setSelectedStoryIndex] = useState<number>(0);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [allStories, setAllStories] = useState<Story[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [storyLargeScreen, setStoryLargeScreen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentUser.isRightSidebarOpen !== undefined) {
-      setIsOpen(currentUser.isRightSidebarOpen);
-    }
-  }, [currentUser.isRightSidebarOpen]);
+    const fetchAllStories = async () => {
+      try {
+        const response = await getAllStories();
+        if (response && response.data) {
+          setAllStories(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch stories:", error);
+      }
+    };
 
-  const toggleSidebar = useCallback(async () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen);
-    await rightSidebar();
-  }, []);
+    fetchAllStories();
+  }, [loading, showAddStory]);
 
   const handleAddStory = async () => {
-    if (mediaFile) {
-      let mediaUrlToUpload = mediaFile;
+    setLoading(true);
+    if (!mediaFile) {
+      toast.error("Please upload an image or video");
+      setLoading(false);
+      return;
+    }
 
-      if (croppedImageUrl && mediaFile.type.startsWith("image")) {
-        mediaUrlToUpload = croppedImageUrl;
-      } else if (mediaFile.type.startsWith("video")) {
-        mediaUrlToUpload = videoUrl;
-      }
+    let mediaUrlToUpload: string | File = mediaFile;
 
+    if (croppedImageUrl && mediaFile.type.startsWith("image")) {
+      mediaUrlToUpload = croppedImageUrl;
+    } else if (mediaFile.type.startsWith("video")) {
+      mediaUrlToUpload = videoUrl;
+    }
+
+    try {
       const response = await upload(
         mediaUrlToUpload,
-        (err) => console.error(err),
+        err => console.error(err),
         "stories",
         mediaFile.type.startsWith("image") ? "image" : "video"
       );
@@ -76,18 +88,25 @@ const RightSidebar = () => {
         };
 
         const addedStory = await handleAddNewStory(newStory);
-        if (addedStory.result === "success") {
+        if (addedStory.status === "success") {
           toast.success("Story added successfully");
+          setAllStories(prevStories =>
+            prevStories ? [...prevStories, newStory] : [newStory]
+          );
         } else {
           toast.error("Error in adding story");
         }
       }
+    } catch (error) {
+      toast.error("Error in uploading media");
+      console.error(error);
+    } finally {
+      setLoading(false);
+      setShowAddStory(false);
+      setMediaFile(null);
+      setMediaUrl(null);
+      setCaption("");
     }
-
-    setShowAddStory(false);
-    setMediaFile(null);
-    setMediaUrl(null);
-    setCaption("");
   };
 
   const handleCancelStory = () => {
@@ -97,7 +116,7 @@ const RightSidebar = () => {
     setCaption("");
   };
 
-  const handleMediaChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setMediaFile(file);
 
@@ -121,67 +140,134 @@ const RightSidebar = () => {
 
   const items = useMemo(
     () =>
-      [...Array(18)].map((_, index) => (
+      allStories?.map((story, index) => (
         <div
           key={index}
-          className={`relative overflow-hidden rounded-lg ${isOpen ? "h-60" : "w-full h-24"}`}>
-          <img
-            src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-            alt="Story"
-            className="object-cover w-full h-full"
-          />
-          <div
-            className={`absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 py-1 px-2 text-white text-center ${
-              isOpen ? "text-sm" : "text-xs"
-            } font-semibold`}>
-            sampleUser
-          </div>
+          onClick={() => {
+            setStoryLargeScreen(true);
+            setSelectedStoryIndex(index);
+          }}
+          className="relative overflow-hidden rounded-lg cursor-pointer"
+          style={{ width: "60px", height: "60px", marginRight: "2px" }}>
+        <div className="absolute flex items-center gap-1 bottom-0 left-0 bg-gray-900  text-white text-center text-xs font-semibold">
+             
+                  {allStories[selectedStoryIndex]?.userId?.username ||
+                    "User"}
+                </div>
+
+          {story.mediaType === "image" && (
+            <img
+              src={story.mediaUrl}
+              alt="Story"
+              className="object-cover w-full h-full rounded-lg"
+            />
+          )}
+          {story.mediaType === "video" && (
+            <video
+              src={story.mediaUrl}
+              controls
+              autoPlay
+              muted
+              className="object-cover w-full h-full rounded-lg"
+            />
+          )}
         </div>
       )),
-    [isOpen]
+    [allStories]
   );
 
+  const handlePrevStory = () => {
+    setSelectedStoryIndex(prevIndex =>
+      prevIndex === 0 ? (allStories?.length || 1) - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNextStory = () => {
+    setSelectedStoryIndex(prevIndex =>
+      prevIndex === (allStories?.length || 1) - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   return (
-    <aside
-      className={`${
-        isOpen ? "md:w-72 w-full" : "w-28"
-      } md:block p-2 hidden bg-gray-800 dark:bg-gray-700 transition-width duration-300 ease-in-out h-full`}>
-      <div className="flex flex-col items-center p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar">
-        <div className="flex justify-center mb-2 w-full">
-          <button onClick={toggleSidebar} className="p-2 bg-gray-800 text-white rounded-full">
-            <FaChevronLeft className={`${isOpen ? "hidden" : "block"}`} />
-            <FaChevronRight className={`${isOpen ? "block" : "hidden"}`} />
-          </button>
-        </div>
-        {isOpen && (
-          <h2 className="text-lg font-semibold underline text-center">Latest Trends</h2>
-        )}
-        <div className={`grid gap-2 w-full ${isOpen ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
+    <div className="w-full h-25 flex flex-row bg-gray-800 dark:bg-gray-700 mb-1 -mt-1 overflow-auto">
+      <div className="flex items-center flex-row p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full w-full overflow-x-auto no-scrollbar">
+        <div className="flex gap-2">
           <div
-            onClick={() => setShowAddStory(true)}
-            className={`relative overflow-hidden rounded-lg transition-all flex flex-col duration-300 ${
-              isOpen ? "h-60" : "h-24"
-            } bg-slate-400 dark:bg-slate-700 hover:bg-slate-300 hover:dark:bg-slate-800 dark:text-white p-4 cursor-pointer flex items-center justify-center`}>
-            <div>
+            className="relative overflow-hidden rounded-lg transition-all duration-300 bg-slate-400 dark:bg-slate-700 hover:bg-slate-300 hover:dark:bg-slate-800 dark:text-whit  cursor-pointer"
+            style={{ width: "60px", height: "60px" }}>
+            <div className=" p-1 text-xs">
               <IoAddCircleSharp
-                size={40}
+                size={20}
                 className="text-slate-900 dark:text-slate-100 group-hover:text-zinc-800"
               />
-            </div>
-            <div
-              className={`text-slate-900 dark:text-slate-100 font-semibold items-center justify-center align-middle ${
-                isOpen ? "text-lg" : "text-sm"
-              }`}>
               Add Story
             </div>
           </div>
           {items}
         </div>
 
+        {storyLargeScreen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-lg mx-auto">
+              <div className="relative rounded-lg transition-all duration-300 h-[calc(100vh-16rem)] w-full">
+                {allStories?.[selectedStoryIndex].mediaType === "image" ? (
+                  <img
+                    src={allStories[selectedStoryIndex].mediaUrl}
+                    alt="Story"
+                    className="object-cover w-full h-full rounded-lg"
+                  />
+                ) : (
+                  <video
+                    src={allStories[selectedStoryIndex].mediaUrl}
+                    controls
+                    autoPlay
+                    muted
+                    className="object-cover w-full h-full rounded-lg"
+                  />
+                )}
+
+                <div className="absolute flex items-center gap-1 top-0 left-0 bg-gray-900 p-2 text-white text-center text-xs font-semibold">
+                  <img
+                    src={allStories[selectedStoryIndex]?.userId?.dp || ""}
+                    className="w-6 h-6 rounded-full"
+                    alt="DP"
+                  />
+                  {allStories[selectedStoryIndex]?.userId?.username ||
+                    "Sample User"}
+                </div>
+                {allStories[selectedStoryIndex].captions && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-slate-900 p-2 text-white text-center break-all">
+                    {allStories[selectedStoryIndex].captions}
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-between m-2">
+                <button
+                  onClick={handlePrevStory}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                  Prev
+                </button>
+                <button
+                  onClick={() => setStoryLargeScreen(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                  Close
+                </button>
+                <button
+                  onClick={handleNextStory}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {showAddStory && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm mx-auto">
-              <p className="text-center mb-4 text-black dark:text-white">Add a new story</p>
+              <p className="text-center mb-4 text-black dark:text-white">
+                Add a new story
+              </p>
               <div className="grid w-full max-w-xs items-center gap-1.5 p-4">
                 <label
                   htmlFor="media"
@@ -198,7 +284,11 @@ const RightSidebar = () => {
                 {mediaUrl && !isCropping && (
                   <div className="mt-2">
                     {mediaFile?.type.startsWith("video") ? (
-                      <video src={mediaUrl} controls className="w-full rounded-md"></video>
+                      <video
+                        src={mediaUrl}
+                        controls
+                        className="w-full rounded-md"
+                      />
                     ) : (
                       <img
                         src={croppedImageUrl || mediaUrl}
@@ -214,16 +304,21 @@ const RightSidebar = () => {
                   name="caption"
                   id="caption"
                   value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                ></textarea>
+                  onChange={e => setCaption(e.target.value)}></textarea>
               </div>
 
               <div className="flex justify-center gap-4 mt-4">
-                <button
-                  onClick={handleAddStory}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
-                  Add Story
-                </button>
+                {loading ? (
+                  <button className="px-4 py-2 bg-red-500 text-white rounded-lg">
+                    Uploading...
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleAddStory}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
+                    Add Story
+                  </button>
+                )}
                 <button
                   onClick={handleCancelStory}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700">
@@ -244,8 +339,8 @@ const RightSidebar = () => {
           />
         )}
       </div>
-    </aside>
+    </div>
   );
 };
 
-export default React.memo(RightSidebar);
+export default React.memo(HomePageRightSidebarMobileView);

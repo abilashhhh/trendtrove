@@ -26,6 +26,7 @@ import { FaHashtag, FaMapMarkedAlt, FaUser } from "react-icons/fa";
 import MentionsHashtagsModal from "../../utils/MentionsHashtagsModal";
 import LikesDislikesModal from "../../utils/LikesDislikesModal";
 import PostsDisplayCommon from "../Post/PostsDisplayCommon";
+import HomePageRightSidebarMobileView from "./HomePageRightSidebarMobileView";
 
 const MiddleContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ const MiddleContainer: React.FC = () => {
         const response = await fetchAllPostsForUser();
         if (response && response.data) {
           setPosts(response.data);
-          setVisiblePosts(response.data.slice(0,start)); // Show first 3 posts initially
+          setVisiblePosts(response.data.slice(0, start)); // Show first 3 posts initially
         } else {
           console.log("No posts of users");
         }
@@ -101,7 +102,7 @@ const MiddleContainer: React.FC = () => {
         ]);
 
         // console.log("Liked posts:", likedResponse);
-        // console.log("Disliked posts:", dislikedResponse);getAllPublicPostsForExplore 
+        // console.log("Disliked posts:", dislikedResponse);getAllPublicPostsForExplore
 
         if (likedResponse) {
           const likedPostsData = likedResponse.likedPosts.reduce(
@@ -195,16 +196,15 @@ const MiddleContainer: React.FC = () => {
     }
   };
 
-
-  const start = 3 + ( page * 3);
-  const end = start + 3 ;
+  const start = 3 + page * 3;
+  const end = start + 3;
   const loadMorePosts = useCallback(() => {
     if (!loading) {
       setLoading(true);
       setTimeout(() => {
         setVisiblePosts(prevVisiblePosts => [
           ...prevVisiblePosts,
-          ...posts.slice(start,end),
+          ...posts.slice(start, end),
         ]);
         setPage(prevPage => prevPage + 1);
         setLoading(false);
@@ -213,7 +213,7 @@ const MiddleContainer: React.FC = () => {
   }, [loading, page, posts]);
 
   const lastPostElementRef = useCallback(
-    (    node: Element) => {
+    (node: Element) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
@@ -229,6 +229,9 @@ const MiddleContainer: React.FC = () => {
   return (
     <main className="flex-1 pt-2 lg:pl-2 lg:pr-0 pb-2  md:pr-0 sm:pr-2 overflow-auto no-scrollbar bg-gray-800 dark:bg-gray-700 text-white items-center justify-center">
       <ToastContainer />
+      <div className="lg:hidden md:hidden">
+        <HomePageRightSidebarMobileView />
+      </div>
 
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar pt-2 sm:pl-4 sm:pr-4 md:pl-12 md:pr-12 lg:pl-36 lg:pr-36 xl:pl-64 xl:pr-64 2xl:pl-96 2xl:pr-96">
         {visiblePosts.length > 0 ? (
@@ -236,8 +239,9 @@ const MiddleContainer: React.FC = () => {
             <div
               key={post._id}
               className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800"
-              ref={visiblePosts.length === index + 1 ? lastPostElementRef : null}
-            >
+              ref={
+                visiblePosts.length === index + 1 ? lastPostElementRef : null
+              }>
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2 cursor-pointer">
                   <img
@@ -249,8 +253,7 @@ const MiddleContainer: React.FC = () => {
                   <div>
                     <p
                       className="font-bold"
-                      onClick={() => navigate(`/profiles/${post.username}`)}
-                    >
+                      onClick={() => navigate(`/profiles/${post.username}`)}>
                       {post.username}
                     </p>
                     {post.location && (
@@ -269,28 +272,24 @@ const MiddleContainer: React.FC = () => {
                 <div className="relative">
                   <button
                     className="focus:outline-none mr-2"
-                    onClick={() => toggleOptions(post._id)}
-                  >
+                    onClick={() => toggleOptions(post._id)}>
                     <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
                   </button>
                   {showOptions === post._id && (
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                       <p
                         onClick={() => navigate(`/profiles/${post.username}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         View Profile
                       </p>
                       <p
                         onClick={() => navigate(`/reportPost/${post._id}`)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Report Post
                       </p>
                       <p
                         onClick={() => handleSavePost(post._id)}
-                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
+                        className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Save Post
                       </p>
                     </div>
@@ -308,8 +307,7 @@ const MiddleContainer: React.FC = () => {
                         ? "text-blue-600"
                         : "text-gray-600 dark:text-gray-400"
                     }`}
-                    onClick={() => handleLike(post._id)}
-                  >
+                    onClick={() => handleLike(post._id)}>
                     {likedPosts[post._id] ? (
                       <AiFillLike
                         title="Like Post"
@@ -328,8 +326,7 @@ const MiddleContainer: React.FC = () => {
                         ? "text-red-600"
                         : "text-gray-600 dark:text-gray-400"
                     }`}
-                    onClick={() => handleDislike(post._id)}
-                  >
+                    onClick={() => handleDislike(post._id)}>
                     {dislikedPosts[post._id] ? (
                       <AiFillDislike
                         title="Disike Post"
@@ -385,8 +382,7 @@ const MiddleContainer: React.FC = () => {
                             ?.likedUsers
                         );
                         setShowingDataLikesDislikes("Liked Users");
-                      }}
-                    >
+                      }}>
                       Likes:{" "}
                       {(likesDislikesData[post._id] &&
                         likesDislikesData[post._id].likesdislikesinfo
@@ -404,8 +400,7 @@ const MiddleContainer: React.FC = () => {
                             ?.dislikedUsers
                         );
                         setShowingDataLikesDislikes("Disliked Users");
-                      }}
-                    >
+                      }}>
                       Dislikes:{" "}
                       {(likesDislikesData[post._id] &&
                         likesDislikesData[post._id].likesdislikesinfo
@@ -420,17 +415,15 @@ const MiddleContainer: React.FC = () => {
         ) : (
           <p>No posts available</p>
         )}
-      </div>  
-      {loading && (
-  <div className="flex items-center justify-center p-4 bg-slate-300 dark:bg-slate-900">
-    <div className="p-3 animate-spin bg-gradient-to-bl from-slate-400 via-slate-700 to-slate-900 w-10 h-10 rounded-full flex items-center justify-center">
-      <div className="rounded-full h-full w-full flex items-center justify-center">
       </div>
-    </div>
-    <p className="text-lg text-blue-500 ml-4">Loading posts...</p>
-  </div>
-)}
-
+      {loading && (
+        <div className="flex items-center justify-center p-4 bg-slate-300 dark:bg-slate-900">
+          <div className="p-3 animate-spin bg-gradient-to-bl from-slate-400 via-slate-700 to-slate-900 w-10 h-10 rounded-full flex items-center justify-center">
+            <div className="rounded-full h-full w-full flex items-center justify-center"></div>
+          </div>
+          <p className="text-lg text-blue-500 ml-4">Loading posts...</p>
+        </div>
+      )}
 
       <MentionsHashtagsModal
         isOpen={showModal}
