@@ -149,9 +149,9 @@ const HomePageRightSidebarMobileView = () => {
           }}
           className="relative overflow-hidden rounded-lg cursor-pointer"
           style={{ width: "60px", height: "60px", marginRight: "2px" }}>
-        <div className="absolute flex items-center gap-1 bottom-0 left-0 bg-gray-900  text-white text-center text-xs font-semibold">
+        <div className="absolute flex items-center gap-1 bottom-0 left-0 bg-gray-900 dark:bg-gray-900  text-white text-center text-xs  p-0.5 font-semibold">
              
-                  {allStories[selectedStoryIndex]?.userId?.username ||
+                  {story?.userId?.username ||
                     "User"}
                 </div>
 
