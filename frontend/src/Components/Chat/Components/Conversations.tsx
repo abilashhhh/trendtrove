@@ -4,6 +4,9 @@ import ConversationItem from "./ConversationItem";
 import { getAllConversations } from "../../../API/Chat/chat";
 import { Message } from "../../../Types/userProfile";
 import useConversation from "../../../Hooks/useConversations";
+import useGetMessages from "../../../Hooks/useGetMessages";
+import useSendMessages from "../../../Hooks/useSendMessages";
+import useListenMessages from "../../../Hooks/useListenMessages";
  
 interface User {
   _id: string;
@@ -31,6 +34,7 @@ const Conversations: React.FC<ConversationsProps> = ({
   activeTab,
 }) => {
   const { selectedConversation } = useConversation(); 
+  const { messages} = useGetMessages(); 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
 
@@ -63,7 +67,7 @@ const Conversations: React.FC<ConversationsProps> = ({
     };
 
     fetchConversations();
-  }, [selectedConversation?._id]); 
+  }, [selectedConversation?._id,  messages ]); 
 
   const usersWithConversations = new Set(
     conversations.map(conv => conv.participants).flat()

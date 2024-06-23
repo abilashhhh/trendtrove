@@ -5,7 +5,7 @@ import useConversation from "../../Hooks/useConversations";
 
 const ChatLeftSidebar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("chats"); // State to track the active tab
+  const [activeTab, setActiveTab] = useState("chats");  
   const { setSelectedConversation } = useConversation();
 
   return (
