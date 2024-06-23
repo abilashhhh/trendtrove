@@ -67,52 +67,56 @@ const RightSidebar = () => {
 
   const handleAddStory = async () => {
     setLoading(true);
-    if (mediaFile) {
-      let mediaUrlToUpload: string | File = mediaFile;
+    if (!mediaFile) {
+      toast.error("Please upload an image or video");
+      setLoading(false);
+      return;
+    }
 
-      if (croppedImageUrl && mediaFile.type.startsWith("image")) {
-        mediaUrlToUpload = croppedImageUrl;
-      } else if (mediaFile.type.startsWith("video")) {
-        mediaUrlToUpload = videoUrl;
-      }
+    let mediaUrlToUpload: string | File = mediaFile;
 
-      try {
-        const response = await upload(
-          mediaUrlToUpload,
-          err => console.error(err),
-          "stories",
-          mediaFile.type.startsWith("image") ? "image" : "video"
-        );
+    if (croppedImageUrl && mediaFile.type.startsWith("image")) {
+      mediaUrlToUpload = croppedImageUrl;
+    } else if (mediaFile.type.startsWith("video")) {
+      mediaUrlToUpload = videoUrl;
+    }
 
-        if (response) {
-          const newStory: Story = {
-            userId: currentUser.id,
-            isHighlighted: false,
-            captions: caption,
-            mediaUrl: response.secure_url,
-            mediaType: mediaFile.type.startsWith("image") ? "image" : "video",
-            viewers: [],
-            viewCount: 0,
-            hiddenFrom: [],
-          };
+    try {
+      const response = await upload(
+        mediaUrlToUpload,
+        err => console.error(err),
+        "stories",
+        mediaFile.type.startsWith("image") ? "image" : "video"
+      );
 
-          const addedStory = await handleAddNewStory(newStory);
-          if (addedStory.status === "success") {
-            toast.success("Story added successfully");
-          } else {
-            toast.error("Error in adding story");
-          }
+      if (response) {
+        const newStory: Story = {
+          userId: currentUser.id,
+          isHighlighted: false,
+          captions: caption,
+          mediaUrl: response.secure_url,
+          mediaType: mediaFile.type.startsWith("image") ? "image" : "video",
+          viewers: [],
+          viewCount: 0,
+          hiddenFrom: [],
+        };
+
+        const addedStory = await handleAddNewStory(newStory);
+        if (addedStory.status === "success") {
+          toast.success("Story added successfully");
+        } else {
+          toast.error("Error in adding story");
         }
-      } catch (error) {
-        toast.error("Error in uploading media");
-        console.error(error);
-      } finally {
-        setLoading(false);
-        setShowAddStory(false);
-        setMediaFile(null);
-        setMediaUrl(null);
-        setCaption("");
       }
+    } catch (error) {
+      toast.error("Error in uploading media");
+      console.error(error);
+    } finally {
+      setLoading(false);
+      setShowAddStory(false);
+      setMediaFile(null);
+      setMediaUrl(null);
+      setCaption("");
     }
   };
 
