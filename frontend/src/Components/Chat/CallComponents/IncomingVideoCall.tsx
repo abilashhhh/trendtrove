@@ -17,7 +17,7 @@ const IncomingVideoCall = () => {
   };
 
   const rejectCall = () => {
-    socket?.emit("reject-video-call", { from: incomingVideoCall.id });
+    socket?.emit("reject-video-call", { from: incomingVideoCall.incomingVideoCall.id });
     dispatch(endCall());
   };
 
@@ -26,7 +26,7 @@ const IncomingVideoCall = () => {
   }
 
   return (
-    <div className="fixed bottom-8 right-6 z-50 flex items-center justify-start p-4 text-white bg-gray-800 rounded-lg shadow-lg border-2 border-gray-700">
+    <div className="fixed bottom-28 right-6 z-50 flex items-center justify-start p-4 text-white bg-gray-800 rounded-lg shadow-lg border-2 border-gray-700">
       <img
         src={incomingVideoCall.incomingVideoCall.dp}
         alt="avatar"
