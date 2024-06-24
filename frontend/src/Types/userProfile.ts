@@ -199,5 +199,6 @@ export interface modesChangingInterface {
 }
 
 export interface generateZegoTokenInterface {
+  generateZegoTokenResult: any;
   token: string;
 }

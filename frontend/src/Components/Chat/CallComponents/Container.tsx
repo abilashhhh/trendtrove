@@ -231,7 +231,7 @@ const Container: React.FC<ContainerProps> = ({ data }) => {
     const getToken = async () => {
       try {
         const result = await generateZegoToken();
-        const returnedToken = result?.token;
+        const returnedToken = result?.generateZegoTokenResult;
         setToken(returnedToken);
       } catch (error) {
         console.log("error in getToken:", error);
@@ -241,12 +241,12 @@ const Container: React.FC<ContainerProps> = ({ data }) => {
   }, [callAccepted]);
 
   useEffect(() => {
-    const appId = import.meta.env.VITE_ZEGO_CLOUD_APP_ID as unknown as number;
+    const appId = import.meta.env.VITE_ZEGO_CLOUD_APP_ID as number;
     const serverSecret = import.meta.env.VITE_ZEGO_CLOUD_SERVER_SECRET as string;
 
     const startCall = async () => {
       const { ZegoExpressEngine } = await import("zego-express-engine-webrtc");
-      const zg = new ZegoExpressEngine(appId, serverSecret);
+      const zg = new ZegoExpressEngine(parseInt(appId), serverSecret);
       setZgVar(zg);
 
       zg?.on(
