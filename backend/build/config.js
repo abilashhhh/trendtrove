@@ -13,5 +13,7 @@ const configurationKeys = {
     MAIL_USERNAME: process.env.MAIL_USERNAME,
     MAIL_PASSWORD: process.env.MAIL_PASSWORD,
     CLIENT_URL: process.env.CLIENT_URL,
+    ZEGO_CLOUD_APP_ID: parseInt(process.env.ZEGO_CLOUD_APP_ID),
+    ZEGO_CLOUD_SERVER_SECRET: process.env.ZEGO_CLOUD_SERVER_SECRET,
 };
 exports.default = configurationKeys;

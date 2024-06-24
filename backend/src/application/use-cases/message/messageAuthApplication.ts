@@ -1,4 +1,6 @@
+import configurationKeys from "../../../config";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
+import { generateToken04 } from "../../../utils/zegoTokenGenerator";
 import { MessageDBInterface } from "../../repositories/MessageDBRepository";
 
 export const handleSendMessage = async (
@@ -157,6 +159,34 @@ export const handleGetFriendsInfo = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to get the friends info", 500);
+  }
+};
+
+
+export const handleGenerateZegoToken = async (userId: string) => {
+  try {
+    const appId = configurationKeys.ZEGO_CLOUD_APP_ID
+    const serverSecret = configurationKeys.ZEGO_CLOUD_SERVER_SECRET
+    const effectiveTime = 3600
+    const payload =""
+    if(appId && serverSecret && userId){
+      const token = generateToken04(
+        appId,
+        userId,
+        serverSecret,
+        effectiveTime,
+        payload
+      )
+      return token
+    }
+    
+ 
+  } catch (error) {
+    console.error("Error in handleGenerateZegoToken:", error);
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to handleGenerateZegoToken", 500);
   }
 };
 

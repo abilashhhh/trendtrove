@@ -12,8 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleGetFriendsInfo = exports.handleGetAllConverations = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessageOnly = exports.handleSendMessage = void 0;
+exports.handleGenerateZegoToken = exports.handleGetFriendsInfo = exports.handleGetAllConverations = exports.handleGetMessage = exports.handleDeleteMessage = exports.handleEditMessage = exports.handleSendMessageOnly = exports.handleSendMessage = void 0;
+const config_1 = __importDefault(require("../../../config"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
+const zegoTokenGenerator_1 = require("../../../utils/zegoTokenGenerator");
 const handleSendMessage = (senderId, receiverId, message, mediaUrl, fileType, dbMessageRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sendMessage = yield dbMessageRepository.sendMessage(senderId, receiverId, message, mediaUrl, fileType);
@@ -120,3 +122,23 @@ const handleGetFriendsInfo = (userId, dbMessageRepository) => __awaiter(void 0, 
     }
 });
 exports.handleGetFriendsInfo = handleGetFriendsInfo;
+const handleGenerateZegoToken = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const appId = config_1.default.ZEGO_CLOUD_APP_ID;
+        const serverSecret = config_1.default.ZEGO_CLOUD_SERVER_SECRET;
+        const effectiveTime = 3600;
+        const payload = "";
+        if (appId && serverSecret && userId) {
+            const token = (0, zegoTokenGenerator_1.generateToken04)(appId, userId, serverSecret, effectiveTime, payload);
+            return token;
+        }
+    }
+    catch (error) {
+        console.error("Error in handleGenerateZegoToken:", error);
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to handleGenerateZegoToken", 500);
+    }
+});
+exports.handleGenerateZegoToken = handleGenerateZegoToken;

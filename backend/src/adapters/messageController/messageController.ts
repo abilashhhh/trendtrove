@@ -6,7 +6,7 @@ import { UserDBInterface } from "../../application/repositories/userDBRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
 import { PostDBInterface } from "../../application/repositories/postDBRepository";
-import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage, handleSendMessageOnly, handleGetAllConverations } from "../../application/use-cases/message/messageAuthApplication";
+import { handleSendMessage, handleGetMessage, handleGetFriendsInfo, handleEditMessage, handleDeleteMessage, handleSendMessageOnly, handleGetAllConverations, handleGenerateZegoToken } from "../../application/use-cases/message/messageAuthApplication";
 import { MessagesRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/messageRepositoryDatabase";
 import { MessageDBInterface } from "../../application/repositories/MessageDBRepository";
 
@@ -155,6 +155,12 @@ const messageController = (
     });
   });
 
+  const generateZegoToken = asyncHandler(async(req:Request , res :Response ) => {
+    const { userId }: { userId: string } = req.body;  
+    const generateZegoTokenResult = await handleGenerateZegoToken(userId);
+    res.status(200).json({ generateZegoTokenResult });
+  })
+
   return {
     sendMessage,
     sendMessageOnly,
@@ -162,7 +168,8 @@ const messageController = (
     getAllConverations,
     getFriendsInfo,
     editMessage,
-    deleteMessage
+    deleteMessage,
+    generateZegoToken
   };
 };
 

@@ -24,6 +24,7 @@ const messageRoutes = () => {
     router.get("/getfriendsinfo", authMiddleware_1.default, controller.getFriendsInfo);
     router.patch("/editmessage/:messageId", authMiddleware_1.default, controller.editMessage);
     router.patch("/deletemessage/:messageId", authMiddleware_1.default, controller.deleteMessage);
+    router.get("/generatezegotoken", authMiddleware_1.default, controller.generateZegoToken);
     return router;
 };
 exports.default = messageRoutes;

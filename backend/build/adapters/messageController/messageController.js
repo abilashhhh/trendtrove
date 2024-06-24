@@ -99,6 +99,11 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
             data: getMessageResult,
         });
     }));
+    const generateZegoToken = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const generateZegoTokenResult = yield (0, messageAuthApplication_1.handleGenerateZegoToken)(userId);
+        res.status(200).json({ generateZegoTokenResult });
+    }));
     return {
         sendMessage,
         sendMessageOnly,
@@ -106,7 +111,8 @@ const messageController = (userDBRepositoryImplementation, userDBRepositoryInter
         getAllConverations,
         getFriendsInfo,
         editMessage,
-        deleteMessage
+        deleteMessage,
+        generateZegoToken
     };
 };
 exports.default = messageController;

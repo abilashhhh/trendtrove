@@ -4,6 +4,7 @@ import END_POINTS from "../../Constants/endpoints";
 import {
   GetMessageInterface,
   GetUserInfoResponse,
+  generateZegoTokenInterface,
   sendMessageInterface,
 } from "../../Types/userProfile";
 
@@ -89,12 +90,11 @@ export const getMessagesFromUser = async (
   }
 };
 
-
-
-export const getAllConversations = async (
-): Promise<GetMessageInterface> => {
+export const getAllConversations = async (): Promise<GetMessageInterface> => {
   try {
-    const response = await axiosUserInstance.get<GetMessageInterface>(END_POINTS.GET_ALL_CONVERSATIONS);
+    const response = await axiosUserInstance.get<GetMessageInterface>(
+      END_POINTS.GET_ALL_CONVERSATIONS
+    );
     // console.log("response of getAllConversations", response.data.data);
     return response.data;
   } catch (error) {
@@ -102,8 +102,6 @@ export const getAllConversations = async (
     throw error;
   }
 };
-
- 
 
 export const updateMessage = async (
   messageId: string,
@@ -127,10 +125,21 @@ export const deleteMessage = async (
 ): Promise<sendMessageInterface> => {
   try {
     // console.log(messageId);
-
     const response = await axiosUserInstance.patch<sendMessageInterface>(
       `${END_POINTS.DELETE_MESSAGES.replace(":messageId", messageId)}`
     );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const generateZegoToken = async (
+): Promise<generateZegoTokenInterface> => {
+  try {
+    const response = await axiosUserInstance.get<generateZegoTokenInterface>(END_POINTS.GENERATE_ZEGO_TOKEN);
+    console.log("Response:  ", response.data)
     return response.data;
   } catch (error) {
     handleAxiosError(error);

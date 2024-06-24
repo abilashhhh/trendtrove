@@ -197,3 +197,7 @@ export interface modesChangingInterface {
   status: string;
   message: string;
 }
+
+export interface generateZegoTokenInterface {
+  token: string;
+}
