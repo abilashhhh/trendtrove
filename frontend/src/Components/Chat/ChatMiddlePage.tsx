@@ -5,7 +5,7 @@ import ChatLeftSidebar from "./ChatLeftSidebar";
 import { FaComments } from "react-icons/fa";
 import useConversation from "../../Hooks/useConversations";
 import ChatInnerMain from "./ChatInnerMain";
-
+ 
 const ChatMiddlePage: React.FC = () => {
   const { selectedConversation, setSelectedConversation } = useConversation();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -14,11 +14,8 @@ const ChatMiddlePage: React.FC = () => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 768);
     };
-
     handleResize();
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -36,7 +33,7 @@ const ChatMiddlePage: React.FC = () => {
     <>
       <ToastContainer />
       <main className="flex-1 pt-2 pr-2 lg:pl-2 lg:pb-2 pb-1 bg-gray-800 dark:bg-gray-700 text-black dark:text-white">
-        <div className="p-2  rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
+        <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 h-full">
           <div className="flex flex-col md:flex-row gap-1 h-full overflow-auto no-scrollbar">
             <div
               className={`w-full md:w-1/3 lg:w-1/4 ${

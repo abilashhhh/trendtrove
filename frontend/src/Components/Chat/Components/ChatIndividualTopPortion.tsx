@@ -5,13 +5,16 @@ import { useSocketContext } from "../../../Context/SocketContext";
 import { IoIosCall } from "react-icons/io";
 import { RxDotsVertical } from "react-icons/rx";
 import { MdVideoCall } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { setVideoCall, setVoiceCall } from "../../../Redux/ChatAuthSlice/chatSlice";
 
 const ChatIndividualTopPortion = () => {
+  const dispatch = useDispatch()
   const { selectedConversation, setSelectedConversation } = useConversation();
   const [displayOptions, setDisplayOptions] = useState(false);
   const optionsRef = useRef(null);
 
-  const handleClickOutside = (event: { target: any; }) => {
+  const handleClickOutside = (event: { target: any }) => {
     if (optionsRef.current && !optionsRef.current.contains(event.target)) {
       setDisplayOptions(false);
     }
@@ -33,6 +36,31 @@ const ChatIndividualTopPortion = () => {
     setDisplayOptions(!displayOptions);
   };
 
+  const handleVoiceCall = () => {
+    console.log("Handle voice call")
+
+    dispatch(
+      setVoiceCall({
+        ...selectedConversation,
+        type: "out-going",
+        callType: "voice",
+        roomId: Date.now(),
+      })
+    );
+  };
+
+  const handleVideoCall = () => {
+    console.log("Handle video  call")
+    dispatch(
+      setVideoCall({
+        ...selectedConversation,
+        type: "out-going",
+        callType: "video",
+        roomId: Date.now(),
+      })
+    );
+  };
+  
   const handleBackClick = () => {
     setSelectedConversation(null);
   };
@@ -72,30 +100,31 @@ const ChatIndividualTopPortion = () => {
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        <IoIosCall className="text-2xl text-gray-900 dark:text-gray-100 cursor-pointer" />
-        <MdVideoCall className="text-2xl text-gray-900 dark:text-gray-100 cursor-pointer" />
+        <IoIosCall onClick={handleVoiceCall}  className="text-2xl text-gray-900 dark:text-gray-100 cursor-pointer" />
+        <MdVideoCall onClick={handleVideoCall} className="text-2xl text-gray-900 dark:text-gray-100 cursor-pointer" />
         <RxDotsVertical
           onClick={toggleDisplayOptions}
-        
           className="text-2xl text-gray-900 dark:text-gray-100 cursor-pointer"
         />
       </div>
 
       {displayOptions && (
-        <div ref={optionsRef} className="absolute right-2 top-16 z-30 mt-2 w-48 bg-slate-200 dark:bg-slate-700 p-2 rounded-lg shadow-lg">
+        <div
+          ref={optionsRef}
+          className="absolute right-2 top-16 z-30 mt-2 w-48 bg-slate-200 dark:bg-slate-700 p-2 rounded-lg shadow-lg">
           <div className="flex flex-col space-y-2">
             <div className="cursor-pointer p-2 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md">
-           Clear Chat
+              Clear Chat
             </div>
 
             <div className="cursor-pointer p-2 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md">
               Block User
             </div>
             <div className="cursor-pointer p-2 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md">
-             Mute Notifications
+              Mute Notifications
             </div>
             <div className="cursor-pointer p-2 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md">
-             Unmute Notifications
+              Unmute Notifications
             </div>
           </div>
         </div>

@@ -149,11 +149,13 @@ const HomePageRightSidebarMobileView = () => {
           }}
           className="relative overflow-hidden rounded-lg cursor-pointer"
           style={{ width: "60px", height: "60px", marginRight: "2px" }}>
-        <div className="absolute flex items-center gap-1 bottom-0 left-0 bg-gray-900 dark:bg-gray-900  text-white text-center text-xs  p-0.5 font-semibold">
-             
-                  {story?.userId?.username ||
-                    "User"}
-                </div>
+          <div className="absolute flex gap-1 bottom-0 items-center text-center bg-gray-900 dark:bg-gray-700  w-full text-white   text-xs  p-0.5 font-semibold">
+      
+            <p className=" animate-marquee ">
+
+            {story?.userId?.username || "User"}
+            </p>
+          </div>
 
           {story.mediaType === "image" && (
             <img
@@ -190,12 +192,12 @@ const HomePageRightSidebarMobileView = () => {
 
   return (
     <div className="w-full h-25 flex flex-row bg-gray-800 dark:bg-gray-700 mb-1 -mt-1 overflow-auto">
-      <div className="flex items-center flex-row p-2 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full w-full overflow-x-auto no-scrollbar">
+      <div className="flex items-center flex-row p-1 rounded-lg bg-gray-200 dark:bg-gray-900 text-black dark:text-white h-full w-full overflow-x-auto no-scrollbar">
         <div className="flex gap-2">
           <div
             className="relative overflow-hidden rounded-lg transition-all duration-300 bg-slate-400 dark:bg-slate-700 hover:bg-slate-300 hover:dark:bg-slate-800 dark:text-whit  cursor-pointer"
             style={{ width: "60px", height: "60px" }}>
-            <div className=" p-1 text-xs">
+            <div className=" p-1 text-xs" onClick={() => setShowAddStory(true)}>
               <IoAddCircleSharp
                 size={20}
                 className="text-slate-900 dark:text-slate-100 group-hover:text-zinc-800"
