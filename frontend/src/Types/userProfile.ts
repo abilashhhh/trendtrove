@@ -5,6 +5,8 @@ export interface GetUserInfoResponse {
 }
 
 export interface UserInfo {
+  _id: any;
+  id: any;
   // userId:string
   name: string;
   username?: string;

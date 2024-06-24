@@ -13,14 +13,14 @@ const Container = ({ data }) => {
   const { socket } = useSocketContext();
   const [callAccepted, setCallAccepted] = useState(false);
 
-  const endCallFun  = () => {
-    console.log("End call fun called.. ")
-    dispatch(endCall())
-  }
+  const endCallFun = () => {
+    console.log("End call fun called.. ");
+    dispatch(endCall());
+  };
 
   return (
     <>
-      <div className="border border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white">
+      <div className="p-2 w-full bg-slate-800 flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white">
         <div className="flex flex-col gap-3 items-center">
           <span className="text-5xl">{data.name}</span>
           <span className="text-lg">
@@ -42,8 +42,10 @@ const Container = ({ data }) => {
           </div>
         )}
 
-        <div className="h-16 w-16 bg-red-600 flex items-center justify-center rounded-full">
-          <MdOutlineCallEnd className="text-3xl cursor-pointer" onClick={endCallFun}/>
+        <div
+          onClick={endCallFun}
+          className="h-16 w-16 bg-red-600 flex items-center justify-center rounded-full">
+          <MdOutlineCallEnd className="text-3xl cursor-pointer" />
         </div>
       </div>
     </>

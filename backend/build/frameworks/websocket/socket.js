@@ -38,7 +38,56 @@ const socket = (io) => {
             const receiverSocketId = (0, exports.getReceiverSocketId)(receiverId);
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit("newMessage", { senderId, message });
-                io.to(receiverSocketId).emit("getNotification", { senderId, isRead: false, date: new Date(), message });
+                io.to(receiverSocketId).emit("getNotification", {
+                    senderId,
+                    isRead: false,
+                    date: new Date(),
+                    message,
+                });
+            }
+        });
+        socket.on("outgoing-voice-call", data => {
+            console.log("outgoing voice call , data: ", data === null || data === void 0 ? void 0 : data.to);
+            const sendUserSocket = (0, exports.getReceiverSocketId)(data.to);
+            if (sendUserSocket) {
+                socket.to(sendUserSocket).emit("incoming-voice-call", {
+                    from: data.from,
+                    roomId: data.roomId,
+                    callType: data.callType,
+                });
+            }
+        });
+        socket.on("outgoing-video-call", data => {
+            const sendUserSocket = (0, exports.getReceiverSocketId)(data.to);
+            console.log("outgoing video call , data: ", data === null || data === void 0 ? void 0 : data.to);
+            console.log("sendUserSocket: ", sendUserSocket);
+            if (sendUserSocket) {
+                socket.to(sendUserSocket).emit("incoming-video-call", {
+                    from: data.from,
+                    roomId: data.roomId,
+                    callType: data.callType,
+                });
+            }
+        });
+        socket.on("reject-video-call", data => {
+            console.log("reject-video call , data: ", data);
+            const sendUserSocket = (0, exports.getReceiverSocketId)(data.from);
+            if (sendUserSocket) {
+                socket.to(sendUserSocket).emit("video-call-rejected");
+            }
+        });
+        socket.on("reject-voice-call", data => {
+            console.log("reject-voice call , data: ", data);
+            const sendUserSocket = (0, exports.getReceiverSocketId)(data.from);
+            if (sendUserSocket) {
+                socket.to(sendUserSocket).emit("voice-call-rejected");
+            }
+        });
+        socket.on("accept-incoming-call", ({ id }) => {
+            console.log("accept-incoming call , id: ", id);
+            const sendUserSocket = (0, exports.getReceiverSocketId)(id);
+            if (sendUserSocket) {
+                socket.to(sendUserSocket).emit("accept-call");
             }
         });
     });
