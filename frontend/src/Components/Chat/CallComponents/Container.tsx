@@ -3,6 +3,8 @@ import useConversation from "../../../Hooks/useConversations";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import { useSocketContext } from "../../../Context/SocketContext";
 import { useDispatch } from "react-redux";
+import { MdOutlineCallEnd } from "react-icons/md";
+import { endCall } from "../../../Redux/ChatAuthSlice/chatSlice";
 
 const Container = ({ data }) => {
   const dispatch = useDispatch();
@@ -10,6 +12,12 @@ const Container = ({ data }) => {
   const currentUser = useUserDetails();
   const { socket } = useSocketContext();
   const [callAccepted, setCallAccepted] = useState(false);
+
+  const endCallFun  = () => {
+    console.log("End call fun called.. ")
+    dispatch(endCall())
+  }
+
   return (
     <>
       <div className="border border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white">
@@ -33,6 +41,10 @@ const Container = ({ data }) => {
             />
           </div>
         )}
+
+        <div className="h-16 w-16 bg-red-600 flex items-center justify-center rounded-full">
+          <MdOutlineCallEnd className="text-3xl cursor-pointer" onClick={endCallFun}/>
+        </div>
       </div>
     </>
   );
