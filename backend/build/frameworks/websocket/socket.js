@@ -75,6 +75,7 @@ const socket = (io) => {
         socket.on("reject-video-call", data => {
             console.log("reject-video call , data: ", data);
             const sendUserSocket = (0, exports.getReceiverSocketId)(data.from);
+            console.log("Send user socket , reject-video-call : ", sendUserSocket);
             if (sendUserSocket) {
                 socket.to(sendUserSocket).emit("video-call-rejected");
             }
@@ -82,6 +83,7 @@ const socket = (io) => {
         socket.on("reject-voice-call", data => {
             console.log("reject-voice call , data: ", data);
             const sendUserSocket = (0, exports.getReceiverSocketId)(data.from);
+            console.log("Send user socket,reject-voice-call: ", sendUserSocket);
             if (sendUserSocket) {
                 socket.to(sendUserSocket).emit("voice-call-rejected");
             }

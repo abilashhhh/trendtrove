@@ -25,7 +25,9 @@ const ChatInnerMain: React.FC = () => {
     const handleIncomingVoiceCall = ({ from, roomId, callType }) => {
       dispatch(
         setIncomingVoiceCall({
-          incomingVoiceCall: { ...from, roomId, callType },
+          ...from,
+          roomId,
+          callType,
         })
       );
     };
@@ -34,7 +36,9 @@ const ChatInnerMain: React.FC = () => {
       console.log("Incoming video call from:", from);
       dispatch(
         setIncomingVideoCall({
-          incomingVideoCall: { ...from, roomId, callType },
+          ...from,
+          roomId,
+          callType,
         })
       );
     };
@@ -62,8 +66,8 @@ const ChatInnerMain: React.FC = () => {
 
   return (
     <>
-      {incomingVideoCall && <IncomingVideoCall />}
-      {incomingVoiceCall && <IncomingVoiceCall />}
+      {!videoCall && !voiceCall && incomingVideoCall && <IncomingVideoCall />}
+      {!voiceCall && !videoCall && incomingVoiceCall && <IncomingVoiceCall />}
 
       {videoCall && (
         <div className="h-full w-full max-h-full overflow-hidden">

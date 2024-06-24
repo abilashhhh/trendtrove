@@ -165,7 +165,7 @@ export const messageRepositoryMongoDB = () => {
         return [];
       }
 
-      console.log(conversation.messages);
+      // console.log(conversation.messages);
 
       return conversation.messages;
     } catch (error: any) {
@@ -184,7 +184,7 @@ export const messageRepositoryMongoDB = () => {
         return [];
       }
 
-      console.log("getAllConversations: ", conversations);
+      // console.log("getAllConversations: ", conversations);
       return conversations;
     } catch (error: any) {
       console.error("Error in getAllConversations:", error.message);

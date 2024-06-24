@@ -137,7 +137,7 @@ const messageRepositoryMongoDB = () => {
             if (!conversation) {
                 return [];
             }
-            console.log(conversation.messages);
+            // console.log(conversation.messages);
             return conversation.messages;
         }
         catch (error) {
@@ -153,7 +153,7 @@ const messageRepositoryMongoDB = () => {
             if (!conversations || conversations.length === 0) {
                 return [];
             }
-            console.log("getAllConversations: ", conversations);
+            // console.log("getAllConversations: ", conversations);
             return conversations;
         }
         catch (error) {

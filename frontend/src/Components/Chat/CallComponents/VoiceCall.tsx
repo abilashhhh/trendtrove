@@ -10,16 +10,16 @@ const VoiceCall = () => {
   const { socket } = useSocketContext();
   const { voiceCall } = useSelector((state: RootState) => state.chat);
   const currentUser = useUserDetails();
-  console.log("Current user: ", currentUser)
+  console.log("Current user: ", currentUser);
 
   useEffect(() => {
     if (voiceCall.type === "out-going") {
       socket?.emit("outgoing-voice-call", {
         to: voiceCall._id,
         from: {
-          id: currentUser._id, 
+          id: currentUser._id,
           username: currentUser.username,
-          dp: currentUser.dp ,
+          dp: currentUser.dp,
         },
         callType: voiceCall.callType,
         roomId: voiceCall.roomId,

@@ -40,7 +40,7 @@ export const SocketContextProvider: React.FC<SocketContextProviderProps> = ({ ch
   const [typing, setTyping] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
-  console.log("Notifications: ", notifications);
+  // console.log("Notifications: ", notifications);
 
   useEffect(() => {
     if (currentUser) {

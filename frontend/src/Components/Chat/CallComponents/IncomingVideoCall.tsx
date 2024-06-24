@@ -1,7 +1,7 @@
 import React from "react";
 import { RootState } from "../../../Redux/Store/reduxStore";
 import { useDispatch, useSelector } from "react-redux";
-import { endCall } from "../../../Redux/ChatAuthSlice/chatSlice";  
+import { endCall, setIncomingVideoCall, setVideoCall } from "../../../Redux/ChatAuthSlice/chatSlice";  
 import { useSocketContext } from "../../../Context/SocketContext";  
 
 const IncomingVideoCall = () => {
@@ -12,30 +12,29 @@ const IncomingVideoCall = () => {
   console.log("Incomming video call :", incomingVideoCall)
 
   const acceptCall = () => {
-    // socket.emit("accept-incoming-call", { id: incomingVideoCall.id });
-    // Additional logic for accepting the call
+    dispatch(setVideoCall({...incomingVideoCall ,type:"in-coming" }))
+    socket?.emit("accept-incoming-call", { id: incomingVideoCall.id });
+    dispatch(setIncomingVideoCall({incomingVideoCall:undefined}))
   };
 
   const rejectCall = () => {
-    socket?.emit("reject-video-call", { from: incomingVideoCall.incomingVideoCall.id });
+    socket?.emit("reject-video-call", { from: incomingVideoCall.id });
     dispatch(endCall());
   };
 
-  if (!incomingVideoCall) {
-    return null;
-  }
+ 
 
   return (
     <div className="fixed bottom-28 right-6 z-50 flex items-center justify-start p-4 text-white bg-gray-800 rounded-lg shadow-lg border-2 border-gray-700">
       <img
-        src={incomingVideoCall.incomingVideoCall.dp}
+        src={incomingVideoCall.dp}
         alt="avatar"
         width={70}
         height={70}
         className="rounded-full mr-4"
       />
       <div className="flex-grow">
-        <div className="font-bold">{incomingVideoCall.incomingVideoCall.username}</div>
+        <div className="font-bold">{incomingVideoCall.username}</div>
         <div className="text-xs">Incoming Video Call</div>
       </div>
       <div className="flex gap-2 ml-4">

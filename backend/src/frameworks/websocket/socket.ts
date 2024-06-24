@@ -61,9 +61,9 @@ const socket = (io: Server<DefaultEventsMap>) => {
     socket.on("outgoing-voice-call", data => {
       console.log("outgoing voice call , data to: ", data?.to);
       console.log("outgoing voice call , data: ", data);
-      
+
       const sendUserSocket = getReceiverSocketId(data.to);
-      console.log("sendUserSocket: ", sendUserSocket);    
+      console.log("sendUserSocket: ", sendUserSocket);
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("incoming-voice-call", {
           from: data.from,
@@ -77,7 +77,7 @@ const socket = (io: Server<DefaultEventsMap>) => {
       const sendUserSocket = getReceiverSocketId(data.to);
       console.log("outgoing video call , data to: ", data?.to);
       console.log("outgoing video call , data: ", data);
-      console.log("sendUserSocket: ", sendUserSocket);  
+      console.log("sendUserSocket: ", sendUserSocket);
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("incoming-video-call", {
           from: data.from,
@@ -91,6 +91,8 @@ const socket = (io: Server<DefaultEventsMap>) => {
       console.log("reject-video call , data: ", data);
 
       const sendUserSocket = getReceiverSocketId(data.from);
+      console.log("Send user socket , reject-video-call : ", sendUserSocket);
+
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("video-call-rejected");
       }
@@ -99,6 +101,7 @@ const socket = (io: Server<DefaultEventsMap>) => {
     socket.on("reject-voice-call", data => {
       console.log("reject-voice call , data: ", data);
       const sendUserSocket = getReceiverSocketId(data.from);
+      console.log("Send user socket,reject-voice-call: ", sendUserSocket);
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("voice-call-rejected");
       }

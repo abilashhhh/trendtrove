@@ -32,38 +32,38 @@
 import React from "react";
 import { RootState } from "../../../Redux/Store/reduxStore";
 import { useDispatch, useSelector } from "react-redux";
-import { endCall } from "../../../Redux/ChatAuthSlice/chatSlice";  
+import { endCall, setIncomingVoiceCall, setVoiceCall } from "../../../Redux/ChatAuthSlice/chatSlice";  
 import { useSocketContext } from "../../../Context/SocketContext"; 
 const IncomingVoiceCall = () => {
   const dispatch = useDispatch();
   const { socket } = useSocketContext();
   const { incomingVoiceCall } = useSelector((state: RootState) => state.chat);
 
+  
+ 
   const acceptCall = () => {
-    // socket?.emit("accept-incoming-call", { id: incomingVoiceCall.id });
-    // Additional logic for accepting the call
+    dispatch(setVoiceCall({...incomingVoiceCall ,type:"in-coming" }))
+    socket?.emit("accept-incoming-call", { id: incomingVoiceCall.id });
+    dispatch(setIncomingVoiceCall({incomingVoiceCall:undefined}))
   };
 
   const rejectCall = () => {
-    socket?.emit("reject-voice-call", { from: incomingVoiceCall.incomingVoiceCall.id });
+    socket?.emit("reject-voice-call", { from: incomingVoiceCall.id });
     dispatch(endCall());
   };
 
-  if (!incomingVoiceCall) {
-    return null;
-  }
 
   return (
     <div className="fixed bottom-28 right-6 z-50 flex items-center justify-start p-4 text-white bg-gray-800 rounded-lg shadow-lg border-2 border-gray-700">
       <img
-        src={incomingVoiceCall.incomingVoiceCall.dp}
+        src={incomingVoiceCall.dp}
         alt="avatar"
         width={70}
         height={70}
         className="rounded-full mr-4"
       />
       <div className="flex-grow">
-        <div className="font-bold">{incomingVoiceCall.incomingVoiceCall.username}</div>
+        <div className="font-bold">{incomingVoiceCall.username}</div>
         <div className="text-xs">Incoming Voice Call</div>
       </div>
       <div className="flex gap-2 ml-4">
