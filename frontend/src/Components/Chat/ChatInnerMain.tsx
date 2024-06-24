@@ -31,6 +31,7 @@ const ChatInnerMain: React.FC = () => {
     };
 
     const handleIncomingVideoCall = ({ from, roomId, callType }) => {
+      console.log("Incoming video call from:", from);
       dispatch(
         setIncomingVideoCall({
           incomingVideoCall: { ...from, roomId, callType },
@@ -50,6 +51,13 @@ const ChatInnerMain: React.FC = () => {
     socket?.on("incoming-video-call", handleIncomingVideoCall);
     socket?.on("voice-call-rejected", handleRejectVoiceCall);
     socket?.on("video-call-rejected", handleRejectVideoCall);
+
+    return () => {
+      socket?.off("incoming-voice-call", handleIncomingVoiceCall);
+      socket?.off("incoming-video-call", handleIncomingVideoCall);
+      socket?.off("voice-call-rejected", handleRejectVoiceCall);
+      socket?.off("video-call-rejected", handleRejectVideoCall);
+    };
   }, [socket, dispatch]);
 
   return (
@@ -68,6 +76,7 @@ const ChatInnerMain: React.FC = () => {
           <VoiceCall />
         </div>
       )}
+
       {!videoCall && !voiceCall && (
         <div className="flex-grow p-1 lg:p-2 h-full bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col">
           <ChatIndividualTopPortion />

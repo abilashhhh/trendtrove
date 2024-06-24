@@ -47,8 +47,10 @@ const socket = (io) => {
             }
         });
         socket.on("outgoing-voice-call", data => {
-            console.log("outgoing voice call , data: ", data === null || data === void 0 ? void 0 : data.to);
+            console.log("outgoing voice call , data to: ", data === null || data === void 0 ? void 0 : data.to);
+            console.log("outgoing voice call , data: ", data);
             const sendUserSocket = (0, exports.getReceiverSocketId)(data.to);
+            console.log("sendUserSocket: ", sendUserSocket);
             if (sendUserSocket) {
                 socket.to(sendUserSocket).emit("incoming-voice-call", {
                     from: data.from,
@@ -59,7 +61,8 @@ const socket = (io) => {
         });
         socket.on("outgoing-video-call", data => {
             const sendUserSocket = (0, exports.getReceiverSocketId)(data.to);
-            console.log("outgoing video call , data: ", data === null || data === void 0 ? void 0 : data.to);
+            console.log("outgoing video call , data to: ", data === null || data === void 0 ? void 0 : data.to);
+            console.log("outgoing video call , data: ", data);
             console.log("sendUserSocket: ", sendUserSocket);
             if (sendUserSocket) {
                 socket.to(sendUserSocket).emit("incoming-video-call", {

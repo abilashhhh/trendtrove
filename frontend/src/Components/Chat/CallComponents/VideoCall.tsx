@@ -16,15 +16,15 @@ const VideoCall = () => {
       socket?.emit("outgoing-video-call", {
         to: videoCall._id,
         from: {
-          id: currentUser?._id, // maybe id or _id check that
-          dp: currentUser?.dp,
-          name: currentUser?.name,
+          id: currentUser._id,  
+          username: currentUser.username,
+          dp: currentUser.dp,
         },
         callType: videoCall.callType,
         roomId: videoCall.roomId,
       });
     }
-  }, [videoCall]);
+  }, [videoCall, currentUser, socket]);
 
   return (
     <div>

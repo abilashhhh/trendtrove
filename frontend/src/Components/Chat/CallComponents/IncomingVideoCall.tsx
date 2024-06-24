@@ -1,27 +1,58 @@
 import React from "react";
 import { RootState } from "../../../Redux/Store/reduxStore";
 import { useDispatch, useSelector } from "react-redux";
+import { endCall } from "../../../Redux/ChatAuthSlice/chatSlice";  
+import { useSocketContext } from "../../../Context/SocketContext";  
 
 const IncomingVideoCall = () => {
   const dispatch = useDispatch();
+  const { socket } = useSocketContext();
   const { incomingVideoCall } = useSelector((state: RootState) => state.chat);
 
-  const acceptCall = () => {};
+  console.log("Incomming video call :", incomingVideoCall)
 
-  const rejectCall = () => {};
+  const acceptCall = () => {
+    // socket.emit("accept-incoming-call", { id: incomingVideoCall.id });
+    // Additional logic for accepting the call
+  };
+
+  const rejectCall = () => {
+    socket?.emit("reject-video-call", { from: incomingVideoCall.id });
+    dispatch(endCall());
+  };
+
+  if (!incomingVideoCall) {
+    return null;
+  }
 
   return (
-    <>
-      <div className="h-24 w-80 fixed bottom-8 mb-0 right-6 z-50 rounded-smflex gap-5 items-center justify-start p-4 text-white drop-shadow-2xl border-2 ">
-        <div><img src={incomingVideoCall.dp} alt="avatar" width={70} height={70} className="rounded-full"/></div>
-        <div>{incomingVideoCall.name}</div>
+    <div className="fixed bottom-8 right-6 z-50 flex items-center justify-start p-4 text-white bg-gray-800 rounded-lg shadow-lg border-2 border-gray-700">
+      <img
+        src={incomingVideoCall.incomingVideoCall.dp}
+        alt="avatar"
+        width={70}
+        height={70}
+        className="rounded-full mr-4"
+      />
+      <div className="flex-grow">
+        <div className="font-bold">{incomingVideoCall.incomingVideoCall.username}</div>
         <div className="text-xs">Incoming Video Call</div>
-        <div className="flex gap-2 mt-2">
-            <button className="bg-red-500 p-1 px-3 text-small rounded-full" onClick={rejectCall}>Reject</button>
-            <button className="bg-green-500 p-1 px-3 text-small rounded-full" onClick={acceptCall}>Accept</button>
-        </div>
       </div>
-    </>
+      <div className="flex gap-2 ml-4">
+        <button
+          className="bg-red-500 p-2 rounded-full focus:outline-none hover:bg-red-700"
+          onClick={rejectCall}
+        >
+          Reject
+        </button>
+        <button
+          className="bg-green-500 p-2 rounded-full focus:outline-none hover:bg-green-700"
+          onClick={acceptCall}
+        >
+          Accept
+        </button>
+      </div>
+    </div>
   );
 };
 

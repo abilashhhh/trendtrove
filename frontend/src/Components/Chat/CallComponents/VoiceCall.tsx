@@ -7,24 +7,25 @@ import { useSocketContext } from "../../../Context/SocketContext";
 const Container = React.lazy(() => import("./Container"));
 
 const VoiceCall = () => {
+  const { socket } = useSocketContext();
   const { voiceCall } = useSelector((state: RootState) => state.chat);
   const currentUser = useUserDetails();
-  const { socket } = useSocketContext();
+  console.log("Current user: ", currentUser)
 
   useEffect(() => {
     if (voiceCall.type === "out-going") {
       socket?.emit("outgoing-voice-call", {
         to: voiceCall._id,
         from: {
-          id: currentUser?._id, // maybe id or _id check that
-          dp: currentUser?.dp,
-          name: currentUser?.name,
+          id: currentUser._id, 
+          username: currentUser.username,
+          dp: currentUser.dp ,
         },
         callType: voiceCall.callType,
         roomId: voiceCall.roomId,
       });
     }
-  }, [voiceCall]);
+  }, [voiceCall, currentUser, socket]);
 
   return (
     <div>

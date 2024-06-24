@@ -30,7 +30,7 @@ const Container = ({ data }) => {
           </span>
         </div>
 
-        {(!callAccepted || data.callType === "audio") && (
+        {(!callAccepted || data.callType === "voice") && (
           <div className="my-24">
             <img
               src={data.dp}

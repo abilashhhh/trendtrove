@@ -59,26 +59,30 @@ const socket = (io: Server<DefaultEventsMap>) => {
     });
 
     socket.on("outgoing-voice-call", data => {
-      console.log("outgoing voice call , data: ", data?.to);
+      console.log("outgoing voice call , data to: ", data?.to);
+      console.log("outgoing voice call , data: ", data);
+      
       const sendUserSocket = getReceiverSocketId(data.to);
+      console.log("sendUserSocket: ", sendUserSocket);    
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("incoming-voice-call", {
           from: data.from,
           roomId: data.roomId,
-          callType: data.callType``,
+          callType: data.callType,
         });
       }
     });
 
     socket.on("outgoing-video-call", data => {
       const sendUserSocket = getReceiverSocketId(data.to);
-      console.log("outgoing video call , data: ", data?.to);
+      console.log("outgoing video call , data to: ", data?.to);
+      console.log("outgoing video call , data: ", data);
       console.log("sendUserSocket: ", sendUserSocket);  
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("incoming-video-call", {
           from: data.from,
           roomId: data.roomId,
-          callType: data.callType``,
+          callType: data.callType,
         });
       }
     });
