@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import TaggedPostComponent from "./TaggedPostComponent";
 import SavedPostComponent from "./SavedPostComponent";
 import MyPostComponent from "./MyPostComponent";
+import StoryHighlightsUserProfile from "../Story/StoryHighlightsUserProfile";
 
 const PostInProfilePage = () => {
   const [activeSection, setActiveSection] = useState("MY POSTS");
 
-  const sections = ["MY POSTS", "SAVED POSTS", "TAGGED POSTS"];
+  const sections = ["MY POSTS", "SAVED POSTS", "TAGGED POSTS" , "STORY HIGHLIGHTS"];
 
   return (
     <>
@@ -31,6 +32,8 @@ const PostInProfilePage = () => {
         {activeSection === "SAVED POSTS" && <SavedPostComponent />}
 
         {activeSection === "TAGGED POSTS" && <TaggedPostComponent />}
+        
+        {activeSection === "STORY HIGHLIGHTS" && <StoryHighlightsUserProfile />}
       </div>
     </>
   );

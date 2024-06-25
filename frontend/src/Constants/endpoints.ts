@@ -44,8 +44,7 @@ const END_POINTS = {
   // POST
   ADD_POST: "api/post/addpost",
   UPDATE_POST: "api/post/updatepost",
-  ADD_STORY: "api/post/addstory",
-  GET_ALL_STORIES: "api/post/getstories",
+
   GET_POSTS_FOR_USER: "api/post/getpostforuser",
   GET_POSTS_FOR_USER_USERNAME: "api/post/getpostforuserusername",
   GET_POSTS_USING_POST_ID: "api/post/getpostusingpostId",
@@ -69,6 +68,13 @@ const END_POINTS = {
   DARK_MODE: "api/post/darkmode",
   LEFT_SIDEBAR: "api/post/leftsidebar",
   RIGHT_SIDEBAR: "api/post/rightsidebar",
+
+  // STORY
+  ADD_STORY: "api/post/addstory",
+  GET_ALL_STORIES: "api/post/getstories",
+  GET_STORIES_FOR_USER_HIGHLIGHTS: "api/post/getstoriesforhighlights",
+  ADD_STORY_TO_HIGHLIGHTS: "api/post/setstoryTohighlighted",
+  REMOVE_STORY_FROM_HIGHLIGHTS: "api/post/removestoryfromhighlighted",
 
   // COMMENT
   ADD_COMMENT: "api/post/addcomment",

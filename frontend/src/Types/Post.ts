@@ -50,6 +50,7 @@ interface IReaction {
 export interface Story {
   userId: string;
   isHighlighted: boolean;
+  isBlocked: boolean;
   captions?: string;
   username?: string;
   dp?: string;
@@ -119,7 +120,16 @@ export interface AddReplyResponse {
   status: string;
   message: string;
 }
+
 export interface AddStoryResponse {
+  status: string;
+  message: string;
+}
+export interface AddToHighlights {
+  status: string;
+  message: string;
+}
+export interface RemoveFromHighlights {
   status: string;
   message: string;
 }
@@ -155,6 +165,7 @@ export interface GetAllCommentsResponse {
 }
 
 export interface GetAllPostsForExploreResponse {
+  allPosts: any;
   status: string;
   message: string;
   data: Post;

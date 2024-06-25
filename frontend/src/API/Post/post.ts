@@ -5,6 +5,7 @@ import {
   AddCommentResponse,
   AddReplyResponse,
   AddStoryResponse,
+  AddToHighlights,
   Comment,
   DeletePostResponse,
   DislikePostResponse,
@@ -22,6 +23,7 @@ import {
   LikePostResponse,
   Post,
   PostResponse,
+  RemoveFromHighlights,
   Reply,
   ReportPostData,
   ReportPostResponse,
@@ -126,46 +128,47 @@ export const getPostUsingPostId = async (
   }
 };
 
-export const fetchPostsOfTheCurrentUser = async (
- 
-): Promise<GetAllPostsOfCurrentUser> => {
-  try {
-    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
-      END_POINTS.GET_POSTS_OF_CURRENT_USER
-    );
-    // console.log("fetchPostsOfTheCurrentUser respose: ", response.data?.data);
-    return response.data?.data;
-  } catch (error) {
-    handleAxiosError(error);
-    throw error;
-  }
-};
+export const fetchPostsOfTheCurrentUser =
+  async (): Promise<GetAllPostsOfCurrentUser> => {
+    try {
+      const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+        END_POINTS.GET_POSTS_OF_CURRENT_USER
+      );
+      // console.log("fetchPostsOfTheCurrentUser respose: ", response.data?.data);
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  };
 
-export const fetchSavedPostsOfTheCurrentUser = async (): Promise<GetAllPostsOfCurrentUser> => {
-  try {
-    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
-      END_POINTS.GET_SAVED_POSTS_OF_CURRENT_USER
-    );
-    // console.log("fetchSavedPostsOfTheCurrentUser respose: ",response.data?.data);
-    return response.data?.data;
-  } catch (error) {
-    handleAxiosError(error);
-    throw error;
-  }
-};
+export const fetchSavedPostsOfTheCurrentUser =
+  async (): Promise<GetAllPostsOfCurrentUser> => {
+    try {
+      const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+        END_POINTS.GET_SAVED_POSTS_OF_CURRENT_USER
+      );
+      // console.log("fetchSavedPostsOfTheCurrentUser respose: ",response.data?.data);
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  };
 
-export const fetchTaggedPostsOfTheCurrentUser = async (): Promise<GetAllPostsOfCurrentUser> => {
-  try {
-    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
-      END_POINTS.GET_TAGGED_POSTS_OF_CURRENT_USER
-    );
-    // console.log("fetchTaggedPostsOfTheCurrentUser respose: ",response.data?.data);
-    return response.data?.data;
-  } catch (error) {
-    handleAxiosError(error);
-    throw error;
-  }
-};
+export const fetchTaggedPostsOfTheCurrentUser =
+  async (): Promise<GetAllPostsOfCurrentUser> => {
+    try {
+      const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+        END_POINTS.GET_TAGGED_POSTS_OF_CURRENT_USER
+      );
+      // console.log("fetchTaggedPostsOfTheCurrentUser respose: ",response.data?.data);
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  };
 
 export const getThePostDataOfParticularPost = async (
   id: string
@@ -382,8 +385,6 @@ export const getPostLikesAndDislikesInfo = async (postId: string) => {
   }
 };
 
-
-
 /////////////////////////////////////////////////////////////////////////////
 // COMMENTS
 /////////////////////////////////////////////////////////////////////////////
@@ -404,9 +405,6 @@ export const addCommentToPost = async (
     throw error;
   }
 };
-
-
-
 
 export const getAllCommentsForThisPost = async (postId: string) => {
   try {
@@ -437,7 +435,7 @@ export const deleteCommentFromPost = async (commentId: string) => {
 };
 
 export const editComment = async (
-  commentId: string, 
+  commentId: string,
   updatedText: string
 ): Promise<AddCommentResponse> => {
   try {
@@ -454,24 +452,23 @@ export const editComment = async (
     throw error;
   }
 };
- 
+
 export const handleGenerateCaption = async (
   imageurl: string
 ): Promise<GenerateCaptionResponse> => {
   try {
-    console.log("Image url:", imageurl)
+    console.log("Image url:", imageurl);
     const response = await axiosUserInstance.post<GenerateCaptionResponse>(
       END_POINTS.GENERATE_CAPTION,
       { imageurl }
     );
-    console.log("response: ", response.data)
+    console.log("response: ", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
     throw error;
   }
 };
-
 
 export const handleAddReplyToComment = async (
   payload: Partial<Reply>
@@ -483,6 +480,36 @@ export const handleAddReplyToComment = async (
       payload
     );
     // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const getAllPublicPostsForExplore = async () => {
+  try {
+    // console.log("getAllPublicPostsForExplore ");
+    const response = await axiosUserInstance.get<GetAllPostsForExploreResponse>(
+      END_POINTS.GET_ALL_POSTS_FOR_EXPLORE
+    );
+    // console.log("getAllPublicPostsForExplore response:", response.data.allPosts);
+    return response.data.allPosts;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+/////////////////// STORIES /////////
+
+export const getAllStories = async () => {
+  try {
+    // console.log("getAllStories ");
+    const response = await axiosUserInstance.get<GetAllStories>(
+      END_POINTS.GET_ALL_STORIES
+    );
+    // console.log("getAllStories response:", response.data.allPosts);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -507,13 +534,13 @@ export const handleAddNewStory = async (
   }
 };
 
-export const getAllStories = async () => {
+export const getStoriesForHighlights = async () => {
   try {
-    // console.log("getAllStories ");
+    // console.log("getStoriesForHighlights ");
     const response = await axiosUserInstance.get<GetAllStories>(
-      END_POINTS.GET_ALL_STORIES
+      END_POINTS.GET_STORIES_FOR_USER_HIGHLIGHTS
     );
-    // console.log("getAllStories response:", response.data.allPosts);
+    // console.log("getStoriesForHighlights response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -521,22 +548,36 @@ export const getAllStories = async () => {
   }
 };
 
-
-
-export const getAllPublicPostsForExplore = async () => {
+export const handleAddStoryToHighlights = async (
+  storyId:string
+): Promise<AddToHighlights> => {
   try {
-    // console.log("getAllPublicPostsForExplore ");
-    const response = await axiosUserInstance.get<GetAllPostsForExploreResponse>(
-      END_POINTS.GET_ALL_POSTS_FOR_EXPLORE
+    console.log("handleAddStoryToHighlights function, storyid: ", storyId);
+    const response = await axiosUserInstance.patch<AddToHighlights>(
+      END_POINTS.ADD_STORY_TO_HIGHLIGHTS,
+      storyId
     );
-    // console.log("getAllPublicPostsForExplore response:", response.data.allPosts);
-    return response.data.allPosts;
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     handleAxiosError(error);
     throw error;
   }
 };
 
-
- 
-
+export const handleRemoveStoryFromHighlights = async (
+  storyId:string
+): Promise<RemoveFromHighlights> => {
+  try {
+    console.log("handleRemoveStoryFromHighlights function, storyid: ", storyId);
+    const response = await axiosUserInstance.patch<RemoveFromHighlights>(
+      END_POINTS.REMOVE_STORY_FROM_HIGHLIGHTS,
+      storyId
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
