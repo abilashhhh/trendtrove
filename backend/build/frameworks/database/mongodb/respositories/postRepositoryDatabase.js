@@ -39,17 +39,6 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error adding new post!");
         }
     });
-    const addNewStory = (storyData) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const newStory = new storyModel_1.default(storyData);
-            const newStoryData = yield newStory.save();
-            return newStoryData;
-        }
-        catch (error) {
-            // console.log(error);
-            throw new Error("Error adding new story!");
-        }
-    });
     const updatePost = (postData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const updatedPost = yield postModel_1.default.findByIdAndUpdate(postData.postId, postData, { new: true });
@@ -444,10 +433,6 @@ const postRepositoryMongoDB = () => {
             console.error("Error updating expired premium accounts:", error);
         }
     });
-    cron.schedule("* * * * *", () => {
-        // console.log('Running cron job to check for expired premium accounts...');
-        checkAndExpirePremiumAccounts();
-    });
     const addNewComment = (newCommentData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const newComment = new commentModel_1.default(newCommentData);
@@ -629,6 +614,17 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error fetching public posts!");
         }
     });
+    const addNewStory = (storyData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const newStory = new storyModel_1.default(storyData);
+            const newStoryData = yield newStory.save();
+            return newStoryData;
+        }
+        catch (error) {
+            // console.log(error);
+            throw new Error("Error adding new story!");
+        }
+    });
     const getAllStoriesForUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const requesterUser = yield userModel_1.default.findById(id);
@@ -645,12 +641,12 @@ const postRepositoryMongoDB = () => {
             const userIdsToFetch = [...followingUsersId, id];
             const currentUser = yield userModel_1.default.findById(id);
             const blockedUsers = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.blockedUsers) || [];
-            // Fetch stories excluding users in blockedUsers list and populate the username and dp fields
             const gettingStories = yield storyModel_1.default.find({
                 userId: { $in: userIdsToFetch, $nin: blockedUsers },
+                isExpired: false,
             })
                 .sort({ createdAt: -1 })
-                .populate('userId', 'username dp');
+                .populate("userId", "username dp");
             console.log("Getting stories from repo: ", gettingStories);
             return gettingStories;
         }
@@ -658,6 +654,52 @@ const postRepositoryMongoDB = () => {
             console.error("Error getting all stories for user:", error);
             throw new Error("Error getting all stories for user!");
         }
+    });
+    const setStoryToHighlighted = (storyId) => __awaiter(void 0, void 0, void 0, function* () {
+        const story = yield storyModel_1.default.findById(storyId);
+        if (!story) {
+            throw new Error("Story not found");
+        }
+        story.isExpired = true;
+        yield story.save();
+    });
+    const removeStoryFromHighlighted = (storyId) => __awaiter(void 0, void 0, void 0, function* () {
+        const story = yield storyModel_1.default.findById(storyId);
+        if (!story) {
+            throw new Error("Story not found");
+        }
+        story.isExpired = true;
+        yield story.save();
+    });
+    const getStoriesForHighlights = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        const requesterUser = yield userModel_1.default.findById(id);
+        if (!requesterUser) {
+            throw new Error("User not found");
+        }
+        const stories = yield storyModel_1.default.find({ userId: id })
+            .sort({ createdAt: -1 })
+            .populate("userId", "username dp");
+        console.log("Getting stories:", stories);
+        return stories;
+    });
+    // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+    const updateStoryExpiry = () => __awaiter(void 0, void 0, void 0, function* () {
+        const currentDate = new Date();
+        const stories = yield storyModel_1.default.find({});
+        for (const story of stories) {
+            const timeDifference = currentDate.getTime() - new Date(story.createdAt).getTime();
+            const hoursDifference = timeDifference / (1000 * 60 * 60);
+            if (hoursDifference >= 24) {
+                if (!story.isExpired) {
+                    story.isExpired = true;
+                    yield story.save();
+                }
+            }
+        }
+    });
+    cron.schedule("* * * * *", () => {
+        checkAndExpirePremiumAccounts();
+        updateStoryExpiry();
     });
     ////////////////////////////////////////////////
     const removeAllTaggedPostsForAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -709,6 +751,9 @@ const postRepositoryMongoDB = () => {
         darkMode,
         addNewStory,
         getAllStoriesForUser,
+        getStoriesForHighlights,
+        setStoryToHighlighted,
+        removeStoryFromHighlighted,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

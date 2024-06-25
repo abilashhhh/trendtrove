@@ -38,6 +38,7 @@ export interface StoryReaction {
 export interface StoryInterface  {
   userId: string;
   isHighlighted: boolean;
+  isExpired: boolean;
   captions?: string;
   username?: string;
   dp?: string;

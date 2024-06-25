@@ -38,18 +38,6 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  const addNewStory = async (storyData: StoryInterface) => {
-    try {
-      const newStory = new Story(storyData);
-      const newStoryData = await newStory.save();
-
-      return newStoryData;
-    } catch (error) {
-      // console.log(error);
-      throw new Error("Error adding new story!");
-    }
-  };
-
   const updatePost = async (postData: PostDataInterface) => {
     try {
       const updatedPost = await Post.findByIdAndUpdate(
@@ -517,11 +505,6 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  cron.schedule("* * * * *", () => {
-    // console.log('Running cron job to check for expired premium accounts...');
-    checkAndExpirePremiumAccounts();
-  });
-
   const addNewComment = async (newCommentData: CommentInterface) => {
     try {
       const newComment = new Comment(newCommentData);
@@ -727,45 +710,118 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  const addNewStory = async (storyData: StoryInterface) => {
+    try {
+      const newStory = new Story(storyData);
+      const newStoryData = await newStory.save();
+
+      return newStoryData;
+    } catch (error) {
+      // console.log(error);
+      throw new Error("Error adding new story!");
+    }
+  };
+
   const getAllStoriesForUser = async (id: string) => {
     try {
       const requesterUser = await User.findById(id);
       if (!requesterUser) {
         throw new Error("User not found");
       }
-  
+
       const followingOfRequestedUser = await User.findById(id, {
         following: 1,
       }).exec();
-  
+
       if (!followingOfRequestedUser || !followingOfRequestedUser.following) {
         throw new Error("User not following anyone");
       }
-  
+
       const followingUsersId = followingOfRequestedUser.following.map(
         follow => follow.userId
       );
-  
+
       const userIdsToFetch = [...followingUsersId, id];
-  
+
       const currentUser = await User.findById(id);
       const blockedUsers = currentUser?.blockedUsers || [];
-  
-      // Fetch stories excluding users in blockedUsers list and populate the username and dp fields
+
       const gettingStories = await Story.find({
         userId: { $in: userIdsToFetch, $nin: blockedUsers },
+        isExpired: false,
       })
         .sort({ createdAt: -1 })
-        .populate('userId', 'username dp');
-  
+        .populate("userId", "username dp");
+
       console.log("Getting stories from repo: ", gettingStories);
-  
+
       return gettingStories;
     } catch (error) {
       console.error("Error getting all stories for user:", error);
       throw new Error("Error getting all stories for user!");
     }
   };
+
+  const setStoryToHighlighted = async (storyId:string) => {
+  const story = await Story.findById(storyId);
+  if (!story) {
+    throw new Error("Story not found");
+  }
+  story.isExpired = true;
+  await story.save();
+  };
+
+  const removeStoryFromHighlighted = async (storyId:string) => {
+  const story = await Story.findById(storyId);
+  if (!story) {
+    throw new Error("Story not found");
+  }
+  story.isExpired = true;
+  await story.save();
+  };
+
+  
+  const getStoriesForHighlights = async(id: string) => {
+    const requesterUser = await User.findById(id);
+    if (!requesterUser) {
+      throw new Error("User not found");
+    }
+
+    const stories = await Story.find({ userId: id })
+      .sort({ createdAt: -1 })
+      .populate("userId", "username dp");
+
+    console.log("Getting stories:", stories);
+
+    return stories;
+    }
+    
+    // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+
+    
+  const updateStoryExpiry = async () => {
+    const currentDate = new Date();
+
+    const stories = await Story.find({});
+
+    for (const story of stories) {
+      const timeDifference =  
+        currentDate.getTime() - new Date(story.createdAt).getTime();
+      const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+      if (hoursDifference >= 24) {
+        if (!story.isExpired) {
+          story.isExpired = true;
+          await story.save();
+        }
+      }
+    }
+  };
+
+  cron.schedule("* * * * *", () => {
+    checkAndExpirePremiumAccounts();
+    updateStoryExpiry();
+  });
 
   ////////////////////////////////////////////////
 
@@ -820,6 +876,10 @@ export const postRepositoryMongoDB = () => {
     darkMode,
     addNewStory,
     getAllStoriesForUser,
+    getStoriesForHighlights,
+    setStoryToHighlighted ,
+    removeStoryFromHighlighted,
+  
   };
 };
 //////////////////////////////////////////////////////////

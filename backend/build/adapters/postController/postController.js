@@ -329,9 +329,37 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getStoriesData,
         });
     }));
+    const getStoriesForHighlights = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const getStoriesData = yield (0, postAuthApplications_1.handleGetStoriesForHighlights)(userId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Stories fetched for user highlights",
+            data: getStoriesData,
+        });
+    }));
+    const setStoryToHighlighted = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const { storyId } = req.body;
+        const getStoriesData = yield (0, postAuthApplications_1.handleSetStoryToHighlighted)(userId, storyId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Story set to user highlights",
+            data: getStoriesData,
+        });
+    }));
+    const removeStoryFromHighlighted = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const { storyId } = req.body;
+        const getStoriesData = yield (0, postAuthApplications_1.handleRemoveStoryFromHighlighted)(userId, storyId, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Story removed from  user highlights",
+            data: getStoriesData,
+        });
+    }));
     return {
         addPost,
-        addStory,
         updatepost,
         getpostforuser,
         getpostforuserusername,
@@ -361,7 +389,11 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         darkmode,
         leftsidebar,
         rightsidebar,
-        getstories
+        addStory,
+        getstories,
+        getStoriesForHighlights,
+        setStoryToHighlighted,
+        removeStoryFromHighlighted,
     };
 };
 exports.default = postController;

@@ -4,6 +4,7 @@ const mongoose_1 = require("mongoose");
 const storySchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
     isHighlighted: { type: Boolean, default: false },
+    isExpired: { type: Boolean, default: false },
     captions: { type: String },
     username: { type: String },
     dp: { type: String },

@@ -45,8 +45,6 @@ const postRouter = () => {
   router.patch("/darkmode", authMiddleware, controller.darkmode);
   router.patch("/leftsidebar", authMiddleware, controller.leftsidebar);
   router.patch("/rightsidebar", authMiddleware, controller.rightsidebar);
-  router.post("/addstory", authMiddleware, controller.addStory);
-  router.get("/getstories", authMiddleware, controller.getstories);
   // COMMENT
   router.post("/addcomment", authMiddleware , controller.addComment)
   router.get("/getallcomments/:postId", authMiddleware, controller.getallcomments);
@@ -54,6 +52,11 @@ const postRouter = () => {
   router.put("/editcomment", authMiddleware, controller.editComment);
   router.post("/replytocomment", authMiddleware , controller.replytocomment)
   // STORIES 
+  router.post("/addstory", authMiddleware, controller.addStory);
+  router.get("/getstories", authMiddleware, controller.getstories);
+  router.get("/getstoriesforhighlights", authMiddleware, controller.getStoriesForHighlights);
+  router.patch("/setstoryTohighlighted", authMiddleware, controller.setStoryToHighlighted);
+  router.patch("/removestoryfromhighlighted", authMiddleware, controller.removeStoryFromHighlighted);
 
 
 

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import LoadingSpinner from "./Components/LoadingSpinner";
+import NotificationToasts from "./Components/Notifications/NotificationToasts";
 
 const HomePage = lazy(() => import("./Pages/HomePage"));
 const SignUpPage = lazy(() => import("./Pages/SignUpPage"));
@@ -16,17 +17,28 @@ const SettingsPage = lazy(() => import("./Pages/SettingsPage"));
 const FriendsPage = lazy(() => import("./Pages/FriendsPage"));
 const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
 const Addpost = lazy(() => import("./Pages/Addpost"));
-const ProfilePageIndividual = lazy(() => import("./Pages/ProfilePageIndividual"));
+const ProfilePageIndividual = lazy(
+  () => import("./Pages/ProfilePageIndividual")
+);
 const ReportPost = lazy(() => import("./Components/Post/ReportPost"));
 const EditPost = lazy(() => import("./Pages/EditPost"));
 const CommentsPage = lazy(() => import("./Components/Comments/CommentsPage"));
-const ExplorePageComponent = lazy(() => import("./Components/Explore/ExplorePageComponent"));
+const ExplorePageComponent = lazy(
+  () => import("./Components/Explore/ExplorePageComponent")
+);
 const ChatPage = lazy(() => import("./Pages/ChatPage"));
 const NotificationsPage = lazy(() => import("./Pages/NotificationsPage"));
 
 const UserRoutes: React.FC = () => {
   return (
-    <Suspense fallback={<div><LoadingSpinner/></div>}>
+    <Suspense
+      fallback={
+        <div>
+          <LoadingSpinner />
+        </div>
+      }
+    >
+      <NotificationToasts />
       <Routes>
         <Route path="/" element={<BasePage />} />
 

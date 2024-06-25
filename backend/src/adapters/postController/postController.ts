@@ -25,17 +25,20 @@ import {
   handleGetPostsForUserUsername,
   handleGetPostsOfCurrentUser,
   handleGetSavedPostsOfCurrentUser,
+  handleGetStoriesForHighlights,
   handleGetStoriesForUser,
   handleGetTaggedPostsOfCurrentUser,
   handleGetlikesdislikesinfo,
   handleLeftSidebar,
   handleLikePosts,
   handleRemoveSavePosts,
+  handleRemoveStoryFromHighlighted,
   handleRemoveTaggedPosts,
   handleReplyToComment,
   handleReportPosts,
   handleRightSidebar,
   handleSavePosts,
+  handleSetStoryToHighlighted,
   handleupdatepost,
 } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
@@ -479,10 +482,41 @@ const postController = (
     });
   });
 
+  const getStoriesForHighlights = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const getStoriesData = await handleGetStoriesForHighlights(userId, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Stories fetched for user highlights",
+      data: getStoriesData,
+    });
+  });
+
+  const setStoryToHighlighted = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const {storyId } :{storyId : string} =  req.body
+    const getStoriesData = await handleSetStoryToHighlighted(userId, storyId, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Story set to user highlights",
+      data: getStoriesData,
+    });
+  });
+
+  const removeStoryFromHighlighted = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const {storyId } :{storyId : string} =  req.body
+    const getStoriesData = await handleRemoveStoryFromHighlighted(userId, storyId, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Story removed from  user highlights",
+      data: getStoriesData,
+    });
+  });
+
 
   return {
     addPost,
-    addStory,
     updatepost,
     getpostforuser,
     getpostforuserusername,
@@ -512,7 +546,11 @@ const postController = (
     darkmode,
     leftsidebar,
     rightsidebar,
-    getstories
+    addStory,
+    getstories,
+    getStoriesForHighlights,
+    setStoryToHighlighted,
+    removeStoryFromHighlighted,
   };
 };
 

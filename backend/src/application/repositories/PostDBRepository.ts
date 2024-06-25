@@ -126,6 +126,16 @@ export const postDBRepository = (
   const getAllStoriesForUser = async (id: string) =>
     await repository.getAllStoriesForUser(id);
 
+  const getAllStoriesForUserHighlights = async (id: string) =>
+    await repository.getStoriesForHighlights(id);
+  
+ 
+  const setStoryToHighlighted = async (storyId: string) =>
+    await repository.setStoryToHighlighted(  storyId);
+ 
+  const removeStoryFromHighlighted = async (storyId: string) =>
+    await repository.removeStoryFromHighlighted(  storyId);
+
   return {
     addNewPost,
     addNewStory,
@@ -163,6 +173,10 @@ export const postDBRepository = (
     leftSidebar,
     rightSidebar,
     getAllStoriesForUser,
+    getAllStoriesForUserHighlights,
+    setStoryToHighlighted,
+    removeStoryFromHighlighted,
+
   };
 };
 

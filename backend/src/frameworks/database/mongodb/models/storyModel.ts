@@ -8,6 +8,7 @@ interface IReaction {
 interface IStory extends Document {
   userId: Types.ObjectId;
   isHighlighted: boolean;
+  isExpired: boolean;
   captions?: string;
   username?: string;
   dp?: string;
@@ -25,6 +26,7 @@ const storySchema = new Schema<IStory>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     isHighlighted: { type: Boolean, default: false },
+    isExpired: { type: Boolean, default: false },
     captions: { type: String },
     username: { type: String },
     dp: { type: String },

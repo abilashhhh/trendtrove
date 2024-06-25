@@ -776,10 +776,13 @@ export const handleGetStoriesForUser = async (
   try {
     // console.log("handleGetStoriesForUser reached");
     if (!id) {
-      throw new ErrorInApplication("User ID is required to get all stories", 400);
+      throw new ErrorInApplication(
+        "User ID is required to get all stories",
+        400
+      );
     }
     const allStoriesForUser = await dbPostRepository.getAllStoriesForUser(id);
-    
+
     return allStoriesForUser;
   } catch (error) {
     // console.log("Error in handleGetStoriesForUser");
@@ -787,5 +790,105 @@ export const handleGetStoriesForUser = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to get all stories", 500);
+  }
+};
+
+export const handleGetStoriesForHighlights = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleGetStoriesForHighlights reached");
+    if (!id) {
+      throw new ErrorInApplication(
+        "User ID is required to get all stories",
+        400
+      );
+    }
+    const allStoriesForUser =
+      await dbPostRepository.getAllStoriesForUserHighlights(id);
+
+    return allStoriesForUser;
+  } catch (error) {
+    // console.log("Error in handleGetStoriesForHighlights");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to get all stories for highlights",
+      500
+    );
+  }
+};
+
+export const handleSetStoryToHighlighted = async (
+  id: string,
+  storyId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleSetStoryToHighlighted reached");
+    if (!id) {
+      throw new ErrorInApplication(
+        "User ID is required to get all stories",
+        400
+      );
+    }
+    if (!storyId) {
+      throw new ErrorInApplication(
+        "story ID is required to get all stories",
+        400
+      );
+    }
+    const allStoriesForUser = await dbPostRepository.setStoryToHighlighted(
+      storyId
+    );
+
+    return allStoriesForUser;
+  } catch (error) {
+    // console.log("Error in handleSetStoryToHighlighted");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to get all stories for highlights",
+      500
+    );
+  }
+};
+
+export const handleRemoveStoryFromHighlighted = async (
+  id: string,
+  storyId: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleRemoveStoryFromHighlighted reached");
+    if (!id) {
+      throw new ErrorInApplication(
+        "User ID is required to get all stories",
+        400
+      );
+    }
+    if (!storyId) {
+      throw new ErrorInApplication(
+        "story ID is required to get all stories",
+        400
+      );
+    }
+    const allStoriesForUser = await dbPostRepository.removeStoryFromHighlighted(
+      storyId
+    );
+
+    return allStoriesForUser;
+  } catch (error) {
+    // console.log("Error in handleRemoveStoryFromHighlighted");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to get all stories for highlights",
+      500
+    );
   }
 };
