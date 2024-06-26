@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  getStoriesForHighlights,
-  gethighlightsdata,
-  handleDeleteHighlight,
-} from "../../API/Post/post";
+import { getStoriesForHighlights, gethighlightsdata, handleDeleteHighlight } from "../../API/Post/post";
 import { formatDateTime } from "../../utils/timeAgo";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
@@ -13,6 +9,8 @@ const DisplayHighlight = () => {
   const [storyhighlights2, setStoryhighlights2] = useState([]);
   const [selectedHighlight, setSelectedHighlight] = useState(null);
   const [storyDetails, setStoryDetails] = useState([]);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [highlightToDelete, setHighlightToDelete] = useState(null);
 
   useEffect(() => {
     const getAllUserHighlights = async () => {
@@ -34,33 +32,43 @@ const DisplayHighlight = () => {
     getAllStoriesOfUser();
   }, []);
 
-  const handleHighlightClick = async highlight => {
+  const handleHighlightClick = async (highlight) => {
     setSelectedHighlight(highlight);
     const storyIds = highlight.selectedStories;
-    const details = storyhighlights2.filter(story =>
+    const details = storyhighlights2.filter((story) =>
       storyIds.includes(story._id)
     );
     setStoryDetails(details);
     document.getElementById("editHighlight").showModal();
   };
 
-  const deleteHighlight = async (highlightid: string) => {
+  const deleteHighlight = async () => {
     try {
-      console.log("deleteHighlight CALLED", highlightid);
-      const response = await handleDeleteHighlight(highlightid);
-      if(response.status === "success"){
+      document.getElementById("editHighlight")?.close();
+      if (!highlightToDelete) return;
+      console.log("deleteHighlight CALLED", highlightToDelete);
+      const response = await handleDeleteHighlight(highlightToDelete);
+      if (response.status === "success") {
         toast.success("Highlight deleted successfully");
-        getAllUserHighlights()
+        setStoryhighlights(storyhighlights.filter(h => h._id !== highlightToDelete));
+        setShowConfirmDelete(false);
+        setHighlightToDelete(null);
       }
-    } catch (error: any) {
-      toast.error(`Error deleting message: ${error.message}`);
+    } catch (error) {
+      toast.error(`Error deleting highlight: ${error.message}`);
     }
   };
 
-  const editHighlight = async (highlightid: string) => {
-    console.log("editHighlight CALLED", highlightid);
-    // const response = await handleEditHighlights(highlightid);
+  const confirmDeleteHighlight = (highlightId) => {
+    document.getElementById("editHighlight")?.close();
 
+    setHighlightToDelete(highlightId);
+    setShowConfirmDelete(true);
+  };
+
+  const editHighlight = async (highlightId) => {
+    console.log("editHighlight CALLED", highlightId);
+    // Add edit logic here
   };
 
   return (
@@ -75,17 +83,15 @@ const DisplayHighlight = () => {
                   <h3 className="font-bold text-lg underline p-2">
                     {selectedHighlight.highlightName}{" "}
                     <button
-                      onClick={() => {
-                        editHighlight(selectedHighlight._id);
-                      }}
-                      className="absolute right-7 top-10">
+                      onClick={() => editHighlight(selectedHighlight._id)}
+                      className="absolute right-7 top-10"
+                    >
                       <FaPen />
                     </button>
                     <button
-                      onClick={() => {
-                        deleteHighlight(selectedHighlight._id);
-                      }}
-                      className="absolute right-14 top-10">
+                      onClick={() => confirmDeleteHighlight(selectedHighlight._id)}
+                      className="absolute right-14 top-10"
+                    >
                       <FaTrash />
                     </button>
                   </h3>
@@ -103,12 +109,14 @@ const DisplayHighlight = () => {
                     {storyDetails.map((story, index) => (
                       <li
                         key={index}
-                        className="bg-slate-200 dark:bg-slate-900 p-2 m-2 flex flex-col items-center rounded-lg shadow-lg">
+                        className="bg-slate-200 dark:bg-slate-900 p-2 m-2 flex flex-col items-center rounded-lg shadow-lg"
+                      >
                         <div className="w-full h-44 relative">
                           {story.mediaType === "video" ? (
                             <video
                               className="w-full h-full object-cover rounded-lg"
-                              controls>
+                              controls
+                            >
                               <source src={story.mediaUrl} type="video/mp4" />
                             </video>
                           ) : (
@@ -144,7 +152,8 @@ const DisplayHighlight = () => {
             <div
               key={index}
               className="flex flex-col items-center rounded-lg p-2 flex-shrink-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-              onClick={() => handleHighlightClick(story)}>
+              onClick={() => handleHighlightClick(story)}
+            >
               <div>
                 <img
                   className="rounded-full w-32 h-32"
@@ -158,6 +167,30 @@ const DisplayHighlight = () => {
             </div>
           ))}
       </div>
+
+      {showConfirmDelete && (
+        <div className="fixed inset-0  flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm mx-auto">
+            <p className="text-center mb-4 text-black dark:text-white">
+              Are you sure you want to delete this highlight?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={deleteHighlight}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setShowConfirmDelete(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
