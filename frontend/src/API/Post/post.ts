@@ -566,6 +566,7 @@ export const getStoriesForHighlights = async () => {
     throw error;
   }
 };
+
 export const gethighlightsdata = async () => {
   try {
     console.log("gethighlightsdata ");
@@ -623,6 +624,34 @@ export const handleEditHighlights = async (
       payload
     );
     console.log(response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const getStoriesForHighlightsUsingUsername = async (username: string) => {
+  try {
+    console.log("getStoriesForHighlightsUsingUsername , username: ", username);
+    const response = await axiosUserInstance.get<GetAllStories>(
+      `${END_POINTS.GET_STORIES_FOR_HIGHLIGHTS_USING_USERNAME.replace(":username", username)}`
+    );
+    console.log("getStoriesForHighlightsUsingUsername response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+export const getHighlightsUsingUsername = async (username: string) => {
+  try {
+    console.log("getHighlightsUsingUsername , username: ", username);
+    const response = await axiosUserInstance.get<HighlightsInterface>(
+      `${END_POINTS.GET_HIGHLIGHTS_USING_USERNAME.replace(":username", username)}`
+    );
+    console.log("getHighlightsUsingUsername response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

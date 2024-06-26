@@ -899,6 +899,35 @@ export const handleGetHighlightsData = async (
   }
 };
  
+
+export const handleGetHighlightsDataUsingUsername = async (
+  username: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleGetHighlightsDataUsingUsername reached");
+    if (!username) {
+      throw new ErrorInApplication(
+        "Username is required to get all stories",
+        400
+      );
+    }
+    const allStoriesForUser =
+      await dbPostRepository.getAllHighlightsForUserHighlightsUsingUsername(username);
+
+    return allStoriesForUser;
+  } catch (error) {
+    // console.log("Error in handleGetHighlightsDataUsingUsername");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to get all highlights for user highlights",
+      500
+    );
+  }
+};
+ 
 export const handleDeleteHighlight = async (
   highlightId: string,
   userId: string,

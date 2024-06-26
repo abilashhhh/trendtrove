@@ -21,6 +21,7 @@ import {
   handleGetAllPublicPosts,
   handleGetDislikedPosts,
   handleGetHighlightsData,
+  handleGetHighlightsDataUsingUsername,
   handleGetLengthForUser,
   handleGetLikedPosts,
   handleGetParticularPost,
@@ -522,6 +523,20 @@ const postController = (
     });
   });
 
+  const gethighlightsusingusername = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const {username} = req.params
+
+    console.log("getHighlightsData Userid: ", userId)
+    console.log("getHighlightsData username: ", username)
+    const getHighlightsDataUser = await handleGetHighlightsDataUsingUsername(username, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Highlights Data fetched for user highlights",
+      data: getHighlightsDataUser,
+    });
+  });
+
   const createstoryhighlights = asyncHandler(async (req: Request, res: Response) => {
     const payload :  highlightsInterface = req.body
 
@@ -585,6 +600,7 @@ const postController = (
     createstoryhighlights,
     getStoriesForHighlights,
     getHighlightsData,
+    gethighlightsusingusername,
     deletehighlight,
   };
 };

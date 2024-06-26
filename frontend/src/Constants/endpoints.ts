@@ -77,6 +77,8 @@ const END_POINTS = {
   GET_HIGHLIGHTS_FOR_USER_HIGHLIGHTS: "api/post/gethighlightsdata",
   DELETE_HIGHLIGHTS: "api/post/deletehighlight/:highlightId",
   EDIT_HIGHLIGHT: "api/post/edithighlight",
+  GET_STORIES_FOR_HIGHLIGHTS_USING_USERNAME: "api/post/storiesforhighlightsusername/:username",
+  GET_HIGHLIGHTS_USING_USERNAME: "api/post/gethighlightsusingusername/:username",
 
   // COMMENT
   ADD_COMMENT: "api/post/addcomment",

@@ -721,7 +721,15 @@ const postRepositoryMongoDB = () => {
         console.log("Getting highlights data:", highlights);
         return highlights;
     });
-    // getHighlightsData('66641c97828195c0d16979ee')
+    const getAllHighlightsForUserHighlightsUsingUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+        const user = yield userModel_1.default.findOne({ username: username });
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const highlights = yield highlightsModel_1.default.find({ userId: user._id });
+        console.log("Getting highlights data:", highlights);
+        return highlights;
+    });
     const updateStoryExpiry = () => __awaiter(void 0, void 0, void 0, function* () {
         const currentDate = new Date();
         const stories = yield storyModel_1.default.find({});
@@ -792,6 +800,7 @@ const postRepositoryMongoDB = () => {
         addNewStory,
         getAllStoriesForUser,
         getHighlightsData,
+        getAllHighlightsForUserHighlightsUsingUsername,
         createHighlights,
         getStoriesForHighlights,
         deleteHighlight,

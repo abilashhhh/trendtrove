@@ -26,6 +26,7 @@ import useUserDetails from "../../Hooks/useUserDetails";
 import FriendsPagePost from "./FriendsPageComponents/FriendsPagePost";
 import TaggedPostComponent from "../Post/TaggedPostComponent";
 import FriendsTaggedPosts from "./FriendsPageComponents/FriendsTaggedPosts";
+import HighlightsDisplay from "./FriendsPageComponents/HighlightsDisplay";
 
 interface UserInfo {
   coverPhoto: string;
@@ -88,7 +89,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
       case "POSTS":
         return <FriendsPagePost username={username} />;
       case "TAGGED POSTS":
-        return <FriendsTaggedPosts username={username} />
+        return <FriendsTaggedPosts username={username} />;
       default:
         return null;
     }
@@ -593,6 +594,10 @@ const ProfilePageIndividualComponent: React.FC = () => {
                 follower => follower.userId === currentUser._id
               )) ? (
               <div>
+                <div>
+                  <HighlightsDisplay username={username} />
+                </div>
+
                 <div className="flex flex-col md:flex-row justify-center px-8 py-2 mt-2 rounded-lg shadow-lg gap-4">
                   {sections.map(section => (
                     <button

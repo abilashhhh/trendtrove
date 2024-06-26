@@ -29,7 +29,6 @@ const FriendsTaggedPosts = ({ username }: { username: string }) => {
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
   const [dislikedPosts, setDislikedPosts] = useState<{ [key: string]: boolean }>({});
   const [likesDislikesData, setLikesDislikesData] = useState<{ [key: string]: any }>({});
-  const [postCount, setPostCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [showOptions, setShowOptions] = useState<string | null>(null);
 

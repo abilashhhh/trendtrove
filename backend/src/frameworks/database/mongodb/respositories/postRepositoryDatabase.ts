@@ -845,7 +845,22 @@ export const postRepositoryMongoDB = () => {
 
     return highlights;
   };
-  // getHighlightsData('66641c97828195c0d16979ee')
+
+  
+  const getAllHighlightsForUserHighlightsUsingUsername = async (username: string) => {
+
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      throw new Error("User not found");
+    } 
+ 
+    const highlights = await Highlights.find({ userId: user._id });
+
+    console.log("Getting highlights data:", highlights);
+
+    return highlights;
+  };
+ 
 
   const updateStoryExpiry = async () => {
     const currentDate = new Date();
@@ -926,6 +941,7 @@ export const postRepositoryMongoDB = () => {
     addNewStory,
     getAllStoriesForUser,
     getHighlightsData,
+    getAllHighlightsForUserHighlightsUsingUsername,
     createHighlights,
     getStoriesForHighlights,
     deleteHighlight,
