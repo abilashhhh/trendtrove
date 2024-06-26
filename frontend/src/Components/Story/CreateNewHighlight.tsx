@@ -26,7 +26,7 @@ const CreateNewHighlight = () => {
       }
     };
     getAllStoriesOfUser();
-  }, []);
+  }, [setStoryhighlights]);
 
   const handleTickClick = storyId => {
     setSelectedStories(prevSelected =>
