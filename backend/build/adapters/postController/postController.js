@@ -338,6 +338,16 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getStoriesData,
         });
     }));
+    const createstoryhighlights = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const payload = req.body;
+        // console.log("Payload: create highlight : ", payload)
+        const getStoriesData = yield (0, postAuthApplications_1.handleCreateHighlights)(payload, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Highlights created successfully",
+            data: getStoriesData,
+        });
+    }));
     const setStoryToHighlighted = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.body;
         const { storyId } = req.body;
@@ -391,6 +401,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         rightsidebar,
         addStory,
         getstories,
+        createstoryhighlights,
         getStoriesForHighlights,
         setStoryToHighlighted,
         removeStoryFromHighlighted,

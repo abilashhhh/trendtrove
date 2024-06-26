@@ -4,9 +4,10 @@ import { AuthService } from "../../frameworks/services/authenticationService";
 import { AuthServiceInterface } from "../../application/services/authenticationServiceInterface";
 import { UserDBInterface } from "../../application/repositories/userDBRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/userRepositoryDatabase";
-import { PostDataInterface,  ReportPostInterface, StoryInterface } from "../../types/postsInterface";
+import { PostDataInterface,  ReportPostInterface, StoryInterface, highlightsInterface } from "../../types/postsInterface";
 import {
   handleCreateComment,
+  handleCreateHighlights,
   handleCreatePost,
   handleCreateStory,
   handleDarkMode,
@@ -492,6 +493,19 @@ const postController = (
     });
   });
 
+  const createstoryhighlights = asyncHandler(async (req: Request, res: Response) => {
+    const payload :  highlightsInterface = req.body
+
+    // console.log("Payload: create highlight : ", payload)
+
+    const getStoriesData = await handleCreateHighlights(payload, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Highlights created successfully",
+      data: getStoriesData,
+    });
+  });
+
   const setStoryToHighlighted = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
     const {storyId } :{storyId : string} =  req.body
@@ -548,6 +562,7 @@ const postController = (
     rightsidebar,
     addStory,
     getstories,
+    createstoryhighlights,
     getStoriesForHighlights,
     setStoryToHighlighted,
     removeStoryFromHighlighted,

@@ -2,6 +2,7 @@ import {
   PostDataInterface,
   ReportPostInterface,
   StoryInterface,
+  highlightsInterface,
 } from "../../../../types/postsInterface";
 const cron = require("node-cron");
 import Post from "../models/postModel";
@@ -17,6 +18,8 @@ import {
 } from "../../../../types/commentInterface";
 import PremiumAccount from "../models/premiumAccount";
 import Story from "../models/storyModel";
+import Highlights from "../models/highlightsModel";
+import mongoose from "mongoose";
 
 //////////////////////////////////////////////////////////
 
@@ -781,6 +784,18 @@ export const postRepositoryMongoDB = () => {
   };
 
   
+
+  const createHighlights = async (payload:highlightsInterface) => {
+
+    // console.log("create highlights opayload : ", payload)
+ 
+  const newHighlight = new Highlights(payload);
+    const newHighlightData = await newHighlight.save();
+    // console.log("create highlights newHighlightData : ", newHighlightData)
+    return newHighlightData
+  };
+
+  
   const getStoriesForHighlights = async(id: string) => {
     const requesterUser = await User.findById(id);
     if (!requesterUser) {
@@ -876,6 +891,7 @@ export const postRepositoryMongoDB = () => {
     darkMode,
     addNewStory,
     getAllStoriesForUser,
+    createHighlights,
     getStoriesForHighlights,
     setStoryToHighlighted ,
     removeStoryFromHighlighted,

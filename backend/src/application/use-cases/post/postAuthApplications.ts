@@ -8,6 +8,7 @@ import {
   PostDataInterface,
   ReportPost,
   StoryInterface,
+  highlightsInterface,
 } from "../../../types/postsInterface";
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
@@ -790,6 +791,28 @@ export const handleGetStoriesForUser = async (
       throw error;
     }
     throw new ErrorInApplication("Failed to get all stories", 500);
+  }
+};
+
+export const handleCreateHighlights = async (
+  payload: highlightsInterface,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    
+    const createHighlightsResult =
+      await dbPostRepository.createHighlights(payload);
+
+    return createHighlightsResult;
+  } catch (error) {
+    // console.log("Error in handleCreateHighlights");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to create highlights",
+      500
+    );
   }
 };
 

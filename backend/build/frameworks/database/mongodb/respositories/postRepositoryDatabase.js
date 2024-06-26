@@ -23,6 +23,7 @@ const ErrorInApplication_1 = __importDefault(require("../../../../utils/ErrorInA
 const commentModel_1 = __importDefault(require("../models/commentModel"));
 const premiumAccount_1 = __importDefault(require("../models/premiumAccount"));
 const storyModel_1 = __importDefault(require("../models/storyModel"));
+const highlightsModel_1 = __importDefault(require("../models/highlightsModel"));
 //////////////////////////////////////////////////////////
 const postRepositoryMongoDB = () => {
     //////////////////////////////////////////////////////////
@@ -671,6 +672,13 @@ const postRepositoryMongoDB = () => {
         story.isExpired = true;
         yield story.save();
     });
+    const createHighlights = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+        // console.log("create highlights opayload : ", payload)
+        const newHighlight = new highlightsModel_1.default(payload);
+        const newHighlightData = yield newHighlight.save();
+        // console.log("create highlights newHighlightData : ", newHighlightData)
+        return newHighlightData;
+    });
     const getStoriesForHighlights = (id) => __awaiter(void 0, void 0, void 0, function* () {
         const requesterUser = yield userModel_1.default.findById(id);
         if (!requesterUser) {
@@ -751,6 +759,7 @@ const postRepositoryMongoDB = () => {
         darkMode,
         addNewStory,
         getAllStoriesForUser,
+        createHighlights,
         getStoriesForHighlights,
         setStoryToHighlighted,
         removeStoryFromHighlighted,

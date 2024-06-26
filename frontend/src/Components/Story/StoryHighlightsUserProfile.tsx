@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getStoriesForHighlights } from "../../API/Post/post";
 import { formatDateTime } from "../../utils/timeAgo";
-import MyStoryHighlightsUserProfile from "./MyStoryHighlightsUserProfile";
+import MyStoryHighlightsUserProfile from "./CreateNewHighlight";
+import CreateNewHighlight from "./CreateNewHighlight";
+import EditHighlight from "./EditHighlight";
 
 const StoryHighlightsUserProfile = () => {
   const [storyhighlights, setStoryhighlights] = useState([]);
@@ -23,7 +25,8 @@ const StoryHighlightsUserProfile = () => {
         <h1 className="font-semibold underline text-2xl p-2 ">
           MY STORY HIGHLIGHTS
         </h1>
-        <MyStoryHighlightsUserProfile />
+    <CreateNewHighlight/>
+    <EditHighlight/>
       </div>
 
 
@@ -52,7 +55,7 @@ const StoryHighlightsUserProfile = () => {
                   onClick={() =>
                     document.getElementById(`modal_${index}`).showModal()
                   }>
-                  Edit
+                  Info
                 </button>
                 <dialog id={`modal_${index}`} className="modal">
                   <div className="modal-box w-full max-w-3xl text-black dark:text-gray-300 bg-gray-200 dark:bg-gray-800">

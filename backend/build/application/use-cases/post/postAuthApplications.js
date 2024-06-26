@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRemoveStoryFromHighlighted = exports.handleSetStoryToHighlighted = exports.handleGetStoriesForHighlights = exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
+exports.handleRemoveStoryFromHighlighted = exports.handleSetStoryToHighlighted = exports.handleGetStoriesForHighlights = exports.handleCreateHighlights = exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
 const clarifai_1 = __importDefault(require("clarifai"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
@@ -609,6 +609,20 @@ const handleGetStoriesForUser = (id, dbPostRepository) => __awaiter(void 0, void
     }
 });
 exports.handleGetStoriesForUser = handleGetStoriesForUser;
+const handleCreateHighlights = (payload, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const createHighlightsResult = yield dbPostRepository.createHighlights(payload);
+        return createHighlightsResult;
+    }
+    catch (error) {
+        // console.log("Error in handleCreateHighlights");
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        throw new ErrorInApplication_1.default("Failed to create highlights", 500);
+    }
+});
+exports.handleCreateHighlights = handleCreateHighlights;
 const handleGetStoriesForHighlights = (id, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("handleGetStoriesForHighlights reached");

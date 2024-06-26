@@ -8,6 +8,7 @@ import {
   PostDataInterface,
   ReportPostInterface,
   StoryInterface,
+  highlightsInterface,
 } from "../../types/postsInterface";
 
 export const postDBRepository = (
@@ -126,6 +127,9 @@ export const postDBRepository = (
   const getAllStoriesForUser = async (id: string) =>
     await repository.getAllStoriesForUser(id);
 
+  const createHighlights = async (payload: highlightsInterface) =>
+    await repository.createHighlights(payload);
+
   const getAllStoriesForUserHighlights = async (id: string) =>
     await repository.getStoriesForHighlights(id);
   
@@ -173,6 +177,7 @@ export const postDBRepository = (
     leftSidebar,
     rightSidebar,
     getAllStoriesForUser,
+    createHighlights,
     getAllStoriesForUserHighlights,
     setStoryToHighlighted,
     removeStoryFromHighlighted,

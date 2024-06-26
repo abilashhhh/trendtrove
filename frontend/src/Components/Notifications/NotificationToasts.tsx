@@ -38,7 +38,7 @@ const NotificationToasts: React.FC = () => {
   }, [notifications, allUsers]);
 
   return <>
-  <ToastContainer  className="tex-blue-400"/>
+  {/* <ToastContainer  className="tex-blue-400"/> */}
   </>;
 };
 

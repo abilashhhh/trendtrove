@@ -129,6 +129,10 @@ export interface AddToHighlights {
   status: string;
   message: string;
 }
+export interface CreateHighlights {
+  status: string;
+  message: string;
+}
 export interface RemoveFromHighlights {
   status: string;
   message: string;
@@ -186,4 +190,10 @@ export interface GenerateCaptionResponse {
 export interface EditCommentResponse {
   status: string;
   message: string;
+}
+
+export interface HighlightsInterface{ 
+  highlightsName: string,
+  highlightsCover: string,
+  storyId: Story
 }

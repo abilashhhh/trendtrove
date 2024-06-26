@@ -51,3 +51,11 @@ export interface StoryInterface  {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+
+export interface highlightsInterface{
+  userId: any; 
+  highlightName: string,
+  coverImage: string,
+  selectedStories: [StoryInterface]
+} 

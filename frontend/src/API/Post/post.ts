@@ -7,6 +7,7 @@ import {
   AddStoryResponse,
   AddToHighlights,
   Comment,
+  CreateHighlights,
   DeletePostResponse,
   DislikePostResponse,
   EditCommentResponse,
@@ -20,6 +21,7 @@ import {
   GetLikedPostsResponse,
   GetLikesDislikesInfoResponse,
   GetOnePost,
+  HighlightsInterface,
   LikePostResponse,
   Post,
   PostResponse,
@@ -541,6 +543,23 @@ export const getStoriesForHighlights = async () => {
       END_POINTS.GET_STORIES_FOR_USER_HIGHLIGHTS
     );
     // console.log("getStoriesForHighlights response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+export const createStoryHighlights = async (
+  payload: Partial<HighlightsInterface>
+): Promise<CreateHighlights> => {
+  try {
+    console.log("createStoryHighlights : ", payload);
+    const response = await axiosUserInstance.post<CreateHighlights>(
+      END_POINTS.CREATE_STORY_HIGHLIGHTS,
+      payload
+    );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
