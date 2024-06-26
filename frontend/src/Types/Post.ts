@@ -133,7 +133,7 @@ export interface CreateHighlights {
   status: string;
   message: string;
 }
-export interface RemoveFromHighlights {
+export interface DeleteHighlights {
   status: string;
   message: string;
 }

@@ -764,23 +764,17 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting all stories for user!");
     }
   };
+ 
 
-  const setStoryToHighlighted = async (storyId: string) => {
-    const story = await Story.findById(storyId);
-    if (!story) {
-      throw new Error("Story not found");
+  const deleteHighlight = async (highlightId: string) => {
+    const highlightData = await Highlights.findById(highlightId);
+    if (!highlightData) {
+      throw new Error("Highlights not found");
+    }else{
+      await Highlights.findByIdAndDelete(highlightId)
     }
-    story.isExpired = true;
-    await story.save();
-  };
-
-  const removeStoryFromHighlighted = async (storyId: string) => {
-    const story = await Story.findById(storyId);
-    if (!story) {
-      throw new Error("Story not found");
-    }
-    story.isExpired = true;
-    await story.save();
+    return 
+ 
   };
 
   const createHighlights = async (payload: highlightsInterface) => {
@@ -903,8 +897,7 @@ export const postRepositoryMongoDB = () => {
     getHighlightsData,
     createHighlights,
     getStoriesForHighlights,
-    setStoryToHighlighted,
-    removeStoryFromHighlighted,
+    deleteHighlight,
   };
 };
 //////////////////////////////////////////////////////////

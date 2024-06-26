@@ -358,24 +358,13 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getStoriesData,
         });
     }));
-    const setStoryToHighlighted = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const deletehighlight = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { highlightId } = req.params;
         const { userId } = req.body;
-        const { storyId } = req.body;
-        const getStoriesData = yield (0, postAuthApplications_1.handleSetStoryToHighlighted)(userId, storyId, dbPostRepository);
+        const getStoriesData = yield (0, postAuthApplications_1.handleDeleteHighlight)(highlightId, userId, dbPostRepository);
         res.status(201).json({
             status: "success",
-            message: "Story set to user highlights",
-            data: getStoriesData,
-        });
-    }));
-    const removeStoryFromHighlighted = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { userId } = req.body;
-        const { storyId } = req.body;
-        const getStoriesData = yield (0, postAuthApplications_1.handleRemoveStoryFromHighlighted)(userId, storyId, dbPostRepository);
-        res.status(201).json({
-            status: "success",
-            message: "Story removed from  user highlights",
-            data: getStoriesData,
+            message: "Highlights deleted",
         });
     }));
     return {
@@ -414,8 +403,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         createstoryhighlights,
         getStoriesForHighlights,
         getHighlightsData,
-        setStoryToHighlighted,
-        removeStoryFromHighlighted,
+        deletehighlight,
     };
 };
 exports.default = postController;

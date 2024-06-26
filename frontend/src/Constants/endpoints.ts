@@ -74,9 +74,9 @@ const END_POINTS = {
   GET_ALL_STORIES: "api/post/getstories",
   CREATE_STORY_HIGHLIGHTS: "api/post/createstoryhighlights",
   GET_STORIES_FOR_USER_HIGHLIGHTS: "api/post/getstoriesforhighlights",
-  ADD_STORY_TO_HIGHLIGHTS: "api/post/setstoryTohighlighted",
-  REMOVE_STORY_FROM_HIGHLIGHTS: "api/post/removestoryfromhighlighted",
   GET_HIGHLIGHTS_FOR_USER_HIGHLIGHTS: "api/post/gethighlightsdata",
+  DELETE_HIGHLIGHTS: "api/post/deletehighlight/:highlightId",
+  EDIT_HIGHLIGHT: "api/post/edithighlight",
 
   // COMMENT
   ADD_COMMENT: "api/post/addcomment",

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   getStoriesForHighlights,
   gethighlightsdata,
+  handleDeleteHighlight,
 } from "../../API/Post/post";
 import { formatDateTime } from "../../utils/timeAgo";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaTrash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 
 const DisplayHighlight = () => {
   const [storyhighlights, setStoryhighlights] = useState([]);
@@ -13,13 +15,13 @@ const DisplayHighlight = () => {
   const [storyDetails, setStoryDetails] = useState([]);
 
   useEffect(() => {
-    const getAllStoriesOfUserHighlights = async () => {
+    const getAllUserHighlights = async () => {
       const stories = await gethighlightsdata();
       if (stories.status === "success") {
         setStoryhighlights(stories?.data);
       }
     };
-    getAllStoriesOfUserHighlights();
+    getAllUserHighlights();
   }, []);
 
   useEffect(() => {
@@ -42,8 +44,28 @@ const DisplayHighlight = () => {
     document.getElementById("editHighlight").showModal();
   };
 
+  const deleteHighlight = async (highlightid: string) => {
+    try {
+      console.log("deleteHighlight CALLED", highlightid);
+      const response = await handleDeleteHighlight(highlightid);
+      if(response.status === "success"){
+        toast.success("Highlight deleted successfully");
+        getAllUserHighlights()
+      }
+    } catch (error: any) {
+      toast.error(`Error deleting message: ${error.message}`);
+    }
+  };
+
+  const editHighlight = async (highlightid: string) => {
+    console.log("editHighlight CALLED", highlightid);
+    // const response = await handleEditHighlights(highlightid);
+
+  };
+
   return (
     <>
+      <ToastContainer />
       <div>
         <dialog id="editHighlight" className="modal">
           <div className="modal-box w-full max-w-3xl text-black dark:text-gray-300 overflow-auto no-scrollbar bg-gray-200 dark:bg-gray-800">
@@ -52,8 +74,19 @@ const DisplayHighlight = () => {
                 <div className="bg-gray-800 p-2 items-center flex flex-col">
                   <h3 className="font-bold text-lg underline p-2">
                     {selectedHighlight.highlightName}{" "}
-                    <button className="  absolute right-7 top-10">
+                    <button
+                      onClick={() => {
+                        editHighlight(selectedHighlight._id);
+                      }}
+                      className="absolute right-7 top-10">
                       <FaPen />
+                    </button>
+                    <button
+                      onClick={() => {
+                        deleteHighlight(selectedHighlight._id);
+                      }}
+                      className="absolute right-14 top-10">
+                      <FaTrash />
                     </button>
                   </h3>
                   <div className="mb-4">
@@ -98,7 +131,6 @@ const DisplayHighlight = () => {
                 </div>
               </div>
             )}
-         
           </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>

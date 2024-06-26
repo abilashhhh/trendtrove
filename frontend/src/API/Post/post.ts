@@ -5,7 +5,6 @@ import {
   AddCommentResponse,
   AddReplyResponse,
   AddStoryResponse,
-  AddToHighlights,
   Comment,
   CreateHighlights,
   DeletePostResponse,
@@ -25,7 +24,7 @@ import {
   LikePostResponse,
   Post,
   PostResponse,
-  RemoveFromHighlights,
+  DeleteHighlights,
   Reply,
   ReportPostData,
   ReportPostResponse,
@@ -580,16 +579,15 @@ export const createStoryHighlights = async (
   }
 };
 
-export const handleAddStoryToHighlights = async (
-  storyId:string
-): Promise<AddToHighlights> => {
+export const handleDeleteHighlight = async (
+  highlightId: string
+): Promise<DeleteHighlights> => {
   try {
-    console.log("handleAddStoryToHighlights function, storyid: ", storyId);
-    const response = await axiosUserInstance.patch<AddToHighlights>(
-      END_POINTS.ADD_STORY_TO_HIGHLIGHTS,
-      storyId
+    console.log("handleDeleteHighlight post API, highlightId:", highlightId);
+    const response = await axiosUserInstance.delete<DeletePostResponse>(
+      `${END_POINTS.DELETE_HIGHLIGHTS.replace(":highlightId", highlightId)}`
     );
-    console.log(response.data);
+    console.log("response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);
@@ -597,14 +595,14 @@ export const handleAddStoryToHighlights = async (
   }
 };
 
-export const handleRemoveStoryFromHighlights = async (
-  storyId:string
-): Promise<RemoveFromHighlights> => {
+export const handleEditHighlights = async (
+  payload: Partial<HighlightsInterface>
+): Promise<CreateHighlights> => {
   try {
-    console.log("handleRemoveStoryFromHighlights function, storyid: ", storyId);
-    const response = await axiosUserInstance.patch<RemoveFromHighlights>(
-      END_POINTS.REMOVE_STORY_FROM_HIGHLIGHTS,
-      storyId
+    console.log("handleEditHighlights : ", payload);
+    const response = await axiosUserInstance.post<CreateHighlights>(
+      END_POINTS.EDIT_HIGHLIGHT,
+      payload
     );
     console.log(response.data);
     return response.data;

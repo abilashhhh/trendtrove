@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRemoveStoryFromHighlighted = exports.handleSetStoryToHighlighted = exports.handleGetHighlightsData = exports.handleGetStoriesForHighlights = exports.handleCreateHighlights = exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
+exports.handleDeleteHighlight = exports.handleGetHighlightsData = exports.handleGetStoriesForHighlights = exports.handleCreateHighlights = exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
 const clarifai_1 = __importDefault(require("clarifai"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
@@ -659,45 +659,24 @@ const handleGetHighlightsData = (id, dbPostRepository) => __awaiter(void 0, void
     }
 });
 exports.handleGetHighlightsData = handleGetHighlightsData;
-const handleSetStoryToHighlighted = (id, storyId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
+const handleDeleteHighlight = (highlightId, userId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // console.log("handleSetStoryToHighlighted reached");
-        if (!id) {
+        // console.log("handleDeleteHighlight reached");
+        if (!userId) {
             throw new ErrorInApplication_1.default("User ID is required to get all stories", 400);
         }
-        if (!storyId) {
-            throw new ErrorInApplication_1.default("story ID is required to get all stories", 400);
+        if (!highlightId) {
+            throw new ErrorInApplication_1.default("Highlight ID is required ", 400);
         }
-        const allStoriesForUser = yield dbPostRepository.setStoryToHighlighted(storyId);
-        return allStoriesForUser;
+        const deleteHighlight = yield dbPostRepository.deleteHighlight(highlightId);
+        return deleteHighlight;
     }
     catch (error) {
-        // console.log("Error in handleSetStoryToHighlighted");
+        // console.log("Error in handleDeleteHighlight");
         if (error instanceof ErrorInApplication_1.default) {
             throw error;
         }
         throw new ErrorInApplication_1.default("Failed to get all stories for highlights", 500);
     }
 });
-exports.handleSetStoryToHighlighted = handleSetStoryToHighlighted;
-const handleRemoveStoryFromHighlighted = (id, storyId, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // console.log("handleRemoveStoryFromHighlighted reached");
-        if (!id) {
-            throw new ErrorInApplication_1.default("User ID is required to get all stories", 400);
-        }
-        if (!storyId) {
-            throw new ErrorInApplication_1.default("story ID is required to get all stories", 400);
-        }
-        const allStoriesForUser = yield dbPostRepository.removeStoryFromHighlighted(storyId);
-        return allStoriesForUser;
-    }
-    catch (error) {
-        // console.log("Error in handleRemoveStoryFromHighlighted");
-        if (error instanceof ErrorInApplication_1.default) {
-            throw error;
-        }
-        throw new ErrorInApplication_1.default("Failed to get all stories for highlights", 500);
-    }
-});
-exports.handleRemoveStoryFromHighlighted = handleRemoveStoryFromHighlighted;
+exports.handleDeleteHighlight = handleDeleteHighlight;

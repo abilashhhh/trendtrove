@@ -136,13 +136,9 @@ export const postDBRepository = (
  
   const getAllHighlightsForUserHighlights = async (id: string) =>
     await repository.getHighlightsData(id);
-  
  
-  const setStoryToHighlighted = async (storyId: string) =>
-    await repository.setStoryToHighlighted(  storyId);
- 
-  const removeStoryFromHighlighted = async (storyId: string) =>
-    await repository.removeStoryFromHighlighted(  storyId);
+  const deleteHighlight = async (highlightId: string) =>
+    await repository.deleteHighlight(  highlightId);
 
   return {
     addNewPost,
@@ -184,8 +180,7 @@ export const postDBRepository = (
     createHighlights,
     getAllStoriesForUserHighlights,
     getAllHighlightsForUserHighlights,
-    setStoryToHighlighted,
-    removeStoryFromHighlighted,
+    deleteHighlight,
 
   };
 };

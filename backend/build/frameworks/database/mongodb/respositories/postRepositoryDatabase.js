@@ -656,21 +656,15 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error getting all stories for user!");
         }
     });
-    const setStoryToHighlighted = (storyId) => __awaiter(void 0, void 0, void 0, function* () {
-        const story = yield storyModel_1.default.findById(storyId);
-        if (!story) {
-            throw new Error("Story not found");
+    const deleteHighlight = (highlightId) => __awaiter(void 0, void 0, void 0, function* () {
+        const highlightData = yield highlightsModel_1.default.findById(highlightId);
+        if (!highlightData) {
+            throw new Error("Highlights not found");
         }
-        story.isExpired = true;
-        yield story.save();
-    });
-    const removeStoryFromHighlighted = (storyId) => __awaiter(void 0, void 0, void 0, function* () {
-        const story = yield storyModel_1.default.findById(storyId);
-        if (!story) {
-            throw new Error("Story not found");
+        else {
+            yield highlightsModel_1.default.findByIdAndDelete(highlightId);
         }
-        story.isExpired = true;
-        yield story.save();
+        return;
     });
     const createHighlights = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         // console.log("create highlights opayload : ", payload)
@@ -772,8 +766,7 @@ const postRepositoryMongoDB = () => {
         getHighlightsData,
         createHighlights,
         getStoriesForHighlights,
-        setStoryToHighlighted,
-        removeStoryFromHighlighted,
+        deleteHighlight,
     };
 };
 exports.postRepositoryMongoDB = postRepositoryMongoDB;

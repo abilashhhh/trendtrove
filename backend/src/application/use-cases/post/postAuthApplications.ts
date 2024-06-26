@@ -871,69 +871,33 @@ export const handleGetHighlightsData = async (
     );
   }
 };
-
-export const handleSetStoryToHighlighted = async (
-  id: string,
-  storyId: string,
+ 
+export const handleDeleteHighlight = async (
+  highlightId: string,
+  userId: string,
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    // console.log("handleSetStoryToHighlighted reached");
-    if (!id) {
+    // console.log("handleDeleteHighlight reached");
+    if (!userId) {
       throw new ErrorInApplication(
         "User ID is required to get all stories",
         400
       );
     }
-    if (!storyId) {
+    if (!highlightId) {
       throw new ErrorInApplication(
-        "story ID is required to get all stories",
+        "Highlight ID is required ",
         400
       );
     }
-    const allStoriesForUser = await dbPostRepository.setStoryToHighlighted(
-      storyId
+    const deleteHighlight = await dbPostRepository.deleteHighlight(
+      highlightId
     );
 
-    return allStoriesForUser;
+    return deleteHighlight;
   } catch (error) {
-    // console.log("Error in handleSetStoryToHighlighted");
-    if (error instanceof ErrorInApplication) {
-      throw error;
-    }
-    throw new ErrorInApplication(
-      "Failed to get all stories for highlights",
-      500
-    );
-  }
-};
-
-export const handleRemoveStoryFromHighlighted = async (
-  id: string,
-  storyId: string,
-  dbPostRepository: ReturnType<PostDBInterface>
-) => {
-  try {
-    // console.log("handleRemoveStoryFromHighlighted reached");
-    if (!id) {
-      throw new ErrorInApplication(
-        "User ID is required to get all stories",
-        400
-      );
-    }
-    if (!storyId) {
-      throw new ErrorInApplication(
-        "story ID is required to get all stories",
-        400
-      );
-    }
-    const allStoriesForUser = await dbPostRepository.removeStoryFromHighlighted(
-      storyId
-    );
-
-    return allStoriesForUser;
-  } catch (error) {
-    // console.log("Error in handleRemoveStoryFromHighlighted");
+    // console.log("Error in handleDeleteHighlight");
     if (error instanceof ErrorInApplication) {
       throw error;
     }

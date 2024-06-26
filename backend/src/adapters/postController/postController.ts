@@ -11,6 +11,7 @@ import {
   handleCreatePost,
   handleCreateStory,
   handleDarkMode,
+  handleDeleteHighlight,
   handleDelteComment,
   handleDeltePosts,
   handleDislikePosts,
@@ -519,25 +520,15 @@ const postController = (
     });
   });
 
-  const setStoryToHighlighted = asyncHandler(async (req: Request, res: Response) => {
-    const { userId }: { userId: string } = req.body;
-    const {storyId } :{storyId : string} =  req.body
-    const getStoriesData = await handleSetStoryToHighlighted(userId, storyId, dbPostRepository);
-    res.status(201).json({
-      status: "success",
-      message: "Story set to user highlights",
-      data: getStoriesData,
-    });
-  });
+ 
 
-  const removeStoryFromHighlighted = asyncHandler(async (req: Request, res: Response) => {
+  const deletehighlight = asyncHandler(async (req: Request, res: Response) => {
+    const { highlightId } = req.params;
     const { userId }: { userId: string } = req.body;
-    const {storyId } :{storyId : string} =  req.body
-    const getStoriesData = await handleRemoveStoryFromHighlighted(userId, storyId, dbPostRepository);
+    const getStoriesData = await handleDeleteHighlight(highlightId,userId, dbPostRepository);
     res.status(201).json({
       status: "success",
-      message: "Story removed from  user highlights",
-      data: getStoriesData,
+      message: "Highlights deleted",
     });
   });
 
@@ -578,8 +569,7 @@ const postController = (
     createstoryhighlights,
     getStoriesForHighlights,
     getHighlightsData,
-    setStoryToHighlighted,
-    removeStoryFromHighlighted,
+    deletehighlight,
   };
 };
 
