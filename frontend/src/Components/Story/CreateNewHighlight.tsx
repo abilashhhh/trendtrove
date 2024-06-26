@@ -8,6 +8,7 @@ import { TiTick } from "react-icons/ti";
 import ImageCropper from "../ImageCropper";
 import upload from "../../utils/cloudinary";
 import { ToastContainer, toast } from "react-toastify";
+import { setAdminCredentials } from "../../Redux/AdminSlice/adminSlice";
 
 const CreateNewHighlight = () => {
   const [storyHighlights, setStoryhighlights] = useState([]);
@@ -16,6 +17,7 @@ const CreateNewHighlight = () => {
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
   const [isCropping, setIsCropping] = useState(false);
+  const [callEffect, setCallEffect] = useState(false);
 
   useEffect(() => {
     const getAllStoriesOfUser = async () => {
@@ -25,7 +27,7 @@ const CreateNewHighlight = () => {
       }
     };
     getAllStoriesOfUser();
-  }, [setStoryhighlights]);
+  }, [callEffect]);
 
   const handleTickClick = (storyId: string) => {
     setSelectedStories(prevSelected =>
@@ -74,7 +76,9 @@ const CreateNewHighlight = () => {
     const createHighlight = await createStoryHighlights(payload);
 
     if (createHighlight.status === "success") {
+      setCallEffect(true)
       toast.success("Highlights created successfully");
+      
     }
 
     setTimeout(() => {
