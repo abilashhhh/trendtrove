@@ -18,7 +18,7 @@ const AllStoriesListing = () => {
   return (
     <div>
         
-      <h1 className="font-semibold underline text-2xl p-2 ">MY STORIES</h1>
+      <h1 className="font-semibold underline text-2xl p-2 ">MY STORIES <span className='text-sm no-underline'>(Expired)</span></h1>
       <div className="rounded-lg bg-gray-100 dark:bg-gray-900 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-1 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
         {storyhighlights &&
           storyhighlights.map((story, index) => (
@@ -76,7 +76,7 @@ const AllStoriesListing = () => {
                         <p className="py-1 break-all">
                           Caption: {story.captions || "N/A"}
                         </p>
-                        <p className="py-1">
+                        {/* <p className="py-1">
                           Added to highlights:{" "}
                           {story.isHighlighted ? "Yes" : "No"}
                         </p>
@@ -91,7 +91,7 @@ const AllStoriesListing = () => {
                           </p>
                           <p className="py-1">
                             Reactions: {story.reactions.length || "N/A"}
-                          </p>
+                          </p> */}
                         <p className="py-1">
                           Posted At: {formatDateTime(story.createdAt) || "N/A"}
                         </p>
@@ -100,6 +100,7 @@ const AllStoriesListing = () => {
                           Is Expired: {story.isExpired ? "Yes" : "No"}
                         </p>
                       </div>
+                      
                     </div>
                   </div>
                   <form method="dialog" className="modal-backdrop">

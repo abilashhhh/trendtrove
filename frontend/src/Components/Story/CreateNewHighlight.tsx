@@ -20,7 +20,6 @@ const CreateNewHighlight = () => {
   useEffect(() => {
     const getAllStoriesOfUser = async () => {
       const stories = await getStoriesForHighlights();
-      // console.log("Stories of user :stories.data:  ", stories.data);
       if (stories.status === "success") {
         setStoryhighlights(stories?.data);
       }
@@ -28,7 +27,7 @@ const CreateNewHighlight = () => {
     getAllStoriesOfUser();
   }, [setStoryhighlights]);
 
-  const handleTickClick = storyId => {
+  const handleTickClick = (storyId: string) => {
     setSelectedStories(prevSelected =>
       prevSelected.includes(storyId)
         ? prevSelected.filter(id => id !== storyId)
@@ -36,11 +35,10 @@ const CreateNewHighlight = () => {
     );
   };
 
-  const handleCoverImageUpload = event => {
+  const handleCoverImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
       const fileUrl = URL.createObjectURL(file);
-
       setImageToCrop(fileUrl);
       setIsCropping(true);
     }
@@ -51,8 +49,13 @@ const CreateNewHighlight = () => {
     setIsCropping(false);
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!highlightName || !croppedImageUrl || selectedStories.length === 0) {
+      toast.error("Please provide a highlight name, cover image, and select at least one story.");
+      return;
+    }
 
     const response = await upload(
       croppedImageUrl,
@@ -62,31 +65,25 @@ const CreateNewHighlight = () => {
     );
 
     const resUrl = response.url;
-    console.log("response url: ", response.url);
-
     const payload = {
       highlightName,
       coverImage: resUrl,
       selectedStories,
     };
 
-    console.log("Payload:", payload);
-
     const createHighlight = await createStoryHighlights(payload);
-    console.log("CreateHighlight:", createHighlight);
 
     if (createHighlight.status === "success") {
       toast.success("Highlights created successfully");
     }
 
     setTimeout(() => {
-      // setStoryhighlights([]);
       setSelectedStories([]);
       setHighlightName("");
       setCroppedImageUrl(null);
       setIsCropping(false);
       setImageToCrop(null);
-      document.getElementById("addNewHighlight").close();
+      document.getElementById("addNewHighlight")?.close();
     }, 1000);
   };
 
@@ -94,7 +91,7 @@ const CreateNewHighlight = () => {
     <>
       <dialog id="addNewHighlight" className="modal">
         <ToastContainer />
-        <div className="modal-box w-full   max-w-3xl text-black dark:text-gray-300 overflow-auto no-scrollbar bg-gray-200 dark:bg-gray-800">
+        <div className="modal-box w-full max-w-3xl text-black dark:text-gray-300 overflow-auto no-scrollbar bg-gray-200 dark:bg-gray-800">
           <h3 className="font-bold text-lg underline my-2">
             Create new highlight
           </h3>
@@ -151,7 +148,7 @@ const CreateNewHighlight = () => {
                     />
                   </div>
                 </div>
-                {croppedImageUrl && <img src={croppedImageUrl} alt="" />}
+                {croppedImageUrl && <img src={croppedImageUrl} alt="Cropped Highlight Cover" />}
               </label>
             </div>
             <h1>Select stories to add </h1>
@@ -251,7 +248,7 @@ const CreateNewHighlight = () => {
 
       <div className="rounded-lg mt-2">
         <div
-          onClick={() => document.getElementById(`addNewHighlight`).showModal()}
+          onClick={() => document.getElementById("addNewHighlight")?.showModal()}
           className="bg-slate-200 flex flex-col justify-center items-center cursor-pointer p-4 dark:bg-slate-800 w-32 h-32 rounded-full flex-shrink-0">
           <FaPlusCircle className="text-2xl" />
           <div className="text-center text-sm">Create new highlight</div>
