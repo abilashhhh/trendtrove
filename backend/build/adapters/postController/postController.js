@@ -347,6 +347,16 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getStoriesData,
         });
     }));
+    const storiesforhighlightsusername = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        const { username } = req.params;
+        const getStoriesData = yield (0, postAuthApplications_1.handleGetStoriesForHighlightsUsername)(username, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "Stories fetched for user highlights",
+            data: getStoriesData,
+        });
+    }));
     const getHighlightsData = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { userId } = req.body;
         console.log("getHighlightsData Userid: ", userId);
@@ -427,6 +437,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         getHighlightsData,
         gethighlightsusingusername,
         deletehighlight,
+        storiesforhighlightsusername,
     };
 };
 exports.default = postController;

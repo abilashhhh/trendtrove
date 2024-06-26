@@ -831,6 +831,21 @@ export const postRepositoryMongoDB = () => {
     return stories;
   };
 
+  const getAllStoriesForUserHighlightsUsername = async (username: string) => {
+    const requesterUser = await User.findById(username);
+    if (!requesterUser) {
+      throw new Error("User not found");
+    }
+
+    const stories = await Story.find({ userId: requesterUser._id })
+      .sort({ createdAt: -1 })
+      .populate("userId", "username dp");
+
+    // console.log("Getting stories:", stories);
+
+    return stories;
+  };
+
   // getStoriesForHighlights('666be616e14eb069b2c78fd8')
 
   const getHighlightsData = async (id: string) => {
@@ -944,6 +959,7 @@ export const postRepositoryMongoDB = () => {
     getAllHighlightsForUserHighlightsUsingUsername,
     createHighlights,
     getStoriesForHighlights,
+    getAllStoriesForUserHighlightsUsername,
     deleteHighlight,
   };
 };

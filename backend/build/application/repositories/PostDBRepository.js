@@ -65,6 +65,7 @@ const postDBRepository = (repository) => {
     const createHighlights = (payload) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.createHighlights(payload); });
     const getAllStoriesForUserHighlights = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getStoriesForHighlights(id); });
     const getAllHighlightsForUserHighlights = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getHighlightsData(id); });
+    const getAllStoriesForUserHighlightsUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllStoriesForUserHighlightsUsername(username); });
     const getAllHighlightsForUserHighlightsUsingUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllHighlightsForUserHighlightsUsingUsername(username); });
     const deleteHighlight = (highlightId) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.deleteHighlight(highlightId); });
     return {
@@ -106,6 +107,7 @@ const postDBRepository = (repository) => {
         rightSidebar,
         getAllStoriesForUser,
         createHighlights,
+        getAllStoriesForUserHighlightsUsername,
         getAllStoriesForUserHighlights,
         getAllHighlightsForUserHighlights,
         getAllHighlightsForUserHighlightsUsingUsername,

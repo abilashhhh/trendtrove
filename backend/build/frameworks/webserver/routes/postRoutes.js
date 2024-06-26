@@ -54,7 +54,7 @@ const postRouter = () => {
     router.get("/getstoriesforhighlights", authMiddleware_1.default, controller.getStoriesForHighlights);
     router.get("/gethighlightsdata", authMiddleware_1.default, controller.getHighlightsData);
     router.delete("/deletehighlight/:highlightId", authMiddleware_1.default, controller.deletehighlight);
-    // router.get("/storiesforhighlightsusername/:username", authMiddleware, controller.storiesforhighlightsusername);
+    router.get("/storiesforhighlightsusername/:username", authMiddleware_1.default, controller.storiesforhighlightsusername);
     router.get("/gethighlightsusingusername/:username", authMiddleware_1.default, controller.gethighlightsusingusername);
     return router;
 };

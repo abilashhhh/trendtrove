@@ -711,6 +711,17 @@ const postRepositoryMongoDB = () => {
         // console.log("Getting stories:", stories);
         return stories;
     });
+    const getAllStoriesForUserHighlightsUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+        const requesterUser = yield userModel_1.default.findById(username);
+        if (!requesterUser) {
+            throw new Error("User not found");
+        }
+        const stories = yield storyModel_1.default.find({ userId: requesterUser._id })
+            .sort({ createdAt: -1 })
+            .populate("userId", "username dp");
+        // console.log("Getting stories:", stories);
+        return stories;
+    });
     // getStoriesForHighlights('666be616e14eb069b2c78fd8')
     const getHighlightsData = (id) => __awaiter(void 0, void 0, void 0, function* () {
         const requesterUser = yield userModel_1.default.findById(id);
@@ -803,6 +814,7 @@ const postRepositoryMongoDB = () => {
         getAllHighlightsForUserHighlightsUsingUsername,
         createHighlights,
         getStoriesForHighlights,
+        getAllStoriesForUserHighlightsUsername,
         deleteHighlight,
     };
 };

@@ -30,6 +30,7 @@ import {
   handleGetPostsOfCurrentUser,
   handleGetSavedPostsOfCurrentUser,
   handleGetStoriesForHighlights,
+  handleGetStoriesForHighlightsUsername,
   handleGetStoriesForUser,
   handleGetTaggedPostsOfCurrentUser,
   handleGetlikesdislikesinfo,
@@ -511,6 +512,19 @@ const postController = (
     });
   });
 
+  const storiesforhighlightsusername = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const {username} = req.params
+
+    const getStoriesData = await handleGetStoriesForHighlightsUsername
+    (username, dbPostRepository);
+    res.status(201).json({
+      status: "success",
+      message: "Stories fetched for user highlights",
+      data: getStoriesData,
+    });
+  });
+
   const getHighlightsData = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
 
@@ -602,6 +616,7 @@ const postController = (
     getHighlightsData,
     gethighlightsusingusername,
     deletehighlight,
+    storiesforhighlightsusername,
   };
 };
 

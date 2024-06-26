@@ -139,6 +139,9 @@ export const postDBRepository = (
  
   const getAllHighlightsForUserHighlights = async (id: string) =>
     await repository.getHighlightsData(id);
+ 
+  const getAllStoriesForUserHighlightsUsername = async (username: string) =>
+    await repository.getAllStoriesForUserHighlightsUsername(username);
 
   const getAllHighlightsForUserHighlightsUsingUsername = async (username: string) =>
     await repository.getAllHighlightsForUserHighlightsUsingUsername(username);
@@ -185,6 +188,7 @@ export const postDBRepository = (
     rightSidebar,
     getAllStoriesForUser,
     createHighlights,
+    getAllStoriesForUserHighlightsUsername,
     getAllStoriesForUserHighlights,
     getAllHighlightsForUserHighlights,
     getAllHighlightsForUserHighlightsUsingUsername,
