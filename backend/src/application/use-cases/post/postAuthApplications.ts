@@ -844,6 +844,34 @@ export const handleGetStoriesForHighlights = async (
   }
 };
 
+export const handleGetHighlightsData = async (
+  id: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleGetHighlightsData reached");
+    if (!id) {
+      throw new ErrorInApplication(
+        "User ID is required to get all stories",
+        400
+      );
+    }
+    const allStoriesForUser =
+      await dbPostRepository.getAllHighlightsForUserHighlights(id);
+
+    return allStoriesForUser;
+  } catch (error) {
+    // console.log("Error in handleGetHighlightsData");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication(
+      "Failed to get all highlights for user highlights",
+      500
+    );
+  }
+};
+
 export const handleSetStoryToHighlighted = async (
   id: string,
   storyId: string,

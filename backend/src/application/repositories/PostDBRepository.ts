@@ -134,6 +134,10 @@ export const postDBRepository = (
     await repository.getStoriesForHighlights(id);
   
  
+  const getAllHighlightsForUserHighlights = async (id: string) =>
+    await repository.getHighlightsData(id);
+  
+ 
   const setStoryToHighlighted = async (storyId: string) =>
     await repository.setStoryToHighlighted(  storyId);
  
@@ -179,6 +183,7 @@ export const postDBRepository = (
     getAllStoriesForUser,
     createHighlights,
     getAllStoriesForUserHighlights,
+    getAllHighlightsForUserHighlights,
     setStoryToHighlighted,
     removeStoryFromHighlighted,
 

@@ -676,7 +676,7 @@ const postRepositoryMongoDB = () => {
         // console.log("create highlights opayload : ", payload)
         const newHighlight = new highlightsModel_1.default(payload);
         const newHighlightData = yield newHighlight.save();
-        // console.log("create highlights newHighlightData : ", newHighlightData)
+        console.log("create highlights newHighlightData : ", newHighlightData);
         return newHighlightData;
     });
     const getStoriesForHighlights = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -687,10 +687,20 @@ const postRepositoryMongoDB = () => {
         const stories = yield storyModel_1.default.find({ userId: id })
             .sort({ createdAt: -1 })
             .populate("userId", "username dp");
-        console.log("Getting stories:", stories);
+        // console.log("Getting stories:", stories);
         return stories;
     });
     // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+    const getHighlightsData = (id) => __awaiter(void 0, void 0, void 0, function* () {
+        const requesterUser = yield userModel_1.default.findById(id);
+        if (!requesterUser) {
+            throw new Error("User not found");
+        }
+        const highlights = yield highlightsModel_1.default.find({ userId: id });
+        console.log("Getting highlights data:", highlights);
+        return highlights;
+    });
+    // getHighlightsData('66641c97828195c0d16979ee')
     const updateStoryExpiry = () => __awaiter(void 0, void 0, void 0, function* () {
         const currentDate = new Date();
         const stories = yield storyModel_1.default.find({});
@@ -759,6 +769,7 @@ const postRepositoryMongoDB = () => {
         darkMode,
         addNewStory,
         getAllStoriesForUser,
+        getHighlightsData,
         createHighlights,
         getStoriesForHighlights,
         setStoryToHighlighted,

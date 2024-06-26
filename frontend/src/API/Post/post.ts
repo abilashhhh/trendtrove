@@ -549,6 +549,19 @@ export const getStoriesForHighlights = async () => {
     throw error;
   }
 };
+export const gethighlightsdata = async () => {
+  try {
+    console.log("gethighlightsdata ");
+    const response = await axiosUserInstance.get<HighlightsInterface>(
+      END_POINTS.GET_HIGHLIGHTS_FOR_USER_HIGHLIGHTS
+    );
+    console.log("gethighlightsdata response:", response.data.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
 
 export const createStoryHighlights = async (
   payload: Partial<HighlightsInterface>

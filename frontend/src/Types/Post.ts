@@ -193,7 +193,9 @@ export interface EditCommentResponse {
 }
 
 export interface HighlightsInterface{ 
-  highlightsName: string,
-  highlightsCover: string,
-  storyId: Story
+  _id: string;  
+  highlightName: string;
+  coverImage: string;
+  selectedStories: string[]; 
+  userId: string;
 }

@@ -51,6 +51,7 @@ const postRouter = () => {
     router.get("/getstories", authMiddleware_1.default, controller.getstories);
     router.post("/createstoryhighlights", authMiddleware_1.default, controller.createstoryhighlights);
     router.get("/getstoriesforhighlights", authMiddleware_1.default, controller.getStoriesForHighlights);
+    router.get("/gethighlightsdata", authMiddleware_1.default, controller.getHighlightsData);
     router.patch("/setstoryTohighlighted", authMiddleware_1.default, controller.setStoryToHighlighted);
     router.patch("/removestoryfromhighlighted", authMiddleware_1.default, controller.removeStoryFromHighlighted);
     return router;

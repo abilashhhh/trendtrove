@@ -765,38 +765,34 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  const setStoryToHighlighted = async (storyId:string) => {
-  const story = await Story.findById(storyId);
-  if (!story) {
-    throw new Error("Story not found");
-  }
-  story.isExpired = true;
-  await story.save();
+  const setStoryToHighlighted = async (storyId: string) => {
+    const story = await Story.findById(storyId);
+    if (!story) {
+      throw new Error("Story not found");
+    }
+    story.isExpired = true;
+    await story.save();
   };
 
-  const removeStoryFromHighlighted = async (storyId:string) => {
-  const story = await Story.findById(storyId);
-  if (!story) {
-    throw new Error("Story not found");
-  }
-  story.isExpired = true;
-  await story.save();
+  const removeStoryFromHighlighted = async (storyId: string) => {
+    const story = await Story.findById(storyId);
+    if (!story) {
+      throw new Error("Story not found");
+    }
+    story.isExpired = true;
+    await story.save();
   };
 
-  
-
-  const createHighlights = async (payload:highlightsInterface) => {
-
+  const createHighlights = async (payload: highlightsInterface) => {
     // console.log("create highlights opayload : ", payload)
- 
-  const newHighlight = new Highlights(payload);
+
+    const newHighlight = new Highlights(payload);
     const newHighlightData = await newHighlight.save();
-    // console.log("create highlights newHighlightData : ", newHighlightData)
-    return newHighlightData
+    console.log("create highlights newHighlightData : ", newHighlightData);
+    return newHighlightData;
   };
 
-  
-  const getStoriesForHighlights = async(id: string) => {
+  const getStoriesForHighlights = async (id: string) => {
     const requesterUser = await User.findById(id);
     if (!requesterUser) {
       throw new Error("User not found");
@@ -806,21 +802,34 @@ export const postRepositoryMongoDB = () => {
       .sort({ createdAt: -1 })
       .populate("userId", "username dp");
 
-    console.log("Getting stories:", stories);
+    // console.log("Getting stories:", stories);
 
     return stories;
-    }
-    
-    // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+  };
 
-    
+  // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+
+  const getHighlightsData = async (id: string) => {
+    const requesterUser = await User.findById(id);
+    if (!requesterUser) {
+      throw new Error("User not found");
+    }
+
+    const highlights = await Highlights.find({ userId: id });
+
+    console.log("Getting highlights data:", highlights);
+
+    return highlights;
+  };
+  // getHighlightsData('66641c97828195c0d16979ee')
+
   const updateStoryExpiry = async () => {
     const currentDate = new Date();
 
     const stories = await Story.find({});
 
     for (const story of stories) {
-      const timeDifference =  
+      const timeDifference =
         currentDate.getTime() - new Date(story.createdAt).getTime();
       const hoursDifference = timeDifference / (1000 * 60 * 60);
 
@@ -891,11 +900,11 @@ export const postRepositoryMongoDB = () => {
     darkMode,
     addNewStory,
     getAllStoriesForUser,
+    getHighlightsData,
     createHighlights,
     getStoriesForHighlights,
-    setStoryToHighlighted ,
+    setStoryToHighlighted,
     removeStoryFromHighlighted,
-  
   };
 };
 //////////////////////////////////////////////////////////
