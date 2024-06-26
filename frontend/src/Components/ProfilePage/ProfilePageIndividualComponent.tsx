@@ -11,31 +11,19 @@ import {
   rejectFollowRequests,
 } from "../../utils/userRequestsHelper";
 import Modal from "../../utils/Modal";
-import { blockOtherUser, getUserProfile, unblockOtherUser } from "../../API/User/user";
+import {
+  blockOtherUser,
+  getUserProfile,
+  unblockOtherUser,
+} from "../../API/User/user";
 import { getPostsLengthOfTheUser } from "../../API/Post/post";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import {  FaMapMarkedAlt } from "react-icons/fa";
-import {
-  dislikePost,
-  fetchAllPostsForUserUsingUsername,
-  likePost,
-  savePost,
-  getLikedPosts,
-  getDislikedPosts,
-  getPostLikesAndDislikesInfo,
-} from "../../API/Post/post";
 import { FiMoreVertical } from "react-icons/fi";
-import {
-  AiOutlineLike,
-  AiOutlineDislike,
-  AiOutlineComment,
-  AiFillLike,
-  AiFillDislike,
-} from "react-icons/ai";
-import PostsDisplayCommon from "../Post/PostsDisplayCommon";
+
 import useUserDetails from "../../Hooks/useUserDetails";
+import FriendsPagePost from "./FriendsPageComponents/FriendsPagePost";
 
 interface UserInfo {
   coverPhoto: string;
@@ -65,7 +53,7 @@ const formatDate = (date: string | undefined) => {
 
 const ProfilePageIndividualComponent: React.FC = () => {
   const { username } = useParams<{ username: string }>();
-  const currentUser = useUserDetails()
+  const currentUser = useUserDetails();
   let navigate = useNavigate();
 
   if (username === currentUser?.username) {
@@ -89,6 +77,21 @@ const ProfilePageIndividualComponent: React.FC = () => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
 
+  const [postCount, setPostCount] = useState(0);
+  const [activeSection, setActiveSection] = useState("POSTS");
+  const sections = ["POSTS", "TAGGED POSTS"];
+
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case "POSTS":
+        return <FriendsPagePost username={username} />;
+      case "TAGGED POSTS":
+        return <div>tagged posts</div>;
+      default:
+        return null;
+    }
+  };
+
   const handleOpenFollowersModal = () => {
     setShowFollowersModal(true);
   };
@@ -104,22 +107,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
   const handleCloseFollowingModal = () => {
     setShowFollowingModal(false);
   };
-
-  const [postCount, setPostCount] = useState(0);
-  const [posts, setPosts] = useState<any[]>([]);
-  const [showOptions, setShowOptions] = useState<string | null>(null);
-  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
-  const [dislikedPosts, setDislikedPosts] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [likesDislikesData, setLikesDislikesData] = useState<{
-    [key: string]: {
-      likesCount: number;
-      dislikesCount: number;
-      likedUsers: string[];
-      dislikedUsers: string[];
-    };
-  }>({});
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -182,16 +169,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
       } else {
         setIsFollower(true);
       }
-    }
-  };
-
-  const handleSavePost = async (postId: string) => {
-    console.log("handleSavePost: ", postId);
-    const response = await savePost(currentUser?._id, postId);
-    if (response.status === "success") {
-      toast.success("Post saved successfully");
-    } else {
-      toast.error("Error saving post");
     }
   };
 
@@ -303,148 +280,65 @@ const ProfilePageIndividualComponent: React.FC = () => {
 
   const handleBlockUser = async (userId: string) => {
     const confirmed = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to block this user.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "You want to block this user.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, block it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, block it!",
     });
-  
+
     if (confirmed.isConfirmed) {
       try {
         const block = await blockOtherUser(currentUser._id, userId);
         console.log("User blocked successfully:", block);
         Swal.fire({
-          icon: 'success',
-          title: 'User Blocked!',
-          text: 'You have successfully blocked the user.',
+          icon: "success",
+          title: "User Blocked!",
+          text: "You have successfully blocked the user.",
         });
-        window.location.reload()
+        window.location.reload();
       } catch (error) {
-        console.error('Error blocking user:', error.message);
+        console.error("Error blocking user:", error.message);
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to block user. Please try again later.',
+          icon: "error",
+          title: "Error",
+          text: "Failed to block user. Please try again later.",
         });
       }
     }
   };
-  
+
   const handleUnBlockUser = async (userId: string) => {
     const confirmed = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to unblock this user.',
-      icon: 'question',
+      title: "Are you sure?",
+      text: "You want to unblock this user.",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, unblock it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, unblock it!",
     });
-  
+
     if (confirmed.isConfirmed) {
       try {
         const unblock = await unblockOtherUser(currentUser._id, userId);
         console.log("User unblocked successfully:", unblock);
         Swal.fire({
-          icon: 'success',
-          title: 'User Unblocked!',
-          text: 'You have successfully unblocked the user.',
+          icon: "success",
+          title: "User Unblocked!",
+          text: "You have successfully unblocked the user.",
         });
-        window.location.reload()
-
+        window.location.reload();
       } catch (error) {
-        console.error('Error unblocking user:', error.message);
+        console.error("Error unblocking user:", error.message);
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to unblock user. Please try again later.',
+          icon: "error",
+          title: "Error",
+          text: "Failed to unblock user. Please try again later.",
         });
       }
-    }
-  };
-  
-
-  const fetchUserPosts = async (username: string | undefined) => {
-    try {
-      if (username) {
-        const response = await fetchAllPostsForUserUsingUsername(username);
-        if (response && response.data) {
-          setPosts(response.data);
-        } else {
-          console.log("No posts of users");
-        }
-      } else {
-        console.log("User ID is undefined");
-      }
-    } catch (error) {
-      console.log("Error getting new posts:", error);
-    }
-  };
-
-  const fetchUserLikesAndDislikes = async (userId: string | undefined) => {
-    try {
-      if (userId) {
-        const [likedResponse, dislikedResponse] = await Promise.all([
-          getLikedPosts(userId),
-          getDislikedPosts(userId),
-        ]);
-
-        if (likedResponse) {
-          const likedPostsData = likedResponse.likedPosts.reduce(
-            (acc: { [key: string]: boolean }, post: any) => {
-              if (post.userId === userId) {
-                acc[post.postId] = true;
-              }
-              return acc;
-            },
-            {}
-          );
-          setLikedPosts(likedPostsData);
-        }
-
-        if (dislikedResponse) {
-          const dislikedPostsData = dislikedResponse.dislikedPosts.reduce(
-            (acc: { [key: string]: boolean }, post: any) => {
-              if (post.userId === userId) {
-                acc[post.postId] = true;
-              }
-              return acc;
-            },
-            {}
-          );
-          setDislikedPosts(dislikedPostsData);
-        }
-      }
-    } catch (error) {
-      console.log("Error fetching liked and disliked posts:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (currentUser?._id) {
-      fetchUserLikesAndDislikes(currentUser._id);
-    }
-  }, [currentUser?._id]);
-
-  useEffect(() => {
-    fetchUserPosts(username);
-  }, [username]);
-
-  useEffect(() => {
-    if (posts.length > 0) {
-      posts.forEach(post => fetchLikesDislikesData(post._id));
-    }
-  }, [posts]);
-
-  const fetchLikesDislikesData = async (postId: string) => {
-    try {
-      const data = await getPostLikesAndDislikesInfo(postId);
-      setLikesDislikesData(prev => ({ ...prev, [postId]: data }));
-    } catch (error) {
-      console.error("Error fetching likes and dislikes data:", error);
     }
   };
 
@@ -479,61 +373,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
       setFollowDate(youAreFollowingHim.followedAt);
     }
   }, [userDetails, currentUser]);
-
-  const handleLike = async (postId: string) => {
-    const result = await likePost(currentUser._id, postId);
-
-    setLikedPosts(prev => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
-
-    if (dislikedPosts[postId]) {
-      setDislikedPosts(prev => ({
-        ...prev,
-        [postId]: false,
-      }));
-    }
-    fetchLikesDislikesData(postId);
-  };
-
-  const handleDislike = async (postId: string) => {
-    const result = await dislikePost(currentUser._id, postId);
-
-    setDislikedPosts(prev => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
-    if (likedPosts[postId]) {
-      setLikedPosts(prev => ({
-        ...prev,
-        [postId]: false,
-      }));
-    }
-
-    fetchLikesDislikesData(postId);
-  };
-
-  const toggleOptions = (postId: string) => {
-    if (showOptions === postId) {
-      setShowOptions(null);
-    } else {
-      setShowOptions(postId);
-    }
-  };
-
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    customPaging: () => (
-      <div className="w-5 h-0.5 rounded-lg mt-2 bg-gray-500 dark:bg-gray-500"></div>
-    ),
-    dotsClass: "slick-dots slick-thumb flex justify-center",
-  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -711,184 +550,75 @@ const ProfilePageIndividualComponent: React.FC = () => {
               </button>
             )}
             <div className="relative">
-      <button
-        onClick={toggleMoreOptions}
-        className="bg-slate-800 p-2 rounded-lg text-white font-bold relative">
-        <FiMoreVertical   />
-      </button>
-      {showMoreOptions && (
-        <div className="absolute mt-4 right-0 p-1 w-40 bg-slate-200 dark:bg-slate-800 rounded-lg shadow-lg z-10">
-          
-    {currentUser.blockedUsers?.includes(userDetails._id) ? (
-  <button
-    onClick={() => handleUnBlockUser(userDetails._id)}
-    className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2"
-  >
-    Unblock User
-  </button>
-) : (
-  <button
-    onClick={() => handleBlockUser(userDetails._id)}
-    className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2"
-  >
-    Block User
-  </button>
-)}
+              <button
+                onClick={toggleMoreOptions}
+                className="bg-slate-800 p-2 rounded-lg text-white font-bold relative">
+                <FiMoreVertical />
+              </button>
+              {showMoreOptions && (
+                <div className="absolute mt-4 right-0 p-1 w-40 bg-slate-200 dark:bg-slate-800 rounded-lg shadow-lg z-10">
+                  {currentUser.blockedUsers?.includes(userDetails._id) ? (
+                    <button
+                      onClick={() => handleUnBlockUser(userDetails._id)}
+                      className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
+                      Unblock User
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleBlockUser(userDetails._id)}
+                      className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
+                      Block User
+                    </button>
+                  )}
 
-       
-          <button  className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
-            Share Profile
-          </button>
-          <button className="block w-full text-left py-2 px-4 rounded-lg  bg-slate-300 dark:bg-slate-900 text-black dark:text-white">
-            Message
-          </button>
-        </div>
-      )}
-    </div>
+                  <button className="block w-full text-left py-2 px-4 rounded-lg bg-slate-300 dark:bg-slate-900 text-black dark:text-white mb-2">
+                    Share Profile
+                  </button>
+                  <button className="block w-full text-left py-2 px-4 rounded-lg  bg-slate-300 dark:bg-slate-900 text-black dark:text-white">
+                    Message
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {!currentUser.blockedUsers?.includes(userDetails._id)  ? 
-
-        <div className="p-2">
-          {!userDetails.isPrivate ||
-          (userDetails.followers &&
-            userDetails.followers.some(
-              follower => follower.userId === currentUser._id
-            )) ? (
-            <div className="rounded-lg bg-gray-100 sm:grid sm:grid-cols-1 md:grid md:grid-cols-2 xl:grid-cols-3 gap-1 dark:bg-gray-900 text-black dark:text-white h-full overflow-y-auto no-scrollbar justify-center">
-              {posts.length > 0 ? (
-                posts.map(post => (
-                  <div
-                    key={post._id}
-                    className="p-2 m-2 border mb-4 rounded-lg bg-white dark:bg-gray-800">
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center gap-2 cursor-pointer">
-                        <img
-                          src={post.dp}
-                          alt=""
-                          className="rounded-full h-10 w-10"
-                          onClick={() => navigate(`/profiles/${post.username}`)}
-                        />
-                        <div>
-                          <p
-                            className="font-bold"
-                            onClick={() =>
-                              navigate(`/profiles/${post.username}`)
-                            }>
-                            {post.username}
-                          </p>
-                          {post.location && (
-                            <p className="text-xs flex gap-2 m-1 text-gray-500 dark:text-gray-400 font-extralight">
-                              <FaMapMarkedAlt /> {post.location}
-                            </p>
-                          )}
-                          <p className="text-xs font-extralight text-gray-500 dark:text-gray-400">
-                            {new Date(post.createdAt).toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="relative">
-                        <button
-                          className="focus:outline-none mr-2"
-                          onClick={() => toggleOptions(post._id)}>
-                          <FiMoreVertical className="text-gray-500 dark:text-gray-400" />
-                        </button>
-                        {showOptions === post._id && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 text-xs border cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                            <p
-                              onClick={() =>
-                                navigate(`/profiles/${post.username}`)
-                              }
-                              className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                              View Profile
-                            </p>
-                            <p
-                              onClick={() =>
-                                navigate(`/reportPost/${post._id}`)
-                              }
-                              className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                              Report Post
-                            </p>
-                            <p
-                              onClick={() => handleSavePost(post._id)}
-                              className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                              Save Post
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <PostsDisplayCommon post={post} />
-
-                    <div className="flex justify-between">
-                      <div className="flex gap-2 items-center mt-4">
-                        <button
-                          className={`flex items-center space-x-2 hover:text-blue-600 ${
-                            likedPosts[post._id]
-                              ? "text-blue-600"
-                              : "text-gray-600 dark:text-gray-400"
-                          }`}
-                          onClick={() => handleLike(post._id)}>
-                          {likedPosts[post._id] ? (
-                            <AiFillLike className="text-xl md:text-2xl lg:text-3xl" />
-                          ) : (
-                            <AiOutlineLike className="text-xl md:text-2xl lg:text-3xl" />
-                          )}
-                        </button>
-                        <button
-                          className={`flex items-center space-x-2 hover:text-red-600 ${
-                            dislikedPosts[post._id]
-                              ? "text-red-600"
-                              : "text-gray-600 dark:text-gray-400"
-                          }`}
-                          onClick={() => handleDislike(post._id)}>
-                          {dislikedPosts[post._id] ? (
-                            <AiFillDislike className="text-xl md:text-2xl lg:text-3xl" />
-                          ) : (
-                            <AiOutlineDislike className="text-xl md:text-2xl lg:text-3xl" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => navigate(`/post/${post._id}`)}
-                          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-green-600">
-                          <AiOutlineComment className="text-xl md:text-2xl lg:text-3xl" />
-                        </button>
-                      </div>
-                      <div className="flex gap-2 mt-4 cursor-pointer">
-                        <p className="text-xs mt-2">
-                          Likes:{" "}
-                          {(likesDislikesData[post._id] &&
-                            likesDislikesData[post._id].likesdislikesinfo
-                              ?.likesCount) ||
-                            0}
-                        </p>
-                        <p className="text-xs mt-2">|</p>
-                        <p className="text-xs mt-2">
-                          Disikes:{" "}
-                          {(likesDislikesData[post._id] &&
-                            likesDislikesData[post._id].likesdislikesinfo
-                              ?.dislikesCount) ||
-                            0}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center  text-center ">
-                  No posts available
-                </p>
-              )}
-            </div>
-          ) : (
-            <div className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center text-center align-middle justify-center">
-              Can't view profile, please send friend request to view full
-              profile
-            </div>
-          )}
-         </div>
-  : <h1 className="p-3 text-center">You have blocked the user, Unblock to view profile</h1> }
+        {!currentUser.blockedUsers?.includes(userDetails._id) ? (
+          <div className="p-2">
+            {!userDetails.isPrivate ||
+            (userDetails.followers &&
+              userDetails.followers.some(
+                follower => follower.userId === currentUser._id
+              )) ? (
+              <div>
+                <div className="flex flex-col md:flex-row justify-center px-8 py-2 mt-2 rounded-lg shadow-lg gap-4">
+                  {sections.map(section => (
+                    <button
+                      key={section}
+                      className={`p-3 rounded-lg border-2 font-bold ${
+                        activeSection === section
+                          ? "bg-blue-500 text-white border-blue-500"
+                          : "bg-slate-300 text-black dark:text-white dark:bg-slate-900 border-red-500"
+                      }`}
+                      onClick={() => setActiveSection(section)}>
+                      {section}
+                    </button>
+                  ))}
+                </div>
+                <div>{renderActiveSection()}</div>
+              </div>
+            ) : (
+              <div className=" bg-slate-700 p-2 dark:bg-slate-900 font-bold text-lg rounded-lg  flex items-center text-center align-middle justify-center">
+                Can't view profile, please send friend request to view full
+                profile
+              </div>
+            )}
+          </div>
+        ) : (
+          <h1 className="p-3 text-center">
+            You have blocked the user, Unblock to view profile
+          </h1>
+        )}
         <Modal
           isOpen={showFollowersModal}
           onClose={handleCloseFollowersModal}
@@ -901,7 +631,6 @@ const ProfilePageIndividualComponent: React.FC = () => {
           title="Following"
           users={userDetails.following}
         />
-
       </div>
     </main>
   );

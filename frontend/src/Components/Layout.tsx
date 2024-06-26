@@ -50,7 +50,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         toast.error("Logging Out");
         setTimeout(() => {
           dispatch(logout());
-        }, 2000);
+        }, 1000);
       } catch (error) {
         console.error("Logout failed", error);
         toast.error("Log out failed");

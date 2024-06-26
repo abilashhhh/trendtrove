@@ -1,4 +1,6 @@
 export interface Post {
+  length: number;
+  map(arg0: (post: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
   userId: string;
   isArchived: boolean;
   captions?: string;

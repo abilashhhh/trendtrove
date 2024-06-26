@@ -8,7 +8,6 @@
 
   const PostInProfilePage = () => {
     const [activeSection, setActiveSection] = useState("MY POSTS");
-
     const sections = ["MY POSTS", "SAVED POSTS", "TAGGED POSTS", "STORY HIGHLIGHTS"];
 
     const renderActiveSection = () => {
