@@ -28,6 +28,7 @@ const postDBRepository = (repository) => {
     });
     const getAllPostsForUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUser(id); });
     const getAllPostsForUserUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForUserUsername(username); });
+    const getAllTaggedPostsForUserUsername = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllTaggedPostsForUserUsername(username); });
     const lengthofPostsForUser = (username) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.lengthofPostsForUser(username); });
     const getAllPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllPostsForCurrentUser(id); });
     const getAllSavedPostsForCurrentUser = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield repository.getAllSavedPostsForCurrentUser(id); });
@@ -75,6 +76,7 @@ const postDBRepository = (repository) => {
         unblockPost,
         getAllPostsForUser,
         getAllPostsForUserUsername,
+        getAllTaggedPostsForUserUsername,
         lengthofPostsForUser,
         getAllPostsForCurrentUser,
         getAllSavedPostsForCurrentUser,

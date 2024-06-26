@@ -171,6 +171,24 @@ export const fetchTaggedPostsOfTheCurrentUser =
     }
   };
 
+
+   
+
+export const fetchTaggedPostsOfUserUsingUsername =
+async (username:string): Promise<GetAllPostsOfCurrentUser> => {
+  try {
+
+const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+  `${END_POINTS.GET_TAGGED_POSTS_OF_CURRENT_USER_USING_USERENAME}/${username}`
+);
+    console.log("fetchTaggedPostsOfTheCurrentUser respose: ",response.data?.data);
+    return response.data?.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
 export const getThePostDataOfParticularPost = async (
   id: string
 ): Promise<GetAllPostsOfCurrentUser> => {

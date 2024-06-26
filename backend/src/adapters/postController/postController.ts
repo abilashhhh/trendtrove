@@ -42,6 +42,7 @@ import {
   handleRightSidebar,
   handleSavePosts,
   handleSetStoryToHighlighted,
+  handleTaggedGetPostsForUserUsername,
   handleupdatepost,
 } from "../../application/use-cases/post/postAuthApplications";
 import { PostRepositoryMongoDB } from "../../frameworks/database/mongodb/respositories/postRepositoryDatabase";
@@ -132,6 +133,20 @@ const postController = (
       res.status(201).json({
         status: "success",
         message: "Posts fetched for user",
+        data: getPosts,
+      });
+    }
+  );
+  const gettaggedpostforuserusername = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { username } = req.params;
+      const getPosts = await handleTaggedGetPostsForUserUsername(
+        username,
+        dbPostRepository
+      );
+      res.status(201).json({
+        status: "success",
+        message: "tagged posts fetched for user",
         data: getPosts,
       });
     }
@@ -538,6 +553,7 @@ const postController = (
     updatepost,
     getpostforuser,
     getpostforuserusername,
+    gettaggedpostforuserusername,
     getpostlengthofuser,
     getpostofcurrentuser,
     getsavedpostofcurrentuser,

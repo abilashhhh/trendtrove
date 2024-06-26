@@ -65,6 +65,15 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             data: getPosts,
         });
     }));
+    const gettaggedpostforuserusername = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { username } = req.params;
+        const getPosts = yield (0, postAuthApplications_1.handleTaggedGetPostsForUserUsername)(username, dbPostRepository);
+        res.status(201).json({
+            status: "success",
+            message: "tagged posts fetched for user",
+            data: getPosts,
+        });
+    }));
     const getpostlengthofuser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { username } = req.params;
         const getPostsLength = yield (0, postAuthApplications_1.handleGetLengthForUser)(username, dbPostRepository);
@@ -372,6 +381,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         updatepost,
         getpostforuser,
         getpostforuserusername,
+        gettaggedpostforuserusername,
         getpostlengthofuser,
         getpostofcurrentuser,
         getsavedpostofcurrentuser,

@@ -112,6 +112,33 @@ const postRepositoryMongoDB = () => {
             throw new Error("Error getting all posts for user!");
         }
     });
+    const getAllTaggedPostsForUserUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (!username) {
+                throw new Error("User ID is required");
+            }
+            const user = yield userModel_1.default.findOne({ username });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const taggedPostIds = user.taggedPosts;
+            if (!taggedPostIds || taggedPostIds.length === 0) {
+                return [];
+            }
+            const taggedPosts = yield postModel_1.default.find({
+                _id: { $in: taggedPostIds },
+                isBlocked: false,
+            }).sort({
+                createdAt: -1,
+            });
+            console.log("tagged posts : ", taggedPosts);
+            return taggedPosts;
+        }
+        catch (error) {
+            console.error(error.message);
+            throw new Error("Error getting tagged posts of current user!");
+        }
+    });
     const lengthofPostsForUser = (username) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const user = yield userModel_1.default.findOne({ username: username });
@@ -733,6 +760,7 @@ const postRepositoryMongoDB = () => {
         updatePost,
         getAllPostsForUser,
         getAllPostsForUserUsername,
+        getAllTaggedPostsForUserUsername,
         lengthofPostsForUser,
         getAllPostsForCurrentUser,
         getAllSavedPostsForCurrentUser,

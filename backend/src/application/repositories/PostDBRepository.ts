@@ -40,6 +40,9 @@ export const postDBRepository = (
   const getAllPostsForUserUsername = async (username: string) =>
     await repository.getAllPostsForUserUsername(username);
 
+  const getAllTaggedPostsForUserUsername = async (username: string) =>
+    await repository.getAllTaggedPostsForUserUsername(username);
+
   const lengthofPostsForUser = async (username: string) =>
     await repository.lengthofPostsForUser(username);
 
@@ -150,6 +153,7 @@ export const postDBRepository = (
     unblockPost,
     getAllPostsForUser,
     getAllPostsForUserUsername,
+    getAllTaggedPostsForUserUsername,
     lengthofPostsForUser,
     getAllPostsForCurrentUser,
     getAllSavedPostsForCurrentUser,

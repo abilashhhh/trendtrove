@@ -1,9 +1,11 @@
+ 
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { AiOutlineLike, AiOutlineDislike, AiOutlineComment, AiFillLike, AiFillDislike } from "react-icons/ai";
 import { FiMoreVertical } from 'react-icons/fi';
-import { fetchAllPostsForUserUsingUsername, getLikedPosts, getDislikedPosts, getPostLikesAndDislikesInfo, savePost, getPostsLengthOfTheUser, likePost, dislikePost } from "../../../API/Post/post";
+import { fetchAllPostsForUserUsingUsername, getLikedPosts, getDislikedPosts, getPostLikesAndDislikesInfo, savePost, getPostsLengthOfTheUser, likePost, dislikePost, fetchTaggedPostsOfTheCurrentUser, fetchTaggedPostsOfUserUsingUsername } from "../../../API/Post/post";
 import useUserDetails from "../../../Hooks/useUserDetails";
 import PostsDisplayCommon from '../../Post/PostsDisplayCommon';
 import { ToastContainer, toast } from "react-toastify";
@@ -20,7 +22,7 @@ interface Post {
   dislikes: number;
 }
 
-const FriendsPagePost = ({ username }: { username: string }) => {
+const FriendsTaggedPosts = ({ username }: { username: string }) => {
   const currentUser = useUserDetails();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
@@ -35,11 +37,15 @@ const FriendsPagePost = ({ username }: { username: string }) => {
     setShowOptions(showOptions === postId ? null : postId);
   };
 
+
+  console.log("username : ",username)
+
   const fetchUserPosts = async (username: string) => {
     try {
-      const response = await fetchAllPostsForUserUsingUsername(username);
-      if (response && response.data) {
-        setPosts(response.data);
+      const response = await fetchTaggedPostsOfUserUsingUsername(username);
+      console.log("responjse : ", response)
+      if (response && response) {
+        setPosts(response);
       } else {
         console.log("No posts found for the user");
       }
@@ -154,8 +160,8 @@ const FriendsPagePost = ({ username }: { username: string }) => {
       posts.forEach(post => fetchLikesDislikesData(post._id));
     }
   }, [posts]);
- 
 
+ 
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -248,4 +254,4 @@ const FriendsPagePost = ({ username }: { username: string }) => {
   );
 };
 
-export default FriendsPagePost;
+export default FriendsTaggedPosts;

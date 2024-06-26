@@ -137,6 +137,37 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  const getAllTaggedPostsForUserUsername = async (username: string) => {
+    try {
+      if (!username) {
+        throw new Error("User ID is required");
+      }
+
+      const user = await User.findOne({ username });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const taggedPostIds = user.taggedPosts;
+
+      if (!taggedPostIds || taggedPostIds.length === 0) {
+        return [];
+      }
+
+      const taggedPosts = await Post.find({
+        _id: { $in: taggedPostIds },
+        isBlocked: false,
+      }).sort({
+        createdAt: -1,
+      });
+      console.log("tagged posts : ", taggedPosts);
+      return taggedPosts;
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error("Error getting tagged posts of current user!");
+    }
+  };
+
   const lengthofPostsForUser = async (username: string) => {
     try {
       const user = await User.findOne({ username: username });
@@ -235,6 +266,7 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting tagged posts of current user!");
     }
   };
+
   const getParticularPostsForCurrentUser = async (id: string) => {
     try {
       if (!id) {
@@ -764,17 +796,15 @@ export const postRepositoryMongoDB = () => {
       throw new Error("Error getting all stories for user!");
     }
   };
- 
 
   const deleteHighlight = async (highlightId: string) => {
     const highlightData = await Highlights.findById(highlightId);
     if (!highlightData) {
       throw new Error("Highlights not found");
-    }else{
-      await Highlights.findByIdAndDelete(highlightId)
+    } else {
+      await Highlights.findByIdAndDelete(highlightId);
     }
-    return 
- 
+    return;
   };
 
   const createHighlights = async (payload: highlightsInterface) => {
@@ -864,6 +894,7 @@ export const postRepositoryMongoDB = () => {
     updatePost,
     getAllPostsForUser,
     getAllPostsForUserUsername,
+    getAllTaggedPostsForUserUsername,
     lengthofPostsForUser,
     getAllPostsForCurrentUser,
     getAllSavedPostsForCurrentUser,

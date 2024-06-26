@@ -24,6 +24,7 @@ const postRouter = () => {
   router.post("/updatepost", authMiddleware, controller.updatepost);
   router.get("/getpostforuser", authMiddleware, controller.getpostforuser);
   router.get("/getpostforuserusername/:username", authMiddleware, controller.getpostforuserusername);
+  router.get("/gettaggedpostforuserusername/:username", authMiddleware, controller.gettaggedpostforuserusername);
   router.get("/getpostlengthofuser/:username", authMiddleware, controller.getpostlengthofuser);
   router.get("/getpostofcurrentuser", authMiddleware, controller.getpostofcurrentuser);
   router.get("/getsavedpostofcurrentuser", authMiddleware, controller.getsavedpostofcurrentuser);

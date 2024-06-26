@@ -24,6 +24,8 @@ import { FiMoreVertical } from "react-icons/fi";
 
 import useUserDetails from "../../Hooks/useUserDetails";
 import FriendsPagePost from "./FriendsPageComponents/FriendsPagePost";
+import TaggedPostComponent from "../Post/TaggedPostComponent";
+import FriendsTaggedPosts from "./FriendsPageComponents/FriendsTaggedPosts";
 
 interface UserInfo {
   coverPhoto: string;
@@ -86,7 +88,7 @@ const ProfilePageIndividualComponent: React.FC = () => {
       case "POSTS":
         return <FriendsPagePost username={username} />;
       case "TAGGED POSTS":
-        return <div>tagged posts</div>;
+        return <FriendsTaggedPosts username={username} />
       default:
         return null;
     }

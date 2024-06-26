@@ -103,13 +103,7 @@ const LeftSidebar = ({
               <FaCommentAlt className="inline-block mr-2" />
               {isOpen && "Chats"}
             </button>
-            <button
-              className={`${buttonClasses} ${buttonHoverClasses} ${isActive(
-                "/calls"
-              )}`}>
-              <FaPhoneAlt className="inline-block mr-2" />
-              {isOpen && "Calls"}
-            </button>
+       
             <button
               onClick={findFriends}
               className={`${buttonClasses} ${buttonHoverClasses} ${isActive(

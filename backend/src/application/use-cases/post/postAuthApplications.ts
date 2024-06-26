@@ -160,6 +160,33 @@ export const handleGetPostsForUserUsername = async (
   }
 };
 
+export const handleTaggedGetPostsForUserUsername = async (
+  username: string,
+  dbPostRepository: ReturnType<PostDBInterface>
+) => {
+  try {
+    // console.log("handleTaggedGetPostsForUserUsername reached");
+    if (!username) {
+      throw new ErrorInApplication(
+        "username is required to get all posts",
+        400
+      );
+    }
+    const allPostsForUser = await dbPostRepository.getAllTaggedPostsForUserUsername(
+      username
+    );
+    const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
+    // console.log("Filtered posts from handleTaggedGetPostsForUserUsername :", filteredPosts);
+    return filteredPosts;
+  } catch (error) {
+    // console.log("Error in handleTaggedGetPostsForUserUsername");
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    throw new ErrorInApplication("Failed to get all posts", 500);
+  }
+};
+
 export const handleGetLengthForUser = async (
   username: string,
   dbPostRepository: ReturnType<PostDBInterface>
