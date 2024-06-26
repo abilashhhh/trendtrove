@@ -98,11 +98,7 @@ const DisplayHighlight = () => {
                 </div>
               </div>
             )}
-            <form method="dialog gap-2">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                ✕
-              </button>
-            </form>
+         
           </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>
