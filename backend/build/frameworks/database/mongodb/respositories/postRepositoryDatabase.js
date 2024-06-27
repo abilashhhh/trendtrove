@@ -675,7 +675,7 @@ const postRepositoryMongoDB = () => {
             })
                 .sort({ createdAt: -1 })
                 .populate("userId", "username dp");
-            console.log("Getting stories from repo: ", gettingStories);
+            // console.log("Getting stories from repo: ", gettingStories);
             return gettingStories;
         }
         catch (error) {
@@ -697,7 +697,7 @@ const postRepositoryMongoDB = () => {
         // console.log("create highlights opayload : ", payload)
         const newHighlight = new highlightsModel_1.default(payload);
         const newHighlightData = yield newHighlight.save();
-        console.log("create highlights newHighlightData : ", newHighlightData);
+        // console.log("create highlights newHighlightData : ", newHighlightData);
         return newHighlightData;
     });
     const getStoriesForHighlights = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -722,7 +722,7 @@ const postRepositoryMongoDB = () => {
             const stories = yield storyModel_1.default.find({ userId: currentUserid })
                 .sort({ createdAt: -1 })
                 .populate("userId", "username dp");
-            console.log("Getting stories: getAllStoriesForUserHighlightsUsername", stories);
+            // console.log("Getting stories: getAllStoriesForUserHighlightsUsername", stories);
             return stories;
         }
         catch (error) {

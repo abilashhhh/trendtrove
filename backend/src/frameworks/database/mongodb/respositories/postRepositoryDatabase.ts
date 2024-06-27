@@ -788,7 +788,7 @@ export const postRepositoryMongoDB = () => {
         .sort({ createdAt: -1 })
         .populate("userId", "username dp");
 
-      console.log("Getting stories from repo: ", gettingStories);
+      // console.log("Getting stories from repo: ", gettingStories);
 
       return gettingStories;
     } catch (error) {
@@ -812,7 +812,7 @@ export const postRepositoryMongoDB = () => {
 
     const newHighlight = new Highlights(payload);
     const newHighlightData = await newHighlight.save();
-    console.log("create highlights newHighlightData : ", newHighlightData);
+    // console.log("create highlights newHighlightData : ", newHighlightData);
     return newHighlightData;
   };
 
@@ -831,30 +831,32 @@ export const postRepositoryMongoDB = () => {
     return stories;
   };
 
-  const getAllStoriesForUserHighlightsUsername = async (username : string) => {
+  const getAllStoriesForUserHighlightsUsername = async (username: string) => {
     try {
       const currentUser = await User.findOne({ username });
       if (!currentUser) {
         throw new Error(`User with username ${username} not found`);
       }
-  
+
       const currentUserid = currentUser._id;
       console.log("Requested user ID: ", currentUserid);
-  
-      const stories = await Story.find({ userId: currentUserid })
-      .sort({ createdAt: -1 })
-      .populate("userId", "username dp");
 
-      console.log("Getting stories: getAllStoriesForUserHighlightsUsername", stories);
-  
+      const stories = await Story.find({ userId: currentUserid })
+        .sort({ createdAt: -1 })
+        .populate("userId", "username dp");
+
+      // console.log("Getting stories: getAllStoriesForUserHighlightsUsername", stories);
+
       return stories;
     } catch (error) {
-      console.error("Error getting stories for user highlights username:", error);
+      console.error(
+        "Error getting stories for user highlights username:",
+        error
+      );
       throw error;
     }
   };
-     
- 
+
   // getAllStoriesForUserHighlightsUsername('abilashn13')
 
   const getHighlightsData = async (id: string) => {
@@ -870,21 +872,20 @@ export const postRepositoryMongoDB = () => {
     return highlights;
   };
 
-  
-  const getAllHighlightsForUserHighlightsUsingUsername = async (username: string) => {
-
+  const getAllHighlightsForUserHighlightsUsingUsername = async (
+    username: string
+  ) => {
     const user = await User.findOne({ username: username });
     if (!user) {
       throw new Error("User not found");
-    } 
- 
+    }
+
     const highlights = await Highlights.find({ userId: user._id });
 
     // console.log("Getting highlights data:", highlights);
 
     return highlights;
   };
- 
 
   const updateStoryExpiry = async () => {
     const currentDate = new Date();
