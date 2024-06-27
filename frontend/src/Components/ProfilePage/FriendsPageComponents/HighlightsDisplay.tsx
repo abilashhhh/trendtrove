@@ -8,7 +8,7 @@ import { GiPreviousButton } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useSwipeable } from 'react-swipeable';
 
-const HighlightsDisplay = ({ username }: { username: string }) => {
+const HighlightsDisplay = ({ username }) => {
   const [highlightsData, setHighlightsData] = useState([]);
   const [storyhighlights, setStoryhighlights] = useState([]);
   const [selectedHighlight, setSelectedHighlight] = useState(null);
@@ -76,7 +76,7 @@ const HighlightsDisplay = ({ username }: { username: string }) => {
               }}>
               <div>
                 <img
-                  className="rounded-full w-16 h-1w-16 sm:w-16 sm:h-1w-16 md:w-16 md:h-1w-16 lg:w-24 lg:h-24"
+                  className="rounded-full w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-24 lg:h-24"
                   src={highlight.coverImage}
                   alt="highlight"
                 />
@@ -89,62 +89,68 @@ const HighlightsDisplay = ({ username }: { username: string }) => {
       </div>
 
       {storyLargeScreen && filteredStories.length > 0 && (
-       <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-       <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-xl mx-auto">
-         <div className="flex justify-center items-center max-h-xl w-full" {...handlers}>
-           <button
-             onClick={handlePrevStory}
-             className="text-white dark:text-slate-400 px-4 py-2 rounded-lg"
-           >
-             <GiPreviousButton />
-           </button>
-           <div className="relative rounded-lg transition-all duration-300 h-[calc(100vh-16rem)] w-full">
-             {filteredStories[selectedStoryIndex].mediaType === 'image' ? (
-               <img
-                 src={filteredStories[selectedStoryIndex].mediaUrl}
-                 alt="Story"
-                 className="object-cover w-full h-full"
-               />
-             ) : (
-               <video
-                 src={filteredStories[selectedStoryIndex].mediaUrl}
-                 controls
-                 autoPlay
-                 muted
-                 className="object-cover w-full h-full"
-               />
-             )}
-             <div className="absolute flex items-center justify-center gap-1 top-0 left-0 bg-gray-900 p-2 text-white text-center text-xs font-semibold">
-               <img
-                 src={filteredStories[selectedStoryIndex].userId.dp}
-                 className="w-6 h-6 rounded-full"
-                 alt="DP"
-               />
-               {filteredStories[selectedStoryIndex]?.userId?.username || 'Sample User'}
-             </div>
-             {filteredStories[selectedStoryIndex].captions && (
-               <div className="absolute bottom-0 left-0 right-0 bg-slate-900 p-2 text-white text-center break-all">
-                 {filteredStories[selectedStoryIndex]?.captions}
-               </div>
-             )}
-           </div>
-           <button
-             onClick={handleNextStory}
-             className="text-white dark:text-slate-400 px-4 py-2 rounded-lg"
-           >
-             <GiNextButton />
-           </button>
-         </div>
-         <div className="flex justify-center m-2">
-           <button
-             onClick={() => setStoryLargeScreen(false)}
-             className="text-white dark:text-slate-400 px-4 py-2 rounded-lg"
-           >
-             <IoMdCloseCircle />
-           </button>
-         </div>
-       </div>
-     </div>
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+          onClick={() => setStoryLargeScreen(false)}
+        >
+          <div
+            className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-xl mx-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-center items-center max-h-xl w-full" {...handlers}>
+              <button
+                onClick={handlePrevStory}
+                className="text-white dark:text-slate-400 px-4 py-2 rounded-lg"
+              >
+                <GiPreviousButton />
+              </button>
+              <div className="relative rounded-lg transition-all duration-300 h-[calc(100vh-16rem)] w-full">
+                {filteredStories[selectedStoryIndex].mediaType === 'image' ? (
+                  <img
+                    src={filteredStories[selectedStoryIndex].mediaUrl}
+                    alt="Story"
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <video
+                    src={filteredStories[selectedStoryIndex].mediaUrl}
+                    controls
+                    autoPlay
+                    muted
+                    className="object-cover w-full h-full"
+                  />
+                )}
+                <div className="absolute flex items-center justify-center gap-1 top-0 left-0 bg-gray-900 p-2 text-white text-center text-xs font-semibold">
+                  <img
+                    src={filteredStories[selectedStoryIndex].userId.dp}
+                    className="w-6 h-6 rounded-full"
+                    alt="DP"
+                  />
+                  {filteredStories[selectedStoryIndex]?.userId?.username || 'Sample User'}
+                </div>
+                {filteredStories[selectedStoryIndex].captions && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-slate-900 p-2 text-white text-center break-all">
+                    {filteredStories[selectedStoryIndex]?.captions}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={handleNextStory}
+                className="text-white dark:text-slate-400 px-4 py-2 rounded-lg"
+              >
+                <GiNextButton />
+              </button>
+            </div>
+            <div className="flex justify-center m-2">
+              <button
+                onClick={() => setStoryLargeScreen(false)}
+                className="text-white dark:text-slate-400 px-4 py-2 rounded-lg"
+              >
+                <IoMdCloseCircle />
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
