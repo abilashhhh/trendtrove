@@ -7,6 +7,10 @@ import upload from "../../utils/cloudinary";
 import ImageCropper from "../ImageCropper";
 import { toast } from "react-toastify";
 import { getAllStories, handleAddNewStory } from "../../API/Post/post";
+import { GiNextButton } from "react-icons/gi";
+import { GiPreviousButton } from "react-icons/gi";
+import { IoMdCloseCircle } from "react-icons/io";
+import { useSwipeable } from "react-swipeable";
 
 interface Story {
   userId: string;
@@ -37,7 +41,7 @@ const RightSidebar = () => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [allStories, setAllStories] = useState<Story[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  
+
   const [storyLargeScreen, setStoryLargeScreen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -206,6 +210,13 @@ const RightSidebar = () => {
     );
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleNextStory(),
+    onSwipedRight: () => handlePrevStory(),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
+
   return (
     <aside
       className={`${
@@ -247,55 +258,62 @@ const RightSidebar = () => {
         </div>
 
         {storyLargeScreen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-            <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-lg mx-auto">
-              <div className="relative rounded-lg transition-all duration-300 h-[calc(100vh-16rem)] w-full">
-                {allStories?.[selectedStoryIndex].mediaType === "image" ? (
-                  <img
-                    src={allStories[selectedStoryIndex].mediaUrl}
-                    alt="Story"
-                    className="object-cover w-full h-full "
-                  />
-                ) : (
-                  <video
-                    src={allStories[selectedStoryIndex].mediaUrl}
-                    controls
-                    autoPlay
-                    muted
-                    className="object-cover w-full h-full"
-                  />
-                )}
-
-                <div className="absolute flex items-center justify-center gap-1 top-0 left-0   bg-gray-900   p-2 text-white text-center text-xs font-semibold">
-                  <img
-                    src={allStories[selectedStoryIndex].userId.dp}
-                    className="w-6 h-6 rounded-full"
-                    alt="DP"
-                  />
-                  {allStories[selectedStoryIndex]?.userId?.username ||
-                    "Sample User"}
-                </div>
-                {allStories[selectedStoryIndex].captions && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-slate-900  p-2 text-white text-center break-all  ">
-                    {allStories[selectedStoryIndex]?.captions}
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-between m-2">
+          <div
+            className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+            onClick={() => setStoryLargeScreen(false)}>
+            <div
+              className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-xl mx-auto"
+              onClick={e => e.stopPropagation()}>
+              <div
+                className="flex justify-center items-center max-h-xl w-full"
+                {...handlers}>
                 <button
                   onClick={handlePrevStory}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
-                  Prev
+                  className="text-white dark:text-slate-400 px-4 py-2 rounded-lg">
+                  <GiPreviousButton />
                 </button>
-                <button
-                  onClick={() => setStoryLargeScreen(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
-                  Close
-                </button>
+                <div className="relative rounded-lg transition-all duration-300 h-[calc(100vh-16rem)] w-full">
+                  {allStories[selectedStoryIndex].mediaType === "image" ? (
+                    <img
+                      src={allStories[selectedStoryIndex].mediaUrl}
+                      alt="Story"
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <video
+                      src={allStories[selectedStoryIndex].mediaUrl}
+                      controls
+                      autoPlay
+                      muted
+                      className="object-cover w-full h-full"
+                    />
+                  )}
+                  <div className="absolute flex items-center justify-center gap-1 top-0 left-0 bg-gray-900 p-2 text-white text-center text-xs font-semibold">
+                    <img
+                      src={allStories[selectedStoryIndex].userId.dp}
+                      className="w-6 h-6 rounded-full"
+                      alt="DP"
+                    />
+                    {allStories[selectedStoryIndex]?.userId?.username ||
+                      "Sample User"}
+                  </div>
+                  {allStories[selectedStoryIndex].captions && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-slate-900 p-2 text-white text-center break-all">
+                      {allStories[selectedStoryIndex]?.captions}
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={handleNextStory}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-lg">
-                  Next
+                  className="text-white dark:text-slate-400 px-4 py-2 rounded-lg">
+                  <GiNextButton />
+                </button>
+              </div>
+              <div className="flex justify-center m-2">
+                <button
+                  onClick={() => setStoryLargeScreen(false)}
+                  className="text-white dark:text-slate-400 px-4 py-2 rounded-lg">
+                  <IoMdCloseCircle />
                 </button>
               </div>
             </div>
