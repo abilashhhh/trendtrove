@@ -37,6 +37,7 @@ const RightSidebar = () => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [allStories, setAllStories] = useState<Story[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  
   const [storyLargeScreen, setStoryLargeScreen] = useState<boolean>(false);
 
   useEffect(() => {
