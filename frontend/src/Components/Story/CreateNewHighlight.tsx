@@ -253,9 +253,9 @@ const CreateNewHighlight = () => {
       <div className="rounded-lg mt-2">
         <div
           onClick={() => document.getElementById("addNewHighlight")?.showModal()}
-          className="bg-slate-200 flex flex-col justify-center items-center cursor-pointer p-4 dark:bg-slate-800 w-32 h-32 rounded-full flex-shrink-0">
+          className="bg-slate-200 flex flex-col justify-center items-center cursor-pointer p-4 dark:bg-slate-800  w-16 h-1w-16 sm:w-16 sm:h-1w-16 md:w-16 md:h-1w-16 lg:w-24 lg:h-24 rounded-full flex-shrink-0">
           <FaPlusCircle className="text-2xl" />
-          <div className="text-center text-sm">Create new highlight</div>
+          <div className="text-center text-sm">Create highlight</div>
         </div>
       </div>
     </>

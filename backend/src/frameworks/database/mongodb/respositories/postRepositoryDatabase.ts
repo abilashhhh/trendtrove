@@ -831,22 +831,31 @@ export const postRepositoryMongoDB = () => {
     return stories;
   };
 
-  const getAllStoriesForUserHighlightsUsername = async (username: string) => {
-    const requesterUser = await User.findById(username);
-    if (!requesterUser) {
-      throw new Error("User not found");
-    }
-
-    const stories = await Story.find({ userId: requesterUser._id })
+  const getAllStoriesForUserHighlightsUsername = async (username : string) => {
+    try {
+      const currentUser = await User.findOne({ username });
+      if (!currentUser) {
+        throw new Error(`User with username ${username} not found`);
+      }
+  
+      const currentUserid = currentUser._id;
+      console.log("Requested user ID: ", currentUserid);
+  
+      const stories = await Story.find({ userId: currentUserid })
       .sort({ createdAt: -1 })
       .populate("userId", "username dp");
 
-    // console.log("Getting stories:", stories);
-
-    return stories;
+      console.log("Getting stories: getAllStoriesForUserHighlightsUsername", stories);
+  
+      return stories;
+    } catch (error) {
+      console.error("Error getting stories for user highlights username:", error);
+      throw error;
+    }
   };
-
-  // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+     
+ 
+  // getAllStoriesForUserHighlightsUsername('abilashn13')
 
   const getHighlightsData = async (id: string) => {
     const requesterUser = await User.findById(id);
@@ -856,7 +865,7 @@ export const postRepositoryMongoDB = () => {
 
     const highlights = await Highlights.find({ userId: id });
 
-    console.log("Getting highlights data:", highlights);
+    // console.log("Getting highlights data:", highlights);
 
     return highlights;
   };
@@ -871,7 +880,7 @@ export const postRepositoryMongoDB = () => {
  
     const highlights = await Highlights.find({ userId: user._id });
 
-    console.log("Getting highlights data:", highlights);
+    // console.log("Getting highlights data:", highlights);
 
     return highlights;
   };

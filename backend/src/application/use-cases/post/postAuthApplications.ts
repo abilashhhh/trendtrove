@@ -876,16 +876,16 @@ export const handleGetStoriesForHighlightsUsername = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    // console.log("handleGetStoriesForHighlightsUsername reached");
+    console.log("handleGetStoriesForHighlightsUsername reached" ,username);
     if (!username) {
       throw new ErrorInApplication(
         "Username is required to get all stories",
         400
       );
     }
-    const allStoriesForUser =
-      await dbPostRepository.getAllStoriesForUserHighlightsUsername(username);
 
+    const allStoriesForUser = await dbPostRepository.getAllStoriesForUserHighlightsUsername(username);
+console.log("All stories : ", allStoriesForUser)
     return allStoriesForUser;
   } catch (error) {
     // console.log("Error in handleGetStoriesForHighlightsUsername");
@@ -893,7 +893,7 @@ export const handleGetStoriesForHighlightsUsername = async (
       throw error;
     }
     throw new ErrorInApplication(
-      "Failed to get all stories for highlights",
+      "Failed to get all stories for highlights using username",
       500
     );
   }

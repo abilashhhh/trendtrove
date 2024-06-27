@@ -513,11 +513,14 @@ const postController = (
   });
 
   const storiesforhighlightsusername = asyncHandler(async (req: Request, res: Response) => {
-    const { userId }: { userId: string } = req.body;
+    // const { userId }: { userId: string } = req.body;
     const {username} = req.params
 
+    console.log("Username; storiesforhighlightsusername ", username)
     const getStoriesData = await handleGetStoriesForHighlightsUsername
     (username, dbPostRepository);
+    console.log("getStoriesData; storiesforhighlightsusername ", getStoriesData)
+
     res.status(201).json({
       status: "success",
       message: "Stories fetched for user highlights",
@@ -528,7 +531,7 @@ const postController = (
   const getHighlightsData = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
 
-    console.log("getHighlightsData Userid: ", userId)
+    // console.log("getHighlightsData Userid: ", userId)
     const getHighlightsDataUser = await handleGetHighlightsData(userId, dbPostRepository);
     res.status(201).json({
       status: "success",
@@ -541,8 +544,8 @@ const postController = (
     const { userId }: { userId: string } = req.body;
     const {username} = req.params
 
-    console.log("getHighlightsData Userid: ", userId)
-    console.log("getHighlightsData username: ", username)
+    // console.log("getHighlightsData Userid: ", userId)
+    // console.log("getHighlightsData username: ", username)
     const getHighlightsDataUser = await handleGetHighlightsDataUsingUsername(username, dbPostRepository);
     res.status(201).json({
       status: "success",

@@ -147,26 +147,27 @@ const DisplayHighlight = () => {
       </div>
 
       <div className="rounded-lg flex gap-2 overflow-y-auto no-scrollbar w-full h-full">
-        {storyhighlights &&
-          storyhighlights.map((story, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center rounded-lg p-2 flex-shrink-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-              onClick={() => handleHighlightClick(story)}
-            >
-              <div>
-                <img
-                  className="rounded-full w-32 h-32"
-                  src={story.coverImage}
-                  alt="Story Highlight"
-                />
-              </div>
-              <div className="text-center text-sm mt-2 flex gap-2 items-center">
-                {story.highlightName}
-              </div>
-            </div>
-          ))}
+  {storyhighlights &&
+    storyhighlights.map((story, index) => (
+      <div
+        key={index}
+        className="flex flex-col items-center rounded-lg p-2 flex-shrink-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+        onClick={() => handleHighlightClick(story)}
+      >
+        <div>
+          <img
+            className="rounded-full w-16 h-1w-16 sm:w-16 sm:h-1w-16 md:w-16 md:h-1w-16 lg:w-24 lg:h-24"
+            src={story.coverImage}
+            alt="Story Highlight"
+          />
+        </div>
+        <div className="text-center text-sm mt-2 flex gap-2 items-center">
+          {story.highlightName}
+        </div>
       </div>
+    ))}
+</div>
+
 
       {showConfirmDelete && (
         <div className="fixed inset-0  flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">

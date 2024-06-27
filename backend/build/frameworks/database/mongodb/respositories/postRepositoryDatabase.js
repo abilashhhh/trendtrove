@@ -712,24 +712,32 @@ const postRepositoryMongoDB = () => {
         return stories;
     });
     const getAllStoriesForUserHighlightsUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
-        const requesterUser = yield userModel_1.default.findById(username);
-        if (!requesterUser) {
-            throw new Error("User not found");
+        try {
+            const currentUser = yield userModel_1.default.findOne({ username });
+            if (!currentUser) {
+                throw new Error(`User with username ${username} not found`);
+            }
+            const currentUserid = currentUser._id;
+            console.log("Requested user ID: ", currentUserid);
+            const stories = yield storyModel_1.default.find({ userId: currentUserid })
+                .sort({ createdAt: -1 })
+                .populate("userId", "username dp");
+            console.log("Getting stories: getAllStoriesForUserHighlightsUsername", stories);
+            return stories;
         }
-        const stories = yield storyModel_1.default.find({ userId: requesterUser._id })
-            .sort({ createdAt: -1 })
-            .populate("userId", "username dp");
-        // console.log("Getting stories:", stories);
-        return stories;
+        catch (error) {
+            console.error("Error getting stories for user highlights username:", error);
+            throw error;
+        }
     });
-    // getStoriesForHighlights('666be616e14eb069b2c78fd8')
+    // getAllStoriesForUserHighlightsUsername('abilashn13')
     const getHighlightsData = (id) => __awaiter(void 0, void 0, void 0, function* () {
         const requesterUser = yield userModel_1.default.findById(id);
         if (!requesterUser) {
             throw new Error("User not found");
         }
         const highlights = yield highlightsModel_1.default.find({ userId: id });
-        console.log("Getting highlights data:", highlights);
+        // console.log("Getting highlights data:", highlights);
         return highlights;
     });
     const getAllHighlightsForUserHighlightsUsingUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
@@ -738,7 +746,7 @@ const postRepositoryMongoDB = () => {
             throw new Error("User not found");
         }
         const highlights = yield highlightsModel_1.default.find({ userId: user._id });
-        console.log("Getting highlights data:", highlights);
+        // console.log("Getting highlights data:", highlights);
         return highlights;
     });
     const updateStoryExpiry = () => __awaiter(void 0, void 0, void 0, function* () {

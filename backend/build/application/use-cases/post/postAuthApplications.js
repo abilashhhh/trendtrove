@@ -663,11 +663,12 @@ const handleGetStoriesForHighlights = (id, dbPostRepository) => __awaiter(void 0
 exports.handleGetStoriesForHighlights = handleGetStoriesForHighlights;
 const handleGetStoriesForHighlightsUsername = (username, dbPostRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // console.log("handleGetStoriesForHighlightsUsername reached");
+        console.log("handleGetStoriesForHighlightsUsername reached", username);
         if (!username) {
             throw new ErrorInApplication_1.default("Username is required to get all stories", 400);
         }
         const allStoriesForUser = yield dbPostRepository.getAllStoriesForUserHighlightsUsername(username);
+        console.log("All stories : ", allStoriesForUser);
         return allStoriesForUser;
     }
     catch (error) {
@@ -675,7 +676,7 @@ const handleGetStoriesForHighlightsUsername = (username, dbPostRepository) => __
         if (error instanceof ErrorInApplication_1.default) {
             throw error;
         }
-        throw new ErrorInApplication_1.default("Failed to get all stories for highlights", 500);
+        throw new ErrorInApplication_1.default("Failed to get all stories for highlights using username", 500);
     }
 });
 exports.handleGetStoriesForHighlightsUsername = handleGetStoriesForHighlightsUsername;
