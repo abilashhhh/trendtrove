@@ -20,6 +20,7 @@ import {
   handleGetAllComments,
   handleGetAllPublicPosts,
   handleGetDislikedPosts,
+  handleGetFeeds,
   handleGetHighlightsData,
   handleGetHighlightsDataUsingUsername,
   handleGetLengthForUser,
@@ -540,6 +541,7 @@ const postController = (
     });
   });
 
+
   const gethighlightsusingusername = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
     const {username} = req.params
@@ -579,6 +581,18 @@ const postController = (
     });
   });
 
+
+  const getFeeds = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    // const userId = "66641cdb828195c0d1697a32"
+    // console.log("getFeeds Userid: ", userId);
+    const getFeedsResult = await handleGetFeeds(userId);
+    res.status(201).json({
+      status: "success",
+      message: "Feeds fetched for user",
+      data: getFeedsResult,
+    });
+  });
 
   return {
     addPost,
@@ -620,6 +634,7 @@ const postController = (
     gethighlightsusingusername,
     deletehighlight,
     storiesforhighlightsusername,
+    getFeeds,
   };
 };
 

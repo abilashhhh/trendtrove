@@ -30,6 +30,7 @@ import {
   ReportPostResponse,
   SavePostResponse,
   Story,
+  FeedsInterface,
 } from "../../Types/Post";
 
 // Utility function for handling Axios errors
@@ -171,17 +172,17 @@ export const fetchTaggedPostsOfTheCurrentUser =
     }
   };
 
-
-   
-
-export const fetchTaggedPostsOfUserUsingUsername =
-async (username:string): Promise<GetAllPostsOfCurrentUser> => {
+export const fetchTaggedPostsOfUserUsingUsername = async (
+  username: string
+): Promise<GetAllPostsOfCurrentUser> => {
   try {
-
-const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
-  `${END_POINTS.GET_TAGGED_POSTS_OF_CURRENT_USER_USING_USERENAME}/${username}`
-);
-    console.log("fetchTaggedPostsOfTheCurrentUser respose: ",response.data?.data);
+    const response = await axiosUserInstance.get<GetAllPostsOfCurrentUser>(
+      `${END_POINTS.GET_TAGGED_POSTS_OF_CURRENT_USER_USING_USERENAME}/${username}`
+    );
+    console.log(
+      "fetchTaggedPostsOfTheCurrentUser respose: ",
+      response.data?.data
+    );
     return response.data?.data;
   } catch (error) {
     handleAxiosError(error);
@@ -631,27 +632,53 @@ export const handleEditHighlights = async (
   }
 };
 
-
-export const getStoriesForHighlightsUsingUsername = async (username: string) => {
+export const getStoriesForHighlightsUsingUsername = async (
+  username: string
+) => {
   try {
     console.log("getStoriesForHighlightsUsingUsername , username: ", username);
     const response = await axiosUserInstance.get<GetAllStories>(
-      `${END_POINTS.GET_STORIES_FOR_HIGHLIGHTS_USING_USERNAME.replace(":username", username)}`
+      `${END_POINTS.GET_STORIES_FOR_HIGHLIGHTS_USING_USERNAME.replace(
+        ":username",
+        username
+      )}`
     );
-    console.log("getStoriesForHighlightsUsingUsername response:", response.data);
+    console.log(
+      "getStoriesForHighlightsUsingUsername response:",
+      response.data
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error);
     throw error;
   }
 };
+
 export const getHighlightsUsingUsername = async (username: string) => {
   try {
     console.log("getHighlightsUsingUsername , username: ", username);
     const response = await axiosUserInstance.get<HighlightsInterface>(
-      `${END_POINTS.GET_HIGHLIGHTS_USING_USERNAME.replace(":username", username)}`
+      `${END_POINTS.GET_HIGHLIGHTS_USING_USERNAME.replace(
+        ":username",
+        username
+      )}`
     );
     console.log("getHighlightsUsingUsername response:", response.data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    throw error;
+  }
+};
+
+
+export const getNewFeeds = async (): Promise<FeedsInterface> => {
+  try {
+    console.log("getNewFeeds ");
+    const response = await axiosUserInstance.get<FeedsInterface>(
+      END_POINTS.GET_FEEDS
+    );
+    console.log("getNewFeeds response:", response.data);
     return response.data;
   } catch (error) {
     handleAxiosError(error);

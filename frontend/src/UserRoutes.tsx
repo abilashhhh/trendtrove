@@ -4,6 +4,7 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import LoadingSpinner from "./Components/LoadingSpinner";
 import NotificationToasts from "./Components/Notifications/NotificationToasts";
+ 
 
 const HomePage = lazy(() => import("./Pages/HomePage"));
 const SignUpPage = lazy(() => import("./Pages/SignUpPage"));
@@ -17,17 +18,14 @@ const SettingsPage = lazy(() => import("./Pages/SettingsPage"));
 const FriendsPage = lazy(() => import("./Pages/FriendsPage"));
 const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
 const Addpost = lazy(() => import("./Pages/Addpost"));
-const ProfilePageIndividual = lazy(
-  () => import("./Pages/ProfilePageIndividual")
-);
+const ProfilePageIndividual = lazy(() => import("./Pages/ProfilePageIndividual"));
 const ReportPost = lazy(() => import("./Components/Post/ReportPost"));
 const EditPost = lazy(() => import("./Pages/EditPost"));
 const CommentsPage = lazy(() => import("./Components/Comments/CommentsPage"));
-const ExplorePageComponent = lazy(
-  () => import("./Components/Explore/ExplorePageComponent")
-);
+const ExplorePageComponent = lazy(() => import("./Components/Explore/ExplorePageComponent"));
 const ChatPage = lazy(() => import("./Pages/ChatPage"));
 const NotificationsPage = lazy(() => import("./Pages/NotificationsPage"));
+const NewsFeed = lazy(() => import("./Pages/NewsFeed"));
 
 const UserRoutes: React.FC = () => {
   return (
@@ -60,6 +58,7 @@ const UserRoutes: React.FC = () => {
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/addpost" element={<Addpost />} />
           <Route path="/chats" element={<ChatPage />} />
+          <Route path="/feeds" element={<NewsFeed />} />
           <Route path="/editpost/:postId" element={<EditPost />} />
           <Route path="/reportpost/:postId" element={<ReportPost />} />
           <Route path="/post/:postId" element={<CommentsPage />} />

@@ -400,6 +400,17 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
             message: "Highlights deleted",
         });
     }));
+    const getFeeds = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { userId } = req.body;
+        // const userId = "66641cdb828195c0d1697a32"
+        // console.log("getFeeds Userid: ", userId);
+        const getFeedsResult = yield (0, postAuthApplications_1.handleGetFeeds)(userId);
+        res.status(201).json({
+            status: "success",
+            message: "Feeds fetched for user",
+            data: getFeedsResult,
+        });
+    }));
     return {
         addPost,
         updatepost,
@@ -440,6 +451,7 @@ const postController = (userDBRepositoryImplementation, userDBRepositoryInterfac
         gethighlightsusingusername,
         deletehighlight,
         storiesforhighlightsusername,
+        getFeeds,
     };
 };
 exports.default = postController;

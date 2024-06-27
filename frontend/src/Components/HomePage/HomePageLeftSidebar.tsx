@@ -11,6 +11,7 @@ import {
   FaChevronRight,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { FaNewspaper } from "react-icons/fa6";
 import { BsExposure } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
 import { leftSidebar } from "../../API/Profile/profile";
@@ -34,6 +35,7 @@ const LeftSidebar = ({
   const addPost = () => navigate("/addpost");
   const explore = () => navigate("/explore");
   const chats = () => navigate("/chats");
+  const feeds = () => navigate("/feeds");
 
   useEffect(() => {
     if (currentUser.isLeftSidebarOpen !== undefined) {
@@ -102,6 +104,14 @@ const LeftSidebar = ({
               )}`}>
               <FaCommentAlt className="inline-block mr-2" />
               {isOpen && "Chats"}
+            </button>
+            <button
+              onClick={feeds}
+              className={`${buttonClasses} ${buttonHoverClasses} ${isActive(
+                "/feeds"
+              )}`}>
+              <FaNewspaper className="inline-block mr-2" />
+              {isOpen && "Feeds"}
             </button>
        
             <button

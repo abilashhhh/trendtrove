@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeleteHighlight = exports.handleGetHighlightsDataUsingUsername = exports.handleGetHighlightsData = exports.handleGetStoriesForHighlightsUsername = exports.handleGetStoriesForHighlights = exports.handleCreateHighlights = exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleTaggedGetPostsForUserUsername = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
+exports.handleGetFeeds = exports.handleDeleteHighlight = exports.handleGetHighlightsDataUsingUsername = exports.handleGetHighlightsData = exports.handleGetStoriesForHighlightsUsername = exports.handleGetStoriesForHighlights = exports.handleCreateHighlights = exports.handleGetStoriesForUser = exports.handleRightSidebar = exports.handleLeftSidebar = exports.handleDarkMode = exports.handleEditComments = exports.handleDelteComment = exports.handleGetAllComments = exports.handleReplyToComment = exports.handleCreateComment = exports.handleDeltePosts = exports.handleGetlikesdislikesinfo = exports.handleGetDislikedPosts = exports.handleGetLikedPosts = exports.handleGenerateCaption = exports.handleGetAllPublicPosts = exports.handleDislikePosts = exports.handleLikePosts = exports.handleRemoveTaggedPosts = exports.handleRemoveSavePosts = exports.handleSavePosts = exports.handleReportPosts = exports.handleGetParticularPost = exports.handleGetSavedPostsOfCurrentUser = exports.handleGetTaggedPostsOfCurrentUser = exports.handleGetPostsOfCurrentUser = exports.handleGetLengthForUser = exports.handleTaggedGetPostsForUserUsername = exports.handleGetPostsForUserUsername = exports.handleGetPostsForUser = exports.handleupdatepost = exports.handleCreateStory = exports.handleCreatePost = void 0;
 const clarifai_1 = __importDefault(require("clarifai"));
 const ErrorInApplication_1 = __importDefault(require("../../../utils/ErrorInApplication"));
+const rssServices_1 = require("../../../frameworks/services/rssServices");
 const handleCreatePost = (postData, dbPostRepository, dbUserRepository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log("Post data in handleCreatePost :", postData);
@@ -737,3 +738,21 @@ const handleDeleteHighlight = (highlightId, userId, dbPostRepository) => __await
     }
 });
 exports.handleDeleteHighlight = handleDeleteHighlight;
+const handleGetFeeds = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!userId) {
+            throw new ErrorInApplication_1.default("User ID is required to get all feeds", 400);
+        }
+        const feeds = yield (0, rssServices_1.fetchRssFeeds)();
+        // console.log("Fetched feeds: ", feeds);
+        return feeds;
+    }
+    catch (error) {
+        if (error instanceof ErrorInApplication_1.default) {
+            throw error;
+        }
+        console.error('Failed to get feeds', error);
+        throw new ErrorInApplication_1.default("Failed to get feeds", 500);
+    }
+});
+exports.handleGetFeeds = handleGetFeeds;

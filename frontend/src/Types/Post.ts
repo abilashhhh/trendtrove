@@ -201,3 +201,20 @@ export interface HighlightsInterface{
   selectedStories: string[]; 
   userId: string;
 }
+ 
+
+export interface FeedsInterface {
+  status: string;
+  message: string;
+  feeds: FeedItem[];
+}
+
+export interface FeedItem {
+  title: string;
+  link: string;
+  pubDate: string;
+  content: string;
+  enclosure?: {
+    url: string;
+  };
+}

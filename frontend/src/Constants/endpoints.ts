@@ -86,6 +86,10 @@ const END_POINTS = {
   GET_ALL_COMMENTS: "/api/post/getallcomments/:postId",
   DELETE_COMMENT: "/api/post/deletecomment/:commentId",
   EDIT_COMMENT: "/api/post/editcomment",
+  
+  //FEEDS
+  GET_FEEDS: "/api/post/feeds",
+
 
   // ADMIN
   ADMIN_LOGOUT: "api/admin/logout",

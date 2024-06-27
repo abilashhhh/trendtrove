@@ -61,6 +61,8 @@ const postRouter = () => {
   router.delete("/deletehighlight/:highlightId", authMiddleware, controller.deletehighlight);
   router.get("/storiesforhighlightsusername/:username", authMiddleware, controller.storiesforhighlightsusername);
   router.get("/gethighlightsusingusername/:username", authMiddleware, controller.gethighlightsusingusername);
+  // FEEDS
+  router.get("/feeds", authMiddleware, controller.getFeeds);
 
 
 

@@ -13,6 +13,7 @@ import {
 import ErrorInApplication from "../../../utils/ErrorInApplication";
 import { PostDBInterface } from "../../repositories/postDBRepository";
 import { UserDBInterface } from "../../repositories/userDBRepository";
+import { fetchRssFeeds } from "../../../frameworks/services/rssServices";
 
 export const handleCreatePost = async (
   postData: PostDataInterface,
@@ -172,9 +173,8 @@ export const handleTaggedGetPostsForUserUsername = async (
         400
       );
     }
-    const allPostsForUser = await dbPostRepository.getAllTaggedPostsForUserUsername(
-      username
-    );
+    const allPostsForUser =
+      await dbPostRepository.getAllTaggedPostsForUserUsername(username);
     const filteredPosts = allPostsForUser.filter(post => !post.isBlocked);
     // console.log("Filtered posts from handleTaggedGetPostsForUserUsername :", filteredPosts);
     return filteredPosts;
@@ -826,9 +826,9 @@ export const handleCreateHighlights = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    
-    const createHighlightsResult =
-      await dbPostRepository.createHighlights(payload);
+    const createHighlightsResult = await dbPostRepository.createHighlights(
+      payload
+    );
 
     return createHighlightsResult;
   } catch (error) {
@@ -836,10 +836,7 @@ export const handleCreateHighlights = async (
     if (error instanceof ErrorInApplication) {
       throw error;
     }
-    throw new ErrorInApplication(
-      "Failed to create highlights",
-      500
-    );
+    throw new ErrorInApplication("Failed to create highlights", 500);
   }
 };
 
@@ -876,7 +873,7 @@ export const handleGetStoriesForHighlightsUsername = async (
   dbPostRepository: ReturnType<PostDBInterface>
 ) => {
   try {
-    console.log("handleGetStoriesForHighlightsUsername reached" ,username);
+    console.log("handleGetStoriesForHighlightsUsername reached", username);
     if (!username) {
       throw new ErrorInApplication(
         "Username is required to get all stories",
@@ -884,8 +881,9 @@ export const handleGetStoriesForHighlightsUsername = async (
       );
     }
 
-    const allStoriesForUser = await dbPostRepository.getAllStoriesForUserHighlightsUsername(username);
-console.log("All stories : ", allStoriesForUser)
+    const allStoriesForUser =
+      await dbPostRepository.getAllStoriesForUserHighlightsUsername(username);
+    console.log("All stories : ", allStoriesForUser);
     return allStoriesForUser;
   } catch (error) {
     // console.log("Error in handleGetStoriesForHighlightsUsername");
@@ -926,7 +924,6 @@ export const handleGetHighlightsData = async (
     );
   }
 };
- 
 
 export const handleGetHighlightsDataUsingUsername = async (
   username: string,
@@ -941,7 +938,9 @@ export const handleGetHighlightsDataUsingUsername = async (
       );
     }
     const allStoriesForUser =
-      await dbPostRepository.getAllHighlightsForUserHighlightsUsingUsername(username);
+      await dbPostRepository.getAllHighlightsForUserHighlightsUsingUsername(
+        username
+      );
 
     return allStoriesForUser;
   } catch (error) {
@@ -955,7 +954,7 @@ export const handleGetHighlightsDataUsingUsername = async (
     );
   }
 };
- 
+
 export const handleDeleteHighlight = async (
   highlightId: string,
   userId: string,
@@ -970,14 +969,9 @@ export const handleDeleteHighlight = async (
       );
     }
     if (!highlightId) {
-      throw new ErrorInApplication(
-        "Highlight ID is required ",
-        400
-      );
+      throw new ErrorInApplication("Highlight ID is required ", 400);
     }
-    const deleteHighlight = await dbPostRepository.deleteHighlight(
-      highlightId
-    );
+    const deleteHighlight = await dbPostRepository.deleteHighlight(highlightId);
 
     return deleteHighlight;
   } catch (error) {
@@ -989,5 +983,22 @@ export const handleDeleteHighlight = async (
       "Failed to get all stories for highlights",
       500
     );
+  }
+};
+
+export const handleGetFeeds = async (userId: string) => {
+  try {
+    if (!userId) {
+      throw new ErrorInApplication("User ID is required to get all feeds", 400);
+    } 
+    const feeds = await fetchRssFeeds();
+    // console.log("Fetched feeds: ", feeds);
+    return feeds;
+  } catch (error) {
+    if (error instanceof ErrorInApplication) {
+      throw error;
+    }
+    console.error('Failed to get feeds', error);
+    throw new ErrorInApplication("Failed to get feeds", 500);
   }
 };
