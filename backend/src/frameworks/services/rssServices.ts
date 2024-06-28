@@ -9,7 +9,6 @@ const RSS_FEEDS = [
   "https://www.tmz.com/rss.xml", 
   "http://rss.cnn.com/rss/edition.rss",  
   "https://variety.com/feed/", 
-
 ];
 
 export const fetchRssFeeds = async () => {
